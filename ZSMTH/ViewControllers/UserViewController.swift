@@ -9,16 +9,30 @@
 import UIKit
 
 class UserViewController: UITableViewController {
-    
+
+    @IBOutlet weak var avatarImageView: UIImageView! {
+        didSet {
+            if let avatar = avatarImageView {
+                avatar.layer.cornerRadius = avatar.frame.width / 2
+                avatar.clipsToBounds = true
+            }
+        }
+    }
+    @IBOutlet weak var nickNameLabel: UILabel!
+    @IBOutlet weak var userIDLabel: UILabel!
+
+    @IBOutlet weak var inboxLabel: UILabel!
+    @IBOutlet weak var outboxLabel: UILabel!
+    @IBOutlet weak var replyLabel: UILabel!
+    @IBOutlet weak var referLabel: UILabel!
+    @IBOutlet weak var settingLabel: UILabel!
+
     let api = SmthAPI()
     let setting = AppSetting.sharedSetting()
 
-    //let cellStrings = [[""], ["收件箱", "发件箱", "回复我", "提到我"], ["设置"]]
-    let cellStrings = [[""], ["收件箱", "发件箱", "回复我", "提到我"]]
-
-    private var newMailCount: Int = 0 { didSet { tableView?.reloadData() } }
-    private var newReplyCount: Int = 0 { didSet { tableView?.reloadData() } }
-    private var newAtCount: Int = 0 { didSet { tableView?.reloadData() } }
+    private var newMailCount: Int = 0 { didSet { updateUI() } }
+    private var newReplyCount: Int = 0 { didSet { updateUI() } }
+    private var newAtCount: Int = 0 { didSet { updateUI() } }
 
     private var lastMailCount = 0
     private var lastReplyCount = 0
@@ -42,15 +56,14 @@ class UserViewController: UITableViewController {
 
     private var userInfo: SMUser? {
         didSet {
-            let cell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as? AvatarViewCell
             if let url = avatarURL(userInfo) {
-                cell?.avatarImageView.setImageWithURL(url)
+                avatarImageView.kf_setImageWithURL(url)
             } else {
-                cell?.avatarImageView.image = nil
+                avatarImageView.image = nil
             }
 
-            cell?.nickNameLabel?.text = userInfo?.nick ?? " "
-            cell?.userIDLabel?.text = userInfo?.id ?? " "
+            nickNameLabel?.text = userInfo?.nick ?? " "
+            userIDLabel?.text = userInfo?.id ?? " "
         }
     }
 
@@ -71,7 +84,7 @@ class UserViewController: UITableViewController {
 
     // handle font size change
     func preferredFontSizeChanged(notification: NSNotification) {
-        tableView?.reloadData()
+        updateUI()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -111,6 +124,7 @@ class UserViewController: UITableViewController {
         if flag {
             result.appendAttributedString(NSAttributedString(string: " [新]", attributes: [NSForegroundColorAttributeName: UIColor.redColor()]))
         }
+        result.addAttribute(NSFontAttributeName, value: UIFont.preferredFontForTextStyle(UIFontTextStyleBody), range: NSMakeRange(0, result.length))
         return result
     }
 
@@ -205,6 +219,35 @@ class UserViewController: UITableViewController {
         }
     }
 
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        switch indexPath {
+        case NSIndexPath(forRow: 0, inSection: 0):
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        case NSIndexPath(forRow: 0, inSection: 1):
+            if let mbvc = storyboard?.instantiateViewControllerWithIdentifier("MailBoxViewController") as? MailBoxViewController {
+                mbvc.inbox = true
+                showViewController(mbvc, sender: self)
+            }
+        case NSIndexPath(forRow: 1, inSection: 1):
+            if let mbvc = storyboard?.instantiateViewControllerWithIdentifier("MailBoxViewController") as? MailBoxViewController {
+                mbvc.inbox = false
+                showViewController(mbvc, sender: self)
+            }
+        case NSIndexPath(forRow: 2, inSection: 1):
+            if let rvc = storyboard?.instantiateViewControllerWithIdentifier("ReminderViewController") as? ReminderViewController {
+                rvc.replyMe = true
+                showViewController(rvc, sender: self)
+            }
+        case NSIndexPath(forRow: 3, inSection: 1):
+            if let rvc = storyboard?.instantiateViewControllerWithIdentifier("ReminderViewController") as? ReminderViewController {
+                rvc.replyMe = false
+                showViewController(rvc, sender: self)
+            }
+        default:
+            break
+        }
+    }
+
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if indexPath == NSIndexPath(forRow: 0, inSection: 0) {
             return 81
@@ -213,75 +256,13 @@ class UserViewController: UITableViewController {
         }
     }
 
-    // Mark: - Data Source
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return cellStrings.count
+    func updateUI() {
+        inboxLabel?.attributedText = attrTextFromString("收件箱", withNewFlag: newMailCount > 0)
+        outboxLabel?.attributedText = attrTextFromString("发件箱", withNewFlag: false)
+        replyLabel?.attributedText = attrTextFromString("回复我", withNewFlag: newReplyCount > 0)
+        referLabel?.attributedText = attrTextFromString("提到我", withNewFlag: newAtCount > 0)
+        settingLabel?.attributedText = attrTextFromString("设置", withNewFlag: false)
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cellStrings[section].count
-    }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let userCell = tableView.dequeueReusableCellWithIdentifier("Me", forIndexPath: indexPath) as! AvatarViewCell
-            // do some customsize
-            return userCell
-        } else {
-            
-            var identifier: String
-            switch indexPath {
-            case NSIndexPath(forRow: 0, inSection: 1), NSIndexPath(forRow: 1, inSection: 1):
-                identifier = "Mailbox"
-            case NSIndexPath(forRow: 2, inSection: 1), NSIndexPath(forRow: 3, inSection: 1):
-                identifier = "Reminder"
-            default:
-                identifier = "Setting"
-            }
-
-            let normalCell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! UITableViewCell
-
-            switch indexPath {
-            case NSIndexPath(forRow: 0, inSection: 1):
-                normalCell.textLabel?.attributedText = attrTextFromString(cellStrings[indexPath.section][indexPath.row], withNewFlag: newMailCount > 0)
-            case NSIndexPath(forRow: 2, inSection: 1):
-                normalCell.textLabel?.attributedText = attrTextFromString(cellStrings[indexPath.section][indexPath.row], withNewFlag: newReplyCount > 0)
-            case NSIndexPath(forRow: 3, inSection: 1):
-                normalCell.textLabel?.attributedText = attrTextFromString(cellStrings[indexPath.section][indexPath.row], withNewFlag: newAtCount > 0)
-            default:
-                normalCell.textLabel?.text = cellStrings[indexPath.section][indexPath.row]
-            }
-
-            normalCell.textLabel?.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
-            return normalCell
-        }
-    }
-
-    // MARK: - Navigation
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let cell = sender as! UITableViewCell
-        if let indexPath = tableView.indexPathForCell(cell) {
-            if let mbvc = segue.destinationViewController as? MailBoxViewController {
-                switch indexPath {
-                case NSIndexPath(forRow: 0, inSection: 1):
-                    mbvc.inbox = true
-                case NSIndexPath(forRow: 1, inSection: 1):
-                    mbvc.inbox = false
-                default:
-                    break
-                }
-            } else if let rvc = segue.destinationViewController as? ReminderViewController {
-                switch indexPath {
-                case NSIndexPath(forRow: 2, inSection: 1):
-                    rvc.replyMe = true
-                case NSIndexPath(forRow: 3, inSection: 1):
-                    rvc.replyMe = false
-                default:
-                    break
-                }
-            }
-        }
-
-    }
 }

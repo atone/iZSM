@@ -60,7 +60,7 @@ class ArticleContentCell: UITableViewCell {
                     let imageView = UIImageView()
                     imageView.contentMode = .ScaleAspectFill
                     imageView.clipsToBounds = true
-                    imageView.setImageWithURL(imageInfo.thumbnailURL)
+                    imageView.kf_setImageWithURL(imageInfo.thumbnailURL)
                     imageView.userInteractionEnabled = true
                     let singleTap = UITapGestureRecognizer(target: self, action: "singleTapOnImage:")
                     singleTap.numberOfTapsRequired = 1

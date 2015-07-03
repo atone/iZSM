@@ -3,95 +3,79 @@
 //  zsmth
 //
 //  Created by Naitong Yu on 15/6/27.
-//  Copyright (c) 2015年 Naitong Yu. All rights reserved.
+//  Copyright (c) 2015 Naitong Yu. All rights reserved.
 //
 
 import UIKit
 
 class SettingsViewController: UITableViewController {
+    @IBOutlet weak var hideTopLabel: UILabel!
+    @IBOutlet weak var showSignatureLabel: UILabel!
+    @IBOutlet weak var backgroundTaskLabel: UILabel!
+    @IBOutlet weak var aboutZSMLabel: UILabel!
+
+    @IBOutlet weak var hideTopSwitch: UISwitch!
+    @IBOutlet weak var showSignatureSwitch: UISwitch!
+    @IBOutlet weak var backgroundTaskSwitch: UISwitch!
+
+
+    let setting = AppSetting.sharedSetting()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        updateUI()
+        // add observer to font size change
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "preferredFontSizeChanged:",
+            name: UIContentSizeCategoryDidChangeNotification,
+            object: nil)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    // remove observer of notification
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
-    // MARK: - Table view data source
-
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
-        return 0
+    // handle font size change
+    func preferredFontSizeChanged(notification: NSNotification) {
+        updateUI()
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
-        return 0
+    @IBAction func hideTopChanged(sender: UISwitch) {
+        setting.hideAlwaysOnTopThread = sender.on
     }
 
-    /*
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
-
-        // Configure the cell...
-
-        return cell
+    @IBAction func showSignatureChanged(sender: UISwitch) {
+        setting.showSignature = sender.on
     }
-    */
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
+    @IBAction func backgroundTaskChanged(sender: UISwitch) {
+        setting.backgroundTaskEnabled = sender.on
+        if sender.on {
+            UIApplication.sharedApplication().setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+        } else {
+            UIApplication.sharedApplication().setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
+        }
     }
-    */
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    func updateUI() {
+        // update label fonts
+        hideTopLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+        showSignatureLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+        backgroundTaskLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+        aboutZSMLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+
+        // update switch states
+        hideTopSwitch.on = setting.hideAlwaysOnTopThread
+        showSignatureSwitch.on = setting.showSignature
+        backgroundTaskSwitch.on = setting.backgroundTaskEnabled
     }
-    */
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        // solve the bug when swipe back, tableview cell doesn't deselect
+        if let selectedRow = tableView.indexPathForSelectedRow() {
+            tableView.deselectRowAtIndexPath(selectedRow, animated: true)
+        }
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

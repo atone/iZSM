@@ -109,6 +109,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     }
 
     override func viewDidLoad() {
+        UIApplication.sharedApplication().setStatusBarStyle(.Default, animated: true)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillChangeFrameNotification, object: nil)
         if replyMode {
             handleReplyMode()
@@ -156,6 +157,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+        UIApplication.sharedApplication().setStatusBarStyle(.LightContent, animated: true)
     }
 
     func keyboardWillShow(notification: NSNotification) {

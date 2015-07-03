@@ -12,23 +12,35 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
     let setting = AppSetting.sharedSetting()
+    let tintColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         window?.backgroundColor = UIColor.whiteColor()
+        window?.tintColor = tintColor
 
+        // set the appearance of the navigation bar
+        UINavigationBar.appearance().barTintColor = tintColor
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
+
+        // set the appearance of the status bar
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
+
+        // set the background fetch mode
         if setting.backgroundTaskEnabled {
             application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         } else {
             application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
         }
 
+        // register notification
         let type: UIUserNotificationType = .Alert | .Badge | .Sound
         let mySettings = UIUserNotificationSettings(forTypes: type, categories: nil)
         application.registerUserNotificationSettings(mySettings)
 
+        // if open from notification, then handle it
         if let localNotif = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as? UILocalNotification {
             navigateToNewMessagePageWithNotification(localNotif)
         }

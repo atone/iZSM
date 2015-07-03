@@ -15,17 +15,11 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
         static let ArticleContentCellIdentifier = "ArticleContentCell"
     }
 
-    private var articles: [[RichArticle]] = [[RichArticle]]() {
-        didSet { tableView?.reloadData() }
-    }
-
+    private var articles = [[RichArticle]]()
     private var smarticles = [[SMArticle]]()
 
     private let api = SmthAPI()
     private let setting = AppSetting.sharedSetting()
-
-    private var blankWidth: CGFloat = 4
-    private var picNumPerLine: CGFloat = 3
 
     private var currentArticleNumber = 0
     private var totalArticleNumber: Int = 0
@@ -121,6 +115,7 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
                         self.smarticles.append(smArticles)
                         self.currentArticleNumber += richArticles.count
                         self.totalArticleNumber = totalArticleNumber
+                        self.tableView?.reloadData()
                     }
                     self.api.displayErrorIfNeeded()
                 }
@@ -156,6 +151,7 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
                         self.smarticles.append(smArticles)
                         self.currentArticleNumber += richArticles.count
                         self.totalArticleNumber = totalArticleNumber
+                        self.tableView.reloadData()
                     }
                     self.api.displayErrorIfNeeded()
                     self.tableView.footer.endRefreshing()
@@ -194,7 +190,7 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
         if setting.sortMode == .LaterPostFirst && floor != 0 {
             floor = totalArticleNumber - floor
         }
-        cell.setData(floor: floor, boardID: boardID!, article: article, smarticle: smarticle, controller: self, delegate: self, blankWidth: blankWidth, picNumPerLine: picNumPerLine)
+        cell.setData(floor: floor, boardID: boardID!, article: article, smarticle: smarticle, controller: self, delegate: self)
         cell.preservesSuperviewLayoutMargins = false
     }
 
@@ -267,21 +263,13 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
 
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let article = articles[indexPath.section][indexPath.row]
-        let boundingSize = CGSizeMake(tableView.frame.width - 16, CGFloat.max)
 
-        let rect = article.body.boundingRectWithSize(boundingSize, options: .UsesLineFragmentOrigin, context: nil)
-        var imageLength: CGFloat = 0
-
-        if let atts = article.imageAtt {
-            if atts.count == 1 {
-                imageLength = tableView.frame.width
-            } else {
-                let oneImageLength = (tableView.frame.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-                imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(atts.count) / picNumPerLine) - blankWidth
+        return tableView.fd_heightForCellWithIdentifier(Static.ArticleContentCellIdentifier) { (cell) -> Void in
+            if let configureCell = cell as? ArticleContentCell {
+                configureCell.fd_enforceFrameLayout = true
+                self.configureArticleCell(configureCell, atIndexPath: indexPath)
             }
         }
-        return 52 + ceil(rect.height) + imageLength + 1
     }
 
     private func imageAttachmentsFromString(string: String) -> [ImageInfo]? {

@@ -15,9 +15,13 @@ class HotTableViewCell: UITableViewCell {
 
     var hotThread: SMHotThread? {
         didSet {
-            titleLabel?.text = hotThread!.subject + " (\(hotThread!.count))"
+            titleLabel?.text = hotThread!.subject + " [\(hotThread!.count)]"
             boardLabel?.text = hotThread!.boardID
             authorLabel?.text = hotThread!.authorID
+
+            boardLabel.textColor = UIApplication.sharedApplication().keyWindow?.tintColor
+            authorLabel.textColor = UIApplication.sharedApplication().keyWindow?.tintColor
+
 
             let descriptor = UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleSubheadline)
             titleLabel.font = UIFont.boldSystemFontOfSize(descriptor.pointSize)

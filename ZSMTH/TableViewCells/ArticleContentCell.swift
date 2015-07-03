@@ -32,6 +32,7 @@ class ArticleContentCell: UITableViewCell {
         }
         set {
             authorLabel?.text = newValue
+            authorLabel?.textColor = UIApplication.sharedApplication().keyWindow?.tintColor
         }
     }
 
@@ -88,7 +89,7 @@ class ArticleContentCell: UITableViewCell {
         return nil
     }
 
-    func setData(#floor: Int, boardID: String, article: RichArticle, smarticle: SMArticle, controller: UITableViewController?, delegate: ComposeArticleControllerDelegate, blankWidth: CGFloat, picNumPerLine: CGFloat) {
+    func setData(#floor: Int, boardID: String, article: RichArticle, smarticle: SMArticle, controller: UITableViewController?, delegate: ComposeArticleControllerDelegate) {
         author = article.author
         let floorText = floor == 0 ? "楼主" : "\(floor)楼"
         floorAndTime = "\(floorText)  \(article.time)"
@@ -100,8 +101,6 @@ class ArticleContentCell: UITableViewCell {
         self.controller = controller
         self.delegate = delegate
         self.smarticle = smarticle
-        self.blankWidth = blankWidth
-        self.picNumPerLine = picNumPerLine
     }
 
     func singleTapOnImage(recognizer: UIGestureRecognizer) {
@@ -167,7 +166,7 @@ class ArticleContentCell: UITableViewCell {
 
     private func reportJunk() {
         let api = SmthAPI()
-        let hud = MBProgressHUD.showHUDAddedTo(self.controller?.view, animated: true)
+        let hud = MBProgressHUD.showHUDAddedTo(self.controller?.navigationController?.view, animated: true)
 
         var adminID = "SYSOP"
 
@@ -191,7 +190,7 @@ class ArticleContentCell: UITableViewCell {
                 }
                 let okAction = UIAlertAction(title: "举报", style: .Default) { [unowned alert, unowned self] action in
                     if let textField = alert.textFields?.first as? UITextField {
-                        let hud = MBProgressHUD.showHUDAddedTo(self.controller?.view, animated: true)
+                        let hud = MBProgressHUD.showHUDAddedTo(self.controller?.navigationController?.view, animated: true)
                         if textField.text == nil || textField.text.isEmpty {
                             hud.mode = .Text
                             hud.labelText = "举报原因不能为空"
@@ -234,7 +233,7 @@ class ArticleContentCell: UITableViewCell {
             }
             let okAction = UIAlertAction(title: "确定", style: .Default) { [unowned alert, unowned self] action in
                 if let textField = alert.textFields?.first as? UITextField {
-                    let hud = MBProgressHUD.showHUDAddedTo(self.controller?.view, animated: true)
+                    let hud = MBProgressHUD.showHUDAddedTo(self.controller?.navigationController?.view, animated: true)
                     networkActivityIndicatorStart()
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                         if ToBoard {
@@ -280,5 +279,18 @@ class ArticleContentCell: UITableViewCell {
                 imageView.frame = CGRectMake(X, startY + offsetY, length, length)
             }
         }
+    }
+
+    override func sizeThatFits(size: CGSize) -> CGSize {
+        let boundingSize = CGSizeMake(size.width-16, size.height)
+        let rect = content!.boundingRectWithSize(boundingSize, options: .UsesLineFragmentOrigin, context: nil)
+        var imageLength: CGFloat = 0
+        if imageViews.count == 1 {
+            imageLength = size.width
+        } else if imageViews.count > 1 {
+            let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
+            imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
+        }
+        return CGSizeMake(size.width, 52 + ceil(rect.height) + imageLength)
     }
 }

@@ -111,6 +111,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     }
 
     override func viewDidLoad() {
+        UIApplication.sharedApplication().setStatusBarStyle(.Default, animated: true)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillChangeFrameNotification, object: nil)
         api.resetStatus() //发文/回复文章时，必须手动resetStatus，因为中间可能会有添加附件等操作
         if !replyByMail { //发送邮件时，不支持添加附件
@@ -207,6 +208,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+        UIApplication.sharedApplication().setStatusBarStyle(.LightContent, animated: true)
     }
 
     func keyboardWillShow(notification: NSNotification) {

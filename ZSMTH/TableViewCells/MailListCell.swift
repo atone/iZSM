@@ -34,6 +34,8 @@ class MailListCell: UITableViewCell {
                 titleLabel?.font = UIFont.boldSystemFontOfSize(descriptor.pointSize)
                 timeLabel?.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
                 authorLabel?.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
+
+                authorLabel?.textColor = UIApplication.sharedApplication().keyWindow?.tintColor
             }
         }
     }

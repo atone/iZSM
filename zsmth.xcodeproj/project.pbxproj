@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9C13B70A1AA8533900A9420D /* SmthStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C13B7091AA8533900A9420D /* SmthStructs.swift */; };
+		9C16B0CC1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C16B0CB1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m */; };
 		9C3065961AC23589004005D0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9C3065981AC23589004005D0 /* InfoPlist.strings */; };
 		9C33C8701AB8815700E5BFD2 /* FavListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C33C86F1AB8815700E5BFD2 /* FavListViewController.swift */; };
 		9C3861381AB7E9AC0062340B /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3861371AB7E9AC0062340B /* ArticleListViewController.swift */; };
@@ -15,6 +16,7 @@
 		9C3D34101ABA717900DC6E0E /* MailBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3D340F1ABA717800DC6E0E /* MailBoxViewController.swift */; };
 		9C3D34121ABA72DD00DC6E0E /* MailListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3D34111ABA72DD00DC6E0E /* MailListCell.swift */; };
 		9C3D34141ABA814A00DC6E0E /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3D34131ABA814A00DC6E0E /* UserViewController.swift */; };
+		9C40E71A1B40F16A00D0C673 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C40E7191B40F16A00D0C673 /* AboutViewController.swift */; };
 		9C5508C01AA98B32006931B6 /* HotTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5508BF1AA98B32006931B6 /* HotTableViewController.swift */; };
 		9C5582911ABD9E9400D76A6E /* ComposeEmailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5582901ABD9E9400D76A6E /* ComposeEmailController.swift */; };
 		9C6D61F11AB9B4B3005A8259 /* ComposeArticleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6D61F01AB9B4B3005A8259 /* ComposeArticleController.swift */; };
@@ -68,6 +70,7 @@
 		9CD7E41A1B3EC67200A75C62 /* UIImage+Decode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7E40F1B3EC67200A75C62 /* UIImage+Decode.swift */; };
 		9CD7E41B1B3EC67200A75C62 /* UIImageView+Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7E4101B3EC67200A75C62 /* UIImageView+Kingfisher.swift */; };
 		9CD7E41C1B3EC67200A75C62 /* WKInterfaceImage+Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7E4111B3EC67200A75C62 /* WKInterfaceImage+Kingfisher.swift */; };
+		9CF60D5F1B465FDB00EA7449 /* UIScreen+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF60D5E1B465FDB00EA7449 /* UIScreen+Additions.m */; };
 		9CF9E82F1ABAF64100A880AB /* ReminderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9E82E1ABAF64100A880AB /* ReminderViewController.swift */; };
 		9CF9E8311ABAF68300A880AB /* ReminderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9E8301ABAF68300A880AB /* ReminderListCell.swift */; };
 /* End PBXBuildFile section */
@@ -84,6 +87,8 @@
 
 /* Begin PBXFileReference section */
 		9C13B7091AA8533900A9420D /* SmthStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SmthStructs.swift; path = SmthAPI/SmthStructs.swift; sourceTree = "<group>"; };
+		9C16B0CA1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDTemplateLayoutCell.h"; sourceTree = "<group>"; };
+		9C16B0CB1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCell.m"; sourceTree = "<group>"; };
 		9C3065971AC23589004005D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9C30659E1AC23861004005D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9C33C86F1AB8815700E5BFD2 /* FavListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FavListViewController.swift; path = ViewControllers/FavListViewController.swift; sourceTree = "<group>"; };
@@ -92,6 +97,7 @@
 		9C3D340F1ABA717800DC6E0E /* MailBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MailBoxViewController.swift; path = ViewControllers/MailBoxViewController.swift; sourceTree = "<group>"; };
 		9C3D34111ABA72DD00DC6E0E /* MailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MailListCell.swift; path = TableViewCells/MailListCell.swift; sourceTree = "<group>"; };
 		9C3D34131ABA814A00DC6E0E /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserViewController.swift; path = ViewControllers/UserViewController.swift; sourceTree = "<group>"; };
+		9C40E7191B40F16A00D0C673 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AboutViewController.swift; path = ViewControllers/AboutViewController.swift; sourceTree = "<group>"; };
 		9C5508BF1AA98B32006931B6 /* HotTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HotTableViewController.swift; path = ViewControllers/HotTableViewController.swift; sourceTree = "<group>"; };
 		9C5582901ABD9E9400D76A6E /* ComposeEmailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComposeEmailController.swift; path = ViewControllers/ComposeEmailController.swift; sourceTree = "<group>"; };
 		9C6D61F01AB9B4B3005A8259 /* ComposeArticleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComposeArticleController.swift; path = ViewControllers/ComposeArticleController.swift; sourceTree = "<group>"; };
@@ -173,6 +179,8 @@
 		9CD7E4101B3EC67200A75C62 /* UIImageView+Kingfisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Kingfisher.swift"; sourceTree = "<group>"; };
 		9CD7E4111B3EC67200A75C62 /* WKInterfaceImage+Kingfisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WKInterfaceImage+Kingfisher.swift"; sourceTree = "<group>"; };
 		9CF2F5601AC24661001F9693 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9CF60D5D1B465FDB00EA7449 /* UIScreen+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+Additions.h"; sourceTree = "<group>"; };
+		9CF60D5E1B465FDB00EA7449 /* UIScreen+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+Additions.m"; sourceTree = "<group>"; };
 		9CF9E82E1ABAF64100A880AB /* ReminderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReminderViewController.swift; path = ViewControllers/ReminderViewController.swift; sourceTree = "<group>"; };
 		9CF9E8301ABAF68300A880AB /* ReminderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReminderListCell.swift; path = TableViewCells/ReminderListCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -196,6 +204,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9C16B0C91B45963E007F1F31 /* FDTemplateLayoutCell */ = {
+			isa = PBXGroup;
+			children = (
+				9C16B0CA1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.h */,
+				9C16B0CB1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m */,
+			);
+			name = FDTemplateLayoutCell;
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		9C5508C11AA98B5F006931B6 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -213,6 +231,7 @@
 				9C5582901ABD9E9400D76A6E /* ComposeEmailController.swift */,
 				9C3D34131ABA814A00DC6E0E /* UserViewController.swift */,
 				9CD7E4031B3EBF4E00A75C62 /* SettingsViewController.swift */,
+				9C40E7191B40F16A00D0C673 /* AboutViewController.swift */,
 				9C9DE9831ABBB6B8001C292F /* MailContentViewController.swift */,
 				9C72F6201ABD0ADE0098F9D8 /* ReferContentViewController.swift */,
 				9CA5B21F1B1870FB00C24777 /* EulaViewController.swift */,
@@ -266,8 +285,8 @@
 				9C5508C11AA98B5F006931B6 /* ViewControllers */,
 				9CA6E8CE1AAACC3A00B1D88F /* TableViewCells */,
 				9CA267EE1AA801CF00CE5C5D /* SmthAPI */,
-				9CA267E21AA7EFFB00CE5C5D /* Frameworks */,
 				9CA267BD1AA7EF2400CE5C5D /* Supporting Files */,
+				9CA267E21AA7EFFB00CE5C5D /* Frameworks */,
 			);
 			path = ZSMTH;
 			sourceTree = "<group>";
@@ -276,6 +295,8 @@
 			isa = PBXGroup;
 			children = (
 				9CA267BF1AA7EF2400CE5C5D /* AppDelegate.swift */,
+				9CF60D5D1B465FDB00EA7449 /* UIScreen+Additions.h */,
+				9CF60D5E1B465FDB00EA7449 /* UIScreen+Additions.m */,
 				9CA267DF1AA7EF5D00CE5C5D /* ZSMTH-Bridging-Header.h */,
 				9CF2F5601AC24661001F9693 /* Info.plist */,
 				9C3065981AC23589004005D0 /* InfoPlist.strings */,
@@ -303,6 +324,7 @@
 		9CA267E21AA7EFFB00CE5C5D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9C16B0C91B45963E007F1F31 /* FDTemplateLayoutCell */,
 				9CD7E4051B3EC67200A75C62 /* Kingfisher */,
 				9CA61B9D1AC43B2E00E595C8 /* MJRefresh */,
 				9CB4EA101AB923B5000986D0 /* MBProgressHUD */,
@@ -433,6 +455,7 @@
 				9CA267B61AA7EF2400CE5C5D /* Sources */,
 				9CA267B71AA7EF2400CE5C5D /* Frameworks */,
 				9CA267B81AA7EF2400CE5C5D /* Resources */,
+				9CE6B99C1B46467F0072FB51 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -526,11 +549,28 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		9CE6B99C1B46467F0072FB51 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "#!/bin/bash\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		9CA267B61AA7EF2400CE5C5D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CF60D5F1B465FDB00EA7449 /* UIScreen+Additions.m in Sources */,
 				9CA61BB81AC43B2E00E595C8 /* MJRefreshConst.m in Sources */,
 				9C6D61F11AB9B4B3005A8259 /* ComposeArticleController.swift in Sources */,
 				9CA61BBC1AC43B2E00E595C8 /* MJRefreshHeader.m in Sources */,
@@ -540,6 +580,7 @@
 				9CA61BC01AC43B2E00E595C8 /* UIScrollView+MJRefresh.m in Sources */,
 				9CA6E8D21AAADF7E00B1D88F /* ArticleContentViewController.swift in Sources */,
 				9CD7E4161B3EC67200A75C62 /* KingfisherOptions.swift in Sources */,
+				9C40E71A1B40F16A00D0C673 /* AboutViewController.swift in Sources */,
 				9C9E4F741AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m in Sources */,
 				9C9E4F751AB5A0D50053CBD8 /* JTSImageInfo.m in Sources */,
 				9CB4EA131AB923B5000986D0 /* MBProgressHUD.m in Sources */,
@@ -561,6 +602,7 @@
 				9CA267F01AA8021600CE5C5D /* SmthAPI.swift in Sources */,
 				9C9E4F781AB5A0D50053CBD8 /* UIApplication+JTSImageViewController.m in Sources */,
 				9CD7E41C1B3EC67200A75C62 /* WKInterfaceImage+Kingfisher.swift in Sources */,
+				9C16B0CC1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m in Sources */,
 				9C33C8701AB8815700E5BFD2 /* FavListViewController.swift in Sources */,
 				9C3D34141ABA814A00DC6E0E /* UserViewController.swift in Sources */,
 				9CA61BBF1AC43B2E00E595C8 /* UIScrollView+MJExtension.m in Sources */,

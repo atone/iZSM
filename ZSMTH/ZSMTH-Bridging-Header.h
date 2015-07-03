@@ -7,3 +7,5 @@
 #import "JTSImageViewController.h"
 #import "MBProgressHUD.h"
 #import "MJRefresh.h"
+#import "UITableView+FDTemplateLayoutCell.h"
+#import "UIScreen+Additions.h"

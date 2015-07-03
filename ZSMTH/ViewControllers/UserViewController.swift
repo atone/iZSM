@@ -89,6 +89,12 @@ class UserViewController: UITableViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+
+        // solve the bug when swipe back, tableview cell doesn't deselect
+        if let selectedRow = tableView.indexPathForSelectedRow() {
+            tableView.deselectRowAtIndexPath(selectedRow, animated: true)
+        }
+
         checkNewMailAndReferenceBackgroundMode(false, completionHandler: nil)
 
         if userInfo != nil {
@@ -186,7 +192,7 @@ class UserViewController: UITableViewController {
 
     @IBAction func logout(sender: UIButton) {
         networkActivityIndicatorStart()
-        let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+        let hud = MBProgressHUD.showHUDAddedTo(navigationController?.view, animated: true)
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             self.api.logoutBBS()
             dispatch_async(dispatch_get_main_queue()) {
@@ -263,6 +269,5 @@ class UserViewController: UITableViewController {
         referLabel?.attributedText = attrTextFromString("提到我", withNewFlag: newAtCount > 0)
         settingLabel?.attributedText = attrTextFromString("设置", withNewFlag: false)
     }
-
 
 }

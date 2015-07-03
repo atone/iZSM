@@ -44,6 +44,15 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
         threadLoaded = originalThreadLoaded!
         originalThread = nil
     }
+
+    func willDismissSearchController(searchController: UISearchController) {
+        UIApplication.sharedApplication().setStatusBarStyle(.LightContent, animated: true)
+    }
+
+    func willPresentSearchController(searchController: UISearchController) {
+        UIApplication.sharedApplication().setStatusBarStyle(.Default, animated: true)
+    }
+
     func didPresentSearchController(searchController: UISearchController) {
         searchMode = true
         tableView.header.endRefreshing()

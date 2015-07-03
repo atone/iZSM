@@ -7,13 +7,18 @@
 //
 
 import UIKit
+import RSTWebViewController
 
-class MailContentViewController: UIViewController {
+class MailContentViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var userButton: UIButton!
     @IBOutlet weak var timeLabel: UILabel!
-    @IBOutlet weak var contentTextView: UITextView!
+    @IBOutlet weak var contentTextView: UITextView! {
+        didSet {
+            contentTextView.delegate = self
+        }
+    }
 
     var mail: SMMail?
     var inbox: Bool = true
@@ -43,7 +48,8 @@ class MailContentViewController: UIViewController {
             cevc.originalEmail = mail
             cevc.replyMode = true
             cevc.modalPresentationStyle = .FormSheet
-            presentViewController(cevc, animated: true, completion: nil)
+            let navigationController = UINavigationController(rootViewController: cevc)
+            presentViewController(navigationController, animated: true, completion: nil)
 
         }
     }
@@ -90,6 +96,16 @@ class MailContentViewController: UIViewController {
         userButton?.titleLabel?.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
         timeLabel?.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
         contentTextView?.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+    }
+
+    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+        let webViewController = RSTWebViewController(URL: URL)
+        webViewController.showsDoneButton = true
+        let navigationController = UINavigationController(rootViewController: webViewController)
+        navigationController.hidesBarsOnSwipe = true
+        presentViewController(navigationController, animated: true, completion: nil)
+
+        return false
     }
 
     private func fetchData() {

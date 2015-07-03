@@ -160,7 +160,8 @@ class ArticleContentCell: UITableViewCell {
             cavc.originalArticle = self.smarticle
             cavc.replyByMail = ByMail
             cavc.modalPresentationStyle = .FormSheet
-            controller?.presentViewController(cavc, animated: true, completion: nil)
+            let navigationController = UINavigationController(rootViewController: cavc)
+            controller?.presentViewController(navigationController, animated: true, completion: nil)
         }
     }
 

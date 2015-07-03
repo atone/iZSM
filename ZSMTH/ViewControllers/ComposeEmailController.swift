@@ -31,10 +31,8 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         get { return receiverTextField?.text }
         set { receiverTextField?.text = newValue }
     }
-    
 
     
-    @IBOutlet weak var navigationBar: UINavigationBar!
     @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBOutlet weak var sendToLabel: UILabel! {
         didSet { sendToLabel?.layer.cornerRadius = 2 }
@@ -109,7 +107,6 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     }
 
     override func viewDidLoad() {
-        UIApplication.sharedApplication().setStatusBarStyle(.Default, animated: true)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillChangeFrameNotification, object: nil)
         if replyMode {
             handleReplyMode()
@@ -121,7 +118,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     }
 
     func handleReplyMode() {
-        navigationBar?.topItem?.title = "回复邮件"
+        title = "回复邮件"
         doneButton.enabled = true
         if let email = originalEmail {
             // 处理标题
@@ -157,7 +154,6 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
-        UIApplication.sharedApplication().setStatusBarStyle(.LightContent, animated: true)
     }
 
     func keyboardWillShow(notification: NSNotification) {

@@ -29,8 +29,6 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         set { contentTextView?.text = newValue }
     }
 
-    @IBOutlet weak var navigationBar: UINavigationBar!
-
     @IBOutlet weak var titleHintLabel: UILabel! {
         didSet { titleHintLabel?.layer.cornerRadius = 2 }
     }
@@ -111,12 +109,11 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     }
 
     override func viewDidLoad() {
-        UIApplication.sharedApplication().setStatusBarStyle(.Default, animated: true)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillChangeFrameNotification, object: nil)
         api.resetStatus() //发文/回复文章时，必须手动resetStatus，因为中间可能会有添加附件等操作
         if !replyByMail { //发送邮件时，不支持添加附件
             let addPhoto = UIBarButtonItem(barButtonSystemItem: .Camera, target: self, action: "addPhoto:")
-            navigationBar?.topItem?.rightBarButtonItems?.append(addPhoto)
+            navigationItem.rightBarButtonItems?.append(addPhoto)
         }
         if replyMode {
             handleReplyMode()
@@ -172,7 +169,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     }
 
     func handleReplyMode() {
-        navigationBar?.topItem?.title = replyByMail ? "私信回复" : "回复文章"
+        title = replyByMail ? "私信回复" : "回复文章"
         doneButton.enabled = true
         if let article = originalArticle {
             // 处理标题
@@ -208,7 +205,6 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
-        UIApplication.sharedApplication().setStatusBarStyle(.LightContent, animated: true)
     }
 
     func keyboardWillShow(notification: NSNotification) {

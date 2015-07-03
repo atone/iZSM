@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RSTWebViewController
 
 class AboutViewController: UITableViewController {
 
@@ -53,8 +54,14 @@ class AboutViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         switch indexPath {
         case NSIndexPath(forRow: 0, inSection: 0):
-            let urlstr = "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=979484184&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"
-            UIApplication.sharedApplication().openURL(NSURL(string: urlstr)!)
+            let urlAddress = "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=979484184&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"
+            UIApplication.sharedApplication().openURL(NSURL(string: urlAddress)!)
+        case NSIndexPath(forRow: 2, inSection: 0):
+            let urlAddress = "http://www.yunaitong.cn/blog/2015/03/24/zsmth-released/"
+            let webViewController = RSTWebViewController(address: urlAddress)
+            webViewController.showsDoneButton = true
+            let navigationController = UINavigationController(rootViewController: webViewController)
+            presentViewController(navigationController, animated: true, completion: nil)
         default:
             break
         }

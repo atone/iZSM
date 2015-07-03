@@ -40,7 +40,8 @@ class ReferContentViewController: UIViewController {
             cavc.replyMode = true
             cavc.originalArticle = article
             cavc.modalPresentationStyle = .FormSheet
-            presentViewController(cavc, animated: true, completion: nil)
+            let navigationController = UINavigationController(rootViewController: cavc)
+            presentViewController(navigationController, animated: true, completion: nil)
         }
     }
 

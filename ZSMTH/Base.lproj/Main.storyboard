@@ -690,7 +690,7 @@
                     <navigationItem key="navigationItem" id="KKP-72-Abs">
                         <barButtonItem key="rightBarButtonItem" systemItem="compose" id="x5K-wQ-juS">
                             <connections>
-                                <segue destination="B6T-k9-9TE" kind="presentation" identifier="Compose" modalPresentationStyle="formSheet" id="Dz3-yq-eNu"/>
+                                <segue destination="0wF-R1-Boa" kind="presentation" identifier="Compose" modalPresentationStyle="formSheet" id="Dz3-yq-eNu"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -700,7 +700,7 @@
             </objects>
             <point key="canvasLocation" x="2186" y="1160"/>
         </scene>
-        <!--Compose Article Controller-->
+        <!--发表文章-->
         <scene sceneID="L7X-Fc-qm1">
             <objects>
                 <viewController storyboardIdentifier="ComposeArticleController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="B6T-k9-9TE" customClass="ComposeArticleController" customModule="zsmth" customModuleProvider="target" sceneMemberID="viewController">
@@ -712,24 +712,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aCt-PW-8dv">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                                <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <items>
-                                    <navigationItem title="发表文章" id="Wg5-P2-dIG">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="fjA-rj-QBD">
-                                            <connections>
-                                                <action selector="cancel:" destination="B6T-k9-9TE" id="Igj-7g-aB1"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" enabled="NO" style="done" systemItem="done" id="pOR-h9-2Zq">
-                                            <connections>
-                                                <action selector="done:" destination="B6T-k9-9TE" id="aJI-nh-61G"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="标题" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eei-bQ-U6J">
                                 <rect key="frame" x="16" y="52" width="38" height="20"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -742,7 +724,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="添加标题" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vIB-Gz-Dwa">
-                                <rect key="frame" x="62" y="53" width="504" height="20"/>
+                                <rect key="frame" x="62" y="53" width="505" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="Doc-QB-UpP"/>
                                 </constraints>
@@ -751,7 +733,7 @@
                                 <textInputTraits key="textInputTraits" returnKeyType="next"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dAi-Ga-dfe">
-                                <rect key="frame" x="574" y="53" width="10" height="20"/>
+                                <rect key="frame" x="574.5" y="53" width="9.5" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="FuU-dM-Or7"/>
                                 </constraints>
@@ -760,19 +742,15 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C7L-Ww-iQa">
-                                <rect key="frame" x="16" y="81" width="568" height="511"/>
+                                <rect key="frame" x="16" y="81" width="568.5" height="511"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="dAi-Ga-dfe" firstAttribute="top" secondItem="aCt-PW-8dv" secondAttribute="bottom" constant="9" id="5ml-RP-byP"/>
-                            <constraint firstItem="aCt-PW-8dv" firstAttribute="leading" secondItem="1HN-fL-1Pb" secondAttribute="leading" id="86C-ot-oc0"/>
                             <constraint firstItem="dAi-Ga-dfe" firstAttribute="leading" secondItem="vIB-Gz-Dwa" secondAttribute="trailing" constant="8" symbolic="YES" id="Djt-Xm-S9P"/>
-                            <constraint firstAttribute="trailing" secondItem="aCt-PW-8dv" secondAttribute="trailing" id="N96-sf-Lwq"/>
                             <constraint firstItem="vIB-Gz-Dwa" firstAttribute="baseline" secondItem="eei-bQ-U6J" secondAttribute="baseline" id="Rrx-R5-cRf"/>
-                            <constraint firstItem="aCt-PW-8dv" firstAttribute="top" secondItem="pyG-wf-4a3" secondAttribute="bottom" id="StG-q1-cas"/>
                             <constraint firstItem="eei-bQ-U6J" firstAttribute="leading" secondItem="1HN-fL-1Pb" secondAttribute="leadingMargin" id="a8Z-dq-sbh"/>
                             <constraint firstItem="gYj-6L-Y8G" firstAttribute="top" secondItem="C7L-Ww-iQa" secondAttribute="bottom" constant="8" symbolic="YES" id="b6P-fs-UjB"/>
                             <constraint firstItem="vIB-Gz-Dwa" firstAttribute="leading" secondItem="eei-bQ-U6J" secondAttribute="trailing" constant="8" id="fa3-pA-NQi"/>
@@ -780,23 +758,34 @@
                             <constraint firstItem="C7L-Ww-iQa" firstAttribute="top" secondItem="vIB-Gz-Dwa" secondAttribute="bottom" constant="8" symbolic="YES" id="gz9-Ow-az6"/>
                             <constraint firstItem="dAi-Ga-dfe" firstAttribute="trailing" secondItem="1HN-fL-1Pb" secondAttribute="trailingMargin" id="iZT-So-hcX"/>
                             <constraint firstItem="dAi-Ga-dfe" firstAttribute="trailing" secondItem="C7L-Ww-iQa" secondAttribute="trailing" id="le3-Af-yzR"/>
-                            <constraint firstItem="eei-bQ-U6J" firstAttribute="top" secondItem="aCt-PW-8dv" secondAttribute="bottom" constant="8" id="o6T-Ac-4RA"/>
                             <constraint firstItem="C7L-Ww-iQa" firstAttribute="leading" secondItem="eei-bQ-U6J" secondAttribute="leading" id="pFe-Zn-MCP"/>
+                            <constraint firstItem="eei-bQ-U6J" firstAttribute="top" secondItem="pyG-wf-4a3" secondAttribute="bottom" constant="8" symbolic="YES" id="wYJ-bi-R6a"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="发表文章" id="0YB-Ew-hoR">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="fjA-rj-QBD">
+                            <connections>
+                                <action selector="cancel:" destination="B6T-k9-9TE" id="Igj-7g-aB1"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" style="done" systemItem="done" id="pOR-h9-2Zq">
+                            <connections>
+                                <action selector="done:" destination="B6T-k9-9TE" id="aJI-nh-61G"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="contentTextView" destination="C7L-Ww-iQa" id="al5-Fh-cn0"/>
                         <outlet property="countLabel" destination="dAi-Ga-dfe" id="eo7-uZ-WeU"/>
                         <outlet property="doneButton" destination="pOR-h9-2Zq" id="nHB-Ur-EzI"/>
                         <outlet property="keyboardHeight" destination="b6P-fs-UjB" id="zG1-wc-s1i"/>
-                        <outlet property="navigationBar" destination="aCt-PW-8dv" id="A0x-MF-Gmj"/>
                         <outlet property="titleHintLabel" destination="eei-bQ-U6J" id="qFs-jC-U7Q"/>
                         <outlet property="titleTextField" destination="vIB-Gz-Dwa" id="FUV-pN-FFB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7bP-xT-sQk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2186" y="1954"/>
+            <point key="canvasLocation" x="2998" y="1954"/>
         </scene>
         <!--Mail Box View Controller-->
         <scene sceneID="ZOd-Nl-Pbp">
@@ -879,7 +868,7 @@
                         </segmentedControl>
                         <barButtonItem key="rightBarButtonItem" systemItem="compose" id="qad-uQ-3o8">
                             <connections>
-                                <segue destination="6RR-Io-Du8" kind="presentation" identifier="Compose" modalPresentationStyle="formSheet" id="4o0-7b-Zq8"/>
+                                <segue destination="17W-0c-xCf" kind="presentation" identifier="Compose" modalPresentationStyle="formSheet" id="4o0-7b-Zq8"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -1446,7 +1435,7 @@
             </objects>
             <point key="canvasLocation" x="3007" y="2770"/>
         </scene>
-        <!--Compose Email Controller-->
+        <!--写邮件-->
         <scene sceneID="4fa-1w-64M">
             <objects>
                 <viewController storyboardIdentifier="ComposeEmailController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="6RR-Io-Du8" customClass="ComposeEmailController" customModule="zsmth" customModuleProvider="target" sceneMemberID="viewController">
@@ -1458,24 +1447,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8eU-qC-UKd">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                                <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <items>
-                                    <navigationItem title="写邮件" id="Zxs-MI-1za">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="bj3-hZ-rvh">
-                                            <connections>
-                                                <action selector="cancel:" destination="6RR-Io-Du8" id="P1O-1P-MTf"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" enabled="NO" style="done" systemItem="done" id="coH-fD-Dvf">
-                                            <connections>
-                                                <action selector="done:" destination="6RR-Io-Du8" id="dh7-Sr-pyX"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="标题" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gpp-hw-asR">
                                 <rect key="frame" x="16" y="80" width="38" height="20"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1488,7 +1459,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="添加标题" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KIE-bO-qDP">
-                                <rect key="frame" x="62" y="81" width="504" height="20"/>
+                                <rect key="frame" x="62" y="81" width="504.5" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="NGP-nu-pea"/>
                                 </constraints>
@@ -1506,7 +1477,7 @@
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qk7-Cj-u1y">
-                                <rect key="frame" x="574" y="81" width="10" height="20"/>
+                                <rect key="frame" x="574.5" y="81" width="9.5" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="uO3-KM-gom"/>
                                 </constraints>
@@ -1536,30 +1507,38 @@
                             <constraint firstItem="aBq-a2-x0a" firstAttribute="top" secondItem="KIE-bO-qDP" secondAttribute="bottom" constant="8" symbolic="YES" id="Gal-hu-6og"/>
                             <constraint firstItem="Qk7-Cj-u1y" firstAttribute="baseline" secondItem="KIE-bO-qDP" secondAttribute="baseline" id="H8O-Ku-46J"/>
                             <constraint firstItem="aBq-a2-x0a" firstAttribute="leading" secondItem="gpp-hw-asR" secondAttribute="leading" id="JqJ-JR-2Xj"/>
-                            <constraint firstItem="8eU-qC-UKd" firstAttribute="leading" secondItem="pOo-FS-zQ0" secondAttribute="leading" id="K3I-Nk-foW"/>
                             <constraint firstItem="KIE-bO-qDP" firstAttribute="baseline" secondItem="gpp-hw-asR" secondAttribute="baseline" id="KdO-O8-y79"/>
-                            <constraint firstItem="4sg-bs-Emy" firstAttribute="top" secondItem="8eU-qC-UKd" secondAttribute="bottom" constant="8" id="LOA-kd-nmf"/>
                             <constraint firstItem="4sg-bs-Emy" firstAttribute="leading" secondItem="pOo-FS-zQ0" secondAttribute="leadingMargin" id="MB5-Oj-Xxd"/>
                             <constraint firstItem="TaQ-LN-rBg" firstAttribute="leading" secondItem="4sg-bs-Emy" secondAttribute="trailing" constant="8" id="RrI-hX-1j3"/>
                             <constraint firstItem="gpp-hw-asR" firstAttribute="top" secondItem="4sg-bs-Emy" secondAttribute="bottom" constant="8" symbolic="YES" id="Tsl-Co-KVw"/>
+                            <constraint firstItem="4sg-bs-Emy" firstAttribute="top" secondItem="Sqg-Eu-0SS" secondAttribute="bottom" constant="8" symbolic="YES" id="UmZ-tw-pfb"/>
                             <constraint firstItem="Qk7-Cj-u1y" firstAttribute="leading" secondItem="KIE-bO-qDP" secondAttribute="trailing" constant="8" symbolic="YES" id="Zhv-f6-UzC"/>
                             <constraint firstItem="Qk7-Cj-u1y" firstAttribute="trailing" secondItem="pOo-FS-zQ0" secondAttribute="trailingMargin" id="aBW-TO-ecc"/>
-                            <constraint firstAttribute="trailing" secondItem="8eU-qC-UKd" secondAttribute="trailing" id="bEQ-x0-Du7"/>
                             <constraint firstItem="KIE-bO-qDP" firstAttribute="leading" secondItem="gpp-hw-asR" secondAttribute="trailing" constant="8" id="fh5-F5-NcT"/>
                             <constraint firstItem="Qk7-Cj-u1y" firstAttribute="trailing" secondItem="aBq-a2-x0a" secondAttribute="trailing" id="hE4-t2-Cdl"/>
-                            <constraint firstItem="8eU-qC-UKd" firstAttribute="top" secondItem="Sqg-Eu-0SS" secondAttribute="bottom" id="iuG-2I-6th"/>
                             <constraint firstAttribute="trailingMargin" secondItem="TaQ-LN-rBg" secondAttribute="trailing" id="kXu-ea-FJI"/>
                             <constraint firstItem="4sg-bs-Emy" firstAttribute="baseline" secondItem="TaQ-LN-rBg" secondAttribute="baseline" id="o8S-XF-Db1"/>
                             <constraint firstItem="KUS-BL-tlx" firstAttribute="top" secondItem="aBq-a2-x0a" secondAttribute="bottom" constant="8" symbolic="YES" id="qIj-rv-EzC"/>
                             <constraint firstItem="gpp-hw-asR" firstAttribute="leading" secondItem="pOo-FS-zQ0" secondAttribute="leadingMargin" id="v0c-Fc-ER1"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="写邮件" id="78T-lU-m2Z">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="bj3-hZ-rvh">
+                            <connections>
+                                <action selector="cancel:" destination="6RR-Io-Du8" id="P1O-1P-MTf"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" style="done" systemItem="done" id="coH-fD-Dvf">
+                            <connections>
+                                <action selector="done:" destination="6RR-Io-Du8" id="dh7-Sr-pyX"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="contentTextView" destination="aBq-a2-x0a" id="dHw-dF-9dW"/>
                         <outlet property="countLabel" destination="Qk7-Cj-u1y" id="hbj-10-Liq"/>
                         <outlet property="doneButton" destination="coH-fD-Dvf" id="rs1-iA-kVd"/>
                         <outlet property="keyboardHeight" destination="qIj-rv-EzC" id="Hqk-3e-75m"/>
-                        <outlet property="navigationBar" destination="8eU-qC-UKd" id="Fbq-F0-2oG"/>
                         <outlet property="receiverTextField" destination="TaQ-LN-rBg" id="aJY-eW-XdH"/>
                         <outlet property="sendToLabel" destination="4sg-bs-Emy" id="ncj-ze-BpY"/>
                         <outlet property="titleLabel" destination="gpp-hw-asR" id="2vQ-YO-EMA"/>
@@ -1568,7 +1547,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o0o-oe-f01" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3007" y="3604"/>
+            <point key="canvasLocation" x="3819" y="3604"/>
         </scene>
         <!--About View Controller-->
         <scene sceneID="MbU-qh-5dh">
@@ -1680,6 +1659,42 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1IA-Gz-qOF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2223" y="4375"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="OAv-HQ-4SC">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0wF-R1-Boa" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3b2-Fc-t8K">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="B6T-k9-9TE" kind="relationship" relationship="rootViewController" id="vSF-ZT-XtZ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kOH-Gi-ZW9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2186" y="1954"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Vdw-iK-H3R">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="17W-0c-xCf" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6it-uG-5kE">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="6RR-Io-Du8" kind="relationship" relationship="rootViewController" id="ZKm-a2-1ps"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oQX-6g-24s" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3007" y="3604"/>
         </scene>
     </scenes>
     <resources>

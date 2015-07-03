@@ -19,7 +19,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>70</string>
+	<string>109</string>
 	<key>LSHasLocalizedDisplayName</key>
 	<true/>
 	<key>LSRequiresIPhoneOS</key>
@@ -50,7 +50,25 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>org.appextension.fill-webview-action</string>
+				<string>public.url</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>RSTWebViewController URL</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.rileytestut.RSTWebViewController.url</string>
+		</dict>
+		<dict>
+			<key>UTTypeDescription</key>
+			<string>1Password Fill Webview Extension</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.appextension.fill-webview-action</string>
+		</dict>
+	</array>
 </dict>
 </plist>

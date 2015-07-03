@@ -41,6 +41,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         tableView.header.hidden = true
         originalBoards = boards
         boards = [SMBoard]()
+        searchController.searchBar.becomeFirstResponder()
     }
 
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {

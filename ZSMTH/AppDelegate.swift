@@ -21,12 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.tintColor = tintColor
 
         // set the appearance of the navigation bar
+        UINavigationBar.appearance().barStyle = .Black
         UINavigationBar.appearance().barTintColor = tintColor
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-
-        // set the appearance of the status bar
-        UIApplication.sharedApplication().statusBarStyle = .LightContent
 
         // set the background fetch mode
         if setting.backgroundTaskEnabled {

@@ -60,7 +60,7 @@ class AboutViewController: UITableViewController {
             let urlAddress = "http://www.yunaitong.cn/blog/2015/03/24/zsmth-released/"
             let webViewController = RSTWebViewController(address: urlAddress)
             webViewController.showsDoneButton = true
-            let navigationController = UINavigationController(rootViewController: webViewController)
+            let navigationController = NYNavigationController(rootViewController: webViewController)
             presentViewController(navigationController, animated: true, completion: nil)
         default:
             break

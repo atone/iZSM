@@ -7,13 +7,18 @@
 //
 
 import UIKit
+import RSTWebViewController
 
-class ReferContentViewController: UIViewController {
+class ReferContentViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var userButton: UIButton!
     @IBOutlet weak var timeLabel: UILabel!
-    @IBOutlet weak var contentTextView: UITextView!
+    @IBOutlet weak var contentTextView: UITextView! {
+        didSet {
+            contentTextView.delegate = self
+        }
+    }
     
     var reference: SMReference?
     var replyMe: Bool = true
@@ -60,6 +65,15 @@ class ReferContentViewController: UIViewController {
             acvc.hidesBottomBarWhenPushed = true
             self.showViewController(acvc, sender: sender)
         }
+    }
+
+    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+        let webViewController = RSTWebViewController(URL: URL)
+        webViewController.showsDoneButton = true
+        let navigationController = NYNavigationController(rootViewController: webViewController)
+        presentViewController(navigationController, animated: true, completion: nil)
+
+        return false
     }
 
     private func fetchData() {

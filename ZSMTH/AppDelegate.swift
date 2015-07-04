@@ -20,6 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.backgroundColor = UIColor.whiteColor()
         window?.tintColor = tintColor
 
+        // set the appearance of the switch
+        UISwitch.appearance().onTintColor = tintColor
+
         // set the appearance of the navigation bar
         UINavigationBar.appearance().barStyle = .Black
         UINavigationBar.appearance().barTintColor = tintColor
@@ -143,19 +146,39 @@ func printLog<T>(message: T,
 }
 
 extension NSDate {
+    
+    var relativeDateString: String {
 
-    func beginningOfDay() -> NSDate {
-        var calendar = NSCalendar.currentCalendar()
-        var components = calendar.components(.CalendarUnitYear | .CalendarUnitMonth | .CalendarUnitDay, fromDate: self)
-        return calendar.dateFromComponents(components)!
-    }
+        var timeInterval = Int(self.timeIntervalSinceNow)
+        if timeInterval >= 0 {
+            return "现在"
+        }
 
-    func endOfDay() -> NSDate {
-        var components = NSDateComponents()
-        components.day = 1
-        var date = NSCalendar.currentCalendar().dateByAddingComponents(components, toDate: self.beginningOfDay(), options: .allZeros)!
-        date = date.dateByAddingTimeInterval(-1)
-        return date
+        timeInterval = -timeInterval
+        if timeInterval < 60 {
+            return "\(timeInterval)秒前"
+        }
+        timeInterval /= 60
+        if timeInterval < 60 {
+            return "\(timeInterval)分钟前"
+        }
+        timeInterval /= 60
+        if timeInterval < 24 {
+            return "\(timeInterval)小时前"
+        }
+        timeInterval /= 24
+        if timeInterval < 7 {
+            return "\(timeInterval)天前"
+        }
+        if timeInterval < 30 {
+            return "\(timeInterval/7)周前"
+        }
+        if timeInterval < 365 {
+            return "\(timeInterval/30)个月前"
+        }
+        timeInterval /= 365
+        return "\(timeInterval)年前"
+
     }
 }
 

@@ -101,8 +101,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
         let webViewController = RSTWebViewController(URL: URL)
         webViewController.showsDoneButton = true
-        let navigationController = UINavigationController(rootViewController: webViewController)
-        navigationController.hidesBarsOnSwipe = true
+        let navigationController = NYNavigationController(rootViewController: webViewController)
         presentViewController(navigationController, animated: true, completion: nil)
 
         return false

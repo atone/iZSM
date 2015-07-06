@@ -59,13 +59,9 @@
     
     if (data) {
         NSString *referenceURL = (canonicalURL.absoluteString.length) ? canonicalURL.absoluteString : imageURL.absoluteString;
-        if ([JTSAnimatedGIFUtility imageURLIsAGIF:referenceURL]) {
+        if ([JTSAnimatedGIFUtility imageURLIsAGIF:referenceURL] || [JTSAnimatedGIFUtility imageDataIsAGIF:data]) {
             image = [JTSAnimatedGIFUtility animatedImageWithAnimatedGIFData:data];
         }
-        else if ([JTSAnimatedGIFUtility imageDataIsAGIF:data]) {
-            image = [JTSAnimatedGIFUtility animatedImageWithAnimatedGIFData:data];
-        }
-
         if (image == nil) {
             image = [[UIImage alloc] initWithData:data];
         }
@@ -73,8 +69,6 @@
     
     return image;
 }
-
-
 
 @end
 

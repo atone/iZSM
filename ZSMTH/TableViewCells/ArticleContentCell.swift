@@ -322,6 +322,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
                 let alert = UIAlertController(title: "举报不良内容", message: "您将要向 \(self.article!.boardID) 版版主 \(adminID) 举报用户 \(self.article!.authorID) 在帖子【\(self.article!.subject)】中发表的不良内容。请您输入举报原因：", preferredStyle: .Alert)
                 alert.addTextFieldWithConfigurationHandler { textField in
                     textField.placeholder = "如垃圾广告、色情内容、人身攻击等"
+                    textField.returnKeyType = .Done
                 }
                 let okAction = UIAlertAction(title: "举报", style: .Default) { [unowned alert, unowned self] action in
                     if let textField = alert.textFields?.first as? UITextField {
@@ -364,7 +365,10 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
             let api = SmthAPI()
             let alert = UIAlertController(title: (ToBoard ? "转寄到版面":"转寄给用户"), message: nil, preferredStyle: .Alert)
             alert.addTextFieldWithConfigurationHandler{ textField in
-                textField.placeholder = ToBoard ? "版面ID":"收件人，不填默认寄给自己"
+                textField.placeholder = ToBoard ? "版面ID" : "收件人，不填默认寄给自己"
+                textField.keyboardType = ToBoard ? UIKeyboardType.ASCIICapable : UIKeyboardType.EmailAddress
+                textField.autocorrectionType = .No
+                textField.returnKeyType = .Send
             }
             let okAction = UIAlertAction(title: "确定", style: .Default) { [unowned alert, unowned self] action in
                 if let textField = alert.textFields?.first as? UITextField {

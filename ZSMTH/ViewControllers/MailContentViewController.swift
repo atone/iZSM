@@ -59,6 +59,9 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
             let alert = UIAlertController(title: "转寄信件", message: nil, preferredStyle: .Alert)
             alert.addTextFieldWithConfigurationHandler{ textField in
                 textField.placeholder = "收件人"
+                textField.autocorrectionType = .No
+                textField.keyboardType = .ASCIICapable
+                textField.returnKeyType = .Send
             }
             let okAction = UIAlertAction(title: "确定", style: .Default) { [unowned alert] action in
                 if let textField = alert.textFields?.first as? UITextField {

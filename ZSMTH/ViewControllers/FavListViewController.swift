@@ -54,7 +54,11 @@ class FavListViewController: BaseTableViewController {
         }
         alert.addAction(okAction)
         alert.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil))
-        alert.addTextFieldWithConfigurationHandler(nil)
+        alert.addTextFieldWithConfigurationHandler { textField in
+            textField.keyboardType = .ASCIICapable
+            textField.autocorrectionType = .No
+            textField.returnKeyType = .Done
+        }
         presentViewController(alert, animated: true, completion: nil)
     }
 

@@ -144,7 +144,7 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
                         }
                         self.smarticles += smArticles
                         self.totalArticleNumber = totalArticleNumber
-                        self.tableView.insertRowsAtIndexPaths(newIndexPaths, withRowAnimation: .Automatic)
+                        self.tableView.insertRowsAtIndexPaths(newIndexPaths, withRowAnimation: .None)
                     }
                     self.api.displayErrorIfNeeded()
                     self.tableView.footer.endRefreshing()

@@ -22,7 +22,6 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
         didSet { tableView?.reloadData() }
     }
 
-
     var originalThreadLoaded: Int? = nil
     var originalThread: [[SMThread]]?
     var searchMode = false

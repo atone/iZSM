@@ -138,9 +138,13 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
                 dispatch_async(dispatch_get_main_queue()) {
                     networkActivityIndicatorStop()
                     if let smArticles = smArticles {
+                        let newIndexs = self.smarticles.count ..< self.smarticles.count+smArticles.count
+                        let newIndexPaths = newIndexs.map { (transform: Int) -> NSIndexPath in
+                            NSIndexPath(forRow: transform, inSection: 0)
+                        }
                         self.smarticles += smArticles
                         self.totalArticleNumber = totalArticleNumber
-                        self.tableView.reloadData()
+                        self.tableView.insertRowsAtIndexPaths(newIndexPaths, withRowAnimation: .Automatic)
                     }
                     self.api.displayErrorIfNeeded()
                     self.tableView.footer.endRefreshing()

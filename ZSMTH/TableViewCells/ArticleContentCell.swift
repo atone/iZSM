@@ -73,7 +73,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         contentLabel.delegate = self
         contentLabel.verticalAlignment = .Top
         contentLabel.linkAttributes = [NSForegroundColorAttributeName:tintColor]
-        contentLabel.activeLinkAttributes = [NSForegroundColorAttributeName:UIColor.lightGrayColor()]
+        contentLabel.activeLinkAttributes = [NSForegroundColorAttributeName:tintColor.colorWithAlphaComponent(0.6)]
         self.contentView.addSubview(contentLabel)
     }
 

@@ -10,7 +10,6 @@
 		9C04C0831B47C99E00C4C2F8 /* ArticleContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C04C0821B47C99E00C4C2F8 /* ArticleContentCell.swift */; };
 		9C04C0871B47E84F00C4C2F8 /* UIView+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C04C0861B47E84F00C4C2F8 /* UIView+Additions.m */; };
 		9C13B70A1AA8533900A9420D /* SmthStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C13B7091AA8533900A9420D /* SmthStructs.swift */; };
-		9C16B0CC1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C16B0CB1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m */; };
 		9C3065961AC23589004005D0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9C3065981AC23589004005D0 /* InfoPlist.strings */; };
 		9C33C8701AB8815700E5BFD2 /* FavListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C33C86F1AB8815700E5BFD2 /* FavListViewController.swift */; };
 		9C3861381AB7E9AC0062340B /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3861371AB7E9AC0062340B /* ArticleListViewController.swift */; };
@@ -25,6 +24,7 @@
 		9C6D61F11AB9B4B3005A8259 /* ComposeArticleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6D61F01AB9B4B3005A8259 /* ComposeArticleController.swift */; };
 		9C72F6211ABD0ADE0098F9D8 /* ReferContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C72F6201ABD0ADE0098F9D8 /* ReferContentViewController.swift */; };
 		9C7700C81ABFB86800F9471B /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7700C71ABFB86800F9471B /* BaseTableViewController.swift */; };
+		9C7ED8E91B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C7ED8E81B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.m */; };
 		9C9DE9841ABBB6B8001C292F /* MailContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9DE9831ABBB6B8001C292F /* MailContentViewController.swift */; };
 		9C9E4F741AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F691AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m */; };
 		9C9E4F751AB5A0D50053CBD8 /* JTSImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F6B1AB5A0D50053CBD8 /* JTSImageInfo.m */; };
@@ -130,8 +130,6 @@
 		9C04C0851B47E84F00C4C2F8 /* UIView+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Additions.h"; sourceTree = "<group>"; };
 		9C04C0861B47E84F00C4C2F8 /* UIView+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Additions.m"; sourceTree = "<group>"; };
 		9C13B7091AA8533900A9420D /* SmthStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SmthStructs.swift; path = SmthAPI/SmthStructs.swift; sourceTree = "<group>"; };
-		9C16B0CA1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDTemplateLayoutCell.h"; sourceTree = "<group>"; };
-		9C16B0CB1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCell.m"; sourceTree = "<group>"; };
 		9C3065971AC23589004005D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9C30659E1AC23861004005D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9C33C86F1AB8815700E5BFD2 /* FavListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FavListViewController.swift; path = ViewControllers/FavListViewController.swift; sourceTree = "<group>"; };
@@ -148,6 +146,8 @@
 		9C6D61F01AB9B4B3005A8259 /* ComposeArticleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComposeArticleController.swift; path = ViewControllers/ComposeArticleController.swift; sourceTree = "<group>"; };
 		9C72F6201ABD0ADE0098F9D8 /* ReferContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReferContentViewController.swift; path = ViewControllers/ReferContentViewController.swift; sourceTree = "<group>"; };
 		9C7700C71ABFB86800F9471B /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewController.swift; path = ViewControllers/BaseTableViewController.swift; sourceTree = "<group>"; };
+		9C7ED8E71B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDTemplateLayoutCell.h"; sourceTree = "<group>"; };
+		9C7ED8E81B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCell.m"; sourceTree = "<group>"; };
 		9C9DE9831ABBB6B8001C292F /* MailContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MailContentViewController.swift; path = ViewControllers/MailContentViewController.swift; sourceTree = "<group>"; };
 		9C9E4F681AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSAnimatedGIFUtility.h; sourceTree = "<group>"; };
 		9C9E4F691AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSAnimatedGIFUtility.m; sourceTree = "<group>"; };
@@ -251,16 +251,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9C16B0C91B45963E007F1F31 /* FDTemplateLayoutCell */ = {
-			isa = PBXGroup;
-			children = (
-				9C16B0CA1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.h */,
-				9C16B0CB1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m */,
-			);
-			name = FDTemplateLayoutCell;
-			path = Classes;
-			sourceTree = "<group>";
-		};
 		9C3BC2F41B49AC140027D9E2 /* TTTAttributedLabel */ = {
 			isa = PBXGroup;
 			children = (
@@ -294,6 +284,24 @@
 				9CEDC66E1B46DAC200D79064 /* NYNavigationController.swift */,
 			);
 			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		9C7ED8E61B4A6BD8000499F0 /* FDTemplateLayoutCell */ = {
+			isa = PBXGroup;
+			children = (
+				9C7ED8E71B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.h */,
+				9C7ED8E81B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.m */,
+			);
+			name = FDTemplateLayoutCell;
+			path = "Kingfisher/UITableView+FDTemplateLayoutCell";
+			sourceTree = "<group>";
+		};
+		9C7ED8EA1B4A6C16000499F0 /* RSTWebViewController */ = {
+			isa = PBXGroup;
+			children = (
+				9CEDC6311B4695D000D79064 /* RSTWebViewController.xcodeproj */,
+			);
+			name = RSTWebViewController;
 			sourceTree = "<group>";
 		};
 		9C9E4F671AB5A0D50053CBD8 /* JTSImageViewController */ = {
@@ -382,12 +390,12 @@
 		9CA267E21AA7EFFB00CE5C5D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9CEDC6311B4695D000D79064 /* RSTWebViewController.xcodeproj */,
-				9C3BC2F41B49AC140027D9E2 /* TTTAttributedLabel */,
-				9C16B0C91B45963E007F1F31 /* FDTemplateLayoutCell */,
 				9CD7E4051B3EC67200A75C62 /* Kingfisher */,
 				9CA61B9D1AC43B2E00E595C8 /* MJRefresh */,
 				9CB4EA101AB923B5000986D0 /* MBProgressHUD */,
+				9C3BC2F41B49AC140027D9E2 /* TTTAttributedLabel */,
+				9C7ED8E61B4A6BD8000499F0 /* FDTemplateLayoutCell */,
+				9C7ED8EA1B4A6C16000499F0 /* RSTWebViewController */,
 				9C9E4F671AB5A0D50053CBD8 /* JTSImageViewController */,
 				9CA267E51AA7F04600CE5C5D /* libSmth */,
 				9CA267E31AA7EFFB00CE5C5D /* libSMTH_0.2.3.a */,
@@ -691,7 +699,6 @@
 				9CA267F01AA8021600CE5C5D /* SmthAPI.swift in Sources */,
 				9C9E4F781AB5A0D50053CBD8 /* UIApplication+JTSImageViewController.m in Sources */,
 				9CD7E41C1B3EC67200A75C62 /* WKInterfaceImage+Kingfisher.swift in Sources */,
-				9C16B0CC1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m in Sources */,
 				9C33C8701AB8815700E5BFD2 /* FavListViewController.swift in Sources */,
 				9C3D34141ABA814A00DC6E0E /* UserViewController.swift in Sources */,
 				9CA61BBF1AC43B2E00E595C8 /* UIScrollView+MJExtension.m in Sources */,
@@ -699,6 +706,7 @@
 				9CA61BBD1AC43B2E00E595C8 /* MJRefreshLegendFooter.m in Sources */,
 				9C04C0871B47E84F00C4C2F8 /* UIView+Additions.m in Sources */,
 				9CA267ED1AA7F04600CE5C5D /* SMTHURLConnection+Addon.m in Sources */,
+				9C7ED8E91B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.m in Sources */,
 				9C9E4F771AB5A0D50053CBD8 /* JTSSimpleImageDownloader.m in Sources */,
 				9CA61BBA1AC43B2E00E595C8 /* MJRefreshGifFooter.m in Sources */,
 				9CD7E4171B3EC67200A75C62 /* KingfisherOptionsInfo.swift in Sources */,

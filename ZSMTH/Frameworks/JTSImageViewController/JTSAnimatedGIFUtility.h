@@ -11,6 +11,7 @@
 @interface JTSAnimatedGIFUtility : NSObject
 
 + (BOOL)imageURLIsAGIF:(NSString *)imageURL;
+
 + (BOOL)imageDataIsAGIF:(NSData *)imageData;
 
 /*

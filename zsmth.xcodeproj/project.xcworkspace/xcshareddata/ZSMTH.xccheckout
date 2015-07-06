@@ -6,31 +6,35 @@
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>494212D1-CF83-479B-912B-DA9A599F72CD</string>
+	<key>IDESourceControlProjectName</key>
+	<string>zsmth</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</key>
-		<string>https://github.com/AFNetworking/AFNetworking.git</string>
+		<key>3E43C024045C086C95B3B47C0C8B8E9F693CE678</key>
+		<string>github.com:atone/iZSM.git</string>
 	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>zsmth.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</key>
-		<string>AFNetworking/</string>
+		<key>3E43C024045C086C95B3B47C0C8B8E9F693CE678</key>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/AFNetworking/AFNetworking.git</string>
+	<string>github.com:atone/iZSM.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</string>
+	<string>3E43C024045C086C95B3B47C0C8B8E9F693CE678</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</string>
+			<string>3E43C024045C086C95B3B47C0C8B8E9F693CE678</string>
 			<key>IDESourceControlWCCName</key>
-			<string>AFNetworking</string>
+			<string>ZSMTH</string>
 		</dict>
 	</array>
 </dict>

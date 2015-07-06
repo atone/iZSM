@@ -12,23 +12,35 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
     let setting = AppSetting.sharedSetting()
+    let tintColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         window?.backgroundColor = UIColor.whiteColor()
+        window?.tintColor = tintColor
 
+        // set the appearance of the switch
+        UISwitch.appearance().onTintColor = tintColor
+
+        // set the appearance of the navigation bar
+        UINavigationBar.appearance().barStyle = .Black
+        UINavigationBar.appearance().barTintColor = tintColor
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+
+        // set the background fetch mode
         if setting.backgroundTaskEnabled {
             application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         } else {
             application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
         }
 
+        // register notification
         let type: UIUserNotificationType = .Alert | .Badge | .Sound
         let mySettings = UIUserNotificationSettings(forTypes: type, categories: nil)
         application.registerUserNotificationSettings(mySettings)
 
+        // if open from notification, then handle it
         if let localNotif = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as? UILocalNotification {
             navigateToNewMessagePageWithNotification(localNotif)
         }
@@ -133,20 +145,46 @@ func printLog<T>(message: T,
     #endif
 }
 
+private let formatter = NSDateFormatter()
 extension NSDate {
+    
+    var relativeDateString: String {
 
-    func beginningOfDay() -> NSDate {
-        var calendar = NSCalendar.currentCalendar()
-        var components = calendar.components(.CalendarUnitYear | .CalendarUnitMonth | .CalendarUnitDay, fromDate: self)
-        return calendar.dateFromComponents(components)!
+        var timeInterval = Int(self.timeIntervalSinceNow)
+        if timeInterval >= 0 {
+            return "现在"
+        }
+
+        timeInterval = -timeInterval
+        if timeInterval < 60 {
+            return "\(timeInterval)秒前"
+        }
+        timeInterval /= 60
+        if timeInterval < 60 {
+            return "\(timeInterval)分钟前"
+        }
+        timeInterval /= 60
+        if timeInterval < 24 {
+            return "\(timeInterval)小时前"
+        }
+        timeInterval /= 24
+        if timeInterval < 7 {
+            return "\(timeInterval)天前"
+        }
+        if timeInterval < 30 {
+            return "\(timeInterval/7)周前"
+        }
+        if timeInterval < 365 {
+            return "\(timeInterval/30)个月前"
+        }
+        timeInterval /= 365
+        return "\(timeInterval)年前"
+
     }
 
-    func endOfDay() -> NSDate {
-        var components = NSDateComponents()
-        components.day = 1
-        var date = NSCalendar.currentCalendar().dateByAddingComponents(components, toDate: self.beginningOfDay(), options: .allZeros)!
-        date = date.dateByAddingTimeInterval(-1)
-        return date
+    var shortDateString: String {
+        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        return formatter.stringFromDate(self)
     }
 }
 

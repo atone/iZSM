@@ -30,7 +30,7 @@ class BaseTableViewController: UITableViewController, LoginViewControllerDelegat
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // set tableview self-sizing cell
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.rowHeight = UITableViewAutomaticDimension

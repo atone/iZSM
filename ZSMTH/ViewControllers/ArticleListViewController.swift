@@ -44,6 +44,7 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
         threadLoaded = originalThreadLoaded!
         originalThread = nil
     }
+
     func didPresentSearchController(searchController: UISearchController) {
         searchMode = true
         tableView.header.endRefreshing()
@@ -52,6 +53,7 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
         originalThreadLoaded = threadLoaded
         threads = [[SMThread]]()
         threadLoaded = 0
+        searchController.searchBar.becomeFirstResponder()
     }
 
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
@@ -245,7 +247,11 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
                 }
             }
         } else if segue.identifier == Static.ComposeSegueIdentifier {
-            if let cavc = segue.destinationViewController as? ComposeArticleController {
+            var dvc = segue.destinationViewController as? UIViewController
+            if let nvc = dvc as? UINavigationController {
+                dvc = nvc.visibleViewController
+            }
+            if let cavc = dvc as? ComposeArticleController {
                 cavc.boardID = boardID
                 cavc.delegate = self
             }

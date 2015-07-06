@@ -8,8 +8,6 @@
 
 import UIKit
 
-private var formatter = NSDateFormatter()
-
 class MailListCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
@@ -22,7 +20,7 @@ class MailListCell: UITableViewCell {
             if let mail = self.mail {
                 titleLabel?.text = mail.subject
                 authorLabel?.text = mail.authorID
-                timeLabel?.text = stringFromDate(mail.time)
+                timeLabel?.text = mail.time.relativeDateString
 
                 if mail.flags.hasPrefix("N") {
                     unreadLabel?.hidden = false
@@ -34,41 +32,10 @@ class MailListCell: UITableViewCell {
                 titleLabel?.font = UIFont.boldSystemFontOfSize(descriptor.pointSize)
                 timeLabel?.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
                 authorLabel?.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
+
+                authorLabel?.textColor = UIApplication.sharedApplication().keyWindow?.tintColor
             }
         }
-    }
-
-
-    private func stringFromDate(date: NSDate) -> String {
-        var timeInterval = Int(date.timeIntervalSinceNow)
-        if timeInterval >= 0 {
-            return "现在"
-        }
-
-        timeInterval = -timeInterval
-        if timeInterval < 60 {
-            return "\(timeInterval)秒前"
-        }
-        timeInterval /= 60
-        if timeInterval < 60 {
-            return "\(timeInterval)分钟前"
-        }
-        timeInterval /= 60
-        if timeInterval < 24 {
-            return "\(timeInterval)小时前"
-        }
-        timeInterval /= 24
-        if timeInterval < 7 {
-            return "\(timeInterval)天前"
-        }
-        if timeInterval < 30 {
-            return "\(timeInterval/7)周前"
-        }
-        if timeInterval < 365 {
-            return "\(timeInterval/30)个月前"
-        }
-        timeInterval /= 365
-        return "\(timeInterval)年前"
     }
 
 }

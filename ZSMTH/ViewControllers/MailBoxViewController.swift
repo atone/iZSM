@@ -155,10 +155,17 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
                 readMail.flags = "  "
                 mails[indexPath.section][indexPath.row] = readMail
             }
-        } else if let cec = segue.destinationViewController as? ComposeEmailController {
-            if !inbox {
-                cec.delegate = self
+        } else {
+            var dvc = segue.destinationViewController as? UIViewController
+            if let nvc = dvc as? UINavigationController {
+                dvc = nvc.visibleViewController
             }
+            if let cec = dvc as? ComposeEmailController {
+                if !inbox {
+                    cec.delegate = self
+                }
+            }
+
         }
     }
 

@@ -8,13 +8,12 @@
 
 import UIKit
 
-private var formatter = NSDateFormatter()
-
 class ArticleListCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var replyLabel: UILabel!
     @IBOutlet weak var unreadLabel: UILabel!
 
     var thread: SMThread? {
@@ -27,7 +26,8 @@ class ArticleListCell: UITableViewCell {
                     titleLabel?.textColor = UIColor.blackColor()
                 }
                 authorLabel?.text = thread.authorID
-                timeLabel?.text =  "\(stringFromDate(thread.lastReplyTime))  \(thread.count-1)💬"
+                timeLabel?.text = thread.lastReplyTime.relativeDateString
+                replyLabel?.text = "\(thread.count-1)💬"
                 if thread.flags.hasPrefix("*") {
                     unreadLabel?.hidden = false
                 } else {
@@ -37,7 +37,11 @@ class ArticleListCell: UITableViewCell {
                 let descriptor = UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleSubheadline)
                 titleLabel.font = UIFont.boldSystemFontOfSize(descriptor.pointSize)
                 timeLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
+                replyLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
                 authorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
+
+                authorLabel.textColor = UIApplication.sharedApplication().keyWindow?.tintColor
+                unreadLabel.textColor = UIApplication.sharedApplication().keyWindow?.tintColor
             }
         }
     }
@@ -61,21 +65,6 @@ class ArticleListCell: UITableViewCell {
         }
         return false
     }
-
-    private func stringFromDate(date: NSDate) -> String {
-        if date.compare(NSDate().beginningOfDay()) == .OrderedDescending {
-            formatter.timeStyle = .ShortStyle
-            formatter.dateStyle = .NoStyle
-            return formatter.stringFromDate(date)
-        } else {
-            formatter.doesRelativeDateFormatting = true
-            formatter.timeStyle = .NoStyle
-            formatter.dateStyle = .ShortStyle
-            return formatter.stringFromDate(date)
-        }
-    }
-
-
 
 }
 

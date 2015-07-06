@@ -34,7 +34,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     override func viewDidAppear(animated: Bool) {
         if !setting.eulaAgreed {
-            if let eula = storyboard?.instantiateViewControllerWithIdentifier("EulaViewController") as? EulaViewController {
+            if let eula = storyboard?.instantiateViewControllerWithIdentifier("EulaViewController") as? UINavigationController {
                 presentViewController(eula, animated: true, completion: nil)
             }
         }

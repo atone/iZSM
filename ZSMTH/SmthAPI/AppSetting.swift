@@ -34,31 +34,17 @@ class AppSetting {
     private let defaults = NSUserDefaults.standardUserDefaults()
     private init () {
         // if some essential settings not set, then set them as default value
-        if defaults.objectForKey(Static.ClearUnreadModeKey) == nil {
-            defaults.setInteger(Int(SmthAPI.ClearUnreadMode.NotClear.rawValue), forKey: Static.ClearUnreadModeKey)
-        }
-        if defaults.objectForKey(Static.SortModeKey) == nil {
-            defaults.setInteger(Int(SmthAPI.SortMode.Normal.rawValue), forKey: Static.SortModeKey)
-        }
-        if defaults.objectForKey(Static.HideAlwaysOnTopThreadKey) == nil {
-            defaults.setBool(false, forKey: Static.HideAlwaysOnTopThreadKey)
-        }
-        if defaults.objectForKey(Static.ShowSignatureKey) == nil {
-            defaults.setBool(false, forKey: Static.ShowSignatureKey)
-        }
-        if defaults.objectForKey(Static.ArticleCountPerSectionKey) == nil {
-            defaults.setInteger(20, forKey: Static.ArticleCountPerSectionKey)
-        }
-        if defaults.objectForKey(Static.ThreadCountPerSectionKey) == nil {
-            defaults.setInteger(20, forKey: Static.ThreadCountPerSectionKey)
-        }
-        if defaults.objectForKey(Static.BackgroundTaskEnabledKey) == nil {
-            defaults.setBool(true, forKey: Static.BackgroundTaskEnabledKey)
-        }
-        if defaults.objectForKey(Static.EulaAgreedKey) == nil {
-            defaults.setBool(false, forKey: Static.EulaAgreedKey)
-        }
-        defaults.synchronize()
+        let initialSettings: [String : AnyObject] = [
+            Static.ClearUnreadModeKey : Int(SmthAPI.ClearUnreadMode.NotClear.rawValue),
+            Static.SortModeKey : Int(SmthAPI.SortMode.Normal.rawValue),
+            Static.HideAlwaysOnTopThreadKey : false,
+            Static.ShowSignatureKey : false,
+            Static.ArticleCountPerSectionKey : 20,
+            Static.ThreadCountPerSectionKey : 20,
+            Static.BackgroundTaskEnabledKey : true,
+            Static.EulaAgreedKey : false
+        ]
+        defaults.registerDefaults(initialSettings)
     }
 
     var username: String? {

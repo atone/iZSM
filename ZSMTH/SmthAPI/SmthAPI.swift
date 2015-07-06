@@ -112,6 +112,8 @@ class SmthAPI {
             for (index, result) in enumerate(results) {
                 if var article = articleFromDictionary(result) {
                     article.floor = threadRange.location + index
+                    article.boardID = boardID
+                    article.extraConfigure()
                     articleList.append(article)
                 }
             }
@@ -153,8 +155,12 @@ class SmthAPI {
     // get article in board with article id
     func getArticleInBoard(boardID: String, articleID: Int) -> SMArticle? {
         api.reset_status()
-        if let rawValue = api.net_GetArticle(boardID, articleID) as? [String:AnyObject] {
-            return articleFromDictionary(rawValue)
+        if let rawValue = api.net_GetArticle(boardID, articleID) as? [String:AnyObject],
+            var article = articleFromDictionary(rawValue)
+        {
+            article.boardID = boardID
+            article.extraConfigure()
+            return article
         }
         return nil
     }
@@ -568,7 +574,7 @@ class SmthAPI {
                     }
                 }
             }
-            return SMArticle(id: id, time: time, subject: subject, authorID: author_id, body: body, effsize: effsize, flags: flags, attachments: attachments, floor: 0)
+            return SMArticle(id: id, time: time, subject: subject, authorID: author_id, body: body, effsize: effsize, flags: flags, attachments: attachments)
         }
         return nil
     }

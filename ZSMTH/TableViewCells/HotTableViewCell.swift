@@ -19,6 +19,10 @@ class HotTableViewCell: UITableViewCell {
             boardLabel?.text = hotThread!.boardID
             authorLabel?.text = hotThread!.authorID
 
+            boardLabel.textColor = UIApplication.sharedApplication().keyWindow?.tintColor
+            authorLabel.textColor = UIApplication.sharedApplication().keyWindow?.tintColor
+
+
             let descriptor = UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleSubheadline)
             titleLabel.font = UIFont.boldSystemFontOfSize(descriptor.pointSize)
             boardLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)

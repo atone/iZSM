@@ -41,6 +41,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         tableView.header.hidden = true
         originalBoards = boards
         boards = [SMBoard]()
+        searchController.searchBar.becomeFirstResponder()
     }
 
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
@@ -85,6 +86,10 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         if boardID == 0 { //只在根目录下显示搜索
             navigationItem.rightBarButtonItem = searchButton
         }
+
+        // add long press gesture recognizer
+        let lpgr = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+        tableView.addGestureRecognizer(lpgr)
     }
 
     override func clearContent() {
@@ -196,6 +201,53 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     }
 
 
+    func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
+        if gestureRecognizer.state == .Began {
+        let point = gestureRecognizer.locationInView(tableView)
+            if let indexPath = tableView.indexPathForRowAtPoint(point) {
+                let board = boards[indexPath.row]
+                if (board.flag != -1) && (board.flag & 0x400 == 0) { //是版面
+                    let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+                    let addFavAction = UIAlertAction(title: "添加到收藏夹", style: .Default) { action in
+                        self.addFavoriteWithBoardID(board.boardID)
+                    }
+                    actionSheet.addAction(addFavAction)
+                    actionSheet.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil))
+                    let cell = tableView.cellForRowAtIndexPath(indexPath)!
+                    actionSheet.popoverPresentationController?.sourceView = cell
+                    actionSheet.popoverPresentationController?.sourceRect = cell.bounds
+                    presentViewController(actionSheet, animated: true, completion: nil)
+                }
+            }
+        }
+    }
+
+    func addFavoriteWithBoardID(boardID: String) {
+        networkActivityIndicatorStart()
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            self.api.addFavorite(boardID)
+            dispatch_async(dispatch_get_main_queue()) {
+                networkActivityIndicatorStop()
+                let hud = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
+                hud.mode = .Text
+                if self.api.errorCode == 0 {
+                    hud.labelText = "添加成功"
+                    if let nvc = (self.tabBarController?.viewControllers as? [UINavigationController])?[2],
+                        flvc = nvc.visibleViewController as? FavListViewController
+                    {
+                        flvc.clearContent()
+                    }
+                } else if self.api.errorCode == 10319 {
+                    hud.labelText = "该版面已在收藏夹中"
+                } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
+                    hud.labelText = self.api.errorDescription
+                } else {
+                    hud.labelText = "出错了"
+                }
+                hud.hide(true, afterDelay: 1)
+            }
+        }
+    }
 
 
 

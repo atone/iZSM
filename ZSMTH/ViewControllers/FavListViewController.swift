@@ -64,7 +64,7 @@ class FavListViewController: BaseTableViewController {
             self.api.addFavorite(boardID)
             dispatch_async(dispatch_get_main_queue()) {
                 networkActivityIndicatorStop()
-                let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                let hud = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
                 hud.mode = .Text
                 if self.api.errorCode == 0 {
                     hud.labelText = "添加成功"
@@ -147,7 +147,7 @@ class FavListViewController: BaseTableViewController {
                         self.favorites.removeAtIndex(indexPath.row)
                         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
                     } else {
-                        let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        let hud = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
                         hud.mode = .Text
                         hud.labelText = self.api.errorDescription
                         hud.hide(true, afterDelay: 1)

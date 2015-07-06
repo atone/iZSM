@@ -10,6 +10,10 @@ import UIKit
 
 class ComposeEmailController: UIViewController, UITextFieldDelegate {
 
+    var preTitle: String?
+    var preContent: String?
+    var preReceiver: String?
+
     var delegate: ComposeEmailControllerDelegate?
 
     var replyMode = false
@@ -31,10 +35,8 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         get { return receiverTextField?.text }
         set { receiverTextField?.text = newValue }
     }
-    
 
     
-    @IBOutlet weak var navigationBar: UINavigationBar!
     @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBOutlet weak var sendToLabel: UILabel! {
         didSet { sendToLabel?.layer.cornerRadius = 2 }
@@ -109,9 +111,19 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     }
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillChangeFrameNotification, object: nil)
         if replyMode {
             handleReplyMode()
+            contentTextView.becomeFirstResponder()
+            contentTextView.selectedRange = NSMakeRange(0, 0)
+        } else if let preTitle = preTitle, preContent = preContent, preReceiver = preReceiver {
+            emailTitle = preTitle
+            emailContent = preContent
+            emailReceiver = preReceiver
+            title = "邮件反馈"
+            doneButton.enabled = true
+            countLabel.text = "\(count(emailTitle!))"
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
         } else {
@@ -120,7 +132,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     }
 
     func handleReplyMode() {
-        navigationBar?.topItem?.title = "回复邮件"
+        title = "回复邮件"
         doneButton.enabled = true
         if let email = originalEmail {
             // 处理标题
@@ -156,6 +168,11 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        view.endEditing(true)
     }
 
     func keyboardWillShow(notification: NSNotification) {

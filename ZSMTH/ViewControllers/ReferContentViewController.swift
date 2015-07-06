@@ -7,13 +7,18 @@
 //
 
 import UIKit
+import RSTWebViewController
 
-class ReferContentViewController: UIViewController {
+class ReferContentViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var userButton: UIButton!
     @IBOutlet weak var timeLabel: UILabel!
-    @IBOutlet weak var contentTextView: UITextView!
+    @IBOutlet weak var contentTextView: UITextView! {
+        didSet {
+            contentTextView.delegate = self
+        }
+    }
     
     var reference: SMReference?
     var replyMe: Bool = true
@@ -39,8 +44,9 @@ class ReferContentViewController: UIViewController {
             cavc.boardID = reference.boardID
             cavc.replyMode = true
             cavc.originalArticle = article
-            cavc.modalPresentationStyle = .FormSheet
-            presentViewController(cavc, animated: true, completion: nil)
+            let navigationController = UINavigationController(rootViewController: cavc)
+            navigationController.modalPresentationStyle = .FormSheet
+            presentViewController(navigationController, animated: true, completion: nil)
         }
     }
 
@@ -59,6 +65,15 @@ class ReferContentViewController: UIViewController {
             acvc.hidesBottomBarWhenPushed = true
             self.showViewController(acvc, sender: sender)
         }
+    }
+
+    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+        let webViewController = RSTWebViewController(URL: URL)
+        webViewController.showsDoneButton = true
+        let navigationController = NYNavigationController(rootViewController: webViewController)
+        presentViewController(navigationController, animated: true, completion: nil)
+
+        return false
     }
 
     private func fetchData() {
@@ -88,7 +103,7 @@ class ReferContentViewController: UIViewController {
                     }
                     self.titleLabel?.text = article.subject
                     self.userButton?.setTitle(article.authorID, forState: .Normal)
-                    self.timeLabel?.text = self.stringFromDate(article.time)
+                    self.timeLabel?.text = article.time.shortDateString
                     self.contentTextView?.attributedText = self.attributedStringFromContentString(article.body)
                 } else {
                     hud.mode = .Text
@@ -124,11 +139,5 @@ class ReferContentViewController: UIViewController {
             }
         }
         return attributeText
-    }
-
-    private func stringFromDate(date: NSDate) -> String {
-        let formatter = NSDateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-        return formatter.stringFromDate(date)
     }
 }

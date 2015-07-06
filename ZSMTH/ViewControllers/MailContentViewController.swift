@@ -7,13 +7,18 @@
 //
 
 import UIKit
+import RSTWebViewController
 
-class MailContentViewController: UIViewController {
+class MailContentViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var userButton: UIButton!
     @IBOutlet weak var timeLabel: UILabel!
-    @IBOutlet weak var contentTextView: UITextView!
+    @IBOutlet weak var contentTextView: UITextView! {
+        didSet {
+            contentTextView.delegate = self
+        }
+    }
 
     var mail: SMMail?
     var inbox: Bool = true
@@ -42,8 +47,9 @@ class MailContentViewController: UIViewController {
             let cevc = storyboard?.instantiateViewControllerWithIdentifier("ComposeEmailController") as! ComposeEmailController
             cevc.originalEmail = mail
             cevc.replyMode = true
-            cevc.modalPresentationStyle = .FormSheet
-            presentViewController(cevc, animated: true, completion: nil)
+            let navigationController = UINavigationController(rootViewController: cevc)
+            navigationController.modalPresentationStyle = .FormSheet
+            presentViewController(navigationController, animated: true, completion: nil)
 
         }
     }
@@ -92,6 +98,15 @@ class MailContentViewController: UIViewController {
         contentTextView?.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
     }
 
+    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+        let webViewController = RSTWebViewController(URL: URL)
+        webViewController.showsDoneButton = true
+        let navigationController = NYNavigationController(rootViewController: webViewController)
+        presentViewController(navigationController, animated: true, completion: nil)
+
+        return false
+    }
+
     private func fetchData() {
         titleLabel?.text = nil
         userButton?.setTitle(nil, forState: .Normal)
@@ -118,7 +133,7 @@ class MailContentViewController: UIViewController {
                     }
                     self.titleLabel?.text = detailMail.subject
                     self.userButton?.setTitle(detailMail.authorID, forState: .Normal)
-                    self.timeLabel?.text = self.stringFromDate(detailMail.time)
+                    self.timeLabel?.text = detailMail.time.shortDateString
                     self.contentTextView?.attributedText = self.attributedStringFromContentString(detailMail.body)
                 }
             }
@@ -143,12 +158,6 @@ class MailContentViewController: UIViewController {
             }
         }
         return attributeText
-    }
-
-    private func stringFromDate(date: NSDate) -> String {
-        let formatter = NSDateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-        return formatter.stringFromDate(date)
     }
 
 }

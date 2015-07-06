@@ -190,7 +190,7 @@ class UserViewController: UITableViewController {
     }
 
 
-    @IBAction func logout(sender: UIButton) {
+    @IBAction func logout(segue: UIStoryboardSegue) {
         networkActivityIndicatorStart()
         let hud = MBProgressHUD.showHUDAddedTo(navigationController?.view, animated: true)
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {

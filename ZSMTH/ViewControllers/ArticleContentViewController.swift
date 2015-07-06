@@ -8,24 +8,22 @@
 
 import UIKit
 
-private let formatter = NSDateFormatter()
+
 
 class ArticleContentViewController: UITableViewController, ComposeArticleControllerDelegate {
     private struct Static {
         static let ArticleContentCellIdentifier = "ArticleContentCell"
     }
 
-    private var articles = [[RichArticle]]()
-    private var smarticles = [[SMArticle]]()
+    private var smarticles = [SMArticle]()
 
     private let api = SmthAPI()
     private let setting = AppSetting.sharedSetting()
 
-    private var currentArticleNumber = 0
     private var totalArticleNumber: Int = 0
 
     private var threadRange: NSRange {
-        return NSMakeRange(currentArticleNumber, setting.articleCountPerSection)
+        return NSMakeRange(smarticles.count, setting.articleCountPerSection)
     }
 
     var boardID: String?
@@ -35,6 +33,7 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.registerClass(ArticleContentCell.self, forCellReuseIdentifier: Static.ArticleContentCellIdentifier)
         // set extra cells hidden
         let footerView = UIView()
         footerView.backgroundColor = UIColor.clearColor()
@@ -83,7 +82,7 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
 
 
     func fetchDataDirectly() {
-        currentArticleNumber = 0
+        self.smarticles.removeAll()
         if let boardID = self.boardID, articleID = self.articleID {
             networkActivityIndicatorStart()
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
@@ -106,14 +105,7 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
                     self.tableView.header.endRefreshing()
                     self.tableView.footer.hidden = false
                     if let smArticles = smArticles {
-                        let richArticles = smArticles.map { (article) -> RichArticle in
-                            self.richArticleFromSMArticle(article)
-                        }
-                        self.articles.removeAll()
-                        self.smarticles.removeAll()
-                        self.articles.append(richArticles)
-                        self.smarticles.append(smArticles)
-                        self.currentArticleNumber += richArticles.count
+                        self.smarticles += smArticles
                         self.totalArticleNumber = totalArticleNumber
                         self.tableView?.reloadData()
                     }
@@ -146,16 +138,13 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
                 dispatch_async(dispatch_get_main_queue()) {
                     networkActivityIndicatorStop()
                     if let smArticles = smArticles {
-                        let richArticles = smArticles.map { (article) -> RichArticle in self.richArticleFromSMArticle(article) }
-                        self.articles.append(richArticles)
-                        self.smarticles.append(smArticles)
-                        self.currentArticleNumber += richArticles.count
+                        self.smarticles += smArticles
                         self.totalArticleNumber = totalArticleNumber
                         self.tableView.reloadData()
                     }
                     self.api.displayErrorIfNeeded()
                     self.tableView.footer.endRefreshing()
-                    if self.totalArticleNumber == self.currentArticleNumber {
+                    if self.totalArticleNumber == self.smarticles.count {
                         self.tableView.footer.setTitle("没有新帖子了", forState: MJRefreshFooterStateIdle)
                     } else {
                         self.tableView.footer.setTitle("", forState: MJRefreshFooterStateIdle)
@@ -169,12 +158,8 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return articles.count
-    }
-
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return articles[section].count
+        return smarticles.count
     }
 
     private func articleCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
@@ -184,86 +169,20 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
     }
 
     private func configureArticleCell(cell: ArticleContentCell, atIndexPath indexPath: NSIndexPath) {
-        let article = articles[indexPath.section][indexPath.row]
-        let smarticle = smarticles[indexPath.section][indexPath.row]
+        let smarticle = smarticles[indexPath.row]
         var floor = smarticle.floor
         if setting.sortMode == .LaterPostFirst && floor != 0 {
             floor = totalArticleNumber - floor
         }
-        cell.setData(floor: floor, boardID: boardID!, article: article, smarticle: smarticle, controller: self, delegate: self)
+        cell.setData(displayFloor: floor, smarticle: smarticle, controller: self, delegate: self)
         cell.preservesSuperviewLayoutMargins = false
-    }
-
-    private func imageAttFromArticle(article: SMArticle) -> [ImageInfo] {
-        var imageAtt = [ImageInfo]()
-
-        for attachment in article.attachments {
-            let fileName = attachment.name.lowercaseString
-            if fileName.hasSuffix(".jpg") || fileName.hasSuffix(".jpeg")
-            || fileName.hasSuffix(".gif") || fileName.hasSuffix("bmp")
-            || fileName.hasSuffix("png") {
-                let baseURLString = "http://att.newsmth.net/nForum/att/\(self.boardID!)/\(article.id)/\(attachment.pos)"
-                let thumbnailURL = NSURL(string: baseURLString + "/large")!
-                let fullImageURL = NSURL(string: baseURLString)!
-                let imageName = attachment.name
-                let imageSize = attachment.size
-                var imageInfo = ImageInfo(thumbnailURL: thumbnailURL, fullImageURL: fullImageURL, imageName: imageName, imageSize: imageSize)
-                imageAtt.append(imageInfo)
-            }
-        }
-        return imageAtt
-    }
-
-    private func attributedStringFromContentString(string: String) -> NSAttributedString {
-        var attributeText = NSMutableAttributedString()
-
-        let normal = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody),
-            NSParagraphStyleAttributeName: NSParagraphStyle.defaultParagraphStyle(),
-            NSForegroundColorAttributeName: UIColor.blackColor()]
-        let quoted = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody),
-            NSParagraphStyleAttributeName: NSParagraphStyle.defaultParagraphStyle(),
-            NSForegroundColorAttributeName: UIColor.grayColor()]
-
-        string.enumerateLines { (line, stop) -> () in
-            if line.hasPrefix(": ") {
-                attributeText.appendAttributedString(NSAttributedString(string: "\(line)\n", attributes: quoted))
-            } else {
-                attributeText.appendAttributedString(NSAttributedString(string: "\(line)\n", attributes: normal))
-            }
-        }
-        return attributeText
-    }
-
-    private func dateFormatter() -> NSDateFormatter {
-        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-        return formatter
-    }
-
-    private func richArticleFromSMArticle(article: SMArticle) -> RichArticle {
-
-        let timeText = dateFormatter().stringFromDate(article.time)
-        let attrBody = attributedStringFromContentString(article.body)
-        var imageAtt: [ImageInfo]? = [ImageInfo]()
-        if article.attachments.count > 0 {
-            imageAtt! += imageAttFromArticle(article)
-        }
-        if let imageInfos = imageAttachmentsFromString(article.body) {
-            imageAtt! += imageInfos
-        }
-        if imageAtt!.count == 0 {
-            imageAtt = nil
-        }
-
-        return RichArticle(title: article.subject, time: timeText, author: article.authorID, body: attrBody, imageAtt: imageAtt)
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         return articleCellAtIndexPath(indexPath)
     }
 
-
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-
         return tableView.fd_heightForCellWithIdentifier(Static.ArticleContentCellIdentifier) { (cell) -> Void in
             if let configureCell = cell as? ArticleContentCell {
                 configureCell.fd_enforceFrameLayout = true
@@ -271,42 +190,5 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
             }
         }
     }
-
-    private func imageAttachmentsFromString(string: String) -> [ImageInfo]? {
-        let pattern = "(?<=\\[img=).*(?=\\]\\[/img\\])"
-        let regularExpression = NSRegularExpression(pattern: pattern, options: .CaseInsensitive, error: nil)!
-        let match = regularExpression.matchesInString(string, options: .ReportCompletion, range: NSMakeRange(0, count(string)))
-        let nsstring = string as NSString
-        if match.count > 0 {
-            var imageInfos = [ImageInfo]()
-            for matc in match as! [NSTextCheckingResult] {
-                let range = matc.range
-                let urlString = nsstring.substringWithRange(range)
-                let fileName = urlString.lastPathComponent
-                let url = NSURL(string: urlString)!
-                imageInfos.append(ImageInfo(thumbnailURL: url, fullImageURL: url, imageName: fileName, imageSize: 0))
-            }
-            return imageInfos
-        } else {
-            return nil
-        }
-    }
-
 }
 
-//MARK: - RichArticle Definition
-
-struct RichArticle {
-    var title: String
-    var time: String
-    var author: String
-    var body: NSAttributedString
-    var imageAtt: [ImageInfo]?
-}
-
-struct ImageInfo {
-    var thumbnailURL: NSURL
-    var fullImageURL: NSURL
-    var imageName: String
-    var imageSize: Int
-}

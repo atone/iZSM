@@ -47,8 +47,8 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
             let cevc = storyboard?.instantiateViewControllerWithIdentifier("ComposeEmailController") as! ComposeEmailController
             cevc.originalEmail = mail
             cevc.replyMode = true
-            cevc.modalPresentationStyle = .FormSheet
             let navigationController = UINavigationController(rootViewController: cevc)
+            navigationController.modalPresentationStyle = .FormSheet
             presentViewController(navigationController, animated: true, completion: nil)
 
         }
@@ -133,7 +133,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
                     }
                     self.titleLabel?.text = detailMail.subject
                     self.userButton?.setTitle(detailMail.authorID, forState: .Normal)
-                    self.timeLabel?.text = self.stringFromDate(detailMail.time)
+                    self.timeLabel?.text = detailMail.time.shortDateString
                     self.contentTextView?.attributedText = self.attributedStringFromContentString(detailMail.body)
                 }
             }
@@ -158,12 +158,6 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
             }
         }
         return attributeText
-    }
-
-    private func stringFromDate(date: NSDate) -> String {
-        let formatter = NSDateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-        return formatter.stringFromDate(date)
     }
 
 }

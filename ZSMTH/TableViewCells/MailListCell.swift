@@ -8,8 +8,6 @@
 
 import UIKit
 
-private var formatter = NSDateFormatter()
-
 class MailListCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!

@@ -213,6 +213,9 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                     }
                     actionSheet.addAction(addFavAction)
                     actionSheet.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil))
+                    let cell = tableView.cellForRowAtIndexPath(indexPath)!
+                    actionSheet.popoverPresentationController?.sourceView = cell
+                    actionSheet.popoverPresentationController?.sourceRect = cell.bounds
                     presentViewController(actionSheet, animated: true, completion: nil)
                 }
             }

@@ -13,6 +13,7 @@ class SettingsViewController: UITableViewController {
     @IBOutlet weak var showSignatureLabel: UILabel!
     @IBOutlet weak var backgroundTaskLabel: UILabel!
     @IBOutlet weak var aboutZSMLabel: UILabel!
+    @IBOutlet weak var logoutLabel: UILabel!
 
     @IBOutlet weak var hideTopSwitch: UISwitch!
     @IBOutlet weak var showSignatureSwitch: UISwitch!
@@ -64,6 +65,9 @@ class SettingsViewController: UITableViewController {
         showSignatureLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
         backgroundTaskLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
         aboutZSMLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+        let descriptor = UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleBody)
+        logoutLabel.font = UIFont.boldSystemFontOfSize(descriptor.pointSize)
+        logoutLabel.textColor = UIColor.redColor()
 
         // update switch states
         hideTopSwitch.on = setting.hideAlwaysOnTopThread

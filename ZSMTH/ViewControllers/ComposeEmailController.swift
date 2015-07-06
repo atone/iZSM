@@ -10,6 +10,10 @@ import UIKit
 
 class ComposeEmailController: UIViewController, UITextFieldDelegate {
 
+    var preTitle: String?
+    var preContent: String?
+    var preReceiver: String?
+
     var delegate: ComposeEmailControllerDelegate?
 
     var replyMode = false
@@ -107,9 +111,19 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     }
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillChangeFrameNotification, object: nil)
         if replyMode {
             handleReplyMode()
+            contentTextView.becomeFirstResponder()
+            contentTextView.selectedRange = NSMakeRange(0, 0)
+        } else if let preTitle = preTitle, preContent = preContent, preReceiver = preReceiver {
+            emailTitle = preTitle
+            emailContent = preContent
+            emailReceiver = preReceiver
+            title = "邮件反馈"
+            doneButton.enabled = true
+            countLabel.text = "\(count(emailTitle!))"
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
         } else {
@@ -154,6 +168,11 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        view.endEditing(true)
     }
 
     func keyboardWillShow(notification: NSNotification) {

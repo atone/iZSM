@@ -44,8 +44,8 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
             cavc.boardID = reference.boardID
             cavc.replyMode = true
             cavc.originalArticle = article
-            cavc.modalPresentationStyle = .FormSheet
             let navigationController = UINavigationController(rootViewController: cavc)
+            navigationController.modalPresentationStyle = .FormSheet
             presentViewController(navigationController, animated: true, completion: nil)
         }
     }
@@ -103,7 +103,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
                     }
                     self.titleLabel?.text = article.subject
                     self.userButton?.setTitle(article.authorID, forState: .Normal)
-                    self.timeLabel?.text = self.stringFromDate(article.time)
+                    self.timeLabel?.text = article.time.shortDateString
                     self.contentTextView?.attributedText = self.attributedStringFromContentString(article.body)
                 } else {
                     hud.mode = .Text
@@ -139,11 +139,5 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
             }
         }
         return attributeText
-    }
-
-    private func stringFromDate(date: NSDate) -> String {
-        let formatter = NSDateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-        return formatter.stringFromDate(date)
     }
 }

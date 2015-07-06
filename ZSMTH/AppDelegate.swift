@@ -145,6 +145,7 @@ func printLog<T>(message: T,
     #endif
 }
 
+private let formatter = NSDateFormatter()
 extension NSDate {
     
     var relativeDateString: String {
@@ -179,6 +180,11 @@ extension NSDate {
         timeInterval /= 365
         return "\(timeInterval)年前"
 
+    }
+
+    var shortDateString: String {
+        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        return formatter.stringFromDate(self)
     }
 }
 

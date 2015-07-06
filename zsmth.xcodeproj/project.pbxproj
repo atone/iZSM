@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C04C0831B47C99E00C4C2F8 /* ArticleContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C04C0821B47C99E00C4C2F8 /* ArticleContentCell.swift */; };
+		9C04C0871B47E84F00C4C2F8 /* UIView+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C04C0861B47E84F00C4C2F8 /* UIView+Additions.m */; };
 		9C13B70A1AA8533900A9420D /* SmthStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C13B7091AA8533900A9420D /* SmthStructs.swift */; };
 		9C16B0CC1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C16B0CB1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m */; };
 		9C3065961AC23589004005D0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9C3065981AC23589004005D0 /* InfoPlist.strings */; };
 		9C33C8701AB8815700E5BFD2 /* FavListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C33C86F1AB8815700E5BFD2 /* FavListViewController.swift */; };
 		9C3861381AB7E9AC0062340B /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3861371AB7E9AC0062340B /* ArticleListViewController.swift */; };
 		9C38613A1AB7F1AB0062340B /* ArticleListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3861391AB7F1AB0062340B /* ArticleListCell.swift */; };
+		9C3BC2F71B49AC140027D9E2 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3BC2F61B49AC140027D9E2 /* TTTAttributedLabel.m */; };
 		9C3D34101ABA717900DC6E0E /* MailBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3D340F1ABA717800DC6E0E /* MailBoxViewController.swift */; };
 		9C3D34121ABA72DD00DC6E0E /* MailListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3D34111ABA72DD00DC6E0E /* MailListCell.swift */; };
 		9C3D34141ABA814A00DC6E0E /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3D34131ABA814A00DC6E0E /* UserViewController.swift */; };
@@ -55,7 +58,6 @@
 		9CA61BC11AC43B2E00E595C8 /* UIView+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA61BB51AC43B2E00E595C8 /* UIView+MJExtension.m */; };
 		9CA6E8D01AAACC7700B1D88F /* HotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA6E8CF1AAACC7700B1D88F /* HotTableViewCell.swift */; };
 		9CA6E8D21AAADF7E00B1D88F /* ArticleContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA6E8D11AAADF7E00B1D88F /* ArticleContentViewController.swift */; };
-		9CA6E8D41AAAE99E00B1D88F /* ArticleContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA6E8D31AAAE99E00B1D88F /* ArticleContentCell.swift */; };
 		9CB4EA131AB923B5000986D0 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CB4EA121AB923B5000986D0 /* MBProgressHUD.m */; };
 		9CBBE3DC1AAF1EE80019C511 /* AppSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBBE3DB1AAF1EE80019C511 /* AppSetting.swift */; };
 		9CC73B5A1AB7251A000F9AE9 /* BoardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC73B591AB7251A000F9AE9 /* BoardListViewController.swift */; };
@@ -124,6 +126,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9C04C0821B47C99E00C4C2F8 /* ArticleContentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleContentCell.swift; path = TableViewCells/ArticleContentCell.swift; sourceTree = "<group>"; };
+		9C04C0851B47E84F00C4C2F8 /* UIView+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Additions.h"; sourceTree = "<group>"; };
+		9C04C0861B47E84F00C4C2F8 /* UIView+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Additions.m"; sourceTree = "<group>"; };
 		9C13B7091AA8533900A9420D /* SmthStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SmthStructs.swift; path = SmthAPI/SmthStructs.swift; sourceTree = "<group>"; };
 		9C16B0CA1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDTemplateLayoutCell.h"; sourceTree = "<group>"; };
 		9C16B0CB1B45963E007F1F31 /* UITableView+FDTemplateLayoutCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCell.m"; sourceTree = "<group>"; };
@@ -132,6 +137,8 @@
 		9C33C86F1AB8815700E5BFD2 /* FavListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FavListViewController.swift; path = ViewControllers/FavListViewController.swift; sourceTree = "<group>"; };
 		9C3861371AB7E9AC0062340B /* ArticleListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleListViewController.swift; path = ViewControllers/ArticleListViewController.swift; sourceTree = "<group>"; };
 		9C3861391AB7F1AB0062340B /* ArticleListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleListCell.swift; path = TableViewCells/ArticleListCell.swift; sourceTree = "<group>"; };
+		9C3BC2F51B49AC140027D9E2 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
+		9C3BC2F61B49AC140027D9E2 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		9C3D340F1ABA717800DC6E0E /* MailBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MailBoxViewController.swift; path = ViewControllers/MailBoxViewController.swift; sourceTree = "<group>"; };
 		9C3D34111ABA72DD00DC6E0E /* MailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MailListCell.swift; path = TableViewCells/MailListCell.swift; sourceTree = "<group>"; };
 		9C3D34131ABA814A00DC6E0E /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserViewController.swift; path = ViewControllers/UserViewController.swift; sourceTree = "<group>"; };
@@ -200,7 +207,6 @@
 		9CA61BB51AC43B2E00E595C8 /* UIView+MJExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MJExtension.m"; sourceTree = "<group>"; };
 		9CA6E8CF1AAACC7700B1D88F /* HotTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HotTableViewCell.swift; path = TableViewCells/HotTableViewCell.swift; sourceTree = "<group>"; };
 		9CA6E8D11AAADF7E00B1D88F /* ArticleContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleContentViewController.swift; path = ViewControllers/ArticleContentViewController.swift; sourceTree = "<group>"; };
-		9CA6E8D31AAAE99E00B1D88F /* ArticleContentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleContentCell.swift; path = TableViewCells/ArticleContentCell.swift; sourceTree = "<group>"; };
 		9CB4EA111AB923B5000986D0 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		9CB4EA121AB923B5000986D0 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		9CBBE3DB1AAF1EE80019C511 /* AppSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppSetting.swift; path = SmthAPI/AppSetting.swift; sourceTree = "<group>"; };
@@ -253,6 +259,15 @@
 			);
 			name = FDTemplateLayoutCell;
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		9C3BC2F41B49AC140027D9E2 /* TTTAttributedLabel */ = {
+			isa = PBXGroup;
+			children = (
+				9C3BC2F51B49AC140027D9E2 /* TTTAttributedLabel.h */,
+				9C3BC2F61B49AC140027D9E2 /* TTTAttributedLabel.m */,
+			);
+			path = TTTAttributedLabel;
 			sourceTree = "<group>";
 		};
 		9C5508C11AA98B5F006931B6 /* ViewControllers */ = {
@@ -323,7 +338,6 @@
 			isa = PBXGroup;
 			children = (
 				9CF32D221ABE598B008C5332 /* GUI */,
-				9CA61BC21AC4566900E595C8 /* Views */,
 				9C5508C11AA98B5F006931B6 /* ViewControllers */,
 				9CA6E8CE1AAACC3A00B1D88F /* TableViewCells */,
 				9CA267EE1AA801CF00CE5C5D /* SmthAPI */,
@@ -339,6 +353,8 @@
 				9CA267BF1AA7EF2400CE5C5D /* AppDelegate.swift */,
 				9CF60D5D1B465FDB00EA7449 /* UIScreen+Additions.h */,
 				9CF60D5E1B465FDB00EA7449 /* UIScreen+Additions.m */,
+				9C04C0851B47E84F00C4C2F8 /* UIView+Additions.h */,
+				9C04C0861B47E84F00C4C2F8 /* UIView+Additions.m */,
 				9CA267DF1AA7EF5D00CE5C5D /* ZSMTH-Bridging-Header.h */,
 				9CF2F5601AC24661001F9693 /* Info.plist */,
 				9C3065981AC23589004005D0 /* InfoPlist.strings */,
@@ -367,6 +383,7 @@
 			isa = PBXGroup;
 			children = (
 				9CEDC6311B4695D000D79064 /* RSTWebViewController.xcodeproj */,
+				9C3BC2F41B49AC140027D9E2 /* TTTAttributedLabel */,
 				9C16B0C91B45963E007F1F31 /* FDTemplateLayoutCell */,
 				9CD7E4051B3EC67200A75C62 /* Kingfisher */,
 				9CA61B9D1AC43B2E00E595C8 /* MJRefresh */,
@@ -433,13 +450,6 @@
 			path = MJRefresh;
 			sourceTree = "<group>";
 		};
-		9CA61BC21AC4566900E595C8 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Views;
-			sourceTree = "<group>";
-		};
 		9CA6E8CE1AAACC3A00B1D88F /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
@@ -447,7 +457,7 @@
 				9C3861391AB7F1AB0062340B /* ArticleListCell.swift */,
 				9C3D34111ABA72DD00DC6E0E /* MailListCell.swift */,
 				9CF9E8301ABAF68300A880AB /* ReminderListCell.swift */,
-				9CA6E8D31AAAE99E00B1D88F /* ArticleContentCell.swift */,
+				9C04C0821B47C99E00C4C2F8 /* ArticleContentCell.swift */,
 			);
 			name = TableViewCells;
 			sourceTree = "<group>";
@@ -661,6 +671,7 @@
 				9C40E71A1B40F16A00D0C673 /* AboutViewController.swift in Sources */,
 				9C9E4F741AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m in Sources */,
 				9C9E4F751AB5A0D50053CBD8 /* JTSImageInfo.m in Sources */,
+				9C04C0831B47C99E00C4C2F8 /* ArticleContentCell.swift in Sources */,
 				9CB4EA131AB923B5000986D0 /* MBProgressHUD.m in Sources */,
 				9CA61BBE1AC43B2E00E595C8 /* MJRefreshLegendHeader.m in Sources */,
 				9CD7E4191B3EC67200A75C62 /* UIButton+Kingfisher.swift in Sources */,
@@ -686,16 +697,17 @@
 				9CA61BBF1AC43B2E00E595C8 /* UIScrollView+MJExtension.m in Sources */,
 				9C3D34121ABA72DD00DC6E0E /* MailListCell.swift in Sources */,
 				9CA61BBD1AC43B2E00E595C8 /* MJRefreshLegendFooter.m in Sources */,
+				9C04C0871B47E84F00C4C2F8 /* UIView+Additions.m in Sources */,
 				9CA267ED1AA7F04600CE5C5D /* SMTHURLConnection+Addon.m in Sources */,
 				9C9E4F771AB5A0D50053CBD8 /* JTSSimpleImageDownloader.m in Sources */,
 				9CA61BBA1AC43B2E00E595C8 /* MJRefreshGifFooter.m in Sources */,
 				9CD7E4171B3EC67200A75C62 /* KingfisherOptionsInfo.swift in Sources */,
+				9C3BC2F71B49AC140027D9E2 /* TTTAttributedLabel.m in Sources */,
 				9CD7E4131B3EC67200A75C62 /* ImageDownloader.swift in Sources */,
 				9CF9E82F1ABAF64100A880AB /* ReminderViewController.swift in Sources */,
 				9CD7E4181B3EC67200A75C62 /* String+MD5.swift in Sources */,
 				9CD7E41A1B3EC67200A75C62 /* UIImage+Decode.swift in Sources */,
 				9CA267C01AA7EF2400CE5C5D /* AppDelegate.swift in Sources */,
-				9CA6E8D41AAAE99E00B1D88F /* ArticleContentCell.swift in Sources */,
 				9CA61B9C1AC42ED700E595C8 /* LoginViewController.swift in Sources */,
 				9CA61BBB1AC43B2E00E595C8 /* MJRefreshGifHeader.m in Sources */,
 				9C13B70A1AA8533900A9420D /* SmthStructs.swift in Sources */,
@@ -869,6 +881,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/ZSMTH/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

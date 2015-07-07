@@ -754,21 +754,23 @@ class SmthAPI {
         }
         // 除去签名档，可选
         if !setting.showSignature {
-            let r = content.rangeOfString("\n--\n")
-            if r.location != NSNotFound {
-                content = content.substringToIndex(r.location)
+            let pattern = "^--$"
+            let regularExpression = NSRegularExpression(pattern: pattern, options: .AnchorsMatchLines, error: nil)!
+            let range = regularExpression.rangeOfFirstMatchInString(content as String, options: .allZeros, range: NSMakeRange(0, content.length))
+            if range.location != NSNotFound {
+                content = content.substringToIndex(range.location)
                 content = content.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
             }
         }
         // 去除ANSI控制字符
         var pattern = "\\[((\\d){1,2};?)*[mB]"
-        var regularExpression = NSRegularExpression(pattern: pattern, options: .CaseInsensitive, error: nil)
-        content = regularExpression!.stringByReplacingMatchesInString(content as String, options: .allZeros, range: NSMakeRange(0, content.length), withTemplate: "")
+        var regularExpression = NSRegularExpression(pattern: pattern, options: .allZeros, error: nil)!
+        content = regularExpression.stringByReplacingMatchesInString(content as String, options: .allZeros, range: NSMakeRange(0, content.length), withTemplate: "")
 
         // 去除图片标志[upload=1][/upload]之类
         pattern = "\\[upload=(\\d){1,2}\\]\\[/upload\\]"
-        regularExpression = NSRegularExpression(pattern: pattern, options: .CaseInsensitive, error: nil)
-        content = regularExpression!.stringByReplacingMatchesInString(content as String, options: .allZeros, range: NSMakeRange(0, content.length), withTemplate: "")
+        regularExpression = NSRegularExpression(pattern: pattern, options: .CaseInsensitive, error: nil)!
+        content = regularExpression.stringByReplacingMatchesInString(content as String, options: .allZeros, range: NSMakeRange(0, content.length), withTemplate: "")
         return content as String
     }
 

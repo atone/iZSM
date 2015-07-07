@@ -64,16 +64,17 @@ struct SMArticle {
 
     mutating func extraConfigure() {
         // configure
-        attributedBody = attributedStringFromContentString(body)
         if attachments.count > 0 {
-            imageAtt += imageAttFromArticle(self)
+            imageAtt += generateImageAtt()
         }
-        if let extraInfos = imageAttachmentsFromString(body) {
+        if let extraInfos = imageAttachmentsFromBody() {
             imageAtt += extraInfos
+            removeImageURLsFromBody()
         }
+        attributedBody = generateAttributedString()
     }
 
-    private func attributedStringFromContentString(string: String) -> NSAttributedString {
+    private func generateAttributedString() -> NSAttributedString {
         var attributeText = NSMutableAttributedString()
 
         let normal = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody),
@@ -83,7 +84,7 @@ struct SMArticle {
             NSParagraphStyleAttributeName: NSParagraphStyle.defaultParagraphStyle(),
             NSForegroundColorAttributeName: UIColor.grayColor()]
 
-        string.enumerateLines { (line, stop) -> () in
+        self.body.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(": ") {
                 attributeText.appendAttributedString(NSAttributedString(string: "\(line)\n", attributes: quoted))
             } else {
@@ -91,29 +92,19 @@ struct SMArticle {
             }
         }
 
-//        var error: NSError? = nil
-//        let detector = NSDataDetector(types: NSTextCheckingType.Link.rawValue, error: &error)!
-//        detector.enumerateMatchesInString(string, options: .allZeros, range: NSMakeRange(0, count(string))) { (match, flags, stop) -> Void in
-//            attributeText.addAttribute(NSForegroundColorAttributeName, value: UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1), range: match.range)
-//            if match.resultType == .Link {
-//                let url = match.URL!
-//                attributeText.addAttribute("NYURLAttribute", value: url, range: match.range)
-//            }
-//        }
-
         return attributeText
     }
 
-    private func imageAttFromArticle(article: SMArticle) -> [ImageInfo] {
+    private func generateImageAtt() -> [ImageInfo] {
         var imageAtt = [ImageInfo]()
 
-        for attachment in article.attachments {
+        for attachment in self.attachments {
             let fileName = attachment.name.lowercaseString
             if fileName.hasSuffix(".jpg") || fileName.hasSuffix(".jpeg")
                 || fileName.hasSuffix(".gif") || fileName.hasSuffix("bmp")
                 || fileName.hasSuffix("png") {
-                    let baseURLString = "http://att.newsmth.net/nForum/att/\(self.boardID)/\(article.id)/\(attachment.pos)"
-                    let thumbnailURL = NSURL(string: baseURLString + "/large")!
+                    let baseURLString = "http://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
+                    let thumbnailURL = NSURL(string: baseURLString + (attachments.count==1 ? "" : "/middle"))!
                     let fullImageURL = NSURL(string: baseURLString)!
                     let imageName = attachment.name
                     let imageSize = attachment.size
@@ -124,15 +115,15 @@ struct SMArticle {
         return imageAtt
     }
 
-    private func imageAttachmentsFromString(string: String) -> [ImageInfo]? {
+    private func imageAttachmentsFromBody() -> [ImageInfo]? {
         let pattern = "(?<=\\[img=).*(?=\\]\\[/img\\])"
         let regularExpression = NSRegularExpression(pattern: pattern, options: .CaseInsensitive, error: nil)!
-        let match = regularExpression.matchesInString(string, options: .ReportCompletion, range: NSMakeRange(0, count(string)))
-        let nsstring = string as NSString
-        if match.count > 0 {
+        let matches = regularExpression.matchesInString(self.body, options: .allZeros, range: NSMakeRange(0, count(self.body)))
+        let nsstring = self.body as NSString
+        if matches.count > 0 {
             var imageInfos = [ImageInfo]()
-            for matc in match as! [NSTextCheckingResult] {
-                let range = matc.range
+            for match in matches as! [NSTextCheckingResult] {
+                let range = match.range
                 let urlString = nsstring.substringWithRange(range)
                 let fileName = urlString.lastPathComponent
                 let url = NSURL(string: urlString)!
@@ -142,6 +133,12 @@ struct SMArticle {
         } else {
             return nil
         }
+    }
+
+    private mutating func removeImageURLsFromBody() {
+        let pattern = "\\[img=.*\\]\\[/img\\]"
+        let regularExpression = NSRegularExpression(pattern: pattern, options: .CaseInsensitive, error: nil)!
+        self.body = regularExpression.stringByReplacingMatchesInString(self.body, options: .allZeros, range: NSMakeRange(0, count(self.body)), withTemplate: "").stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
     }
 }
 

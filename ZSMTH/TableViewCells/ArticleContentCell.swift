@@ -72,6 +72,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         contentLabel.enabledTextCheckingTypes = NSTextCheckingType.Link.rawValue
         contentLabel.delegate = self
         contentLabel.verticalAlignment = .Top
+        contentLabel.extendsLinkTouchArea = false
         contentLabel.linkAttributes = [NSForegroundColorAttributeName:tintColor]
         contentLabel.activeLinkAttributes = [NSForegroundColorAttributeName:tintColor.colorWithAlphaComponent(0.6)]
         self.contentView.addSubview(contentLabel)

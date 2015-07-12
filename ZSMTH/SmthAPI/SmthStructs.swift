@@ -77,11 +77,19 @@ struct SMArticle {
     private func generateAttributedString() -> NSAttributedString {
         var attributeText = NSMutableAttributedString()
 
-        let normal = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody),
-            NSParagraphStyleAttributeName: NSParagraphStyle.defaultParagraphStyle(),
+        let textFont = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+        var paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 4
+        paragraphStyle.alignment = .Natural
+        paragraphStyle.minimumLineHeight = textFont.pointSize
+        paragraphStyle.maximumLineHeight = textFont.pointSize
+        paragraphStyle.lineBreakMode = .ByWordWrapping
+
+        let normal = [NSFontAttributeName: textFont,
+            NSParagraphStyleAttributeName: paragraphStyle,
             NSForegroundColorAttributeName: UIColor.blackColor()]
-        let quoted = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody),
-            NSParagraphStyleAttributeName: NSParagraphStyle.defaultParagraphStyle(),
+        let quoted = [NSFontAttributeName: textFont,
+            NSParagraphStyleAttributeName: paragraphStyle,
             NSForegroundColorAttributeName: UIColor.grayColor()]
 
         self.body.enumerateLines { (line, stop) -> () in

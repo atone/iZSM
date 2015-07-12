@@ -1177,7 +1177,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZsW-Zy-AcA">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ynm-AE-Ars">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <string key="text">水木社区管理规则（2012年11月11日修订） 
@@ -1290,17 +1290,16 @@
   
                                                                水木委员会 
                                                          2012年 11月 11日</string>
-                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="ZsW-Zy-AcA" secondAttribute="trailing" id="5Ak-LL-92V"/>
-                            <constraint firstItem="ZsW-Zy-AcA" firstAttribute="leading" secondItem="n7t-hC-zdS" secondAttribute="leading" id="MKF-g6-VTr"/>
-                            <constraint firstItem="ZsW-Zy-AcA" firstAttribute="top" secondItem="DtF-ZD-AnX" secondAttribute="bottom" id="OX1-Zp-qrG"/>
-                            <constraint firstItem="aFJ-ji-Od8" firstAttribute="top" secondItem="ZsW-Zy-AcA" secondAttribute="bottom" id="bIA-3w-A4U"/>
+                            <constraint firstItem="Ynm-AE-Ars" firstAttribute="leading" secondItem="n7t-hC-zdS" secondAttribute="leading" id="4kK-1t-2tj"/>
+                            <constraint firstAttribute="trailing" secondItem="Ynm-AE-Ars" secondAttribute="trailing" id="N8O-u8-BoK"/>
+                            <constraint firstItem="Ynm-AE-Ars" firstAttribute="bottom" secondItem="aFJ-ji-Od8" secondAttribute="top" id="XUV-IE-fZi"/>
+                            <constraint firstItem="Ynm-AE-Ars" firstAttribute="top" secondItem="DtF-ZD-AnX" secondAttribute="bottom" id="a5H-w2-HPd"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="水木社区管理规则" id="6I4-7v-cgO">
@@ -1508,28 +1507,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="2yB-SP-a6s">
-                            <rect key="frame" x="0.0" y="64" width="600" height="320"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="252" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="Jfs-C1-L0n">
-                                    <rect key="frame" x="180" y="40" width="240" height="240"/>
-                                </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="最水木 1.0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w2D-e4-Sgj">
-                                    <rect key="frame" x="260" y="288" width="80" height="21"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
-                            <constraints>
-                                <constraint firstAttribute="centerY" secondItem="Jfs-C1-L0n" secondAttribute="centerY" id="0de-nb-vez"/>
-                                <constraint firstAttribute="centerX" secondItem="w2D-e4-Sgj" secondAttribute="centerX" id="Qd4-d6-9dZ"/>
-                                <constraint firstAttribute="centerX" secondItem="Jfs-C1-L0n" secondAttribute="centerX" id="TDN-5I-pfx"/>
-                                <constraint firstItem="w2D-e4-Sgj" firstAttribute="top" secondItem="Jfs-C1-L0n" secondAttribute="bottom" constant="8" symbolic="YES" id="byK-SW-O5N"/>
-                            </constraints>
-                        </view>
                         <sections>
                             <tableViewSection id="OkJ-32-jAg">
                                 <cells>
@@ -1599,11 +1576,8 @@
                         </connections>
                     </tableView>
                     <connections>
-                        <outlet property="headerView" destination="2yB-SP-a6s" id="X8k-ZF-k0N"/>
-                        <outlet property="logoImageView" destination="Jfs-C1-L0n" id="Bsj-9b-dBv"/>
                         <outlet property="mailLabel" destination="no4-0n-rsO" id="IWt-gu-lyM"/>
                         <outlet property="rateLabel" destination="dV8-fM-akl" id="C9E-57-anH"/>
-                        <outlet property="versionLabel" destination="w2D-e4-Sgj" id="b86-5g-yYa"/>
                         <outlet property="websiteLabel" destination="8qC-wu-CYC" id="OOI-nf-4RV"/>
                     </connections>
                 </tableViewController>

@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>494212D1-CF83-479B-912B-DA9A599F72CD</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>zsmth</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>3E43C024045C086C95B3B47C0C8B8E9F693CE678</key>
 		<string>github.com:atone/iZSM.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>zsmth.xcodeproj/project.xcworkspace</string>
+	<string>zsmth.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>3E43C024045C086C95B3B47C0C8B8E9F693CE678</key>

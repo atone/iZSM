@@ -12,6 +12,7 @@
 		9C13B70A1AA8533900A9420D /* SmthStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C13B7091AA8533900A9420D /* SmthStructs.swift */; };
 		9C3065961AC23589004005D0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9C3065981AC23589004005D0 /* InfoPlist.strings */; };
 		9C33C8701AB8815700E5BFD2 /* FavListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C33C86F1AB8815700E5BFD2 /* FavListViewController.swift */; };
+		9C34E9481B5282F700E94AD5 /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C34E9471B5282F700E94AD5 /* LogoView.swift */; };
 		9C3861381AB7E9AC0062340B /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3861371AB7E9AC0062340B /* ArticleListViewController.swift */; };
 		9C38613A1AB7F1AB0062340B /* ArticleListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3861391AB7F1AB0062340B /* ArticleListCell.swift */; };
 		9C3BC2F71B49AC140027D9E2 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3BC2F61B49AC140027D9E2 /* TTTAttributedLabel.m */; };
@@ -21,10 +22,10 @@
 		9C40E71A1B40F16A00D0C673 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C40E7191B40F16A00D0C673 /* AboutViewController.swift */; };
 		9C5508C01AA98B32006931B6 /* HotTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5508BF1AA98B32006931B6 /* HotTableViewController.swift */; };
 		9C5582911ABD9E9400D76A6E /* ComposeEmailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5582901ABD9E9400D76A6E /* ComposeEmailController.swift */; };
+		9C55EBC01B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C55EBBF1B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.m */; };
 		9C6D61F11AB9B4B3005A8259 /* ComposeArticleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6D61F01AB9B4B3005A8259 /* ComposeArticleController.swift */; };
 		9C72F6211ABD0ADE0098F9D8 /* ReferContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C72F6201ABD0ADE0098F9D8 /* ReferContentViewController.swift */; };
 		9C7700C81ABFB86800F9471B /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7700C71ABFB86800F9471B /* BaseTableViewController.swift */; };
-		9C7ED8E91B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C7ED8E81B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.m */; };
 		9C9DE9841ABBB6B8001C292F /* MailContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9DE9831ABBB6B8001C292F /* MailContentViewController.swift */; };
 		9C9E4F741AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F691AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m */; };
 		9C9E4F751AB5A0D50053CBD8 /* JTSImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F6B1AB5A0D50053CBD8 /* JTSImageInfo.m */; };
@@ -71,7 +72,6 @@
 		9CD7E4191B3EC67200A75C62 /* UIButton+Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7E40E1B3EC67200A75C62 /* UIButton+Kingfisher.swift */; };
 		9CD7E41A1B3EC67200A75C62 /* UIImage+Decode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7E40F1B3EC67200A75C62 /* UIImage+Decode.swift */; };
 		9CD7E41B1B3EC67200A75C62 /* UIImageView+Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7E4101B3EC67200A75C62 /* UIImageView+Kingfisher.swift */; };
-		9CD7E41C1B3EC67200A75C62 /* WKInterfaceImage+Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7E4111B3EC67200A75C62 /* WKInterfaceImage+Kingfisher.swift */; };
 		9CEDC63A1B46962B00D79064 /* RSTWebViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CEDC6371B4695D000D79064 /* RSTWebViewController.framework */; };
 		9CEDC63B1B46962B00D79064 /* RSTWebViewController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9CEDC6371B4695D000D79064 /* RSTWebViewController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9CEDC66F1B46DAC200D79064 /* NYNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CEDC66E1B46DAC200D79064 /* NYNavigationController.swift */; };
@@ -133,6 +133,7 @@
 		9C3065971AC23589004005D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9C30659E1AC23861004005D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9C33C86F1AB8815700E5BFD2 /* FavListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FavListViewController.swift; path = ViewControllers/FavListViewController.swift; sourceTree = "<group>"; };
+		9C34E9471B5282F700E94AD5 /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogoView.swift; path = Views/LogoView.swift; sourceTree = "<group>"; };
 		9C3861371AB7E9AC0062340B /* ArticleListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleListViewController.swift; path = ViewControllers/ArticleListViewController.swift; sourceTree = "<group>"; };
 		9C3861391AB7F1AB0062340B /* ArticleListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleListCell.swift; path = TableViewCells/ArticleListCell.swift; sourceTree = "<group>"; };
 		9C3BC2F51B49AC140027D9E2 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
@@ -143,11 +144,11 @@
 		9C40E7191B40F16A00D0C673 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AboutViewController.swift; path = ViewControllers/AboutViewController.swift; sourceTree = "<group>"; };
 		9C5508BF1AA98B32006931B6 /* HotTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HotTableViewController.swift; path = ViewControllers/HotTableViewController.swift; sourceTree = "<group>"; };
 		9C5582901ABD9E9400D76A6E /* ComposeEmailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComposeEmailController.swift; path = ViewControllers/ComposeEmailController.swift; sourceTree = "<group>"; };
+		9C55EBBE1B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableView+FDTemplateLayoutCell.h"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDTemplateLayoutCell.h"; sourceTree = "<group>"; };
+		9C55EBBF1B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableView+FDTemplateLayoutCell.m"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDTemplateLayoutCell.m"; sourceTree = "<group>"; };
 		9C6D61F01AB9B4B3005A8259 /* ComposeArticleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComposeArticleController.swift; path = ViewControllers/ComposeArticleController.swift; sourceTree = "<group>"; };
 		9C72F6201ABD0ADE0098F9D8 /* ReferContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReferContentViewController.swift; path = ViewControllers/ReferContentViewController.swift; sourceTree = "<group>"; };
 		9C7700C71ABFB86800F9471B /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewController.swift; path = ViewControllers/BaseTableViewController.swift; sourceTree = "<group>"; };
-		9C7ED8E71B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDTemplateLayoutCell.h"; sourceTree = "<group>"; };
-		9C7ED8E81B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCell.m"; sourceTree = "<group>"; };
 		9C9DE9831ABBB6B8001C292F /* MailContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MailContentViewController.swift; path = ViewControllers/MailContentViewController.swift; sourceTree = "<group>"; };
 		9C9E4F681AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSAnimatedGIFUtility.h; sourceTree = "<group>"; };
 		9C9E4F691AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSAnimatedGIFUtility.m; sourceTree = "<group>"; };
@@ -221,7 +222,6 @@
 		9CD7E40E1B3EC67200A75C62 /* UIButton+Kingfisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Kingfisher.swift"; sourceTree = "<group>"; };
 		9CD7E40F1B3EC67200A75C62 /* UIImage+Decode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Decode.swift"; sourceTree = "<group>"; };
 		9CD7E4101B3EC67200A75C62 /* UIImageView+Kingfisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Kingfisher.swift"; sourceTree = "<group>"; };
-		9CD7E4111B3EC67200A75C62 /* WKInterfaceImage+Kingfisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WKInterfaceImage+Kingfisher.swift"; sourceTree = "<group>"; };
 		9CEDC6311B4695D000D79064 /* RSTWebViewController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RSTWebViewController.xcodeproj; path = RSTWebViewController/RSTWebViewController.xcodeproj; sourceTree = "<group>"; };
 		9CEDC66E1B46DAC200D79064 /* NYNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NYNavigationController.swift; path = ViewControllers/NYNavigationController.swift; sourceTree = "<group>"; };
 		9CF2F5601AC24661001F9693 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -251,6 +251,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9C34E9451B5282B600E94AD5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9C34E9471B5282F700E94AD5 /* LogoView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		9C3BC2F41B49AC140027D9E2 /* TTTAttributedLabel */ = {
 			isa = PBXGroup;
 			children = (
@@ -286,14 +294,13 @@
 			name = ViewControllers;
 			sourceTree = "<group>";
 		};
-		9C7ED8E61B4A6BD8000499F0 /* FDTemplateLayoutCell */ = {
+		9C55EBC11B4EB35800DB75F7 /* UITableView+FDTemplateLayoutCell */ = {
 			isa = PBXGroup;
 			children = (
-				9C7ED8E71B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.h */,
-				9C7ED8E81B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.m */,
+				9C55EBBE1B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.h */,
+				9C55EBBF1B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.m */,
 			);
-			name = FDTemplateLayoutCell;
-			path = "Kingfisher/UITableView+FDTemplateLayoutCell";
+			name = "UITableView+FDTemplateLayoutCell";
 			sourceTree = "<group>";
 		};
 		9C7ED8EA1B4A6C16000499F0 /* RSTWebViewController */ = {
@@ -346,6 +353,7 @@
 			isa = PBXGroup;
 			children = (
 				9CF32D221ABE598B008C5332 /* GUI */,
+				9C34E9451B5282B600E94AD5 /* Views */,
 				9C5508C11AA98B5F006931B6 /* ViewControllers */,
 				9CA6E8CE1AAACC3A00B1D88F /* TableViewCells */,
 				9CA267EE1AA801CF00CE5C5D /* SmthAPI */,
@@ -394,9 +402,9 @@
 				9CA61B9D1AC43B2E00E595C8 /* MJRefresh */,
 				9CB4EA101AB923B5000986D0 /* MBProgressHUD */,
 				9C3BC2F41B49AC140027D9E2 /* TTTAttributedLabel */,
-				9C7ED8E61B4A6BD8000499F0 /* FDTemplateLayoutCell */,
 				9C7ED8EA1B4A6C16000499F0 /* RSTWebViewController */,
 				9C9E4F671AB5A0D50053CBD8 /* JTSImageViewController */,
+				9C55EBC11B4EB35800DB75F7 /* UITableView+FDTemplateLayoutCell */,
 				9CA267E51AA7F04600CE5C5D /* libSmth */,
 				9CA267E31AA7EFFB00CE5C5D /* libSMTH_0.2.3.a */,
 			);
@@ -491,7 +499,6 @@
 				9CD7E40E1B3EC67200A75C62 /* UIButton+Kingfisher.swift */,
 				9CD7E40F1B3EC67200A75C62 /* UIImage+Decode.swift */,
 				9CD7E4101B3EC67200A75C62 /* UIImageView+Kingfisher.swift */,
-				9CD7E4111B3EC67200A75C62 /* WKInterfaceImage+Kingfisher.swift */,
 			);
 			path = Kingfisher;
 			sourceTree = "<group>";
@@ -692,13 +699,13 @@
 				9CA61BC11AC43B2E00E595C8 /* UIView+MJExtension.m in Sources */,
 				9CC73B5A1AB7251A000F9AE9 /* BoardListViewController.swift in Sources */,
 				9CA61BB71AC43B2E00E595C8 /* MJRefreshComponent.m in Sources */,
+				9C34E9481B5282F700E94AD5 /* LogoView.swift in Sources */,
 				9CBBE3DC1AAF1EE80019C511 /* AppSetting.swift in Sources */,
 				9CD7E4151B3EC67200A75C62 /* KingfisherManager.swift in Sources */,
 				9C38613A1AB7F1AB0062340B /* ArticleListCell.swift in Sources */,
 				9C5582911ABD9E9400D76A6E /* ComposeEmailController.swift in Sources */,
 				9CA267F01AA8021600CE5C5D /* SmthAPI.swift in Sources */,
 				9C9E4F781AB5A0D50053CBD8 /* UIApplication+JTSImageViewController.m in Sources */,
-				9CD7E41C1B3EC67200A75C62 /* WKInterfaceImage+Kingfisher.swift in Sources */,
 				9C33C8701AB8815700E5BFD2 /* FavListViewController.swift in Sources */,
 				9C3D34141ABA814A00DC6E0E /* UserViewController.swift in Sources */,
 				9CA61BBF1AC43B2E00E595C8 /* UIScrollView+MJExtension.m in Sources */,
@@ -706,7 +713,7 @@
 				9CA61BBD1AC43B2E00E595C8 /* MJRefreshLegendFooter.m in Sources */,
 				9C04C0871B47E84F00C4C2F8 /* UIView+Additions.m in Sources */,
 				9CA267ED1AA7F04600CE5C5D /* SMTHURLConnection+Addon.m in Sources */,
-				9C7ED8E91B4A6BD8000499F0 /* UITableView+FDTemplateLayoutCell.m in Sources */,
+				9C55EBC01B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.m in Sources */,
 				9C9E4F771AB5A0D50053CBD8 /* JTSSimpleImageDownloader.m in Sources */,
 				9CA61BBA1AC43B2E00E595C8 /* MJRefreshGifFooter.m in Sources */,
 				9CD7E4171B3EC67200A75C62 /* KingfisherOptionsInfo.swift in Sources */,

@@ -11,23 +11,9 @@ import RSTWebViewController
 
 class AboutViewController: UITableViewController {
 
-    @IBOutlet weak var versionLabel: UILabel!
-    
-    @IBOutlet weak var logoImageView: UIImageView! {
-        didSet {
-            if let imageView = logoImageView {
-                imageView.layer.cornerRadius = imageView.frame.width / 8
-                imageView.clipsToBounds = true
-            }
-        }
-    }
-
-    @IBOutlet weak var headerView: UIView!
-
     @IBOutlet weak var rateLabel: UILabel!
     @IBOutlet weak var mailLabel: UILabel!
     @IBOutlet weak var websiteLabel: UILabel!
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +24,10 @@ class AboutViewController: UITableViewController {
             selector: "preferredFontSizeChanged:",
             name: UIContentSizeCategoryDidChangeNotification,
             object: nil)
+
+        let width = UIScreen.screenWidth() < UIScreen.screenHeight() ? UIScreen.screenWidth() : UIScreen.screenHeight()
+        let logoView = LogoView(frame: CGRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(width)))
+        tableView.tableHeaderView = logoView
     }
 
     // remove observer of notification
@@ -57,9 +47,17 @@ class AboutViewController: UITableViewController {
             UIApplication.sharedApplication().openURL(NSURL(string: urlAddress)!)
         case NSIndexPath(forRow: 1, inSection: 0):
             let cevc = storyboard?.instantiateViewControllerWithIdentifier("ComposeEmailController") as! ComposeEmailController
-            cevc.preTitle = "『\(versionLabel.text!)』应用问题反馈"
+            var versionText: String = ""
+            if let infoDictionary = NSBundle.mainBundle().infoDictionary,
+                appVersion = infoDictionary["CFBundleShortVersionString"] as? String,
+                appBuild = infoDictionary["CFBundleVersion"] as? String
+            {
+                versionText = "最水木(iZSM) \(appVersion)(\(appBuild))"
+            }
+
+            cevc.preTitle = "『\(versionText)』应用问题反馈"
             cevc.preReceiver = "atone"
-            cevc.preContent = "\n\n设备类型: \(UIDevice.currentDevice().model)\n系统版本: \(UIDevice.currentDevice().systemName) \(UIDevice.currentDevice().systemVersion)\n应用版本: \(versionLabel.text!)"
+            cevc.preContent = "\n\n设备类型: \(UIDevice.currentDevice().model)\n系统版本: \(UIDevice.currentDevice().systemName) \(UIDevice.currentDevice().systemVersion)\n应用版本: \(versionText)"
             let navigationController = UINavigationController(rootViewController: cevc)
             navigationController.modalPresentationStyle = .FormSheet
             presentViewController(navigationController, animated: true, completion: nil)
@@ -76,19 +74,9 @@ class AboutViewController: UITableViewController {
     }
 
     func updateUI() {
-        let width = UIScreen.screenWidth() < UIScreen.screenHeight() ? UIScreen.screenWidth() : UIScreen.screenHeight()
-        headerView.frame = CGRect(x: 0, y: 0, width: CGFloat(UIScreen.screenWidth()), height: CGFloat(width))
-        if let infoDictionary = NSBundle.mainBundle().infoDictionary,
-            appVersion = infoDictionary["CFBundleShortVersionString"] as? String,
-            appBuild = infoDictionary["CFBundleVersion"] as? String
-        {
-            versionLabel.text = "最水木(iZSM) \(appVersion)(\(appBuild))"
-            versionLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        }
         rateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
         mailLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
         websiteLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
-        
     }
 
     override func viewDidLayoutSubviews() {

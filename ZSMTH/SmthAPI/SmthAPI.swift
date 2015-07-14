@@ -58,11 +58,7 @@ class SmthAPI {
         data.writeToFile(localPath, atomically: true)
         var error:Int32 = 0
         let ret = apiNetAddAttachment(localPath, &error)
-        if ret == 0 {
-            return true
-        } else {
-            return false
-        }
+        return (ret == 0)
     }
 
     //MARK: - Reset API's Status
@@ -93,10 +89,11 @@ class SmthAPI {
                     threadList.append(thread)
                 }
             }
-            return threadList
-        } else {
-            return nil
+            if threadList.count > 0 {
+                return threadList
+            }
         }
+        return nil
     }
 
     enum SortMode: Int32 {
@@ -117,10 +114,11 @@ class SmthAPI {
                     articleList.append(article)
                 }
             }
-            return articleList
-        } else {
-            return nil
+            if articleList.count > 0 {
+                return articleList
+            }
         }
+        return nil
     }
 
     // call this after getThreadContentInBoard to get the last thread articles count
@@ -140,10 +138,11 @@ class SmthAPI {
                     threadList.append(thread)
                 }
             }
-            return threadList
-        } else {
-            return nil
+            if threadList.count > 0 {
+                return threadList
+            }
         }
+        return nil
     }
 
     // get article count of board
@@ -223,7 +222,9 @@ class SmthAPI {
                     mailList.append(mail)
                 }
             }
-            return mailList
+            if mailList.count > 0 {
+                return mailList
+            }
         }
         return nil
     }
@@ -238,7 +239,9 @@ class SmthAPI {
                     mailList.append(mail)
                 }
             }
-            return mailList
+            if mailList.count > 0 {
+                return mailList
+            }
         }
         return nil
     }
@@ -309,8 +312,11 @@ class SmthAPI {
                     referList.append(refer)
                 }
             }
+            if referList.count > 0 {
+                return referList
+            }
         }
-        return referList
+        return nil
     }
 
     // set reference read
@@ -330,7 +336,9 @@ class SmthAPI {
                     boardList.append(board)
                 }
             }
-            return boardList
+            if boardList.count > 0 {
+                return boardList
+            }
         }
         return nil
     }
@@ -358,7 +366,9 @@ class SmthAPI {
                     boardList.append(board)
                 }
             }
-            return boardList
+            if boardList.count > 0 {
+                return boardList
+            }
         }
         return nil
     }
@@ -373,7 +383,9 @@ class SmthAPI {
                     boardList.append(board)
                 }
             }
-            return boardList
+            if boardList.count > 0 {
+                return boardList
+            }
         }
         return nil
     }
@@ -388,7 +400,9 @@ class SmthAPI {
                     boardList.append(board)
                 }
             }
-            return boardList
+            if boardList.count > 0 {
+                return boardList
+            }
         }
         return nil
     }
@@ -409,7 +423,9 @@ class SmthAPI {
                     sectionList.append(SMSection(code: code, description: desc, name: name, id: id))
                 }
             }
-            return sectionList
+            if sectionList.count > 0 {
+                return sectionList
+            }
         }
         return nil
     }
@@ -424,7 +440,9 @@ class SmthAPI {
                     hotThreadList.append(hotThread)
                 }
             }
-            return hotThreadList
+            if hotThreadList.count > 0 {
+                return hotThreadList
+            }
         }
         return nil
     }
@@ -449,7 +467,9 @@ class SmthAPI {
                     friendList.append(userID)
                 }
             }
-            return friendList
+            if friendList.count > 0 {
+                return friendList
+            }
         }
         return nil
     }
@@ -503,7 +523,9 @@ class SmthAPI {
                     memberList.append(member)
                 }
             }
-            return memberList
+            if memberList.count > 0 {
+                return memberList
+            }
         }
         return nil
     }

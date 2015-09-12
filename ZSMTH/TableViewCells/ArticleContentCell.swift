@@ -8,14 +8,15 @@
 
 import UIKit
 import RSTWebViewController
+import Kingfisher
 import MessageUI
 
 class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDelegate, TTTAttributedLabelDelegate, MFMailComposeViewControllerDelegate {
 
-    private var authorButton = UIButton.buttonWithType(.System) as! UIButton
+    private var authorButton = UIButton(type: .System)
     private var floorAndTimeLabel = UILabel(frame: CGRectZero)
-    private var replyButton = UIButton.buttonWithType(.System) as! UIButton
-    private var moreButton = UIButton.buttonWithType(.System) as! UIButton
+    private var replyButton = UIButton(type: .System)
+    private var moreButton = UIButton(type: .System)
     private var imageViews = [UIImageView]()
 
     private var contentLabel = TTTAttributedLabel(frame: CGRectZero)
@@ -29,7 +30,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
     private let blankWidth: CGFloat = 4
     private let picNumPerLine: CGFloat = 3
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
@@ -122,7 +123,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         if imageViews.count == 1 {
             imageViews.first!.frame = CGRect(x: 0, y: size.height - size.width, width: size.width, height: size.width)
         } else {
-            for (index, imageView) in enumerate(imageViews) {
+            for (index, imageView) in imageViews.enumerate() {
                 let length = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
                 let startY = size.height - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth)
                 let offsetY = (length + blankWidth) * CGFloat(index / Int(picNumPerLine))
@@ -173,28 +174,27 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
     }
 
     func attributedLabel(label: TTTAttributedLabel!, didSelectLinkWithURL url: NSURL!) {
-        if let urlString = url.absoluteString {
-            if urlString.hasPrefix("mailto") {
-                let recipient = urlString.substringFromIndex(advance(urlString.startIndex, 7))
-                let mailComposeViewController = MFMailComposeViewController()
-                mailComposeViewController.mailComposeDelegate = self
-                mailComposeViewController.setToRecipients([recipient])
-                mailComposeViewController.modalPresentationStyle = .FormSheet
-                mailComposeViewController.navigationBar.barStyle = .Black
-                mailComposeViewController.navigationBar.tintColor = UIColor.whiteColor()
-                controller?.presentViewController(mailComposeViewController, animated: true, completion: nil)
-
-            } else {
-                let webViewController = RSTWebViewController(URL: url)
-                webViewController.showsDoneButton = true
-                let navigationController = NYNavigationController(rootViewController: webViewController)
-                controller?.presentViewController(navigationController, animated: true, completion: nil)
-            }
+        let urlString = url.absoluteString
+        if urlString.hasPrefix("mailto") {
+            let recipient = urlString.substringFromIndex(urlString.startIndex.advancedBy(7))
+            let mailComposeViewController = MFMailComposeViewController()
+            mailComposeViewController.mailComposeDelegate = self
+            mailComposeViewController.setToRecipients([recipient])
+            mailComposeViewController.modalPresentationStyle = .FormSheet
+            mailComposeViewController.navigationBar.barStyle = .Black
+            mailComposeViewController.navigationBar.tintColor = UIColor.whiteColor()
+            controller?.presentViewController(mailComposeViewController, animated: true, completion: nil)
+            
+        } else {
+            let webViewController = RSTWebViewController(URL: url)
+            webViewController.showsDoneButton = true
+            let navigationController = NYNavigationController(rootViewController: webViewController)
+            controller?.presentViewController(navigationController, animated: true, completion: nil)
         }
     }
 
-    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
-        controller?.dismissViewControllerAnimated(true, completion: nil)
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
     }
 
     //MARK: - Action
@@ -202,7 +202,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         if let imageView = recognizer.view as? UIImageView {
             let imageInfo = JTSImageInfo()
 
-            if let index = find(imageViews, imageView) {
+            if let index = imageViews.indexOf(imageView) {
                 imageInfo.imageURL = article?.imageAtt[index].fullImageURL
                 imageInfo.placeholderImage = imageView.image
             } else {
@@ -214,7 +214,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
 
             let imageViewer = JTSImageViewController(imageInfo: imageInfo, mode: .Image, backgroundStyle: .Blurred)
             imageViewer.interactionsDelegate = self
-            imageViewer.showFromViewController(controller, transition: ._FromOriginalPosition)
+            imageViewer.showFromViewController(controller, transition: .FromOriginalPosition)
         }
     }
 
@@ -225,7 +225,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
             UIImageWriteToSavedPhotosAlbum(image, self, "image:didFinishSavingWithError:contextInfo:", nil)
         }
         actionSheet.addAction(savePhotoAction)
-        let copyPhotoAction = UIAlertAction(title: "复制到剪贴板", style: .Default) { [unowned self](alertAction) -> Void in
+        let copyPhotoAction = UIAlertAction(title: "复制到剪贴板", style: .Default) { (alertAction) -> Void in
             UIPasteboard.generalPasteboard().image = imageViewer.image
             let hud = MBProgressHUD.showHUDAddedTo(UIApplication.sharedApplication().keyWindow, animated: true)
             hud.mode = .Text
@@ -290,7 +290,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         controller?.presentViewController(actionSheet, animated: true, completion: nil)
     }
 
-    private func reply(#ByMail: Bool) {
+    private func reply(ByMail ByMail: Bool) {
         if let cavc = self.controller?.storyboard?.instantiateViewControllerWithIdentifier("ComposeArticleController") as? ComposeArticleController {
             cavc.boardID = self.article?.boardID
             cavc.delegate = self.delegate
@@ -313,7 +313,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
             if let boardID = self.article?.boardID, boards = api.queryBoard(boardID) {
                 for board in boards {
                     if board.boardID == boardID {
-                        let managers = split(board.manager) { $0 == " " }
+                        let managers = board.manager.characters.split { $0 == " " }.map { String($0) }
                         if managers.count > 0 && !managers[0].isEmpty {
                             adminID = managers[0]
                         }
@@ -329,9 +329,9 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
                     textField.returnKeyType = .Done
                 }
                 let okAction = UIAlertAction(title: "举报", style: .Default) { [unowned alert, unowned self] action in
-                    if let textField = alert.textFields?.first as? UITextField {
+                    if let textField = alert.textFields?.first {
                         let hud = MBProgressHUD.showHUDAddedTo(self.controller?.navigationController?.view, animated: true)
-                        if textField.text == nil || textField.text.isEmpty {
+                        if textField.text == nil || textField.text!.isEmpty {
                             hud.mode = .Text
                             hud.labelText = "举报原因不能为空"
                             hud.hide(true, afterDelay: 1)
@@ -364,7 +364,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         }
     }
 
-    private func forward(#ToBoard: Bool) {
+    private func forward(ToBoard ToBoard: Bool) {
         if let originalArticle = self.article {
             let api = SmthAPI()
             let alert = UIAlertController(title: (ToBoard ? "转寄到版面":"转寄给用户"), message: nil, preferredStyle: .Alert)
@@ -375,14 +375,14 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
                 textField.returnKeyType = .Send
             }
             let okAction = UIAlertAction(title: "确定", style: .Default) { [unowned alert, unowned self] action in
-                if let textField = alert.textFields?.first as? UITextField {
+                if let textField = alert.textFields?.first {
                     let hud = MBProgressHUD.showHUDAddedTo(self.controller?.navigationController?.view, animated: true)
                     networkActivityIndicatorStart()
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                         if ToBoard {
-                            api.crossArticle(originalArticle.id, fromBoard: self.article!.boardID, toBoard: textField.text)
+                            api.crossArticle(originalArticle.id, fromBoard: self.article!.boardID, toBoard: textField.text!)
                         } else {
-                            let user = textField.text.isEmpty ? AppSetting.sharedSetting().username! : textField.text
+                            let user = textField.text!.isEmpty ? AppSetting.sharedSetting().username! : textField.text!
                             api.forwardArticle(originalArticle.id, inBoard: self.article!.boardID, toUser: user)
                         }
                         dispatch_async(dispatch_get_main_queue()) {

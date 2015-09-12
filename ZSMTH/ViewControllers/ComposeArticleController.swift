@@ -166,7 +166,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         }
     }
 
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         dismissViewControllerAnimated(true, completion: nil)
         let type = info[UIImagePickerControllerMediaType] as! String
         if type == "public.image" {
@@ -184,7 +184,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
             } else {
                 articleTitle = "Re: " + article.subject
             }
-            countLabel.text = "\(count(articleTitle!))"
+            countLabel.text = "\((articleTitle!).characters.count)"
             // 处理内容
             var tempContent = "\n【 在 \(article.authorID) 的大作中提到: 】\n"
             var origContent = article.body + "\n"
@@ -193,7 +193,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                 origContent.replaceRange(range, with: "")
             }
 
-            for i in 1...3 {
+            for _ in 1...3 {
                 if let linebreak = origContent.rangeOfString("\n") {
                     tempContent += (": " + origContent.substringToIndex(linebreak.endIndex))
                     origContent = origContent.substringFromIndex(linebreak.endIndex)
@@ -201,7 +201,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                     break
                 }
             }
-            if let linebreak = origContent.rangeOfString("\n") {
+            if origContent.rangeOfString("\n") != nil {
                 tempContent += ": ....................\n"
             }
 
@@ -235,12 +235,13 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     }
 
     func textFieldDidChange(textField: UITextField) {
-        let length = count(textField.text)
-        countLabel?.text = "\(length)"
-        if length > 0 {
-            doneButton.enabled = true
-        } else {
-            doneButton.enabled = false
+        if let length = textField.text?.characters.count {
+            countLabel?.text = "\(length)"
+            if length > 0 {
+                doneButton.enabled = true
+            } else {
+                doneButton.enabled = false
+            }
         }
     }
 

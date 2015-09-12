@@ -47,8 +47,8 @@ class FavListViewController: BaseTableViewController {
     @IBAction func addFavorite(sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "请输入要收藏的版面ID", message: nil, preferredStyle: .Alert)
         let okAction = UIAlertAction(title: "确定", style: .Default) { [unowned alert] action in
-            if let textField = alert.textFields?.first as? UITextField {
-                let board = textField.text
+            if let textField = alert.textFields?.first {
+                let board = textField.text!
                 self.addFavoriteWithBoardID(board)
             }
         }
@@ -102,9 +102,9 @@ class FavListViewController: BaseTableViewController {
         let fav = favorites[indexPath.row]
         var cell: UITableViewCell
         if (fav.flag != -1) && (fav.flag & 0x400 == 0) { //是版面
-            cell = tableView.dequeueReusableCellWithIdentifier(Static.boardIdentifier, forIndexPath: indexPath) as! UITableViewCell
+            cell = tableView.dequeueReusableCellWithIdentifier(Static.boardIdentifier, forIndexPath: indexPath) 
         } else {
-            cell = tableView.dequeueReusableCellWithIdentifier(Static.directoryIdentifier, forIndexPath: indexPath) as! UITableViewCell
+            cell = tableView.dequeueReusableCellWithIdentifier(Static.directoryIdentifier, forIndexPath: indexPath) 
         }
         // Configure the cell...
         cell.textLabel?.text = fav.name

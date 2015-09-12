@@ -58,7 +58,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
             acvc.boardID = reference.boardID
             var title = reference.subject
             if title.hasPrefix("Re: ") {
-                title = title.substringFromIndex(advance(title.startIndex, 4))
+                title = title.substringFromIndex(title.startIndex.advancedBy(4))
             }
             acvc.title = title
             acvc.fromTopTen = true
@@ -122,7 +122,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     }
 
     private func attributedStringFromContentString(string: String) -> NSAttributedString {
-        var attributeText = NSMutableAttributedString()
+        let attributeText = NSMutableAttributedString()
 
         let normal = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody),
             NSParagraphStyleAttributeName: NSParagraphStyle.defaultParagraphStyle(),

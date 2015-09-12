@@ -1,0 +1,3 @@
+[submodule "ZSMTH/Frameworks/Kingfisher"]
+	path = ZSMTH/Frameworks/Kingfisher
+	url = https://github.com/onevcat/Kingfisher.git

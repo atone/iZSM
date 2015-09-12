@@ -64,11 +64,11 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
                 textField.returnKeyType = .Send
             }
             let okAction = UIAlertAction(title: "确定", style: .Default) { [unowned alert] action in
-                if let textField = alert.textFields?.first as? UITextField {
+                if let textField = alert.textFields?.first {
                     let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                     networkActivityIndicatorStart()
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                        self.api.forwardMailAtPosition(originalMail.position, toUser: textField.text)
+                        self.api.forwardMailAtPosition(originalMail.position, toUser: textField.text!)
                         dispatch_async(dispatch_get_main_queue()) {
                             networkActivityIndicatorStop()
                             hud.mode = .Text
@@ -144,7 +144,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     }
 
     private func attributedStringFromContentString(string: String) -> NSAttributedString {
-        var attributeText = NSMutableAttributedString()
+        let attributeText = NSMutableAttributedString()
 
         let normal = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody),
             NSParagraphStyleAttributeName: NSParagraphStyle.defaultParagraphStyle(),

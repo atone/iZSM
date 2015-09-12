@@ -97,7 +97,7 @@ class BaseTableViewController: UITableViewController, LoginViewControllerDelegat
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         // solve the bug when swipe back, tableview cell doesn't deselect
-        if let selectedRow = tableView.indexPathForSelectedRow() {
+        if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRowAtIndexPath(selectedRow, animated: true)
         }
     }

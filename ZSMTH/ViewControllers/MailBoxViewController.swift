@@ -71,7 +71,7 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
                 if let fetchedMails = fetchedMails {
                     self.mailCountLoaded -= fetchedMails.count
                     self.mails.removeAll()
-                    self.mails.append(fetchedMails.reverse())
+                    self.mails.append(Array(fetchedMails.reverse()))
                 }
                 self.api.displayErrorIfNeeded()
             }
@@ -92,7 +92,7 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
                 networkActivityIndicatorStop()
                 if let fetchedMails = fetchedMails {
                     self.mailCountLoaded -= fetchedMails.count
-                    self.mails.append(fetchedMails.reverse())
+                    self.mails.append(Array(fetchedMails.reverse()))
                 }
                 self.api.displayErrorIfNeeded()
             }
@@ -156,9 +156,9 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
                 mails[indexPath.section][indexPath.row] = readMail
             }
         } else {
-            var dvc = segue.destinationViewController as? UIViewController
+            var dvc = segue.destinationViewController
             if let nvc = dvc as? UINavigationController {
-                dvc = nvc.visibleViewController
+                dvc = nvc.visibleViewController!
             }
             if let cec = dvc as? ComposeEmailController {
                 if !inbox {

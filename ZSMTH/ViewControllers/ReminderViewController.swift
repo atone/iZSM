@@ -71,7 +71,7 @@ class ReminderViewController: BaseTableViewController {
                 if let fetchedRefers = fetchedRefers {
                     self.referCountLoaded -= fetchedRefers.count
                     self.references.removeAll()
-                    self.references.append(fetchedRefers.reverse())
+                    self.references.append(Array(fetchedRefers.reverse()))
                 }
                 self.api.displayErrorIfNeeded()
             }
@@ -92,7 +92,7 @@ class ReminderViewController: BaseTableViewController {
                 networkActivityIndicatorStop()
                 if let fetchedRefers = fetchedRefers {
                     self.referCountLoaded -= fetchedRefers.count
-                    self.references.append(fetchedRefers.reverse())
+                    self.references.append(Array(fetchedRefers.reverse()))
                 }
                 self.api.displayErrorIfNeeded()
             }

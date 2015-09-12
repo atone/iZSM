@@ -155,7 +155,7 @@ public class RSTWebViewController: UIViewController {
         }
     }
     
-    public required init(coder: NSCoder)
+    public required init?(coder: NSCoder)
     {
         let configuration = WKWebViewConfiguration()
         self.webView = WKWebView(frame: CGRectZero, configuration: configuration)
@@ -172,7 +172,7 @@ public class RSTWebViewController: UIViewController {
     private func initialize()
     {
         self.progressView.progressViewStyle = .Bar
-        self.progressView.autoresizingMask = .FlexibleWidth | .FlexibleTopMargin
+        self.progressView.autoresizingMask = [.FlexibleWidth, .FlexibleTopMargin]
         self.progressView.progress = 0.5
         self.progressView.alpha = 0.0
         self.progressView.hidden = true
@@ -252,7 +252,7 @@ public class RSTWebViewController: UIViewController {
         
         var shouldHideToolbarItems = true
         
-        if let toolbarItems = self.navigationController?.topViewController.toolbarItems
+        if let toolbarItems = self.navigationController?.topViewController?.toolbarItems
         {
             if toolbarItems.count > 0
             {
@@ -324,7 +324,7 @@ public class RSTWebViewController: UIViewController {
     
     //MARK: KVO
     
-    public override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<()>)
+    public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<()>)
     {
         if context == RSTWebViewControllerContext
         {
@@ -332,20 +332,20 @@ public class RSTWebViewController: UIViewController {
             
             switch keyPath
             {
-            case "title":
+            case "title"?:
                 self.updateTitle(webView.title)
                 
-            case "estimatedProgress":
+            case "estimatedProgress"?:
                 self.updateProgress(Float(webView.estimatedProgress))
                 
-            case "loading":
+            case "loading"?:
                 self.updateLoadingStatus(status: webView.loading)
                 
-            case "canGoBack", "canGoForward":
+            case "canGoBack"?, "canGoForward"?:
                 self.updateToolbarItems()
                 
             default:
-                println("Unknown KVO keypath")
+                print("Unknown KVO keypath")
             }
         }
         else
@@ -403,7 +403,7 @@ internal extension RSTWebViewController {
         let activityItem = RSTURLActivityItem(URL: self.webView.URL ?? NSURL())
         activityItem.title = self.webView.title
         
-        if self.excludedActivityTypes == nil || (self.excludedActivityTypes != nil && !contains(self.excludedActivityTypes!, RSTActivityTypeOnePassword))
+        if self.excludedActivityTypes == nil || (self.excludedActivityTypes != nil && !(self.excludedActivityTypes!).contains(RSTActivityTypeOnePassword))
         {
             
             #if DEBUG
@@ -429,7 +429,7 @@ internal extension RSTWebViewController {
                             {
                                 let UTIs = importedUTI["UTTypeConformsTo"] as! [String]
                                 
-                                if contains(UTIs, "org.appextension.fill-webview-action") && contains(UTIs, "public.url")
+                                if UTIs.contains("org.appextension.fill-webview-action") && UTIs.contains("public.url")
                                 {
                                     importedURLUTI = true
                                 }
@@ -475,12 +475,12 @@ internal extension RSTWebViewController {
         
         if let excludedActivityTypes = self.excludedActivityTypes
         {
-            if !contains(excludedActivityTypes, RSTActivityTypeSafari)
+            if !excludedActivityTypes.contains(RSTActivityTypeSafari)
             {
                 applicationActivities.append(RSTSafariActivity())
             }
             
-            if !contains(excludedActivityTypes, RSTActivityTypeChrome)
+            if !excludedActivityTypes.contains(RSTActivityTypeChrome)
             {
                 applicationActivities.append(RSTChromeActivity())
             }
@@ -540,11 +540,11 @@ private extension RSTWebViewController {
     
     func startKeyValueObserving()
     {
-        self.webView.addObserver(self, forKeyPath: "title", options:nil, context: RSTWebViewControllerContext)
-        self.webView.addObserver(self, forKeyPath: "estimatedProgress", options: nil, context: RSTWebViewControllerContext)
-        self.webView.addObserver(self, forKeyPath: "loading", options: nil, context: RSTWebViewControllerContext)
-        self.webView.addObserver(self, forKeyPath: "canGoBack", options: nil, context: RSTWebViewControllerContext)
-        self.webView.addObserver(self, forKeyPath: "canGoForward", options: nil, context: RSTWebViewControllerContext)
+        self.webView.addObserver(self, forKeyPath: "title", options:[], context: RSTWebViewControllerContext)
+        self.webView.addObserver(self, forKeyPath: "estimatedProgress", options: [], context: RSTWebViewControllerContext)
+        self.webView.addObserver(self, forKeyPath: "loading", options: [], context: RSTWebViewControllerContext)
+        self.webView.addObserver(self, forKeyPath: "canGoBack", options: [], context: RSTWebViewControllerContext)
+        self.webView.addObserver(self, forKeyPath: "canGoForward", options: [], context: RSTWebViewControllerContext)
     }
     
     func stopKeyValueObserving()
@@ -627,7 +627,7 @@ private extension RSTWebViewController {
         }
     }
     
-    func showProgressBar(#animated: Bool)
+    func showProgressBar(animated animated: Bool)
     {
         let navigationBarBounds = self.navigationController?.navigationBar.bounds ?? CGRectZero
         self.progressView.frame = CGRect(x: 0, y: navigationBarBounds.height - self.progressView.bounds.height, width: navigationBarBounds.width, height: self.progressView.bounds.height)
@@ -649,7 +649,7 @@ private extension RSTWebViewController {
         }
     }
     
-    func hideProgressBar(#animated: Bool)
+    func hideProgressBar(animated animated: Bool)
     {
         if animated
         {

@@ -84,9 +84,9 @@ class HotTableViewController: BaseTableViewController {
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        var dvc = segue.destinationViewController as? UIViewController
+        var dvc = segue.destinationViewController
         if let nvc = dvc as? UINavigationController {
-            dvc = nvc.visibleViewController
+            dvc = nvc.visibleViewController!
         }
 
         if let

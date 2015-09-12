@@ -123,7 +123,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             emailReceiver = preReceiver
             title = "邮件反馈"
             doneButton.enabled = true
-            countLabel.text = "\(count(emailTitle!))"
+            countLabel.text = "\((emailTitle!).characters.count)"
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
         } else {
@@ -142,7 +142,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                 emailTitle = "Re: " + email.subject
             }
             emailReceiver = email.authorID
-            countLabel.text = "\(count(emailTitle!))"
+            countLabel.text = "\((emailTitle!).characters.count)"
             // 处理内容
             var tempContent = "\n【 在 \(email.authorID) 的来信中提到: 】\n"
             var origContent = email.body + "\n"
@@ -151,7 +151,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                 origContent.replaceRange(range, with: "")
             }
 
-            for i in 1...3 {
+            for _ in 1...3 {
                 if let linebreak = origContent.rangeOfString("\n") {
                     tempContent += (": " + origContent.substringToIndex(linebreak.endIndex))
                     origContent = origContent.substringFromIndex(linebreak.endIndex)
@@ -159,7 +159,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                     break
                 }
             }
-            if let linebreak = origContent.rangeOfString("\n") {
+            if origContent.rangeOfString("\n") != nil {
                 tempContent += ": ....................\n"
             }
             emailContent = tempContent
@@ -202,10 +202,10 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
 
     func textFieldDidChange(textField: UITextField) {
         if textField === titleTextField {
-            countLabel?.text = "\(count(textField.text))"
+            countLabel?.text = "\(textField.text!.characters.count)"
         }
-        let userLength = count(receiverTextField.text)
-        let titleLength = count(titleTextField.text)
+        let userLength = receiverTextField.text!.characters.count
+        let titleLength = titleTextField.text!.characters.count
         if userLength > 0 && titleLength > 0 {
             doneButton.enabled = true
         } else {

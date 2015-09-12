@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         // register notification
-        let type: UIUserNotificationType = .Alert | .Badge | .Sound
+        let type: UIUserNotificationType = [.Alert, .Badge, .Sound]
         let mySettings = UIUserNotificationSettings(forTypes: type, categories: nil)
         application.registerUserNotificationSettings(mySettings)
 
@@ -78,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if setting.accessToken != nil {
             let tabBarController = self.window?.rootViewController as? UITabBarController
             let navigationController = tabBarController?.viewControllers?.last as? UINavigationController
-            let userViewController = navigationController?.viewControllers?.first as? UserViewController
+            let userViewController = navigationController?.viewControllers.first as? UserViewController
 
             if let uvc = userViewController {
                 uvc.checkNewMailAndReferenceBackgroundMode(true) { hasNewMessage -> Void in
@@ -104,7 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func navigateToNewMessagePageWithNotification(notif: UILocalNotification) {
         let tabBarController = self.window?.rootViewController as? UITabBarController
         let navigationController = tabBarController?.viewControllers?.last as? UINavigationController
-        let userViewController = navigationController?.viewControllers?.first as? UserViewController
+        let userViewController = navigationController?.viewControllers.first as? UserViewController
 
         if let uvc = userViewController {
             tabBarController?.selectedIndex = 3
@@ -141,7 +141,7 @@ func printLog<T>(message: T,
     method: String = __FUNCTION__, line: Int = __LINE__)
 {
     #if DEBUG
-        println("\(file.lastPathComponent)[\(line)], \(method): \(message)")
+        print("\(file)[\(line)], \(method): \(message)")
     #endif
 }
 

@@ -27,7 +27,7 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
     var searchMode = false
 
     var searchString: String {
-        return searchController.searchBar.text
+        return searchController.searchBar.text!
     }
     var selectedIndex: Int {
         return searchController.searchBar.selectedScopeButtonIndex
@@ -222,9 +222,9 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == Static.ArticleSegueIdentifier {
-            var dvc = segue.destinationViewController as? UIViewController
+            var dvc = segue.destinationViewController
             if let nvc = dvc as? UINavigationController {
-                dvc = nvc.visibleViewController
+                dvc = nvc.visibleViewController!
             }
 
             if let
@@ -246,9 +246,9 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
                 }
             }
         } else if segue.identifier == Static.ComposeSegueIdentifier {
-            var dvc = segue.destinationViewController as? UIViewController
+            var dvc = segue.destinationViewController
             if let nvc = dvc as? UINavigationController {
-                dvc = nvc.visibleViewController
+                dvc = nvc.visibleViewController!
             }
             if let cavc = dvc as? ComposeArticleController {
                 cavc.boardID = boardID

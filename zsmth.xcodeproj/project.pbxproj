@@ -63,6 +63,9 @@
 		9CBBE3DC1AAF1EE80019C511 /* AppSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBBE3DB1AAF1EE80019C511 /* AppSetting.swift */; };
 		9CC73B5A1AB7251A000F9AE9 /* BoardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC73B591AB7251A000F9AE9 /* BoardListViewController.swift */; };
 		9CD7E4041B3EBF4E00A75C62 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7E4031B3EBF4E00A75C62 /* SettingsViewController.swift */; };
+		9CE8C6601BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65B1BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.m */; settings = {ASSET_TAGS = (); }; };
+		9CE8C6611BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65D1BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m */; settings = {ASSET_TAGS = (); }; };
+		9CE8C6621BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65F1BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m */; settings = {ASSET_TAGS = (); }; };
 		9CEDC63A1B46962B00D79064 /* RSTWebViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CEDC6371B4695D000D79064 /* RSTWebViewController.framework */; };
 		9CEDC63B1B46962B00D79064 /* RSTWebViewController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9CEDC6371B4695D000D79064 /* RSTWebViewController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9CEDC66F1B46DAC200D79064 /* NYNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CEDC66E1B46DAC200D79064 /* NYNavigationController.swift */; };
@@ -234,6 +237,12 @@
 		9CBBE3DB1AAF1EE80019C511 /* AppSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppSetting.swift; path = SmthAPI/AppSetting.swift; sourceTree = "<group>"; };
 		9CC73B591AB7251A000F9AE9 /* BoardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BoardListViewController.swift; path = ViewControllers/BoardListViewController.swift; sourceTree = "<group>"; };
 		9CD7E4031B3EBF4E00A75C62 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = ViewControllers/SettingsViewController.swift; sourceTree = "<group>"; };
+		9CE8C65A1BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableView+FDIndexPathHeightCache.h"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDIndexPathHeightCache.h"; sourceTree = "<group>"; };
+		9CE8C65B1BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableView+FDIndexPathHeightCache.m"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDIndexPathHeightCache.m"; sourceTree = "<group>"; };
+		9CE8C65C1BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableView+FDKeyedHeightCache.h"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDKeyedHeightCache.h"; sourceTree = "<group>"; };
+		9CE8C65D1BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableView+FDKeyedHeightCache.m"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDKeyedHeightCache.m"; sourceTree = "<group>"; };
+		9CE8C65E1BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableView+FDTemplateLayoutCellDebug.h"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDTemplateLayoutCellDebug.h"; sourceTree = "<group>"; };
+		9CE8C65F1BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableView+FDTemplateLayoutCellDebug.m"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDTemplateLayoutCellDebug.m"; sourceTree = "<group>"; };
 		9CEDC6311B4695D000D79064 /* RSTWebViewController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RSTWebViewController.xcodeproj; path = RSTWebViewController/RSTWebViewController.xcodeproj; sourceTree = "<group>"; };
 		9CEDC66E1B46DAC200D79064 /* NYNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NYNavigationController.swift; path = ViewControllers/NYNavigationController.swift; sourceTree = "<group>"; };
 		9CF2F5601AC24661001F9693 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -310,6 +319,12 @@
 		9C55EBC11B4EB35800DB75F7 /* UITableView+FDTemplateLayoutCell */ = {
 			isa = PBXGroup;
 			children = (
+				9CE8C65A1BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.h */,
+				9CE8C65B1BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.m */,
+				9CE8C65C1BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.h */,
+				9CE8C65D1BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m */,
+				9CE8C65E1BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.h */,
+				9CE8C65F1BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m */,
 				9C55EBBE1B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.h */,
 				9C55EBBF1B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.m */,
 			);
@@ -716,6 +731,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CF60D5F1B465FDB00EA7449 /* UIScreen+Additions.m in Sources */,
+				9CE8C6621BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */,
 				9CA61BB81AC43B2E00E595C8 /* MJRefreshConst.m in Sources */,
 				9C6D61F11AB9B4B3005A8259 /* ComposeArticleController.swift in Sources */,
 				9CA61BBC1AC43B2E00E595C8 /* MJRefreshHeader.m in Sources */,
@@ -739,6 +755,7 @@
 				9CA61BC11AC43B2E00E595C8 /* UIView+MJExtension.m in Sources */,
 				9CC73B5A1AB7251A000F9AE9 /* BoardListViewController.swift in Sources */,
 				9CA61BB71AC43B2E00E595C8 /* MJRefreshComponent.m in Sources */,
+				9CE8C6611BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m in Sources */,
 				9C34E9481B5282F700E94AD5 /* LogoView.swift in Sources */,
 				9CBBE3DC1AAF1EE80019C511 /* AppSetting.swift in Sources */,
 				9C38613A1AB7F1AB0062340B /* ArticleListCell.swift in Sources */,
@@ -760,6 +777,7 @@
 				9CA267C01AA7EF2400CE5C5D /* AppDelegate.swift in Sources */,
 				9CA61B9C1AC42ED700E595C8 /* LoginViewController.swift in Sources */,
 				9CA61BBB1AC43B2E00E595C8 /* MJRefreshGifHeader.m in Sources */,
+				9CE8C6601BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.m in Sources */,
 				9C13B70A1AA8533900A9420D /* SmthStructs.swift in Sources */,
 				9C5508C01AA98B32006931B6 /* HotTableViewController.swift in Sources */,
 				9C7700C81ABFB86800F9471B /* BaseTableViewController.swift in Sources */,

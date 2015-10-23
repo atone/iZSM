@@ -18,7 +18,7 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
     private var threadRange: NSRange {
         return NSMakeRange(threadLoaded, setting.threadCountPerSection)
     }
-    private var threads: [[SMThread]] = [[SMThread]]() {
+    var threads: [[SMThread]] = [[SMThread]]() {
         didSet { tableView?.reloadData() }
     }
 
@@ -104,6 +104,12 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
         searchController.searchBar.delegate = self
         let searchButton = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: "pressSearchButton:")
         navigationItem.rightBarButtonItems?.append(searchButton)
+        
+        if #available(iOS 9.0, *) {
+            if traitCollection.forceTouchCapability == .Available {
+                registerForPreviewingWithDelegate(self, sourceView: view)
+            }
+        }
     }
 
     override func clearContent() {

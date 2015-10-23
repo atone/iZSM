@@ -163,14 +163,6 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
 
     // MARK: - Table view data source
     
-    override func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
-        if smarticles.count == 0 {
-            return [String]()
-        }
-        let sectionRange = 1...smarticles.count
-        return sectionRange.map { (t: Int) -> String in String(t) }
-    }
-    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return smarticles.count
     }

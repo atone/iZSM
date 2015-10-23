@@ -26,6 +26,8 @@
 		9C6D61F11AB9B4B3005A8259 /* ComposeArticleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6D61F01AB9B4B3005A8259 /* ComposeArticleController.swift */; };
 		9C72F6211ABD0ADE0098F9D8 /* ReferContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C72F6201ABD0ADE0098F9D8 /* ReferContentViewController.swift */; };
 		9C7700C81ABFB86800F9471B /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7700C71ABFB86800F9471B /* BaseTableViewController.swift */; };
+		9C785E551BDA7DC600BF71FC /* HotTableViewController+UIViewControllerPreviewing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C785E541BDA7DC600BF71FC /* HotTableViewController+UIViewControllerPreviewing.swift */; };
+		9C785E5A1BDA84F600BF71FC /* ArticleListViewController+UIViewControllerPreviewing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C785E591BDA84F600BF71FC /* ArticleListViewController+UIViewControllerPreviewing.swift */; };
 		9C9DE9841ABBB6B8001C292F /* MailContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9DE9831ABBB6B8001C292F /* MailContentViewController.swift */; };
 		9C9E4F741AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F691AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m */; };
 		9C9E4F751AB5A0D50053CBD8 /* JTSImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F6B1AB5A0D50053CBD8 /* JTSImageInfo.m */; };
@@ -63,9 +65,9 @@
 		9CBBE3DC1AAF1EE80019C511 /* AppSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBBE3DB1AAF1EE80019C511 /* AppSetting.swift */; };
 		9CC73B5A1AB7251A000F9AE9 /* BoardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC73B591AB7251A000F9AE9 /* BoardListViewController.swift */; };
 		9CD7E4041B3EBF4E00A75C62 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7E4031B3EBF4E00A75C62 /* SettingsViewController.swift */; };
-		9CE8C6601BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65B1BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.m */; settings = {ASSET_TAGS = (); }; };
-		9CE8C6611BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65D1BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m */; settings = {ASSET_TAGS = (); }; };
-		9CE8C6621BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65F1BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m */; settings = {ASSET_TAGS = (); }; };
+		9CE8C6601BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65B1BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.m */; };
+		9CE8C6611BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65D1BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m */; };
+		9CE8C6621BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65F1BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m */; };
 		9CEDC63A1B46962B00D79064 /* RSTWebViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CEDC6371B4695D000D79064 /* RSTWebViewController.framework */; };
 		9CEDC63B1B46962B00D79064 /* RSTWebViewController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9CEDC6371B4695D000D79064 /* RSTWebViewController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9CEDC66F1B46DAC200D79064 /* NYNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CEDC66E1B46DAC200D79064 /* NYNavigationController.swift */; };
@@ -173,6 +175,8 @@
 		9C6D61F01AB9B4B3005A8259 /* ComposeArticleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComposeArticleController.swift; path = ViewControllers/ComposeArticleController.swift; sourceTree = "<group>"; };
 		9C72F6201ABD0ADE0098F9D8 /* ReferContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReferContentViewController.swift; path = ViewControllers/ReferContentViewController.swift; sourceTree = "<group>"; };
 		9C7700C71ABFB86800F9471B /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewController.swift; path = ViewControllers/BaseTableViewController.swift; sourceTree = "<group>"; };
+		9C785E541BDA7DC600BF71FC /* HotTableViewController+UIViewControllerPreviewing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "HotTableViewController+UIViewControllerPreviewing.swift"; path = "ViewControllers/HotTableViewController+UIViewControllerPreviewing.swift"; sourceTree = "<group>"; };
+		9C785E591BDA84F600BF71FC /* ArticleListViewController+UIViewControllerPreviewing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ArticleListViewController+UIViewControllerPreviewing.swift"; path = "ViewControllers/ArticleListViewController+UIViewControllerPreviewing.swift"; sourceTree = "<group>"; };
 		9C9DE9831ABBB6B8001C292F /* MailContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MailContentViewController.swift; path = ViewControllers/MailContentViewController.swift; sourceTree = "<group>"; };
 		9C9E4F681AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSAnimatedGIFUtility.h; sourceTree = "<group>"; };
 		9C9E4F691AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSAnimatedGIFUtility.m; sourceTree = "<group>"; };
@@ -295,9 +299,11 @@
 			children = (
 				9C7700C71ABFB86800F9471B /* BaseTableViewController.swift */,
 				9C5508BF1AA98B32006931B6 /* HotTableViewController.swift */,
+				9C785E541BDA7DC600BF71FC /* HotTableViewController+UIViewControllerPreviewing.swift */,
 				9C33C86F1AB8815700E5BFD2 /* FavListViewController.swift */,
 				9CC73B591AB7251A000F9AE9 /* BoardListViewController.swift */,
 				9C3861371AB7E9AC0062340B /* ArticleListViewController.swift */,
+				9C785E591BDA84F600BF71FC /* ArticleListViewController+UIViewControllerPreviewing.swift */,
 				9C3D340F1ABA717800DC6E0E /* MailBoxViewController.swift */,
 				9CF9E82E1ABAF64100A880AB /* ReminderViewController.swift */,
 				9CA6E8D11AAADF7E00B1D88F /* ArticleContentViewController.swift */,
@@ -764,6 +770,7 @@
 				9C9E4F781AB5A0D50053CBD8 /* UIApplication+JTSImageViewController.m in Sources */,
 				9C33C8701AB8815700E5BFD2 /* FavListViewController.swift in Sources */,
 				9C3D34141ABA814A00DC6E0E /* UserViewController.swift in Sources */,
+				9C785E5A1BDA84F600BF71FC /* ArticleListViewController+UIViewControllerPreviewing.swift in Sources */,
 				9CA61BBF1AC43B2E00E595C8 /* UIScrollView+MJExtension.m in Sources */,
 				9C3D34121ABA72DD00DC6E0E /* MailListCell.swift in Sources */,
 				9CA61BBD1AC43B2E00E595C8 /* MJRefreshLegendFooter.m in Sources */,
@@ -784,6 +791,7 @@
 				9C9E4F7B1AB5D2350053CBD8 /* SmthSplitViewController.swift in Sources */,
 				9C3861381AB7E9AC0062340B /* ArticleListViewController.swift in Sources */,
 				9CA5B2201B1870FB00C24777 /* EulaViewController.swift in Sources */,
+				9C785E551BDA7DC600BF71FC /* HotTableViewController+UIViewControllerPreviewing.swift in Sources */,
 				9CA267EC1AA7F04600CE5C5D /* client_signature.m in Sources */,
 				9C9DE9841ABBB6B8001C292F /* MailContentViewController.swift in Sources */,
 			);
@@ -932,6 +940,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/ZSMTH/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -955,6 +964,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/ZSMTH/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

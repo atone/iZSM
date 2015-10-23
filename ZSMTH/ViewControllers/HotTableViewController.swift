@@ -50,6 +50,16 @@ class HotTableViewController: BaseTableViewController {
         super.clearContent()
         content.removeAll()
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if #available(iOS 9.0, *) {
+            if traitCollection.forceTouchCapability == .Available {
+                registerForPreviewingWithDelegate(self, sourceView: view)
+            }
+        }
+    }
 
     // MARK: - Table view data source
 

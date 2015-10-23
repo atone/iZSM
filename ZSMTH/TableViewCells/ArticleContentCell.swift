@@ -107,8 +107,8 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         authorButton.frame = CGRect(origin: CGPoint(x: 8, y: 0), size: authorButton.bounds.size)
         floorAndTimeLabel.sizeToFit()
         floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: 8, y: 26), size: floorAndTimeLabel.bounds.size)
-        replyButton.frame = CGRect(x: CGFloat(UIScreen.screenWidth()-104), y: 14, width: 40, height: 24)
-        moreButton.frame = CGRect(x: CGFloat(UIScreen.screenWidth()-54), y: 14, width: 36, height: 24)
+        replyButton.frame = CGRect(x: CGFloat(UIScreen.screenWidth()-94), y: 14, width: 40, height: 24)
+        moreButton.frame = CGRect(x: CGFloat(UIScreen.screenWidth()-44), y: 14, width: 36, height: 24)
 
         var imageLength: CGFloat = 0
         if imageViews.count == 1 {
@@ -117,7 +117,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
             let oneImageLength = (contentView.bounds.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
         }
-        contentLabel.frame = CGRect(x: 8, y: 52, width: CGFloat(UIScreen.screenWidth()-24), height: contentView.bounds.height - 60 - imageLength)
+        contentLabel.frame = CGRect(x: 8, y: 52, width: CGFloat(UIScreen.screenWidth()-16), height: contentView.bounds.height - 60 - imageLength)
 
         let size = contentView.bounds.size
         if imageViews.count == 1 {
@@ -135,7 +135,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
 
     //MARK: - Calculate Fitting Size
     override func sizeThatFits(size: CGSize) -> CGSize {
-        let boundingSize = CGSizeMake(size.width-24, size.height)
+        let boundingSize = CGSizeMake(size.width-16, size.height)
         let rect = TTTAttributedLabel.sizeThatFitsAttributedString(article!.attributedBody, withConstraints: boundingSize, limitedToNumberOfLines: 0)
         var imageLength: CGFloat = 0
         if imageViews.count == 1 {

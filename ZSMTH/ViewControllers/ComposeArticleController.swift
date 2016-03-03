@@ -17,7 +17,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     var replyByMail: Bool = false
     var originalArticle: SMArticle?
 
-    let signature = "\n- 来自最水木 -"
+    let signature = "\n- 来自「最水木」iOS客户端"
 
     var articleTitle: String? {
         get { return titleTextField?.text }

@@ -62,7 +62,7 @@ class AboutViewController: UITableViewController {
             navigationController.modalPresentationStyle = .FormSheet
             presentViewController(navigationController, animated: true, completion: nil)
         case NSIndexPath(forRow: 2, inSection: 0):
-            let urlAddress = "http://www.yunaitong.cn/blog/2015/03/24/zsmth-released/"
+            let urlAddress = "http://www.yunaitong.cn/2015/03/24/zsmth-released/"
             let webViewController = RSTWebViewController(address: urlAddress)
             webViewController.showsDoneButton = true
             let navigationController = NYNavigationController(rootViewController: webViewController)

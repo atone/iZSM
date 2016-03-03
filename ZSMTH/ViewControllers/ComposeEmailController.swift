@@ -19,7 +19,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     var replyMode = false
     var originalEmail: SMMail?
 
-    let signature = "\n- 来自最水木 -"
+    let signature = "\n- 来自「最水木」iOS客户端"
 
     var emailTitle: String? {
         get { return titleTextField?.text }

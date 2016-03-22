@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RSTWebViewController
+import SafariServices
 
 class MailContentViewController: UIViewController, UITextViewDelegate {
 
@@ -102,10 +102,8 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     }
 
     func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
-        let webViewController = RSTWebViewController(URL: URL)
-        webViewController.showsDoneButton = true
-        let navigationController = NYNavigationController(rootViewController: webViewController)
-        presentViewController(navigationController, animated: true, completion: nil)
+        let webViewController = SFSafariViewController(URL: URL)
+        presentViewController(webViewController, animated: true, completion: nil)
 
         return false
     }

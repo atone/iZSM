@@ -105,11 +105,10 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
         let searchButton = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: #selector(ArticleListViewController.pressSearchButton(_:)))
         navigationItem.rightBarButtonItems?.append(searchButton)
         
-        if #available(iOS 9.0, *) {
-            if traitCollection.forceTouchCapability == .Available {
-                registerForPreviewingWithDelegate(self, sourceView: view)
-            }
+        if traitCollection.forceTouchCapability == .Available {
+            registerForPreviewingWithDelegate(self, sourceView: view)
         }
+        
     }
 
     override func clearContent() {

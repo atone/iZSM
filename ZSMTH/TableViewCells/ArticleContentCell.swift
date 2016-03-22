@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import RSTWebViewController
 import Kingfisher
 import MessageUI
+import SafariServices
 
 class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDelegate, TTTAttributedLabelDelegate, MFMailComposeViewControllerDelegate {
 
@@ -186,10 +186,8 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
             controller?.presentViewController(mailComposeViewController, animated: true, completion: nil)
             
         } else {
-            let webViewController = RSTWebViewController(URL: url)
-            webViewController.showsDoneButton = true
-            let navigationController = NYNavigationController(rootViewController: webViewController)
-            controller?.presentViewController(navigationController, animated: true, completion: nil)
+            let webViewController = SFSafariViewController(URL: NSURL(string: urlString)!)
+            controller?.presentViewController(webViewController, animated: true, completion: nil)
         }
     }
 

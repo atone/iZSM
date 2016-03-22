@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RSTWebViewController
+import SafariServices
 
 class AboutViewController: UITableViewController {
 
@@ -62,11 +62,9 @@ class AboutViewController: UITableViewController {
             navigationController.modalPresentationStyle = .FormSheet
             presentViewController(navigationController, animated: true, completion: nil)
         case NSIndexPath(forRow: 2, inSection: 0):
-            let urlAddress = "http://www.yunaitong.cn/2015/03/24/zsmth-released/"
-            let webViewController = RSTWebViewController(address: urlAddress)
-            webViewController.showsDoneButton = true
-            let navigationController = NYNavigationController(rootViewController: webViewController)
-            presentViewController(navigationController, animated: true, completion: nil)
+            let urlAddress = "http://www.yunaitong.cn/zsmth-released.html"
+            let webViewController = SFSafariViewController(URL: NSURL(string: urlAddress)!)
+            presentViewController(webViewController, animated: true, completion: nil)
         default:
             break
         }

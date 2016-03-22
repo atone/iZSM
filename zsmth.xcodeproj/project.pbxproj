@@ -68,10 +68,6 @@
 		9CE8C6601BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65B1BD7DD7F005AF073 /* UITableView+FDIndexPathHeightCache.m */; };
 		9CE8C6611BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65D1BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m */; };
 		9CE8C6621BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE8C65F1BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m */; };
-		9CEDC63A1B46962B00D79064 /* RSTWebViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CEDC6371B4695D000D79064 /* RSTWebViewController.framework */; };
-		9CEDC63B1B46962B00D79064 /* RSTWebViewController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9CEDC6371B4695D000D79064 /* RSTWebViewController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9CEDC66F1B46DAC200D79064 /* NYNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CEDC66E1B46DAC200D79064 /* NYNavigationController.swift */; };
-		9CF3CCAE1BA1E38B00766AD8 /* Kingfisher.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF3CCA71BA1E2BE00766AD8 /* Kingfisher.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9CF60D5F1B465FDB00EA7449 /* UIScreen+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF60D5E1B465FDB00EA7449 /* UIScreen+Additions.m */; };
 		9CF9E82F1ABAF64100A880AB /* ReminderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9E82E1ABAF64100A880AB /* ReminderViewController.swift */; };
 		9CF9E8311ABAF68300A880AB /* ReminderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9E8301ABAF68300A880AB /* ReminderListCell.swift */; };
@@ -85,118 +81,6 @@
 			remoteGlobalIDString = 9CA267B91AA7EF2400CE5C5D;
 			remoteInfo = ZSMTH;
 		};
-		9CC9D2CD1C8879A30079DD6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D13F49D61BEDA67C00CE335D;
-			remoteInfo = "Kingfisher-tvOS";
-		};
-		9CC9D2CF1C8879A30079DD6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4B2944481C3D01B20088C3E7;
-			remoteInfo = "Kingfisher-OSX";
-		};
-		9CC9D2D11C8879A30079DD6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D16799EB1C4E74460020FD12;
-			remoteInfo = "Kingfisher-watchOS";
-		};
-		9CC9D2D31C8879A30079DD6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D13F49C21BEDA53F00CE335D;
-			remoteInfo = "Kingfisher-tvOS-Demo";
-		};
-		9CC9D2D51C8879A30079DD6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4B2944551C3D03880088C3E7;
-			remoteInfo = "Kingfisher-OSX-Demo";
-		};
-		9CC9D2D71C8879A30079DD6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D1679A391C4E78B20020FD12;
-			remoteInfo = "Kingfisher-watchOS-Demo";
-		};
-		9CC9D2D91C8879A30079DD6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D1679A451C4E78B20020FD12;
-			remoteInfo = "Kingfisher-watchOS-Demo Extension";
-		};
-		9CC9D2DB1C8879A30079DD6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4B37667F1C478F940001443F;
-			remoteInfo = "KingfisherTests-tvOS";
-		};
-		9CC9D2DD1C8879A30079DD6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D10EC2311C3D632300A4211C;
-			remoteInfo = "KingfisherTests-OSX";
-		};
-		9CEDC6361B4695D000D79064 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CEDC6311B4695D000D79064 /* RSTWebViewController.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BF7E5EEF1A4A13E800106AAB;
-			remoteInfo = RSTWebViewController;
-		};
-		9CEDC6381B4695D000D79064 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CEDC6311B4695D000D79064 /* RSTWebViewController.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BF7E5EFA1A4A13E800106AAB;
-			remoteInfo = RSTWebViewControllerTests;
-		};
-		9CEDC63C1B46962B00D79064 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CEDC6311B4695D000D79064 /* RSTWebViewController.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = BF7E5EEE1A4A13E800106AAB;
-			remoteInfo = RSTWebViewController;
-		};
-		9CF3CCA41BA1E2BE00766AD8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D1ED2D0B1AD2CFA600CFC3EB;
-			remoteInfo = "Kingfisher-Demo";
-		};
-		9CF3CCA61BA1E2BE00766AD8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D1ED2D351AD2D09F00CFC3EB;
-			remoteInfo = Kingfisher;
-		};
-		9CF3CCA81BA1E2BE00766AD8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D1ED2D3F1AD2D09F00CFC3EB;
-			remoteInfo = KingfisherTests;
-		};
-		9CF3CCAA1BA1E30E00766AD8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D1ED2D341AD2D09F00CFC3EB;
-			remoteInfo = Kingfisher;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -206,8 +90,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9CF3CCAE1BA1E38B00766AD8 /* Kingfisher.framework in Embed Frameworks */,
-				9CEDC63B1B46962B00D79064 /* RSTWebViewController.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -310,10 +192,7 @@
 		9CE8C65D1BD7DD7F005AF073 /* UITableView+FDKeyedHeightCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableView+FDKeyedHeightCache.m"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDKeyedHeightCache.m"; sourceTree = "<group>"; };
 		9CE8C65E1BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableView+FDTemplateLayoutCellDebug.h"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDTemplateLayoutCellDebug.h"; sourceTree = "<group>"; };
 		9CE8C65F1BD7DD7F005AF073 /* UITableView+FDTemplateLayoutCellDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableView+FDTemplateLayoutCellDebug.m"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDTemplateLayoutCellDebug.m"; sourceTree = "<group>"; };
-		9CEDC6311B4695D000D79064 /* RSTWebViewController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RSTWebViewController.xcodeproj; path = RSTWebViewController/RSTWebViewController.xcodeproj; sourceTree = "<group>"; };
-		9CEDC66E1B46DAC200D79064 /* NYNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NYNavigationController.swift; path = ViewControllers/NYNavigationController.swift; sourceTree = "<group>"; };
 		9CF2F5601AC24661001F9693 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Kingfisher.xcodeproj; sourceTree = "<group>"; };
 		9CF60D5D1B465FDB00EA7449 /* UIScreen+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+Additions.h"; sourceTree = "<group>"; };
 		9CF60D5E1B465FDB00EA7449 /* UIScreen+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+Additions.m"; sourceTree = "<group>"; };
 		9CF9E82E1ABAF64100A880AB /* ReminderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReminderViewController.swift; path = ViewControllers/ReminderViewController.swift; sourceTree = "<group>"; };
@@ -325,7 +204,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9CEDC63A1B46962B00D79064 /* RSTWebViewController.framework in Frameworks */,
 				9CA267E41AA7EFFB00CE5C5D /* libSMTH_0.2.3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -380,7 +258,6 @@
 				9C9DE9831ABBB6B8001C292F /* MailContentViewController.swift */,
 				9C72F6201ABD0ADE0098F9D8 /* ReferContentViewController.swift */,
 				9CA5B21F1B1870FB00C24777 /* EulaViewController.swift */,
-				9CEDC66E1B46DAC200D79064 /* NYNavigationController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -398,14 +275,6 @@
 				9C55EBBF1B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.m */,
 			);
 			name = "UITableView+FDTemplateLayoutCell";
-			sourceTree = "<group>";
-		};
-		9C7ED8EA1B4A6C16000499F0 /* RSTWebViewController */ = {
-			isa = PBXGroup;
-			children = (
-				9CEDC6311B4695D000D79064 /* RSTWebViewController.xcodeproj */,
-			);
-			name = RSTWebViewController;
 			sourceTree = "<group>";
 		};
 		9C9E4F671AB5A0D50053CBD8 /* JTSImageViewController */ = {
@@ -495,11 +364,9 @@
 		9CA267E21AA7EFFB00CE5C5D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9CD7E4051B3EC67200A75C62 /* Kingfisher */,
 				9CA61B9D1AC43B2E00E595C8 /* MJRefresh */,
 				9CB4EA101AB923B5000986D0 /* MBProgressHUD */,
 				9C3BC2F41B49AC140027D9E2 /* TTTAttributedLabel */,
-				9C7ED8EA1B4A6C16000499F0 /* RSTWebViewController */,
 				9C9E4F671AB5A0D50053CBD8 /* JTSImageViewController */,
 				9C55EBC11B4EB35800DB75F7 /* UITableView+FDTemplateLayoutCell */,
 				9CA267E51AA7F04600CE5C5D /* libSmth */,
@@ -584,23 +451,6 @@
 			path = MBProgressHUD;
 			sourceTree = "<group>";
 		};
-		9CD7E4051B3EC67200A75C62 /* Kingfisher */ = {
-			isa = PBXGroup;
-			children = (
-				9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */,
-			);
-			path = Kingfisher;
-			sourceTree = "<group>";
-		};
-		9CEDC6321B4695D000D79064 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9CEDC6371B4695D000D79064 /* RSTWebViewController.framework */,
-				9CEDC6391B4695D000D79064 /* RSTWebViewControllerTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		9CF32D221ABE598B008C5332 /* GUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -609,25 +459,6 @@
 				9CA267C61AA7EF2500CE5C5D /* Images.xcassets */,
 			);
 			name = GUI;
-			sourceTree = "<group>";
-		};
-		9CF3CC9F1BA1E2BE00766AD8 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9CF3CCA71BA1E2BE00766AD8 /* Kingfisher.framework */,
-				9CC9D2CE1C8879A30079DD6D /* Kingfisher.framework */,
-				9CC9D2D01C8879A30079DD6D /* Kingfisher.framework */,
-				9CC9D2D21C8879A30079DD6D /* Kingfisher.framework */,
-				9CF3CCA51BA1E2BE00766AD8 /* Kingfisher-Demo.app */,
-				9CC9D2D41C8879A30079DD6D /* Kingfisher-tvOS-Demo.app */,
-				9CC9D2D61C8879A30079DD6D /* Kingfisher-OSX-Demo.app */,
-				9CC9D2D81C8879A30079DD6D /* Kingfisher-watchOS-Demo.app */,
-				9CC9D2DA1C8879A30079DD6D /* Kingfisher-watchOS-Demo Extension.appex */,
-				9CF3CCA91BA1E2BE00766AD8 /* KingfisherTests.xctest */,
-				9CC9D2DC1C8879A30079DD6D /* KingfisherTests-tvOS.xctest */,
-				9CC9D2DE1C8879A30079DD6D /* KingfisherTests-OSX.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -640,14 +471,12 @@
 				9CA267B61AA7EF2400CE5C5D /* Sources */,
 				9CA267B71AA7EF2400CE5C5D /* Frameworks */,
 				9CA267B81AA7EF2400CE5C5D /* Resources */,
-				9CE6B99C1B46467F0072FB51 /* ShellScript */,
 				9CEDC63E1B46962B00D79064 /* Embed Frameworks */,
+				9C69408B1CA1A71800AEFEC9 /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				9CF3CCAB1BA1E30E00766AD8 /* PBXTargetDependency */,
-				9CEDC63D1B46962B00D79064 /* PBXTargetDependency */,
 			);
 			name = zsmth;
 			productName = ZSMTH;
@@ -709,16 +538,6 @@
 			mainGroup = 9CA267B11AA7EF2400CE5C5D;
 			productRefGroup = 9CA267BB1AA7EF2400CE5C5D /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 9CF3CC9F1BA1E2BE00766AD8 /* Products */;
-					ProjectRef = 9CF3CC9E1BA1E2BE00766AD8 /* Kingfisher.xcodeproj */;
-				},
-				{
-					ProductGroup = 9CEDC6321B4695D000D79064 /* Products */;
-					ProjectRef = 9CEDC6311B4695D000D79064 /* RSTWebViewController.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				9CA267B91AA7EF2400CE5C5D /* zsmth */,
@@ -726,107 +545,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		9CC9D2CE1C8879A30079DD6D /* Kingfisher.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Kingfisher.framework;
-			remoteRef = 9CC9D2CD1C8879A30079DD6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CC9D2D01C8879A30079DD6D /* Kingfisher.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Kingfisher.framework;
-			remoteRef = 9CC9D2CF1C8879A30079DD6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CC9D2D21C8879A30079DD6D /* Kingfisher.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Kingfisher.framework;
-			remoteRef = 9CC9D2D11C8879A30079DD6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CC9D2D41C8879A30079DD6D /* Kingfisher-tvOS-Demo.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "Kingfisher-tvOS-Demo.app";
-			remoteRef = 9CC9D2D31C8879A30079DD6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CC9D2D61C8879A30079DD6D /* Kingfisher-OSX-Demo.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "Kingfisher-OSX-Demo.app";
-			remoteRef = 9CC9D2D51C8879A30079DD6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CC9D2D81C8879A30079DD6D /* Kingfisher-watchOS-Demo.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "Kingfisher-watchOS-Demo.app";
-			remoteRef = 9CC9D2D71C8879A30079DD6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CC9D2DA1C8879A30079DD6D /* Kingfisher-watchOS-Demo Extension.appex */ = {
-			isa = PBXReferenceProxy;
-			fileType = "wrapper.app-extension";
-			path = "Kingfisher-watchOS-Demo Extension.appex";
-			remoteRef = 9CC9D2D91C8879A30079DD6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CC9D2DC1C8879A30079DD6D /* KingfisherTests-tvOS.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "KingfisherTests-tvOS.xctest";
-			remoteRef = 9CC9D2DB1C8879A30079DD6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CC9D2DE1C8879A30079DD6D /* KingfisherTests-OSX.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "KingfisherTests-OSX.xctest";
-			remoteRef = 9CC9D2DD1C8879A30079DD6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CEDC6371B4695D000D79064 /* RSTWebViewController.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = RSTWebViewController.framework;
-			remoteRef = 9CEDC6361B4695D000D79064 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CEDC6391B4695D000D79064 /* RSTWebViewControllerTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = RSTWebViewControllerTests.xctest;
-			remoteRef = 9CEDC6381B4695D000D79064 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CF3CCA51BA1E2BE00766AD8 /* Kingfisher-Demo.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "Kingfisher-Demo.app";
-			remoteRef = 9CF3CCA41BA1E2BE00766AD8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CF3CCA71BA1E2BE00766AD8 /* Kingfisher.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Kingfisher.framework;
-			remoteRef = 9CF3CCA61BA1E2BE00766AD8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CF3CCA91BA1E2BE00766AD8 /* KingfisherTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = KingfisherTests.xctest;
-			remoteRef = 9CF3CCA81BA1E2BE00766AD8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9CA267B81AA7EF2400CE5C5D /* Resources */ = {
@@ -851,18 +569,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		9CE6B99C1B46467F0072FB51 /* ShellScript */ = {
+		9C69408B1CA1A71800AEFEC9 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Kingfisher.framework",
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "#!/bin/bash\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"\n";
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -881,7 +600,6 @@
 				9CD7E4041B3EBF4E00A75C62 /* SettingsViewController.swift in Sources */,
 				9CA61BC01AC43B2E00E595C8 /* UIScrollView+MJRefresh.m in Sources */,
 				9CA6E8D21AAADF7E00B1D88F /* ArticleContentViewController.swift in Sources */,
-				9CEDC66F1B46DAC200D79064 /* NYNavigationController.swift in Sources */,
 				9C40E71A1B40F16A00D0C673 /* AboutViewController.swift in Sources */,
 				9C9E4F741AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m in Sources */,
 				9C9E4F751AB5A0D50053CBD8 /* JTSImageInfo.m in Sources */,
@@ -947,16 +665,6 @@
 			isa = PBXTargetDependency;
 			target = 9CA267B91AA7EF2400CE5C5D /* zsmth */;
 			targetProxy = 9CA267D01AA7EF2500CE5C5D /* PBXContainerItemProxy */;
-		};
-		9CEDC63D1B46962B00D79064 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = RSTWebViewController;
-			targetProxy = 9CEDC63C1B46962B00D79064 /* PBXContainerItemProxy */;
-		};
-		9CF3CCAB1BA1E30E00766AD8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Kingfisher;
-			targetProxy = 9CF3CCAA1BA1E30E00766AD8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1024,7 +732,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1061,7 +769,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1078,7 +786,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/ZSMTH/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1104,7 +812,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/ZSMTH/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

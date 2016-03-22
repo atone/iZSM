@@ -35,7 +35,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     @IBOutlet weak var titleTextField: UITextField! {
         didSet {
             titleTextField?.delegate = self
-            titleTextField?.addTarget(self, action: "textFieldDidChange:", forControlEvents: .EditingChanged)
+            titleTextField?.addTarget(self, action: #selector(ComposeArticleController.textFieldDidChange(_:)), forControlEvents: .EditingChanged)
         }
     }
     @IBOutlet weak var contentTextView: UITextView!
@@ -110,10 +110,10 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillChangeFrameNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ComposeArticleController.keyboardWillShow(_:)), name: UIKeyboardWillChangeFrameNotification, object: nil)
         api.resetStatus() //发文/回复文章时，必须手动resetStatus，因为中间可能会有添加附件等操作
         if !replyByMail { //发送邮件时，不支持添加附件
-            let addPhoto = UIBarButtonItem(barButtonSystemItem: .Camera, target: self, action: "addPhoto:")
+            let addPhoto = UIBarButtonItem(barButtonSystemItem: .Camera, target: self, action: #selector(ComposeArticleController.addPhoto(_:)))
             navigationItem.rightBarButtonItems?.append(addPhoto)
         }
         if replyMode {

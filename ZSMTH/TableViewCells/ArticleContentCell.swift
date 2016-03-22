@@ -57,7 +57,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         replyButton.layer.borderWidth = 1
         replyButton.layer.borderColor = tintColor.CGColor
         replyButton.clipsToBounds = true
-        replyButton.addTarget(self, action: "reply:", forControlEvents: .TouchUpInside)
+        replyButton.addTarget(self, action: #selector(ArticleContentCell.reply(_:)), forControlEvents: .TouchUpInside)
         self.contentView.addSubview(replyButton)
 
         moreButton.setTitle("•••", forState: .Normal)
@@ -65,7 +65,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         moreButton.layer.cornerRadius = 4
         moreButton.layer.borderWidth = 1
         moreButton.layer.borderColor = tintColor.CGColor
-        moreButton.addTarget(self, action: "action:", forControlEvents: .TouchUpInside)
+        moreButton.addTarget(self, action: #selector(ArticleContentCell.action(_:)), forControlEvents: .TouchUpInside)
         self.contentView.addSubview(moreButton)
 
         contentLabel.lineBreakMode = .ByWordWrapping
@@ -165,7 +165,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
             imageView.clipsToBounds = true
             imageView.kf_setImageWithURL(imageInfo.thumbnailURL)
             imageView.userInteractionEnabled = true
-            let singleTap = UITapGestureRecognizer(target: self, action: "singleTapOnImage:")
+            let singleTap = UITapGestureRecognizer(target: self, action: #selector(ArticleContentCell.singleTapOnImage(_:)))
             singleTap.numberOfTapsRequired = 1
             imageView.addGestureRecognizer(singleTap)
             contentView.addSubview(imageView)
@@ -222,7 +222,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         let savePhotoAction = UIAlertAction(title: "保存到相册", style: .Default) { [unowned self](alertAction) -> Void in
             let image = imageViewer.image
-            UIImageWriteToSavedPhotosAlbum(image, self, "image:didFinishSavingWithError:contextInfo:", nil)
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(ArticleContentCell.image(_:didFinishSavingWithError:contextInfo:)), nil)
         }
         actionSheet.addAction(savePhotoAction)
         let copyPhotoAction = UIAlertAction(title: "复制到剪贴板", style: .Default) { (alertAction) -> Void in

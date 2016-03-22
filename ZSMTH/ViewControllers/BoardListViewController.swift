@@ -82,13 +82,13 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         searchController.delegate = self
         searchController.searchBar.delegate = self
         searchController.hidesNavigationBarDuringPresentation = false
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: "pressSearchButton:")
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: #selector(BoardListViewController.pressSearchButton(_:)))
         if boardID == 0 { //只在根目录下显示搜索
             navigationItem.rightBarButtonItem = searchButton
         }
 
         // add long press gesture recognizer
-        let lpgr = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+        let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(BoardListViewController.handleLongPress(_:)))
         tableView.addGestureRecognizer(lpgr)
     }
 

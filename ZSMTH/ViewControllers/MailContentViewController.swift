@@ -28,15 +28,15 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "preferredFontSizeChanged:",
+            selector: #selector(MailContentViewController.preferredFontSizeChanged(_:)),
             name: UIContentSizeCategoryDidChangeNotification,
             object: nil)
         if inbox {
-            let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: "reply:")
-            let actionItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "forward:")
+            let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: #selector(MailContentViewController.reply(_:)))
+            let actionItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(MailContentViewController.forward(_:)))
             navigationItem.rightBarButtonItems = [actionItem, replyItem]
         } else {
-            let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: "reply:")
+            let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: #selector(MailContentViewController.reply(_:)))
             navigationItem.rightBarButtonItem = replyItem
         }
         fetchData()

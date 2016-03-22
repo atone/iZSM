@@ -29,11 +29,11 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "preferredFontSizeChanged:",
+            selector: #selector(ReferContentViewController.preferredFontSizeChanged(_:)),
             name: UIContentSizeCategoryDidChangeNotification,
             object: nil)
-        let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: "reply:")
-        let actionItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "action:")
+        let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: #selector(ReferContentViewController.reply(_:)))
+        let actionItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(ReferContentViewController.action(_:)))
         navigationItem.rightBarButtonItems = [actionItem, replyItem]
         fetchData()
     }

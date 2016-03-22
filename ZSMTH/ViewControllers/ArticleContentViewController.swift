@@ -40,9 +40,9 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
         footerView.backgroundColor = UIColor.clearColor()
         tableView.tableFooterView = footerView
 
-        tableView.addLegendHeaderWithRefreshingTarget(self, refreshingAction: "fetchDataDirectly")
+        tableView.addLegendHeaderWithRefreshingTarget(self, refreshingAction: #selector(ArticleContentViewController.fetchDataDirectly))
         tableView.header.updatedTimeHidden = true
-        tableView.addLegendFooterWithRefreshingTarget(self, refreshingAction: "fetchMoreData")
+        tableView.addLegendFooterWithRefreshingTarget(self, refreshingAction: #selector(ArticleContentViewController.fetchMoreData))
         tableView.footer.setTitle("", forState: MJRefreshFooterStateIdle)
         fetchData()
     }

@@ -72,7 +72,7 @@ class UserViewController: UITableViewController {
 
         // add observer to font size change
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "preferredFontSizeChanged:",
+            selector: #selector(UserViewController.preferredFontSizeChanged(_:)),
             name: UIContentSizeCategoryDidChangeNotification,
             object: nil)
     }

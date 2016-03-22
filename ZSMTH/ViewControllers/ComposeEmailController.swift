@@ -48,14 +48,14 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var receiverTextField: UITextField! {
         didSet {
             receiverTextField?.delegate = self
-            receiverTextField?.addTarget(self, action: "textFieldDidChange:", forControlEvents: .EditingChanged)
+            receiverTextField?.addTarget(self, action: #selector(ComposeEmailController.textFieldDidChange(_:)), forControlEvents: .EditingChanged)
 
         }
     }
     @IBOutlet weak var titleTextField: UITextField! {
         didSet {
             titleTextField?.delegate = self
-            titleTextField?.addTarget(self, action: "textFieldDidChange:", forControlEvents: .EditingChanged)
+            titleTextField?.addTarget(self, action: #selector(ComposeEmailController.textFieldDidChange(_:)), forControlEvents: .EditingChanged)
 
         }
     }
@@ -112,7 +112,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillChangeFrameNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ComposeEmailController.keyboardWillShow(_:)), name: UIKeyboardWillChangeFrameNotification, object: nil)
         if replyMode {
             handleReplyMode()
             contentTextView.becomeFirstResponder()

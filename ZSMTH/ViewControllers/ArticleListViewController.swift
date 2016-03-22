@@ -102,7 +102,7 @@ class ArticleListViewController: BaseTableViewController, ComposeArticleControll
         searchController.dimsBackgroundDuringPresentation = false
         searchController.delegate = self
         searchController.searchBar.delegate = self
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: "pressSearchButton:")
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: #selector(ArticleListViewController.pressSearchButton(_:)))
         navigationItem.rightBarButtonItems?.append(searchButton)
         
         if #available(iOS 9.0, *) {

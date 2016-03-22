@@ -16,7 +16,7 @@ class NYNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         hidesBarsOnSwipe = true
-        barHideOnSwipeGestureRecognizer.addTarget(self, action: "swipe:")
+        barHideOnSwipeGestureRecognizer.addTarget(self, action: #selector(NYNavigationController.swipe(_:)))
     }
 
     override func didReceiveMemoryWarning() {

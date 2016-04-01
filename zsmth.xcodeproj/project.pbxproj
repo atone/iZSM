@@ -15,6 +15,7 @@
 		9C34E9481B5282F700E94AD5 /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C34E9471B5282F700E94AD5 /* LogoView.swift */; };
 		9C3861381AB7E9AC0062340B /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3861371AB7E9AC0062340B /* ArticleListViewController.swift */; };
 		9C38613A1AB7F1AB0062340B /* ArticleListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3861391AB7F1AB0062340B /* ArticleListCell.swift */; };
+		9C394AD51CA38A1F00DE0C03 /* Kingfisher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C394AD41CA38A1F00DE0C03 /* Kingfisher.framework */; };
 		9C3BC2F71B49AC140027D9E2 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3BC2F61B49AC140027D9E2 /* TTTAttributedLabel.m */; };
 		9C3D34101ABA717900DC6E0E /* MailBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3D340F1ABA717800DC6E0E /* MailBoxViewController.swift */; };
 		9C3D34121ABA72DD00DC6E0E /* MailListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3D34111ABA72DD00DC6E0E /* MailListCell.swift */; };
@@ -23,18 +24,13 @@
 		9C5508C01AA98B32006931B6 /* HotTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5508BF1AA98B32006931B6 /* HotTableViewController.swift */; };
 		9C5582911ABD9E9400D76A6E /* ComposeEmailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5582901ABD9E9400D76A6E /* ComposeEmailController.swift */; };
 		9C55EBC01B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C55EBBF1B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.m */; };
+		9C6B217B1CA3C4DC0018DDD0 /* SKPhotoBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C6B217A1CA3C4DC0018DDD0 /* SKPhotoBrowser.framework */; };
 		9C6D61F11AB9B4B3005A8259 /* ComposeArticleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6D61F01AB9B4B3005A8259 /* ComposeArticleController.swift */; };
 		9C72F6211ABD0ADE0098F9D8 /* ReferContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C72F6201ABD0ADE0098F9D8 /* ReferContentViewController.swift */; };
 		9C7700C81ABFB86800F9471B /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7700C71ABFB86800F9471B /* BaseTableViewController.swift */; };
 		9C785E551BDA7DC600BF71FC /* HotTableViewController+UIViewControllerPreviewing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C785E541BDA7DC600BF71FC /* HotTableViewController+UIViewControllerPreviewing.swift */; };
 		9C785E5A1BDA84F600BF71FC /* ArticleListViewController+UIViewControllerPreviewing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C785E591BDA84F600BF71FC /* ArticleListViewController+UIViewControllerPreviewing.swift */; };
 		9C9DE9841ABBB6B8001C292F /* MailContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9DE9831ABBB6B8001C292F /* MailContentViewController.swift */; };
-		9C9E4F741AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F691AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m */; };
-		9C9E4F751AB5A0D50053CBD8 /* JTSImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F6B1AB5A0D50053CBD8 /* JTSImageInfo.m */; };
-		9C9E4F761AB5A0D50053CBD8 /* JTSImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F6D1AB5A0D50053CBD8 /* JTSImageViewController.m */; };
-		9C9E4F771AB5A0D50053CBD8 /* JTSSimpleImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F6F1AB5A0D50053CBD8 /* JTSSimpleImageDownloader.m */; };
-		9C9E4F781AB5A0D50053CBD8 /* UIApplication+JTSImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F711AB5A0D50053CBD8 /* UIApplication+JTSImageViewController.m */; };
-		9C9E4F791AB5A0D50053CBD8 /* UIImage+JTSImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F731AB5A0D50053CBD8 /* UIImage+JTSImageEffects.m */; };
 		9C9E4F7B1AB5D2350053CBD8 /* SmthSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E4F7A1AB5D2350053CBD8 /* SmthSplitViewController.swift */; };
 		9CA267C01AA7EF2400CE5C5D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA267BF1AA7EF2400CE5C5D /* AppDelegate.swift */; };
 		9CA267C51AA7EF2500CE5C5D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CA267C31AA7EF2400CE5C5D /* Main.storyboard */; };
@@ -83,19 +79,6 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		9CEDC63E1B46962B00D79064 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		9C04C0821B47C99E00C4C2F8 /* ArticleContentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleContentCell.swift; path = TableViewCells/ArticleContentCell.swift; sourceTree = "<group>"; };
 		9C04C0851B47E84F00C4C2F8 /* UIView+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Additions.h"; sourceTree = "<group>"; };
@@ -107,6 +90,7 @@
 		9C34E9471B5282F700E94AD5 /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogoView.swift; path = Views/LogoView.swift; sourceTree = "<group>"; };
 		9C3861371AB7E9AC0062340B /* ArticleListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleListViewController.swift; path = ViewControllers/ArticleListViewController.swift; sourceTree = "<group>"; };
 		9C3861391AB7F1AB0062340B /* ArticleListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleListCell.swift; path = TableViewCells/ArticleListCell.swift; sourceTree = "<group>"; };
+		9C394AD41CA38A1F00DE0C03 /* Kingfisher.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kingfisher.framework; path = ../../Carthage/Build/iOS/Kingfisher.framework; sourceTree = "<group>"; };
 		9C3BC2F51B49AC140027D9E2 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		9C3BC2F61B49AC140027D9E2 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		9C3D340F1ABA717800DC6E0E /* MailBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MailBoxViewController.swift; path = ViewControllers/MailBoxViewController.swift; sourceTree = "<group>"; };
@@ -117,24 +101,13 @@
 		9C5582901ABD9E9400D76A6E /* ComposeEmailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComposeEmailController.swift; path = ViewControllers/ComposeEmailController.swift; sourceTree = "<group>"; };
 		9C55EBBE1B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableView+FDTemplateLayoutCell.h"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDTemplateLayoutCell.h"; sourceTree = "<group>"; };
 		9C55EBBF1B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableView+FDTemplateLayoutCell.m"; path = "UITableView+FDTemplateLayoutCell/UITableView+FDTemplateLayoutCell.m"; sourceTree = "<group>"; };
+		9C6B217A1CA3C4DC0018DDD0 /* SKPhotoBrowser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SKPhotoBrowser.framework; path = ../../Carthage/Build/iOS/SKPhotoBrowser.framework; sourceTree = "<group>"; };
 		9C6D61F01AB9B4B3005A8259 /* ComposeArticleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComposeArticleController.swift; path = ViewControllers/ComposeArticleController.swift; sourceTree = "<group>"; };
 		9C72F6201ABD0ADE0098F9D8 /* ReferContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReferContentViewController.swift; path = ViewControllers/ReferContentViewController.swift; sourceTree = "<group>"; };
 		9C7700C71ABFB86800F9471B /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewController.swift; path = ViewControllers/BaseTableViewController.swift; sourceTree = "<group>"; };
 		9C785E541BDA7DC600BF71FC /* HotTableViewController+UIViewControllerPreviewing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "HotTableViewController+UIViewControllerPreviewing.swift"; path = "ViewControllers/HotTableViewController+UIViewControllerPreviewing.swift"; sourceTree = "<group>"; };
 		9C785E591BDA84F600BF71FC /* ArticleListViewController+UIViewControllerPreviewing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ArticleListViewController+UIViewControllerPreviewing.swift"; path = "ViewControllers/ArticleListViewController+UIViewControllerPreviewing.swift"; sourceTree = "<group>"; };
 		9C9DE9831ABBB6B8001C292F /* MailContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MailContentViewController.swift; path = ViewControllers/MailContentViewController.swift; sourceTree = "<group>"; };
-		9C9E4F681AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSAnimatedGIFUtility.h; sourceTree = "<group>"; };
-		9C9E4F691AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSAnimatedGIFUtility.m; sourceTree = "<group>"; };
-		9C9E4F6A1AB5A0D50053CBD8 /* JTSImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSImageInfo.h; sourceTree = "<group>"; };
-		9C9E4F6B1AB5A0D50053CBD8 /* JTSImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSImageInfo.m; sourceTree = "<group>"; };
-		9C9E4F6C1AB5A0D50053CBD8 /* JTSImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSImageViewController.h; sourceTree = "<group>"; };
-		9C9E4F6D1AB5A0D50053CBD8 /* JTSImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSImageViewController.m; sourceTree = "<group>"; };
-		9C9E4F6E1AB5A0D50053CBD8 /* JTSSimpleImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSSimpleImageDownloader.h; sourceTree = "<group>"; };
-		9C9E4F6F1AB5A0D50053CBD8 /* JTSSimpleImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSSimpleImageDownloader.m; sourceTree = "<group>"; };
-		9C9E4F701AB5A0D50053CBD8 /* UIApplication+JTSImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+JTSImageViewController.h"; sourceTree = "<group>"; };
-		9C9E4F711AB5A0D50053CBD8 /* UIApplication+JTSImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+JTSImageViewController.m"; sourceTree = "<group>"; };
-		9C9E4F721AB5A0D50053CBD8 /* UIImage+JTSImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+JTSImageEffects.h"; sourceTree = "<group>"; };
-		9C9E4F731AB5A0D50053CBD8 /* UIImage+JTSImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+JTSImageEffects.m"; sourceTree = "<group>"; };
 		9C9E4F7A1AB5D2350053CBD8 /* SmthSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SmthSplitViewController.swift; path = ViewControllers/SmthSplitViewController.swift; sourceTree = "<group>"; };
 		9CA267BA1AA7EF2400CE5C5D /* zsmth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = zsmth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CA267BF1AA7EF2400CE5C5D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -204,6 +177,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C6B217B1CA3C4DC0018DDD0 /* SKPhotoBrowser.framework in Frameworks */,
+				9C394AD51CA38A1F00DE0C03 /* Kingfisher.framework in Frameworks */,
 				9CA267E41AA7EFFB00CE5C5D /* libSMTH_0.2.3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,25 +252,6 @@
 			name = "UITableView+FDTemplateLayoutCell";
 			sourceTree = "<group>";
 		};
-		9C9E4F671AB5A0D50053CBD8 /* JTSImageViewController */ = {
-			isa = PBXGroup;
-			children = (
-				9C9E4F681AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.h */,
-				9C9E4F691AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m */,
-				9C9E4F6A1AB5A0D50053CBD8 /* JTSImageInfo.h */,
-				9C9E4F6B1AB5A0D50053CBD8 /* JTSImageInfo.m */,
-				9C9E4F6C1AB5A0D50053CBD8 /* JTSImageViewController.h */,
-				9C9E4F6D1AB5A0D50053CBD8 /* JTSImageViewController.m */,
-				9C9E4F6E1AB5A0D50053CBD8 /* JTSSimpleImageDownloader.h */,
-				9C9E4F6F1AB5A0D50053CBD8 /* JTSSimpleImageDownloader.m */,
-				9C9E4F701AB5A0D50053CBD8 /* UIApplication+JTSImageViewController.h */,
-				9C9E4F711AB5A0D50053CBD8 /* UIApplication+JTSImageViewController.m */,
-				9C9E4F721AB5A0D50053CBD8 /* UIImage+JTSImageEffects.h */,
-				9C9E4F731AB5A0D50053CBD8 /* UIImage+JTSImageEffects.m */,
-			);
-			path = JTSImageViewController;
-			sourceTree = "<group>";
-		};
 		9CA267B11AA7EF2400CE5C5D = {
 			isa = PBXGroup;
 			children = (
@@ -364,10 +320,11 @@
 		9CA267E21AA7EFFB00CE5C5D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9C394AD41CA38A1F00DE0C03 /* Kingfisher.framework */,
+				9C6B217A1CA3C4DC0018DDD0 /* SKPhotoBrowser.framework */,
 				9CA61B9D1AC43B2E00E595C8 /* MJRefresh */,
 				9CB4EA101AB923B5000986D0 /* MBProgressHUD */,
 				9C3BC2F41B49AC140027D9E2 /* TTTAttributedLabel */,
-				9C9E4F671AB5A0D50053CBD8 /* JTSImageViewController */,
 				9C55EBC11B4EB35800DB75F7 /* UITableView+FDTemplateLayoutCell */,
 				9CA267E51AA7F04600CE5C5D /* libSmth */,
 				9CA267E31AA7EFFB00CE5C5D /* libSMTH_0.2.3.a */,
@@ -471,7 +428,6 @@
 				9CA267B61AA7EF2400CE5C5D /* Sources */,
 				9CA267B71AA7EF2400CE5C5D /* Frameworks */,
 				9CA267B81AA7EF2400CE5C5D /* Resources */,
-				9CEDC63E1B46962B00D79064 /* Embed Frameworks */,
 				9C69408B1CA1A71800AEFEC9 /* ShellScript */,
 			);
 			buildRules = (
@@ -576,6 +532,7 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/Kingfisher.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SKPhotoBrowser.framework",
 			);
 			outputPaths = (
 			);
@@ -596,20 +553,16 @@
 				9C6D61F11AB9B4B3005A8259 /* ComposeArticleController.swift in Sources */,
 				9CA61BBC1AC43B2E00E595C8 /* MJRefreshHeader.m in Sources */,
 				9C72F6211ABD0ADE0098F9D8 /* ReferContentViewController.swift in Sources */,
-				9C9E4F791AB5A0D50053CBD8 /* UIImage+JTSImageEffects.m in Sources */,
 				9CD7E4041B3EBF4E00A75C62 /* SettingsViewController.swift in Sources */,
 				9CA61BC01AC43B2E00E595C8 /* UIScrollView+MJRefresh.m in Sources */,
 				9CA6E8D21AAADF7E00B1D88F /* ArticleContentViewController.swift in Sources */,
 				9C40E71A1B40F16A00D0C673 /* AboutViewController.swift in Sources */,
-				9C9E4F741AB5A0D50053CBD8 /* JTSAnimatedGIFUtility.m in Sources */,
-				9C9E4F751AB5A0D50053CBD8 /* JTSImageInfo.m in Sources */,
 				9C04C0831B47C99E00C4C2F8 /* ArticleContentCell.swift in Sources */,
 				9CB4EA131AB923B5000986D0 /* MBProgressHUD.m in Sources */,
 				9CA61BBE1AC43B2E00E595C8 /* MJRefreshLegendHeader.m in Sources */,
 				9CA61BB91AC43B2E00E595C8 /* MJRefreshFooter.m in Sources */,
 				9CA6E8D01AAACC7700B1D88F /* HotTableViewCell.swift in Sources */,
 				9C3D34101ABA717900DC6E0E /* MailBoxViewController.swift in Sources */,
-				9C9E4F761AB5A0D50053CBD8 /* JTSImageViewController.m in Sources */,
 				9CF9E8311ABAF68300A880AB /* ReminderListCell.swift in Sources */,
 				9CA61BC11AC43B2E00E595C8 /* UIView+MJExtension.m in Sources */,
 				9CC73B5A1AB7251A000F9AE9 /* BoardListViewController.swift in Sources */,
@@ -620,7 +573,6 @@
 				9C38613A1AB7F1AB0062340B /* ArticleListCell.swift in Sources */,
 				9C5582911ABD9E9400D76A6E /* ComposeEmailController.swift in Sources */,
 				9CA267F01AA8021600CE5C5D /* SmthAPI.swift in Sources */,
-				9C9E4F781AB5A0D50053CBD8 /* UIApplication+JTSImageViewController.m in Sources */,
 				9C33C8701AB8815700E5BFD2 /* FavListViewController.swift in Sources */,
 				9C3D34141ABA814A00DC6E0E /* UserViewController.swift in Sources */,
 				9C785E5A1BDA84F600BF71FC /* ArticleListViewController+UIViewControllerPreviewing.swift in Sources */,
@@ -630,7 +582,6 @@
 				9C04C0871B47E84F00C4C2F8 /* UIView+Additions.m in Sources */,
 				9CA267ED1AA7F04600CE5C5D /* SMTHURLConnection+Addon.m in Sources */,
 				9C55EBC01B4EA28700DB75F7 /* UITableView+FDTemplateLayoutCell.m in Sources */,
-				9C9E4F771AB5A0D50053CBD8 /* JTSSimpleImageDownloader.m in Sources */,
 				9CA61BBA1AC43B2E00E595C8 /* MJRefreshGifFooter.m in Sources */,
 				9C3BC2F71B49AC140027D9E2 /* TTTAttributedLabel.m in Sources */,
 				9CF9E82F1ABAF64100A880AB /* ReminderViewController.swift in Sources */,
@@ -785,6 +736,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/ZSMTH/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -811,6 +766,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/ZSMTH/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

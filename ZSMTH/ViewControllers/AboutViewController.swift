@@ -21,7 +21,7 @@ class AboutViewController: UITableViewController {
         // Do any additional setup after loading the view.
         // add observer to font size change
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: #selector(AboutViewController.preferredFontSizeChanged(_:)),
+            selector: .preferredFontSizeChanged,
             name: UIContentSizeCategoryDidChangeNotification,
             object: nil)
 
@@ -83,4 +83,8 @@ class AboutViewController: UITableViewController {
     }
 
 
+}
+
+private extension Selector {
+    static let preferredFontSizeChanged = #selector(AboutViewController.preferredFontSizeChanged(_:))
 }

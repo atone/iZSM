@@ -10,14 +10,16 @@ import UIKit
 import Kingfisher
 import MessageUI
 import SafariServices
+import SKPhotoBrowser
 
-class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDelegate, TTTAttributedLabelDelegate, MFMailComposeViewControllerDelegate {
+class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate, MFMailComposeViewControllerDelegate {
 
     private var authorButton = UIButton(type: .System)
     private var floorAndTimeLabel = UILabel(frame: CGRectZero)
     private var replyButton = UIButton(type: .System)
     private var moreButton = UIButton(type: .System)
     private var imageViews = [UIImageView]()
+    private var images = [SKPhoto]()
 
     private var contentLabel = TTTAttributedLabel(frame: CGRectZero)
 
@@ -157,6 +159,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
             imageView.removeFromSuperview()
         }
         imageViews.removeAll()
+        images.removeAll()
 
         // add new image views
         for imageInfo in imageAtt {
@@ -170,6 +173,8 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
             imageView.addGestureRecognizer(singleTap)
             contentView.addSubview(imageView)
             imageViews.append(imageView)
+            let image = SKPhoto.photoWithImageURL(imageInfo.fullImageURL.absoluteString)
+            images.append(image)
         }
     }
 
@@ -198,44 +203,36 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
     //MARK: - Action
     @objc private func singleTapOnImage(recognizer: UIGestureRecognizer) {
         if let imageView = recognizer.view as? UIImageView {
-            let imageInfo = JTSImageInfo()
+            
+            guard let index = imageViews.indexOf(imageView) else { return }
+            let browser = SKPhotoBrowser(originImage: imageView.image!, photos: images, animatedFromView: imageView)
+            browser.initializePageIndex(index)
+            
+            controller?.presentViewController(browser, animated: true, completion: nil)
 
-            if let index = imageViews.indexOf(imageView) {
-                imageInfo.imageURL = article?.imageAtt[index].fullImageURL
-                imageInfo.placeholderImage = imageView.image
-            } else {
-                imageInfo.image = imageView.image
-            }
-
-            imageInfo.referenceRect = imageView.convertRect(imageView.bounds, toView: controller?.tableView)
-            imageInfo.referenceView = controller?.tableView
-
-            let imageViewer = JTSImageViewController(imageInfo: imageInfo, mode: .Image, backgroundStyle: .Blurred)
-            imageViewer.interactionsDelegate = self
-            imageViewer.showFromViewController(controller, transition: .FromOriginalPosition)
         }
     }
 
-    func imageViewerDidLongPress(imageViewer: JTSImageViewController!, atRect rect: CGRect) {
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        let savePhotoAction = UIAlertAction(title: "保存到相册", style: .Default) { [unowned self](alertAction) -> Void in
-            let image = imageViewer.image
-            UIImageWriteToSavedPhotosAlbum(image, self, #selector(ArticleContentCell.image(_:didFinishSavingWithError:contextInfo:)), nil)
-        }
-        actionSheet.addAction(savePhotoAction)
-        let copyPhotoAction = UIAlertAction(title: "复制到剪贴板", style: .Default) { (alertAction) -> Void in
-            UIPasteboard.generalPasteboard().image = imageViewer.image
-            let hud = MBProgressHUD.showHUDAddedTo(UIApplication.sharedApplication().keyWindow, animated: true)
-            hud.mode = .Text
-            hud.labelText = "复制成功"
-            hud.hide(true, afterDelay: 1)
-        }
-        actionSheet.addAction(copyPhotoAction)
-        actionSheet.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil))
-        actionSheet.popoverPresentationController?.sourceView = imageViewer.view
-        actionSheet.popoverPresentationController?.sourceRect = rect
-        imageViewer.presentViewController(actionSheet, animated: true, completion: nil)
-    }
+//    func imageViewerDidLongPress(imageViewer: JTSImageViewController!, atRect rect: CGRect) {
+//        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+//        let savePhotoAction = UIAlertAction(title: "保存到相册", style: .Default) { [unowned self](alertAction) -> Void in
+//            let image = imageViewer.image
+//            UIImageWriteToSavedPhotosAlbum(image, self, #selector(ArticleContentCell.image(_:didFinishSavingWithError:contextInfo:)), nil)
+//        }
+//        actionSheet.addAction(savePhotoAction)
+//        let copyPhotoAction = UIAlertAction(title: "复制到剪贴板", style: .Default) { (alertAction) -> Void in
+//            UIPasteboard.generalPasteboard().image = imageViewer.image
+//            let hud = MBProgressHUD.showHUDAddedTo(UIApplication.sharedApplication().keyWindow, animated: true)
+//            hud.mode = .Text
+//            hud.labelText = "复制成功"
+//            hud.hide(true, afterDelay: 1)
+//        }
+//        actionSheet.addAction(copyPhotoAction)
+//        actionSheet.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil))
+//        actionSheet.popoverPresentationController?.sourceView = imageViewer.view
+//        actionSheet.popoverPresentationController?.sourceRect = rect
+//        imageViewer.presentViewController(actionSheet, animated: true, completion: nil)
+//    }
 
     func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeMutablePointer<Void>) {
         let hud = MBProgressHUD.showHUDAddedTo(UIApplication.sharedApplication().keyWindow, animated: true)

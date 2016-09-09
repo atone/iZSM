@@ -807,7 +807,7 @@ class SmthAPI {
         UIGraphicsBeginImageContext(newImageSize)
         image.drawInRect(CGRect(origin: CGPointZero, size: newImageSize))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        return newImage
+        return newImage!
     }
 
     private func convertedDataFromImage(image: UIImage) -> NSData {

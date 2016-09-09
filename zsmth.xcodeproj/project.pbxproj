@@ -36,7 +36,6 @@
 		9CA267C51AA7EF2500CE5C5D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CA267C31AA7EF2400CE5C5D /* Main.storyboard */; };
 		9CA267C71AA7EF2500CE5C5D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CA267C61AA7EF2500CE5C5D /* Images.xcassets */; };
 		9CA267CA1AA7EF2500CE5C5D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CA267C81AA7EF2500CE5C5D /* LaunchScreen.xib */; };
-		9CA267D61AA7EF2500CE5C5D /* ZSMTHTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA267D51AA7EF2500CE5C5D /* ZSMTHTests.swift */; };
 		9CA267E41AA7EFFB00CE5C5D /* libSMTH_0.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA267E31AA7EFFB00CE5C5D /* libSMTH_0.2.3.a */; };
 		9CA267EC1AA7F04600CE5C5D /* client_signature.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA267E71AA7F04600CE5C5D /* client_signature.m */; };
 		9CA267ED1AA7F04600CE5C5D /* SMTHURLConnection+Addon.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA267EA1AA7F04600CE5C5D /* SMTHURLConnection+Addon.m */; };
@@ -68,16 +67,6 @@
 		9CF9E82F1ABAF64100A880AB /* ReminderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9E82E1ABAF64100A880AB /* ReminderViewController.swift */; };
 		9CF9E8311ABAF68300A880AB /* ReminderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9E8301ABAF68300A880AB /* ReminderListCell.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		9CA267D01AA7EF2500CE5C5D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CA267B21AA7EF2400CE5C5D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9CA267B91AA7EF2400CE5C5D;
-			remoteInfo = ZSMTH;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		9C04C0821B47C99E00C4C2F8 /* ArticleContentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleContentCell.swift; path = TableViewCells/ArticleContentCell.swift; sourceTree = "<group>"; };
@@ -114,9 +103,6 @@
 		9CA267C41AA7EF2500CE5C5D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9CA267C61AA7EF2500CE5C5D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9CA267C91AA7EF2500CE5C5D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		9CA267CF1AA7EF2500CE5C5D /* zsmthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = zsmthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9CA267D41AA7EF2500CE5C5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9CA267D51AA7EF2500CE5C5D /* ZSMTHTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZSMTHTests.swift; sourceTree = "<group>"; };
 		9CA267DF1AA7EF5D00CE5C5D /* ZSMTH-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ZSMTH-Bridging-Header.h"; sourceTree = "<group>"; };
 		9CA267E31AA7EFFB00CE5C5D /* libSMTH_0.2.3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSMTH_0.2.3.a; sourceTree = "<group>"; };
 		9CA267E61AA7F04600CE5C5D /* client_signature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client_signature.h; sourceTree = "<group>"; };
@@ -180,13 +166,6 @@
 				9C6B217B1CA3C4DC0018DDD0 /* SKPhotoBrowser.framework in Frameworks */,
 				9C394AD51CA38A1F00DE0C03 /* Kingfisher.framework in Frameworks */,
 				9CA267E41AA7EFFB00CE5C5D /* libSMTH_0.2.3.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9CA267CC1AA7EF2500CE5C5D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,7 +235,6 @@
 			isa = PBXGroup;
 			children = (
 				9CA267BC1AA7EF2400CE5C5D /* ZSMTH */,
-				9CA267D21AA7EF2500CE5C5D /* ZSMTHTests */,
 				9CA267BB1AA7EF2400CE5C5D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -266,7 +244,6 @@
 			isa = PBXGroup;
 			children = (
 				9CA267BA1AA7EF2400CE5C5D /* zsmth.app */,
-				9CA267CF1AA7EF2500CE5C5D /* zsmthTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -296,23 +273,6 @@
 				9CA267DF1AA7EF5D00CE5C5D /* ZSMTH-Bridging-Header.h */,
 				9CF2F5601AC24661001F9693 /* Info.plist */,
 				9C3065981AC23589004005D0 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		9CA267D21AA7EF2500CE5C5D /* ZSMTHTests */ = {
-			isa = PBXGroup;
-			children = (
-				9CA267D51AA7EF2500CE5C5D /* ZSMTHTests.swift */,
-				9CA267D31AA7EF2500CE5C5D /* Supporting Files */,
-			);
-			path = ZSMTHTests;
-			sourceTree = "<group>";
-		};
-		9CA267D31AA7EF2500CE5C5D /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				9CA267D41AA7EF2500CE5C5D /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -439,24 +399,6 @@
 			productReference = 9CA267BA1AA7EF2400CE5C5D /* zsmth.app */;
 			productType = "com.apple.product-type.application";
 		};
-		9CA267CE1AA7EF2500CE5C5D /* zsmthTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9CA267DC1AA7EF2500CE5C5D /* Build configuration list for PBXNativeTarget "zsmthTests" */;
-			buildPhases = (
-				9CA267CB1AA7EF2500CE5C5D /* Sources */,
-				9CA267CC1AA7EF2500CE5C5D /* Frameworks */,
-				9CA267CD1AA7EF2500CE5C5D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				9CA267D11AA7EF2500CE5C5D /* PBXTargetDependency */,
-			);
-			name = zsmthTests;
-			productName = ZSMTHTests;
-			productReference = 9CA267CF1AA7EF2500CE5C5D /* zsmthTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -465,21 +407,18 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Naitong Yu";
 				TargetAttributes = {
 					9CA267B91AA7EF2400CE5C5D = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 9TXRXPVXCE;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
 						};
-					};
-					9CA267CE1AA7EF2500CE5C5D = {
-						CreatedOnToolsVersion = 6.1.1;
-						TestTargetID = 9CA267B91AA7EF2400CE5C5D;
 					};
 				};
 			};
@@ -497,7 +436,6 @@
 			projectRoot = "";
 			targets = (
 				9CA267B91AA7EF2400CE5C5D /* zsmth */,
-				9CA267CE1AA7EF2500CE5C5D /* zsmthTests */,
 			);
 		};
 /* End PBXProject section */
@@ -512,13 +450,6 @@
 				9CA267CA1AA7EF2500CE5C5D /* LaunchScreen.xib in Resources */,
 				9CA61BB61AC43B2E00E595C8 /* MJRefresh.bundle in Resources */,
 				9CA267C71AA7EF2500CE5C5D /* Images.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9CA267CD1AA7EF2500CE5C5D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -601,23 +532,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9CA267CB1AA7EF2500CE5C5D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9CA267D61AA7EF2500CE5C5D /* ZSMTHTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		9CA267D11AA7EF2500CE5C5D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9CA267B91AA7EF2400CE5C5D /* zsmth */;
-			targetProxy = 9CA267D01AA7EF2500CE5C5D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		9C3065981AC23589004005D0 /* InfoPlist.strings */ = {
@@ -661,8 +576,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -671,6 +588,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -705,8 +623,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -714,6 +634,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -723,6 +644,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -753,6 +675,7 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ZSMTH/ZSMTH-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -782,37 +705,8 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ZSMTH/ZSMTH-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		9CA267DD1AA7EF2500CE5C5D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = ZSMTHTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "cn.yunaitong.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = zsmthTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZSMTH.app/ZSMTH";
-			};
-			name = Debug;
-		};
-		9CA267DE1AA7EF2500CE5C5D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = ZSMTHTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "cn.yunaitong.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = zsmthTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZSMTH.app/ZSMTH";
 			};
 			name = Release;
 		};
@@ -833,15 +727,6 @@
 			buildConfigurations = (
 				9CA267DA1AA7EF2500CE5C5D /* Debug */,
 				9CA267DB1AA7EF2500CE5C5D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9CA267DC1AA7EF2500CE5C5D /* Build configuration list for PBXNativeTarget "zsmthTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9CA267DD1AA7EF2500CE5C5D /* Debug */,
-				9CA267DE1AA7EF2500CE5C5D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

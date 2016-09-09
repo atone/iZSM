@@ -173,15 +173,15 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate, MFMailCom
             imageView.addGestureRecognizer(singleTap)
             contentView.addSubview(imageView)
             imageViews.append(imageView)
-            let image = SKPhoto.photoWithImageURL(imageInfo.fullImageURL.absoluteString)
+            let image = SKPhoto.photoWithImageURL(imageInfo.fullImageURL.absoluteString!)
             images.append(image)
         }
     }
 
     func attributedLabel(label: TTTAttributedLabel!, didSelectLinkWithURL url: NSURL!) {
         let urlString = url.absoluteString
-        if urlString.hasPrefix("mailto") {
-            let recipient = urlString.substringFromIndex(urlString.startIndex.advancedBy(7))
+        if urlString!.hasPrefix("mailto") {
+            let recipient = urlString!.substringFromIndex(urlString!.startIndex.advancedBy(7))
             let mailComposeViewController = MFMailComposeViewController()
             mailComposeViewController.mailComposeDelegate = self
             mailComposeViewController.setToRecipients([recipient])
@@ -191,7 +191,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate, MFMailCom
             controller?.presentViewController(mailComposeViewController, animated: true, completion: nil)
             
         } else {
-            let webViewController = SFSafariViewController(URL: NSURL(string: urlString)!)
+            let webViewController = SFSafariViewController(URL: NSURL(string: urlString!)!)
             controller?.presentViewController(webViewController, animated: true, completion: nil)
         }
     }

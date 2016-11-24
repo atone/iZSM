@@ -116,8 +116,14 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
-        let webViewController = SFSafariViewController(url: URL)
-        present(webViewController, animated: true, completion: nil)
+        let urlString = URL.absoluteString
+        print("Clicked: \(urlString)")
+        if urlString.hasPrefix("http") {
+            let webViewController = SFSafariViewController(url: URL)
+            present(webViewController, animated: true, completion: nil)
+        } else {
+            UIApplication.shared.openURL(URL)
+        }
         return false
     }
     

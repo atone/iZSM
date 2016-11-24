@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MessageUI
 import SafariServices
 import SVProgressHUD
 
@@ -201,7 +200,7 @@ class ArticleContentViewController: UITableViewController {
     }
 }
 
-extension ArticleContentViewController: ArticleContentCellDelegate, MFMailComposeViewControllerDelegate {
+extension ArticleContentViewController: ArticleContentCellDelegate {
     
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int) {
         guard let imageInfos = cell.article?.imageAtt else { return }
@@ -258,24 +257,13 @@ extension ArticleContentViewController: ArticleContentCellDelegate, MFMailCompos
     
     func cell(_ cell: ArticleContentCell, didClick url: URL) {
         let urlString = url.absoluteString
-        if urlString.hasPrefix("mailto") {
-            let recipient = urlString.substring(from: urlString.index(urlString.startIndex, offsetBy: 7))
-            let mailComposeViewController = MFMailComposeViewController()
-            mailComposeViewController.mailComposeDelegate = self
-            mailComposeViewController.setToRecipients([recipient])
-            mailComposeViewController.modalPresentationStyle = .formSheet
-            mailComposeViewController.navigationBar.barStyle = .black
-            mailComposeViewController.navigationBar.tintColor = UIColor.white
-            present(mailComposeViewController, animated: true, completion: nil)
-            
-        } else {
-            let webViewController = SFSafariViewController(url: URL(string: urlString)!)
+        print("Clicked: \(urlString)")
+        if urlString.hasPrefix("http") {
+            let webViewController = SFSafariViewController(url: url)
             present(webViewController, animated: true, completion: nil)
+        } else {
+            UIApplication.shared.openURL(url)
         }
-    }
-    
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        controller.dismiss(animated: true, completion: nil)
     }
     
     private func reply(ByMail: Bool, in cell: ArticleContentCell) {

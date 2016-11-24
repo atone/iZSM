@@ -1,2 +1,5 @@
-github "onevcat/Kingfisher" "2.5.1"
-github "suzuki-0000/SKPhotoBrowser" "3.0.2"
+github "SVProgressHUD/SVProgressHUD" "2.0.4"
+github "SnapKit/SnapKit" "3.1.1"
+github "TTTAttributedLabel/TTTAttributedLabel" "2.0.0"
+github "ibireme/YYKit" "1.0.9"
+github "AgileBits/onepassword-extension" "d99f5d7a4c7328f8e3a8d1e7aff455d1072e0c19"

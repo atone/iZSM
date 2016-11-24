@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.2</string>
 	<key>CFBundleVersion</key>
-	<string>320</string>
+	<string>321</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>org-appextension-feature-password-management</string>
@@ -45,6 +45,41 @@
 	<string>使用相机拍照作为附件发送。</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>访问照片图库以保存照片或添加图片附件。</string>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>Hot</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>热点话题</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER).hot</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>List</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>版面列表</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER).board</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>Star</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>收藏夹</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER).favorite</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>User</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>我的消息</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER).user</string>
+		</dict>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

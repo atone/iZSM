@@ -10,12 +10,60 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    enum ShortcutIdentifier: String {
+        case hot
+        case board
+        case favorite
+        case user
+        
+        init?(fullType: String) {
+            guard let last = fullType.components(separatedBy: ".").last else { return nil }
+            self.init(rawValue: last)
+        }
+        
+        var type: String {
+            return Bundle.main.bundleIdentifier! + ".\(self.rawValue)"
+        }
+    }
+    
+    static let kApplicationShortcutUserInfoIcon = "ApplicationShortcutUserInfoIconKey"
 
     var window: UIWindow?
+    
+    /// Saved shortcut item used as a result of an app launch, used later when app is activated.
+    var launchedShortcutItem: UIApplicationShortcutItem?
+    
     let mainController = UITabBarController()
     let setting = AppSetting.sharedSetting
     let api = SmthAPI()
     let tintColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
+    
+    func handle(shortcutItem: UIApplicationShortcutItem) -> Bool {
+        var handled = false
+        // Verify that the provided `shortcutItem`'s `type` is one handled by the application.
+        guard ShortcutIdentifier(fullType: shortcutItem.type) != nil else { return false }
+        
+        guard let shortCutType = shortcutItem.type as String? else { return false }
+        
+        switch shortCutType {
+        case ShortcutIdentifier.hot.type:
+            mainController.selectedIndex = 0
+            handled = true
+        case ShortcutIdentifier.board.type:
+            mainController.selectedIndex = 1
+            handled = true
+        case ShortcutIdentifier.favorite.type:
+            mainController.selectedIndex = 2
+            handled = true
+        case ShortcutIdentifier.user.type:
+            mainController.selectedIndex = 3
+            handled = true
+        default:
+            break
+        }
+        return handled
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -52,7 +100,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             navigateToNewMessagePage(notification: localNotif)
         }
         
-        return true
+        var shouldPerformAdditionalDelegateHandling = true
+        
+        // If a shortcut was launched, display its information and take the appropriate action
+        if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
+            launchedShortcutItem = shortcutItem
+            // This will block "performActionForShortcutItem:completionHandler" from being called.
+            shouldPerformAdditionalDelegateHandling = false
+        }
+
+        return shouldPerformAdditionalDelegateHandling
     }
     
     func rootViewControllers() -> [UIViewController] {
@@ -75,6 +132,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         controllerArray.append(UINavigationController(rootViewController: userViewController))
         return controllerArray
     }
+    
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        let handledShortCutItem = handle(shortcutItem: shortcutItem)
+        print("handle shortcut item in performActionForShortcutItem: \(handledShortCutItem)")
+        completionHandler(handledShortCutItem)
+    }
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -92,6 +155,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        guard let shortcut = launchedShortcutItem else { return }
+        
+        let handled = handle(shortcutItem: shortcut)
+        print("handle shortcut item in didBecomeActive: \(handled)")
+        
+        launchedShortcutItem = nil
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

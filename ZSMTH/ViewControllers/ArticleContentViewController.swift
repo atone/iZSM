@@ -15,15 +15,16 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
         static let ArticleContentCellIdentifier = "ArticleContentCell"
     }
 
-    private var smarticles = [SMArticle]()
+    private var smarticles = [[SMArticle]]()
 
     private let api = SmthAPI()
     private let setting = AppSetting.sharedSetting()
 
     private var totalArticleNumber: Int = 0
+    private var currentArticleNumber: Int = 0
 
     private var threadRange: NSRange {
-        return NSMakeRange(smarticles.count, setting.articleCountPerSection)
+        return NSMakeRange(currentArticleNumber, setting.articleCountPerSection)
     }
 
     var boardID: String?
@@ -39,9 +40,9 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
         footerView.backgroundColor = UIColor.clearColor()
         tableView.tableFooterView = footerView
 
-        tableView.addLegendHeaderWithRefreshingTarget(self, refreshingAction: "fetchDataDirectly")
+        tableView.addLegendHeaderWithRefreshingTarget(self, refreshingAction: #selector(ArticleContentViewController.fetchDataDirectly))
         tableView.header.updatedTimeHidden = true
-        tableView.addLegendFooterWithRefreshingTarget(self, refreshingAction: "fetchMoreData")
+        tableView.addLegendFooterWithRefreshingTarget(self, refreshingAction: #selector(ArticleContentViewController.fetchMoreData))
         tableView.footer.setTitle("", forState: MJRefreshFooterStateIdle)
         fetchData()
     }
@@ -83,6 +84,7 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
 
     func fetchDataDirectly() {
         self.smarticles.removeAll()
+        self.currentArticleNumber = 0
         if let boardID = self.boardID, articleID = self.articleID {
             networkActivityIndicatorStart()
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
@@ -105,7 +107,8 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
                     self.tableView.header.endRefreshing()
                     self.tableView.footer.hidden = false
                     if let smArticles = smArticles {
-                        self.smarticles += smArticles
+                        self.smarticles.append(smArticles)
+                        self.currentArticleNumber += smArticles.count
                         self.totalArticleNumber = totalArticleNumber
                         self.tableView?.reloadData()
                     }
@@ -138,17 +141,15 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
                 dispatch_async(dispatch_get_main_queue()) {
                     networkActivityIndicatorStop()
                     if let smArticles = smArticles {
-                        let newIndexs = self.smarticles.count ..< self.smarticles.count+smArticles.count
-                        let newIndexPaths = newIndexs.map { (transform: Int) -> NSIndexPath in
-                            NSIndexPath(forRow: transform, inSection: 0)
-                        }
-                        self.smarticles += smArticles
+                        let newIndexSet = NSIndexSet(index: self.smarticles.count)
+                        self.smarticles.append(smArticles)
+                        self.currentArticleNumber += smArticles.count
                         self.totalArticleNumber = totalArticleNumber
-                        self.tableView.insertRowsAtIndexPaths(newIndexPaths, withRowAnimation: .None)
+                        self.tableView.insertSections(newIndexSet, withRowAnimation: .None)
                     }
                     self.api.displayErrorIfNeeded()
                     self.tableView.footer.endRefreshing()
-                    if self.totalArticleNumber == self.smarticles.count {
+                    if self.totalArticleNumber == self.currentArticleNumber {
                         self.tableView.footer.setTitle("没有新帖子了", forState: MJRefreshFooterStateIdle)
                     } else {
                         self.tableView.footer.setTitle("", forState: MJRefreshFooterStateIdle)
@@ -161,9 +162,13 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
     }
 
     // MARK: - Table view data source
+    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return smarticles.count
+    }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return smarticles.count
+        return smarticles[section].count
     }
 
     private func articleCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
@@ -173,7 +178,7 @@ class ArticleContentViewController: UITableViewController, ComposeArticleControl
     }
 
     private func configureArticleCell(cell: ArticleContentCell, atIndexPath indexPath: NSIndexPath) {
-        let smarticle = smarticles[indexPath.row]
+        let smarticle = smarticles[indexPath.section][indexPath.row]
         var floor = smarticle.floor
         if setting.sortMode == .LaterPostFirst && floor != 0 {
             floor = totalArticleNumber - floor

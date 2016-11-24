@@ -27,7 +27,7 @@ class SettingsViewController: UITableViewController {
         updateUI()
         // add observer to font size change
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "preferredFontSizeChanged:",
+            selector: #selector(SettingsViewController.preferredFontSizeChanged(_:)),
             name: UIContentSizeCategoryDidChangeNotification,
             object: nil)
     }
@@ -78,7 +78,7 @@ class SettingsViewController: UITableViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         // solve the bug when swipe back, tableview cell doesn't deselect
-        if let selectedRow = tableView.indexPathForSelectedRow() {
+        if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRowAtIndexPath(selectedRow, animated: true)
         }
     }

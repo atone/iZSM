@@ -7,16 +7,19 @@
 //
 
 import UIKit
-import RSTWebViewController
+import Kingfisher
 import MessageUI
+import SafariServices
+import SKPhotoBrowser
 
-class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDelegate, TTTAttributedLabelDelegate, MFMailComposeViewControllerDelegate {
+class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate, MFMailComposeViewControllerDelegate {
 
-    private var authorButton = UIButton.buttonWithType(.System) as! UIButton
+    private var authorButton = UIButton(type: .System)
     private var floorAndTimeLabel = UILabel(frame: CGRectZero)
-    private var replyButton = UIButton.buttonWithType(.System) as! UIButton
-    private var moreButton = UIButton.buttonWithType(.System) as! UIButton
+    private var replyButton = UIButton(type: .System)
+    private var moreButton = UIButton(type: .System)
     private var imageViews = [UIImageView]()
+    private var images = [SKPhoto]()
 
     private var contentLabel = TTTAttributedLabel(frame: CGRectZero)
 
@@ -29,7 +32,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
     private let blankWidth: CGFloat = 4
     private let picNumPerLine: CGFloat = 3
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
@@ -56,7 +59,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         replyButton.layer.borderWidth = 1
         replyButton.layer.borderColor = tintColor.CGColor
         replyButton.clipsToBounds = true
-        replyButton.addTarget(self, action: "reply:", forControlEvents: .TouchUpInside)
+        replyButton.addTarget(self, action: #selector(ArticleContentCell.reply(_:)), forControlEvents: .TouchUpInside)
         self.contentView.addSubview(replyButton)
 
         moreButton.setTitle("•••", forState: .Normal)
@@ -64,7 +67,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         moreButton.layer.cornerRadius = 4
         moreButton.layer.borderWidth = 1
         moreButton.layer.borderColor = tintColor.CGColor
-        moreButton.addTarget(self, action: "action:", forControlEvents: .TouchUpInside)
+        moreButton.addTarget(self, action: #selector(ArticleContentCell.action(_:)), forControlEvents: .TouchUpInside)
         self.contentView.addSubview(moreButton)
 
         contentLabel.lineBreakMode = .ByWordWrapping
@@ -86,7 +89,10 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         self.delegate = delegate
         self.article = smarticle
 
-        authorButton.setTitle(smarticle.authorID, forState: .Normal)
+        UIView.performWithoutAnimation {
+            self.authorButton.setTitle(smarticle.authorID, forState: .Normal)
+            self.authorButton.layoutIfNeeded()
+        }
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
         floorAndTimeLabel.text = "\(floorText)  \(smarticle.timeString)"
 
@@ -119,7 +125,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         if imageViews.count == 1 {
             imageViews.first!.frame = CGRect(x: 0, y: size.height - size.width, width: size.width, height: size.width)
         } else {
-            for (index, imageView) in enumerate(imageViews) {
+            for (index, imageView) in imageViews.enumerate() {
                 let length = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
                 let startY = size.height - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth)
                 let offsetY = (length + blankWidth) * CGFloat(index / Int(picNumPerLine))
@@ -153,6 +159,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
             imageView.removeFromSuperview()
         }
         imageViews.removeAll()
+        images.removeAll()
 
         // add new image views
         for imageInfo in imageAtt {
@@ -161,80 +168,71 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
             imageView.clipsToBounds = true
             imageView.kf_setImageWithURL(imageInfo.thumbnailURL)
             imageView.userInteractionEnabled = true
-            let singleTap = UITapGestureRecognizer(target: self, action: "singleTapOnImage:")
+            let singleTap = UITapGestureRecognizer(target: self, action: #selector(ArticleContentCell.singleTapOnImage(_:)))
             singleTap.numberOfTapsRequired = 1
             imageView.addGestureRecognizer(singleTap)
             contentView.addSubview(imageView)
             imageViews.append(imageView)
+            let image = SKPhoto.photoWithImageURL(imageInfo.fullImageURL.absoluteString!)
+            images.append(image)
         }
     }
 
     func attributedLabel(label: TTTAttributedLabel!, didSelectLinkWithURL url: NSURL!) {
-        if let urlString = url.absoluteString {
-            if urlString.hasPrefix("mailto") {
-                let recipient = urlString.substringFromIndex(advance(urlString.startIndex, 7))
-                let mailComposeViewController = MFMailComposeViewController()
-                mailComposeViewController.mailComposeDelegate = self
-                mailComposeViewController.setToRecipients([recipient])
-                mailComposeViewController.modalPresentationStyle = .FormSheet
-                mailComposeViewController.navigationBar.barStyle = .Black
-                mailComposeViewController.navigationBar.tintColor = UIColor.whiteColor()
-                controller?.presentViewController(mailComposeViewController, animated: true, completion: nil)
-
-            } else {
-                let webViewController = RSTWebViewController(URL: url)
-                webViewController.showsDoneButton = true
-                let navigationController = NYNavigationController(rootViewController: webViewController)
-                controller?.presentViewController(navigationController, animated: true, completion: nil)
-            }
+        let urlString = url.absoluteString
+        if urlString!.hasPrefix("mailto") {
+            let recipient = urlString!.substringFromIndex(urlString!.startIndex.advancedBy(7))
+            let mailComposeViewController = MFMailComposeViewController()
+            mailComposeViewController.mailComposeDelegate = self
+            mailComposeViewController.setToRecipients([recipient])
+            mailComposeViewController.modalPresentationStyle = .FormSheet
+            mailComposeViewController.navigationBar.barStyle = .Black
+            mailComposeViewController.navigationBar.tintColor = UIColor.whiteColor()
+            controller?.presentViewController(mailComposeViewController, animated: true, completion: nil)
+            
+        } else {
+            let webViewController = SFSafariViewController(URL: NSURL(string: urlString!)!)
+            controller?.presentViewController(webViewController, animated: true, completion: nil)
         }
     }
 
-    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
-        controller?.dismissViewControllerAnimated(true, completion: nil)
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
     }
 
     //MARK: - Action
     @objc private func singleTapOnImage(recognizer: UIGestureRecognizer) {
         if let imageView = recognizer.view as? UIImageView {
-            let imageInfo = JTSImageInfo()
+            
+            guard let index = imageViews.indexOf(imageView) else { return }
+            let browser = SKPhotoBrowser(originImage: imageView.image!, photos: images, animatedFromView: imageView)
+            browser.initializePageIndex(index)
+            
+            controller?.presentViewController(browser, animated: true, completion: nil)
 
-            if let index = find(imageViews, imageView) {
-                imageInfo.imageURL = article?.imageAtt[index].fullImageURL
-                imageInfo.placeholderImage = imageView.image
-            } else {
-                imageInfo.image = imageView.image
-            }
-
-            imageInfo.referenceRect = imageView.convertRect(imageView.bounds, toView: controller?.tableView)
-            imageInfo.referenceView = controller?.tableView
-
-            let imageViewer = JTSImageViewController(imageInfo: imageInfo, mode: .Image, backgroundStyle: .Blurred)
-            imageViewer.interactionsDelegate = self
-            imageViewer.showFromViewController(controller, transition: ._FromOriginalPosition)
         }
     }
 
-    func imageViewerDidLongPress(imageViewer: JTSImageViewController!, atRect rect: CGRect) {
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        let savePhotoAction = UIAlertAction(title: "保存到相册", style: .Default) { [unowned self](alertAction) -> Void in
-            let image = imageViewer.image
-            UIImageWriteToSavedPhotosAlbum(image, self, "image:didFinishSavingWithError:contextInfo:", nil)
-        }
-        actionSheet.addAction(savePhotoAction)
-        let copyPhotoAction = UIAlertAction(title: "复制到剪贴板", style: .Default) { [unowned self](alertAction) -> Void in
-            UIPasteboard.generalPasteboard().image = imageViewer.image
-            let hud = MBProgressHUD.showHUDAddedTo(UIApplication.sharedApplication().keyWindow, animated: true)
-            hud.mode = .Text
-            hud.labelText = "复制成功"
-            hud.hide(true, afterDelay: 1)
-        }
-        actionSheet.addAction(copyPhotoAction)
-        actionSheet.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil))
-        actionSheet.popoverPresentationController?.sourceView = imageViewer.view
-        actionSheet.popoverPresentationController?.sourceRect = rect
-        imageViewer.presentViewController(actionSheet, animated: true, completion: nil)
-    }
+//    func imageViewerDidLongPress(imageViewer: JTSImageViewController!, atRect rect: CGRect) {
+//        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+//        let savePhotoAction = UIAlertAction(title: "保存到相册", style: .Default) { [unowned self](alertAction) -> Void in
+//            let image = imageViewer.image
+//            UIImageWriteToSavedPhotosAlbum(image, self, #selector(ArticleContentCell.image(_:didFinishSavingWithError:contextInfo:)), nil)
+//        }
+//        actionSheet.addAction(savePhotoAction)
+//        let copyPhotoAction = UIAlertAction(title: "复制到剪贴板", style: .Default) { (alertAction) -> Void in
+//            UIPasteboard.generalPasteboard().image = imageViewer.image
+//            let hud = MBProgressHUD.showHUDAddedTo(UIApplication.sharedApplication().keyWindow, animated: true)
+//            hud.mode = .Text
+//            hud.labelText = "复制成功"
+//            hud.hide(true, afterDelay: 1)
+//        }
+//        actionSheet.addAction(copyPhotoAction)
+//        actionSheet.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil))
+//        actionSheet.popoverPresentationController?.sourceView = imageViewer.view
+//        actionSheet.popoverPresentationController?.sourceRect = rect
+//        imageViewer.presentViewController(actionSheet, animated: true, completion: nil)
+//    }
 
     func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeMutablePointer<Void>) {
         let hud = MBProgressHUD.showHUDAddedTo(UIApplication.sharedApplication().keyWindow, animated: true)
@@ -287,7 +285,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         controller?.presentViewController(actionSheet, animated: true, completion: nil)
     }
 
-    private func reply(#ByMail: Bool) {
+    private func reply(ByMail ByMail: Bool) {
         if let cavc = self.controller?.storyboard?.instantiateViewControllerWithIdentifier("ComposeArticleController") as? ComposeArticleController {
             cavc.boardID = self.article?.boardID
             cavc.delegate = self.delegate
@@ -310,7 +308,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
             if let boardID = self.article?.boardID, boards = api.queryBoard(boardID) {
                 for board in boards {
                     if board.boardID == boardID {
-                        let managers = split(board.manager) { $0 == " " }
+                        let managers = board.manager.characters.split { $0 == " " }.map { String($0) }
                         if managers.count > 0 && !managers[0].isEmpty {
                             adminID = managers[0]
                         }
@@ -326,9 +324,9 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
                     textField.returnKeyType = .Done
                 }
                 let okAction = UIAlertAction(title: "举报", style: .Default) { [unowned alert, unowned self] action in
-                    if let textField = alert.textFields?.first as? UITextField {
+                    if let textField = alert.textFields?.first {
                         let hud = MBProgressHUD.showHUDAddedTo(self.controller?.navigationController?.view, animated: true)
-                        if textField.text == nil || textField.text.isEmpty {
+                        if textField.text == nil || textField.text!.isEmpty {
                             hud.mode = .Text
                             hud.labelText = "举报原因不能为空"
                             hud.hide(true, afterDelay: 1)
@@ -361,7 +359,7 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
         }
     }
 
-    private func forward(#ToBoard: Bool) {
+    private func forward(ToBoard ToBoard: Bool) {
         if let originalArticle = self.article {
             let api = SmthAPI()
             let alert = UIAlertController(title: (ToBoard ? "转寄到版面":"转寄给用户"), message: nil, preferredStyle: .Alert)
@@ -372,14 +370,14 @@ class ArticleContentCell: UITableViewCell, JTSImageViewControllerInteractionsDel
                 textField.returnKeyType = .Send
             }
             let okAction = UIAlertAction(title: "确定", style: .Default) { [unowned alert, unowned self] action in
-                if let textField = alert.textFields?.first as? UITextField {
+                if let textField = alert.textFields?.first {
                     let hud = MBProgressHUD.showHUDAddedTo(self.controller?.navigationController?.view, animated: true)
                     networkActivityIndicatorStart()
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                         if ToBoard {
-                            api.crossArticle(originalArticle.id, fromBoard: self.article!.boardID, toBoard: textField.text)
+                            api.crossArticle(originalArticle.id, fromBoard: self.article!.boardID, toBoard: textField.text!)
                         } else {
-                            let user = textField.text.isEmpty ? AppSetting.sharedSetting().username! : textField.text
+                            let user = textField.text!.isEmpty ? AppSetting.sharedSetting().username! : textField.text!
                             api.forwardArticle(originalArticle.id, inBoard: self.article!.boardID, toUser: user)
                         }
                         dispatch_async(dispatch_get_main_queue()) {

@@ -21,7 +21,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     var originalBoards: [SMBoard]?
     var searchMode = false
     var searchString: String {
-        return searchController.searchBar.text
+        return searchController.searchBar.text!
     }
 
     private let searchController = UISearchController(searchResultsController: nil)
@@ -82,13 +82,13 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         searchController.delegate = self
         searchController.searchBar.delegate = self
         searchController.hidesNavigationBarDuringPresentation = false
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: "pressSearchButton:")
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: #selector(BoardListViewController.pressSearchButton(_:)))
         if boardID == 0 { //只在根目录下显示搜索
             navigationItem.rightBarButtonItem = searchButton
         }
 
         // add long press gesture recognizer
-        let lpgr = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+        let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(BoardListViewController.handleLongPress(_:)))
         tableView.addGestureRecognizer(lpgr)
     }
 
@@ -112,7 +112,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                 }
             }
 
-            boardList.sort{ (b1, b2) -> Bool in
+            boardList.sortInPlace{ (b1, b2) -> Bool in
                 var flag_a = b1.flag
                 var flag_b = b2.flag
                 if flag_a == -1 || (flag_a & 0x400 != 0) {
@@ -181,11 +181,11 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         let board = boards[indexPath.row]
         var cell: UITableViewCell
         if (board.flag != -1) && (board.flag & 0x400 == 0) { //是版面
-            cell = tableView.dequeueReusableCellWithIdentifier(Static.boardIdentifier, forIndexPath: indexPath) as! UITableViewCell
+            cell = tableView.dequeueReusableCellWithIdentifier(Static.boardIdentifier, forIndexPath: indexPath) 
             cell.textLabel?.text = board.name
             cell.detailTextLabel?.text = board.boardID
         } else {
-            cell = tableView.dequeueReusableCellWithIdentifier(Static.directoryIdentifier, forIndexPath: indexPath) as! UITableViewCell
+            cell = tableView.dequeueReusableCellWithIdentifier(Static.directoryIdentifier, forIndexPath: indexPath) 
             let name = board.name
             if let r = name.rangeOfString(" ") {
                 cell.textLabel?.text = name.substringToIndex(r.startIndex)

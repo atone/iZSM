@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RSTWebViewController
+import SafariServices
 
 class MailContentViewController: UIViewController, UITextViewDelegate {
 
@@ -28,15 +28,15 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "preferredFontSizeChanged:",
+            selector: #selector(MailContentViewController.preferredFontSizeChanged(_:)),
             name: UIContentSizeCategoryDidChangeNotification,
             object: nil)
         if inbox {
-            let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: "reply:")
-            let actionItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "forward:")
+            let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: #selector(MailContentViewController.reply(_:)))
+            let actionItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(MailContentViewController.forward(_:)))
             navigationItem.rightBarButtonItems = [actionItem, replyItem]
         } else {
-            let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: "reply:")
+            let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: #selector(MailContentViewController.reply(_:)))
             navigationItem.rightBarButtonItem = replyItem
         }
         fetchData()
@@ -64,11 +64,11 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
                 textField.returnKeyType = .Send
             }
             let okAction = UIAlertAction(title: "确定", style: .Default) { [unowned alert] action in
-                if let textField = alert.textFields?.first as? UITextField {
+                if let textField = alert.textFields?.first {
                     let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                     networkActivityIndicatorStart()
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                        self.api.forwardMailAtPosition(originalMail.position, toUser: textField.text)
+                        self.api.forwardMailAtPosition(originalMail.position, toUser: textField.text!)
                         dispatch_async(dispatch_get_main_queue()) {
                             networkActivityIndicatorStop()
                             hud.mode = .Text
@@ -102,10 +102,8 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     }
 
     func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
-        let webViewController = RSTWebViewController(URL: URL)
-        webViewController.showsDoneButton = true
-        let navigationController = NYNavigationController(rootViewController: webViewController)
-        presentViewController(navigationController, animated: true, completion: nil)
+        let webViewController = SFSafariViewController(URL: URL)
+        presentViewController(webViewController, animated: true, completion: nil)
 
         return false
     }
@@ -144,7 +142,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     }
 
     private func attributedStringFromContentString(string: String) -> NSAttributedString {
-        var attributeText = NSMutableAttributedString()
+        let attributeText = NSMutableAttributedString()
 
         let normal = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody),
             NSParagraphStyleAttributeName: NSParagraphStyle.defaultParagraphStyle(),

@@ -58,11 +58,7 @@ class SmthAPI {
         data.writeToFile(localPath, atomically: true)
         var error:Int32 = 0
         let ret = apiNetAddAttachment(localPath, &error)
-        if ret == 0 {
-            return true
-        } else {
-            return false
-        }
+        return (ret == 0)
     }
 
     //MARK: - Reset API's Status
@@ -93,10 +89,11 @@ class SmthAPI {
                     threadList.append(thread)
                 }
             }
-            return threadList
-        } else {
-            return nil
+            if threadList.count > 0 {
+                return threadList
+            }
         }
+        return nil
     }
 
     enum SortMode: Int32 {
@@ -109,7 +106,7 @@ class SmthAPI {
         var articleList = [SMArticle]()
         let rawResults = api.net_GetThread(boardID, articleID, threadRange.location, threadRange.length, replyMode.rawValue)
         if let results = rawResults as? [[String:AnyObject]] {
-            for (index, result) in enumerate(results) {
+            for (index, result) in results.enumerate() {
                 if var article = articleFromDictionary(result) {
                     article.floor = threadRange.location + index
                     article.boardID = boardID
@@ -117,10 +114,11 @@ class SmthAPI {
                     articleList.append(article)
                 }
             }
-            return articleList
-        } else {
-            return nil
+            if articleList.count > 0 {
+                return articleList
+            }
         }
+        return nil
     }
 
     // call this after getThreadContentInBoard to get the last thread articles count
@@ -140,10 +138,11 @@ class SmthAPI {
                     threadList.append(thread)
                 }
             }
-            return threadList
-        } else {
-            return nil
+            if threadList.count > 0 {
+                return threadList
+            }
         }
+        return nil
     }
 
     // get article count of board
@@ -167,7 +166,7 @@ class SmthAPI {
 
     // post article in board
     // should call reset status before
-    func postArticle(#title: String, content: String, inBoard boardID: String) -> Int {
+    func postArticle(title title: String, content: String, inBoard boardID: String) -> Int {
         return api.net_PostArticle(boardID, title, content)
     }
 
@@ -214,7 +213,7 @@ class SmthAPI {
     }
 
     // get sent mail list
-    func getMailSentList(#inRange: NSRange) -> [SMMail]? {
+    func getMailSentList(inRange inRange: NSRange) -> [SMMail]? {
         api.reset_status()
         var mailList = [SMMail]()
         if let rawValues = api.net_LoadMailSentList(inRange.location, inRange.length) as? [[String:AnyObject]] {
@@ -223,13 +222,15 @@ class SmthAPI {
                     mailList.append(mail)
                 }
             }
-            return mailList
+            if mailList.count > 0 {
+                return mailList
+            }
         }
         return nil
     }
 
     // get mail list
-    func getMailList(#inRange: NSRange) -> [SMMail]? {
+    func getMailList(inRange inRange: NSRange) -> [SMMail]? {
         api.reset_status()
         var mailList = [SMMail]()
         if let rawValues = api.net_LoadMailList(inRange.location, inRange.length) as? [[String:AnyObject]] {
@@ -238,7 +239,9 @@ class SmthAPI {
                     mailList.append(mail)
                 }
             }
-            return mailList
+            if mailList.count > 0 {
+                return mailList
+            }
         }
         return nil
     }
@@ -285,7 +288,7 @@ class SmthAPI {
         case AtMe = 1, ReplyToMe
     }
     // get reference count
-    func getReferCount(#mode: ReferMode) -> SMReferenceStatus? {
+    func getReferCount(mode mode: ReferMode) -> SMReferenceStatus? {
         api.reset_status()
         if let
             dict = api.net_GetReferCount(mode.rawValue) as? [String:AnyObject],
@@ -300,7 +303,7 @@ class SmthAPI {
     }
 
     // get reference list
-    func getReferList(#mode: ReferMode, inRange: NSRange) -> [SMReference]? {
+    func getReferList(mode mode: ReferMode, inRange: NSRange) -> [SMReference]? {
         api.reset_status()
         var referList = [SMReference]()
         if let references = api.net_LoadRefer(mode.rawValue, inRange.location, inRange.length) as? [[String:AnyObject]] {
@@ -309,12 +312,15 @@ class SmthAPI {
                     referList.append(refer)
                 }
             }
+            if referList.count > 0 {
+                return referList
+            }
         }
-        return referList
+        return nil
     }
 
     // set reference read
-    func setReferRead(#mode: ReferMode, atPosition: Int) -> Int {
+    func setReferRead(mode mode: ReferMode, atPosition: Int) -> Int {
         api.reset_status()
         return Int(api.net_SetReferRead(mode.rawValue, Int32(atPosition)))
     }
@@ -330,7 +336,9 @@ class SmthAPI {
                     boardList.append(board)
                 }
             }
-            return boardList
+            if boardList.count > 0 {
+                return boardList
+            }
         }
         return nil
     }
@@ -358,7 +366,9 @@ class SmthAPI {
                     boardList.append(board)
                 }
             }
-            return boardList
+            if boardList.count > 0 {
+                return boardList
+            }
         }
         return nil
     }
@@ -373,7 +383,9 @@ class SmthAPI {
                     boardList.append(board)
                 }
             }
-            return boardList
+            if boardList.count > 0 {
+                return boardList
+            }
         }
         return nil
     }
@@ -388,7 +400,9 @@ class SmthAPI {
                     boardList.append(board)
                 }
             }
-            return boardList
+            if boardList.count > 0 {
+                return boardList
+            }
         }
         return nil
     }
@@ -409,7 +423,9 @@ class SmthAPI {
                     sectionList.append(SMSection(code: code, description: desc, name: name, id: id))
                 }
             }
-            return sectionList
+            if sectionList.count > 0 {
+                return sectionList
+            }
         }
         return nil
     }
@@ -424,14 +440,16 @@ class SmthAPI {
                     hotThreadList.append(hotThread)
                 }
             }
-            return hotThreadList
+            if hotThreadList.count > 0 {
+                return hotThreadList
+            }
         }
         return nil
     }
 
     // MARK: - User Related
     // get user info
-    func getUserInfo(#userID: String) -> SMUser? {
+    func getUserInfo(userID userID: String) -> SMUser? {
         api.reset_status()
         if let rawData = api.net_QueryUser(userID) as? [String:AnyObject] {
             return userFromDictionary(rawData)
@@ -440,7 +458,7 @@ class SmthAPI {
     }
 
     // get user friend list
-    func getUserFriendList(#userID: String) -> [String]? {
+    func getUserFriendList(userID userID: String) -> [String]? {
         api.reset_status()
         var friendList = [String]()
         if let rawList = api.net_LoadUserAllFriends(userID) as? [[String:AnyObject]] {
@@ -449,25 +467,27 @@ class SmthAPI {
                     friendList.append(userID)
                 }
             }
-            return friendList
+            if friendList.count > 0 {
+                return friendList
+            }
         }
         return nil
     }
 
     // get user friend list refresh time stamp
-    func getFriendListRefreshStamp(#userID: String) -> Int {
+    func getFriendListRefreshStamp(userID userID: String) -> Int {
         api.reset_status()
         return Int(api.net_LoadUserFriendsTS(userID))
     }
 
     // add friend
-    func addFriend(#friendID: String) -> Int {
+    func addFriend(friendID friendID: String) -> Int {
         api.reset_status()
         return Int(api.net_AddUserFriend(friendID))
     }
 
     // delete friend
-    func delFriend(#friendID: String) -> Int {
+    func delFriend(friendID friendID: String) -> Int {
         api.reset_status()
         return Int(api.net_DelUserFriend(friendID))
     }
@@ -482,7 +502,7 @@ class SmthAPI {
     }
 
     // login to the bbs
-    func loginBBS(#username: String, password: String) -> Int {
+    func loginBBS(username username: String, password: String) -> Int {
         api.reset_status()
         return Int(api.net_LoginBBS(username, password))
     }
@@ -503,7 +523,9 @@ class SmthAPI {
                     memberList.append(member)
                 }
             }
-            return memberList
+            if memberList.count > 0 {
+                return memberList
+            }
         }
         return nil
     }
@@ -592,7 +614,7 @@ class SmthAPI {
             if let rawPosition = dict["position"] as? NSNumber {
                 position = rawPosition.integerValue
             } else if let rawPosition = dict["position"] as? String {
-                position = rawPosition.toInt() ?? 0
+                position = Int(rawPosition) ?? 0
             }
             let body = cleanedStringFrom(string: rawBody)
             var attachments = [SMAttachment]()
@@ -631,7 +653,7 @@ class SmthAPI {
             if let rawPosition = dict["position"] as? NSNumber {
                 position = rawPosition.integerValue
             } else if let rawPosition = dict["position"] as? String {
-                position = rawPosition.toInt() ?? 0
+                position = Int(rawPosition) ?? 0
             }
             return SMReference(subject: subject, flag: flag, replyID: re_id, mode: mode, id: id, boardID: board_id, time: time, userID: user_id, groupID: group_id, position: position)
         }
@@ -691,7 +713,7 @@ class SmthAPI {
             if let sectionInt = dict["section"] as? NSNumber {
                 section = sectionInt.integerValue
             } else if let sectionStr = dict["section"] as? String {
-                section = sectionStr.toInt() ?? 10 // 10 means "A", aborted section
+                section = Int(sectionStr) ?? 10 // 10 means "A", aborted section
             }
             let max_time = NSDate(timeIntervalSince1970: max_timeInterval)
             return SMBoard(bid: bid, boardID: id, level: level, unread: unread, currentUsers: current_users, maxOnline: max_online, scoreLevel: score_level, section: section, total: total, position: position, lastPost: last_post, manager: manager, type: type, flag: flag, maxTime: max_time, name: name, score: score, group: group)
@@ -742,7 +764,7 @@ class SmthAPI {
         return nil
     }
 
-    private func cleanedStringFrom(#string: String) -> String {
+    private func cleanedStringFrom(string string: String) -> String {
         var content = string as NSString
         // 去除头尾多余的空格和回车
         content = content.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
@@ -755,8 +777,8 @@ class SmthAPI {
         // 除去签名档，可选
         if !setting.showSignature {
             let pattern = "^--$"
-            let regularExpression = NSRegularExpression(pattern: pattern, options: .AnchorsMatchLines, error: nil)!
-            let range = regularExpression.rangeOfFirstMatchInString(content as String, options: .allZeros, range: NSMakeRange(0, content.length))
+            let regularExpression = try! NSRegularExpression(pattern: pattern, options: .AnchorsMatchLines)
+            let range = regularExpression.rangeOfFirstMatchInString(content as String, options: [], range: NSMakeRange(0, content.length))
             if range.location != NSNotFound {
                 content = content.substringToIndex(range.location)
                 content = content.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
@@ -764,13 +786,13 @@ class SmthAPI {
         }
         // 去除ANSI控制字符
         var pattern = "\\[((\\d){1,2};?)*[mB]"
-        var regularExpression = NSRegularExpression(pattern: pattern, options: .allZeros, error: nil)!
-        content = regularExpression.stringByReplacingMatchesInString(content as String, options: .allZeros, range: NSMakeRange(0, content.length), withTemplate: "")
+        var regularExpression = try! NSRegularExpression(pattern: pattern, options: [])
+        content = regularExpression.stringByReplacingMatchesInString(content as String, options: [], range: NSMakeRange(0, content.length), withTemplate: "")
 
         // 去除图片标志[upload=1][/upload]之类
         pattern = "\\[upload=(\\d){1,2}\\]\\[/upload\\]"
-        regularExpression = NSRegularExpression(pattern: pattern, options: .CaseInsensitive, error: nil)!
-        content = regularExpression.stringByReplacingMatchesInString(content as String, options: .allZeros, range: NSMakeRange(0, content.length), withTemplate: "")
+        regularExpression = try! NSRegularExpression(pattern: pattern, options: .CaseInsensitive)
+        content = regularExpression.stringByReplacingMatchesInString(content as String, options: [], range: NSMakeRange(0, content.length), withTemplate: "")
         return content as String
     }
 
@@ -785,18 +807,18 @@ class SmthAPI {
         UIGraphicsBeginImageContext(newImageSize)
         image.drawInRect(CGRect(origin: CGPointZero, size: newImageSize))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        return newImage
+        return newImage!
     }
 
     private func convertedDataFromImage(image: UIImage) -> NSData {
         let newImage = resizedImageFromImage(image)
         var compressionQuality: CGFloat = 1
-        var data = UIImageJPEGRepresentation(newImage, compressionQuality)
+        var data = UIImageJPEGRepresentation(newImage, compressionQuality)!
 
         let maxSize = 1 * 1024 * 1024
         while data.length > maxSize && compressionQuality > 0.1 {
             compressionQuality -= 0.1
-            data = UIImageJPEGRepresentation(newImage, compressionQuality)
+            data = UIImageJPEGRepresentation(newImage, compressionQuality)!
         }
         return data
     }

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RSTWebViewController
+import SafariServices
 
 class ReferContentViewController: UIViewController, UITextViewDelegate {
 
@@ -29,11 +29,11 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "preferredFontSizeChanged:",
+            selector: #selector(ReferContentViewController.preferredFontSizeChanged(_:)),
             name: UIContentSizeCategoryDidChangeNotification,
             object: nil)
-        let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: "reply:")
-        let actionItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "action:")
+        let replyItem = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: #selector(ReferContentViewController.reply(_:)))
+        let actionItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(ReferContentViewController.action(_:)))
         navigationItem.rightBarButtonItems = [actionItem, replyItem]
         fetchData()
     }
@@ -58,7 +58,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
             acvc.boardID = reference.boardID
             var title = reference.subject
             if title.hasPrefix("Re: ") {
-                title = title.substringFromIndex(advance(title.startIndex, 4))
+                title = title.substringFromIndex(title.startIndex.advancedBy(4))
             }
             acvc.title = title
             acvc.fromTopTen = true
@@ -68,10 +68,8 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     }
 
     func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
-        let webViewController = RSTWebViewController(URL: URL)
-        webViewController.showsDoneButton = true
-        let navigationController = NYNavigationController(rootViewController: webViewController)
-        presentViewController(navigationController, animated: true, completion: nil)
+        let webViewController = SFSafariViewController(URL: URL)
+        presentViewController(webViewController, animated: true, completion: nil)
 
         return false
     }
@@ -122,7 +120,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     }
 
     private func attributedStringFromContentString(string: String) -> NSAttributedString {
-        var attributeText = NSMutableAttributedString()
+        let attributeText = NSMutableAttributedString()
 
         let normal = [NSFontAttributeName: UIFont.preferredFontForTextStyle(UIFontTextStyleBody),
             NSParagraphStyleAttributeName: NSParagraphStyle.defaultParagraphStyle(),

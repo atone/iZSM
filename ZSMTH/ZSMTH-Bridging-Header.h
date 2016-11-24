@@ -4,7 +4,7 @@
 
 #import "SMTHURLConnection+Addon.h"
 #import "smth_netop.h"
-#import "JTSImageViewController.h"
+//#import "JTSImageViewController.h"
 #import "MBProgressHUD.h"
 #import "MJRefresh.h"
 #import "UITableView+FDTemplateLayoutCell.h"

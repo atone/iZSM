@@ -15,10 +15,10 @@ class SmthSplitViewController: UISplitViewController, UISplitViewControllerDeleg
         self.delegate = self
     }
 
-    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController!, ontoPrimaryViewController primaryViewController: UIViewController!) -> Bool {
+    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
         var vc = secondaryViewController
         if let nvc = vc as? UINavigationController {
-            vc = nvc.visibleViewController
+            vc = nvc.visibleViewController!
         }
 
         if let contentViewController = vc as? ArticleContentViewController where contentViewController.articleID == nil {

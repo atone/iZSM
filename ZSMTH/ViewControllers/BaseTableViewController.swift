@@ -37,7 +37,7 @@ class BaseTableViewController: UITableViewController, LoginViewControllerDelegat
 
         // add observer to font size change
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "preferredFontSizeChanged:",
+            selector: #selector(BaseTableViewController.preferredFontSizeChanged(_:)),
             name: UIContentSizeCategoryDidChangeNotification,
             object: nil)
 
@@ -46,7 +46,7 @@ class BaseTableViewController: UITableViewController, LoginViewControllerDelegat
         footerView.backgroundColor = UIColor.clearColor()
         tableView.tableFooterView = footerView
 
-        tableView?.addLegendHeaderWithRefreshingTarget(self, refreshingAction: "checkLoginIfNeededOrFetchDataDirectly")
+        tableView?.addLegendHeaderWithRefreshingTarget(self, refreshingAction: #selector(BaseTableViewController.checkLoginIfNeededOrFetchDataDirectly))
         tableView.header.updatedTimeHidden = true
     }
 
@@ -97,7 +97,7 @@ class BaseTableViewController: UITableViewController, LoginViewControllerDelegat
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         // solve the bug when swipe back, tableview cell doesn't deselect
-        if let selectedRow = tableView.indexPathForSelectedRow() {
+        if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRowAtIndexPath(selectedRow, animated: true)
         }
     }

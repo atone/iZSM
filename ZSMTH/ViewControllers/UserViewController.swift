@@ -72,7 +72,7 @@ class UserViewController: UITableViewController {
 
         // add observer to font size change
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "preferredFontSizeChanged:",
+            selector: #selector(UserViewController.preferredFontSizeChanged(_:)),
             name: UIContentSizeCategoryDidChangeNotification,
             object: nil)
     }
@@ -91,7 +91,7 @@ class UserViewController: UITableViewController {
         super.viewWillAppear(animated)
 
         // solve the bug when swipe back, tableview cell doesn't deselect
-        if let selectedRow = tableView.indexPathForSelectedRow() {
+        if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRowAtIndexPath(selectedRow, animated: true)
         }
 
@@ -126,7 +126,7 @@ class UserViewController: UITableViewController {
     }
 
     func attrTextFromString(string: String, withNewFlag flag: Bool) -> NSAttributedString {
-        var result = NSMutableAttributedString(string: string)
+        let result = NSMutableAttributedString(string: string)
         if flag {
             result.appendAttributedString(NSAttributedString(string: " [新]", attributes: [NSForegroundColorAttributeName: UIColor.redColor()]))
         }

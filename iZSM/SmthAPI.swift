@@ -782,7 +782,7 @@ class SmthAPI {
             }
         }
         // 去除ANSI控制字符
-        var pattern = "\\[((\\d){1,2};?)*[mB]"
+        var pattern = "\\[((\\d){1,2};?)*[mHABCD]|\\[[suK]|\\[2J"
         var regularExpression = try! NSRegularExpression(pattern: pattern)
         content = regularExpression.stringByReplacingMatches(in: content, range: NSMakeRange(0, content.characters.count), withTemplate: "")
 

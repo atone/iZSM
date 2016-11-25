@@ -76,7 +76,6 @@
 		9C1A3BC61DE2C0ED00CF4A43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9C1A3BC91DE2C0ED00CF4A43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9C1A3BCB1DE2C0ED00CF4A43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9C1A3BD31DE2C5E100CF4A43 /* Kingfisher.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kingfisher.framework; path = Carthage/Build/iOS/Kingfisher.framework; sourceTree = "<group>"; };
 		9C1A3BD51DE2C5EF00CF4A43 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		9C1A3BD81DE2CBAF00CF4A43 /* EulaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EulaViewController.swift; sourceTree = "<group>"; };
 		9C1A3BDA1DE2CDB100CF4A43 /* EULA.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = EULA.rtf; path = Resources/EULA.rtf; sourceTree = "<group>"; };
@@ -238,7 +237,6 @@
 				9C1A3BF51DE2EEAA00CF4A43 /* SVProgressHUD.framework */,
 				9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */,
 				9C1A3BD51DE2C5EF00CF4A43 /* SnapKit.framework */,
-				9C1A3BD31DE2C5E100CF4A43 /* Kingfisher.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

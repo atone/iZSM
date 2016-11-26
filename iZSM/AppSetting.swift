@@ -78,7 +78,7 @@ class AppSetting {
         }
         set {
             defaults.set(newValue, forKey: Static.AccessTokenKey)
-            defaults.set(NSDate(timeIntervalSinceNow: 24 * 60 * 60), forKey: Static.ExpireDateKey)
+            defaults.set(Date(timeIntervalSinceNow: 24 * 60 * 60), forKey: Static.ExpireDateKey)
             defaults.synchronize()
         }
     }

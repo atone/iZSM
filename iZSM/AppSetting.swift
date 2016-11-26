@@ -53,7 +53,6 @@ class AppSetting {
         get { return defaults.string(forKey: Static.UsernameKey) }
         set {
             defaults.set(newValue, forKey: Static.UsernameKey)
-            defaults.synchronize()
         }
     }
 
@@ -61,7 +60,6 @@ class AppSetting {
         get { return defaults.string(forKey: Static.PasswordKey) }
         set {
             defaults.set(newValue, forKey: Static.PasswordKey)
-            defaults.synchronize()
         }
     }
 
@@ -79,7 +77,6 @@ class AppSetting {
         set {
             defaults.set(newValue, forKey: Static.AccessTokenKey)
             defaults.set(Date(timeIntervalSinceNow: 24 * 60 * 60), forKey: Static.ExpireDateKey)
-            defaults.synchronize()
         }
     }
 
@@ -87,7 +84,6 @@ class AppSetting {
         get { return defaults.bool(forKey: Static.BackgroundTaskEnabledKey) }
         set {
             defaults.set(newValue, forKey: Static.BackgroundTaskEnabledKey)
-            defaults.synchronize()
         }
     }
 
@@ -95,7 +91,6 @@ class AppSetting {
         get { return defaults.bool(forKey: Static.HideAlwaysOnTopThreadKey) }
         set {
             defaults.set(newValue, forKey: Static.HideAlwaysOnTopThreadKey)
-            defaults.synchronize()
         }
     }
 
@@ -103,7 +98,6 @@ class AppSetting {
         get { return defaults.bool(forKey: Static.ShowSignatureKey) }
         set {
             defaults.set(newValue, forKey: Static.ShowSignatureKey)
-            defaults.synchronize()
         }
     }
 
@@ -111,7 +105,6 @@ class AppSetting {
         get { return defaults.bool(forKey: Static.EulaAgreedKey) }
         set {
             defaults.set(newValue, forKey: Static.EulaAgreedKey)
-            defaults.synchronize()
         }
     }
 
@@ -119,7 +112,6 @@ class AppSetting {
         get { return SmthAPI.ClearUnreadMode(rawValue: Int32(defaults.integer(forKey: Static.ClearUnreadModeKey)))! }
         set {
             defaults.set(Int(newValue.rawValue), forKey: Static.ClearUnreadModeKey)
-            defaults.synchronize()
         }
     }
 
@@ -127,7 +119,6 @@ class AppSetting {
         get { return SmthAPI.SortMode(rawValue: Int32(defaults.integer(forKey: Static.SortModeKey)))! }
         set {
             defaults.set(Int(newValue.rawValue), forKey: Static.SortModeKey)
-            defaults.synchronize()
         }
     }
 
@@ -135,7 +126,6 @@ class AppSetting {
         get { return defaults.integer(forKey: Static.ArticleCountPerSectionKey) }
         set {
             defaults.set(newValue, forKey: Static.ArticleCountPerSectionKey)
-            defaults.synchronize()
         }
     }
 
@@ -143,7 +133,6 @@ class AppSetting {
         get { return defaults.integer(forKey: Static.ThreadCountPerSectionKey) }
         set {
             defaults.set(newValue, forKey: Static.ThreadCountPerSectionKey)
-            defaults.synchronize()
         }
     }
     
@@ -151,7 +140,6 @@ class AppSetting {
         get { return defaults.integer(forKey: Static.MailCountKey) }
         set {
             defaults.set(newValue, forKey: Static.MailCountKey)
-            defaults.synchronize()
         }
     }
     
@@ -159,7 +147,6 @@ class AppSetting {
         get { return defaults.integer(forKey: Static.ReplyCountKey) }
         set {
             defaults.set(newValue, forKey: Static.ReplyCountKey)
-            defaults.synchronize()
         }
     }
     
@@ -167,7 +154,6 @@ class AppSetting {
         get { return defaults.integer(forKey: Static.ReferCountKey) }
         set {
             defaults.set(newValue, forKey: Static.ReferCountKey)
-            defaults.synchronize()
         }
     }
 }

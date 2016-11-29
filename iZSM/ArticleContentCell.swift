@@ -52,6 +52,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.tintColor = UIApplication.shared.keyWindow?.tintColor
         self.clipsToBounds = true
         self.separatorInset = .zero
+        self.selectionStyle = .none
         
         authorButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
         self.contentView.addSubview(authorButton)

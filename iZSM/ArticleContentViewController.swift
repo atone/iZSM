@@ -36,6 +36,7 @@ class ArticleContentViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.separatorStyle = .none
         tableView.register(ArticleContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)
         // set extra cells hidden
         let footerView = UIView()

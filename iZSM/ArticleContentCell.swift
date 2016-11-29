@@ -20,6 +20,8 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     private var contentLabel = TTTAttributedLabel(frame: CGRect.zero)
     
+    private var separatorView = UIView()
+    
     private var delegate: ArticleContentCellDelegate?
     
     var article: SMArticle?
@@ -27,6 +29,14 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     private let blankWidth: CGFloat = 4
     private let picNumPerLine: CGFloat = 3
+    private let separatorHeight: CGFloat = 6
+    private let contentInset: CGFloat = 8
+    
+    private let replyButtonWidth: CGFloat = 40
+    private let moreButtonWidth: CGFloat = 36
+    private let buttonHeight: CGFloat = 26
+    
+    private let fontSize: CGFloat = 15
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -39,19 +49,18 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     }
     
     func setup() {
-        self.selectionStyle = .none
         self.tintColor = UIApplication.shared.keyWindow?.tintColor
         self.clipsToBounds = true
         self.separatorInset = .zero
         
-        authorButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        authorButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
         self.contentView.addSubview(authorButton)
         
-        floorAndTimeLabel.font = UIFont.systemFont(ofSize: 15)
+        floorAndTimeLabel.font = UIFont.systemFont(ofSize: fontSize)
         self.contentView.addSubview(floorAndTimeLabel)
         
         replyButton.setTitle("回复", for: .normal)
-        replyButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        replyButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
         replyButton.layer.cornerRadius = 4
         replyButton.layer.borderWidth = 1
         replyButton.layer.borderColor = tintColor.cgColor
@@ -60,7 +69,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.contentView.addSubview(replyButton)
         
         moreButton.setTitle("•••", for: .normal)
-        moreButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        moreButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: fontSize)
         moreButton.layer.cornerRadius = 4
         moreButton.layer.borderWidth = 1
         moreButton.layer.borderColor = tintColor.cgColor
@@ -76,6 +85,9 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         contentLabel.linkAttributes = [NSForegroundColorAttributeName:tintColor]
         contentLabel.activeLinkAttributes = [NSForegroundColorAttributeName:tintColor.withAlphaComponent(0.6)]
         self.contentView.addSubview(contentLabel)
+        
+        separatorView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+        self.contentView.addSubview(separatorView)
     }
     
     func setData(displayFloor floor: Int, smarticle: SMArticle, delegate: ArticleContentCellDelegate) {
@@ -100,38 +112,39 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         super.layoutSubviews()
         
         authorButton.sizeToFit()
-        authorButton.frame = CGRect(origin: CGPoint(x: 8, y: 0), size: authorButton.bounds.size)
+        authorButton.frame = CGRect(origin: CGPoint(x: contentInset, y: 0), size: authorButton.bounds.size)
         floorAndTimeLabel.sizeToFit()
-        floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: 8, y: 26), size: floorAndTimeLabel.bounds.size)
-        replyButton.frame = CGRect(x: CGFloat(UIScreen.screenWidth()-94), y: 14, width: 40, height: 24)
-        moreButton.frame = CGRect(x: CGFloat(UIScreen.screenWidth()-44), y: 14, width: 36, height: 24)
-        
-        var imageLength: CGFloat = 0
-        if imageViews.count == 1 {
-            imageLength = contentView.bounds.width
-        } else if imageViews.count > 1 {
-            let oneImageLength = (contentView.bounds.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-            imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
-        }
-        contentLabel.frame = CGRect(x: 8, y: 52, width: CGFloat(UIScreen.screenWidth()-16), height: contentView.bounds.height - 60 - imageLength + 1)
+        floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: contentInset, y: buttonHeight), size: floorAndTimeLabel.bounds.size)
+        replyButton.frame = CGRect(x: CGFloat(UIScreen.screenWidth()) - contentInset * 2 - replyButtonWidth - moreButtonWidth, y: buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
+        moreButton.frame = CGRect(x: CGFloat(UIScreen.screenWidth()) - contentInset - moreButtonWidth, y: buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
         
         let size = contentView.bounds.size
+        var imageLength: CGFloat = 0
         if imageViews.count == 1 {
-            imageViews.first!.frame = CGRect(x: 0, y: size.height - size.width, width: size.width, height: size.width)
+            imageLength = size.width
+        } else if imageViews.count > 1 {
+            let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
+            imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
+        }
+        contentLabel.frame = CGRect(x: contentInset, y: buttonHeight * 2, width: CGFloat(UIScreen.screenWidth()) - 2 * contentInset, height: size.height - buttonHeight * 2 - contentInset - imageLength - separatorHeight + 1)
+        
+        if imageViews.count == 1 {
+            imageViews.first!.frame = CGRect(x: 0, y: size.height - separatorHeight - size.width, width: size.width, height: size.width)
         } else {
             for (index, imageView) in imageViews.enumerated() {
                 let length = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-                let startY = size.height - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth)
+                let startY = size.height - separatorHeight - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth)
                 let offsetY = (length + blankWidth) * CGFloat(index / Int(picNumPerLine))
                 let X = 0 + CGFloat(index % Int(picNumPerLine)) * (length + blankWidth)
                 imageView.frame = CGRect(x: X, y: startY + offsetY, width: length, height: length)
             }
         }
+        separatorView.frame = CGRect(x: 0, y: size.height - separatorHeight, width: size.width, height: separatorHeight)
     }
     
     //MARK: - Calculate Fitting Size
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let boundingSize = CGSize(width: size.width-16, height: size.height)
+        let boundingSize = CGSize(width: size.width - 2 * contentInset, height: size.height)
         let rect = TTTAttributedLabel.sizeThatFitsAttributedString(article!.attributedBody, withConstraints: boundingSize, limitedToNumberOfLines: 0)
         var imageLength: CGFloat = 0
         if imageViews.count == 1 {
@@ -140,7 +153,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
         }
-        return CGSize(width: size.width, height: 52 + ceil(rect.height) + 8 + imageLength)
+        return CGSize(width: size.width, height: buttonHeight * 2 + ceil(rect.height) + contentInset + imageLength + separatorHeight)
     }
     
     private func drawImagesWithInfo(imageAtt: [ImageInfo]) {

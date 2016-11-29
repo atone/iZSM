@@ -77,7 +77,8 @@ struct SMArticle {
     private func generateAttributedString() -> NSAttributedString {
         let attributeText = NSMutableAttributedString()
 
-        let textFont = UIFont.preferredFont(forTextStyle: .body)
+        let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        let textFont = UIFont(name: "HYXinRenWenSongW", size: fontDescriptor.pointSize)!
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 4
         paragraphStyle.alignment = .natural

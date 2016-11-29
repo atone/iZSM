@@ -68,6 +68,7 @@
 		9CB573C11DE5B46D00CD6F3E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */; };
 		9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */; };
 		9CB573C41DE5B61800CD6F3E /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C31DE5B61800CD6F3E /* LogoView.swift */; };
+		9CDC486F1DEDB50A00482408 /* HYXinRenWenSongW.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9CDC486E1DEDB40A00482408 /* HYXinRenWenSongW.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -161,6 +162,7 @@
 		9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		9CB573C31DE5B61800CD6F3E /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
+		9CDC486E1DEDB40A00482408 /* HYXinRenWenSongW.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = HYXinRenWenSongW.otf; path = Resources/HYXinRenWenSongW.otf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +213,7 @@
 		9C1A3BD11DE2C3EA00CF4A43 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
+				9CDC486D1DEDB3FB00482408 /* Fonts */,
 				9C889FCA1DE4832E00C33A8D /* YYPhotoGroupView */,
 				9CA3B15F1DE3359200E9B121 /* MJRefresh */,
 				9C1A3BE41DE2E6EB00CF4A43 /* libSmth */,
@@ -404,6 +407,14 @@
 			name = TableViewCells;
 			sourceTree = "<group>";
 		};
+		9CDC486D1DEDB3FB00482408 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				9CDC486E1DEDB40A00482408 /* HYXinRenWenSongW.otf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -471,6 +482,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CDC486F1DEDB50A00482408 /* HYXinRenWenSongW.otf in Resources */,
 				9C1A3BCA1DE2C0ED00CF4A43 /* LaunchScreen.storyboard in Resources */,
 				9C1A3BC71DE2C0ED00CF4A43 /* Assets.xcassets in Resources */,
 				9CA3B19C1DE3359200E9B121 /* MJRefresh.bundle in Resources */,

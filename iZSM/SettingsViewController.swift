@@ -13,6 +13,7 @@ import SVProgressHUD
 class SettingsViewController: UITableViewController {
     @IBOutlet weak var hideTopLabel: UILabel!
     @IBOutlet weak var showSignatureLabel: UILabel!
+    @IBOutlet weak var newReplyFirstLabel: UILabel!
     @IBOutlet weak var backgroundTaskLabel: UILabel!
     @IBOutlet weak var clearCacheLabel: UILabel!
     @IBOutlet weak var cacheSizeLabel: UILabel!
@@ -21,6 +22,7 @@ class SettingsViewController: UITableViewController {
 
     @IBOutlet weak var hideTopSwitch: UISwitch!
     @IBOutlet weak var showSignatureSwitch: UISwitch!
+    @IBOutlet weak var newReplyFirstSwitch: UISwitch!
     @IBOutlet weak var backgroundTaskSwitch: UISwitch!
 
 
@@ -56,6 +58,14 @@ class SettingsViewController: UITableViewController {
     @IBAction func showSignatureChanged(sender: UISwitch) {
         setting.showSignature = sender.isOn
     }
+    
+    @IBAction func newReplyFirstChanged(sender: UISwitch) {
+        if sender.isOn {
+            setting.sortMode = .LaterPostFirst
+        } else {
+            setting.sortMode = .Normal
+        }
+    }
 
     @IBAction func backgroundTaskChanged(sender: UISwitch) {
         setting.backgroundTaskEnabled = sender.isOn
@@ -70,6 +80,7 @@ class SettingsViewController: UITableViewController {
         // update label fonts
         hideTopLabel.font = UIFont.preferredFont(forTextStyle: .body)
         showSignatureLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        newReplyFirstLabel.font = UIFont.preferredFont(forTextStyle: .body)
         backgroundTaskLabel.font = UIFont.preferredFont(forTextStyle: .body)
         clearCacheLabel.font = UIFont.preferredFont(forTextStyle: .body)
         cacheSizeLabel.font = UIFont.preferredFont(forTextStyle: .body)
@@ -87,6 +98,7 @@ class SettingsViewController: UITableViewController {
         // update switch states
         hideTopSwitch.isOn = setting.hideAlwaysOnTopThread
         showSignatureSwitch.isOn = setting.showSignature
+        newReplyFirstSwitch.isOn = (setting.sortMode == .LaterPostFirst)
         backgroundTaskSwitch.isOn = setting.backgroundTaskEnabled
     }
 

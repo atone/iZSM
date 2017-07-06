@@ -73,6 +73,8 @@ class ArticleListViewCell: UITableViewCell {
         }
         replyLabel.setContentHuggingPriority(titleLabel.contentHuggingPriority(for: .horizontal) + 1,
                                              for: .horizontal)
+        replyLabel.setContentCompressionResistancePriority(titleLabel.contentCompressionResistancePriority(for: .horizontal) + 1,
+                                                           for: .horizontal)
         authorLabel.snp.makeConstraints { (make) in
             make.top.equalTo(titleLabel.snp.bottom).offset(5)
             make.leading.equalTo(titleLabel.snp.leading)

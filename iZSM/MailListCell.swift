@@ -30,6 +30,7 @@ class MailListCell: UITableViewCell {
         unreadLabel.text = "⦁"
         unreadLabel.font = UIFont.systemFont(ofSize: 12)
         unreadLabel.textColor = UIApplication.shared.keyWindow?.tintColor
+        timeLabel.textColor = UIColor.gray
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(timeLabel)

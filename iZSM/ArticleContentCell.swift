@@ -55,6 +55,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.contentView.addSubview(authorButton)
         
         floorAndTimeLabel.font = UIFont.systemFont(ofSize: fontSize)
+        floorAndTimeLabel.textColor = UIColor.gray
         self.contentView.addSubview(floorAndTimeLabel)
         
         replyButton.setTitle("回复", for: .normal)
@@ -96,7 +97,6 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         }
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
         floorAndTimeLabel.text = "\(floorText)  \(smarticle.timeString)"
-        floorAndTimeLabel.textColor = UIColor.gray
         
         contentLabel.setText(smarticle.attributedBody)
         

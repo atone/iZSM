@@ -42,9 +42,6 @@ class ArticleContentViewController: UITableViewController {
         footerView.backgroundColor = UIColor.clear
         tableView.tableFooterView = footerView
         
-        tableView.estimatedRowHeight = 88
-        tableView.rowHeight = UITableViewAutomaticDimension
-        
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action,
                                                             target: self,
                                                             action: #selector(reverse(sender:)))
@@ -193,10 +190,21 @@ class ArticleContentViewController: UITableViewController {
         }
         cell.setData(displayFloor: floor, smarticle: smarticle, delegate: self)
         cell.preservesSuperviewLayoutMargins = false
+        cell.fd_enforceFrameLayout = true
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return articleCellAtIndexPath(indexPath: indexPath)
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return tableView.fd_heightForCell(withIdentifier: kArticleContentCellIdentifier, cacheBy: indexPath) { (cell) in
+            if let cell = cell as? ArticleContentCell {
+                self.configureArticleCell(cell: cell, atIndexPath: indexPath)
+            } else {
+                print("ERROR: cell is not ArticleContentCell!")
+            }
+        }
     }
 }
 
@@ -307,7 +315,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                             return
                         }
                         let title = "举报用户 \(cell.article!.authorID) 在 \(cell.article!.boardID) 版中发表的不良内容"
-                        let body = "举报原因：\(textField.text)\n\n【以下为被举报的帖子内容】\n作者：\(cell.article!.authorID)\n信区：\(cell.article!.boardID)\n标题：\(cell.article!.subject)\n时间：\(cell.article!.timeString)\n\n\(cell.article!.body)\n"
+                        let body = "举报原因：\(textField.text!)\n\n【以下为被举报的帖子内容】\n作者：\(cell.article!.authorID)\n信区：\(cell.article!.boardID)\n标题：\(cell.article!.subject)\n时间：\(cell.article!.timeString)\n\n\(cell.article!.body)\n"
                         networkActivityIndicatorStart()
                         DispatchQueue.global().async {
                             let result = self.api.sendMailTo(user: adminID, withTitle: title, content: body)

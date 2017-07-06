@@ -102,6 +102,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         }
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
         floorAndTimeLabel.text = "\(floorText)  \(smarticle.timeString)"
+        floorAndTimeLabel.textColor = UIColor.gray
         
         contentLabel.setText(smarticle.attributedBody)
         

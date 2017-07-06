@@ -48,18 +48,13 @@ class BaseTableViewController: UITableViewController {
         footerView.backgroundColor = UIColor.clear
         tableView.tableFooterView = footerView
         let header = MJRefreshNormalHeader(refreshingTarget: self,
-                                           refreshingAction: #selector(checkLoginIfNeededOrFetchDataDirectly))
+                                           refreshingAction: #selector(fetchData))
         header?.lastUpdatedTimeLabel.isHidden = true
         tableView.mj_header = header
     }
     
     // check login status and fetch initial data
     func fetchData() {
-        tableView.mj_header.beginRefreshing()
-    }
-    
-    // check whether need login or just fetch data directly
-    func checkLoginIfNeededOrFetchDataDirectly() {
         if let accessToken = setting.accessToken { // fetch data directly
             api.accessToken = accessToken
             fetchDataDirectly()

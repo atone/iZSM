@@ -45,7 +45,7 @@ class ArticleContentViewController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action,
                                                             target: self,
                                                             action: #selector(reverse(sender:)))
-        header = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(fetchDataDirectly))
+        header = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(fetchData))
         header?.lastUpdatedTimeLabel.isHidden = true
         tableView.mj_header = header
         footer = MJRefreshAutoNormalFooter(refreshingTarget: self, refreshingAction: #selector(fetchMoreData))
@@ -86,8 +86,7 @@ class ArticleContentViewController: UITableViewController {
         present(actionSheet, animated: true, completion: nil)
     }
     
-    
-    func fetchDataDirectly() {
+    func fetchData() {
         self.smarticles.removeAll()
         self.currentArticleNumber = 0
         if let boardID = self.boardID, let articleID = self.articleID {
@@ -113,7 +112,6 @@ class ArticleContentViewController: UITableViewController {
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
                     self.tableView.mj_header.endRefreshing()
-                    self.tableView.mj_footer.isHidden = false
                     if let smArticles = smArticles {
                         self.smarticles.append(smArticles)
                         self.currentArticleNumber += smArticles.count
@@ -125,13 +123,7 @@ class ArticleContentViewController: UITableViewController {
             }
         } else {
             self.tableView.mj_header.endRefreshing()
-            tableView.mj_footer.isHidden = false
         }
-    }
-    
-    func fetchData() {
-        tableView.mj_header.beginRefreshing()
-        tableView.mj_footer.isHidden = true
     }
     
     func fetchMoreData() {

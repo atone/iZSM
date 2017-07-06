@@ -20,8 +20,6 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     private var contentLabel = TTTAttributedLabel(frame: CGRect.zero)
     
-    private var separatorView = UIView()
-    
     private var delegate: ArticleContentCellDelegate?
     
     var article: SMArticle?
@@ -29,7 +27,6 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     private let blankWidth: CGFloat = 4
     private let picNumPerLine: CGFloat = 3
-    private let separatorHeight: CGFloat = 6
     private let contentInset: CGFloat = 8
     
     private let replyButtonWidth: CGFloat = 40
@@ -86,9 +83,6 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         contentLabel.linkAttributes = [NSForegroundColorAttributeName:tintColor]
         contentLabel.activeLinkAttributes = [NSForegroundColorAttributeName:tintColor.withAlphaComponent(0.6)]
         self.contentView.addSubview(contentLabel)
-        
-        separatorView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
-        self.contentView.addSubview(separatorView)
     }
     
     func setData(displayFloor floor: Int, smarticle: SMArticle, delegate: ArticleContentCellDelegate) {
@@ -128,20 +122,19 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
         }
-        contentLabel.frame = CGRect(x: contentInset, y: buttonHeight * 2, width: CGFloat(UIScreen.screenWidth()) - 2 * contentInset, height: size.height - buttonHeight * 2 - contentInset - imageLength - separatorHeight + 1)
+        contentLabel.frame = CGRect(x: contentInset, y: buttonHeight * 2, width: CGFloat(UIScreen.screenWidth()) - 2 * contentInset, height: size.height - buttonHeight * 2 - contentInset - imageLength + 1)
         
         if imageViews.count == 1 {
-            imageViews.first!.frame = CGRect(x: 0, y: size.height - separatorHeight - size.width, width: size.width, height: size.width)
+            imageViews.first!.frame = CGRect(x: 0, y: size.height - size.width, width: size.width, height: size.width)
         } else {
             for (index, imageView) in imageViews.enumerated() {
                 let length = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-                let startY = size.height - separatorHeight - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth)
+                let startY = size.height - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth)
                 let offsetY = (length + blankWidth) * CGFloat(index / Int(picNumPerLine))
                 let X = 0 + CGFloat(index % Int(picNumPerLine)) * (length + blankWidth)
                 imageView.frame = CGRect(x: X, y: startY + offsetY, width: length, height: length)
             }
         }
-        separatorView.frame = CGRect(x: 0, y: size.height - separatorHeight, width: size.width, height: separatorHeight)
     }
     
     //MARK: - Calculate Fitting Size
@@ -155,7 +148,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
         }
-        return CGSize(width: size.width, height: buttonHeight * 2 + ceil(rect.height) + contentInset + imageLength + separatorHeight)
+        return CGSize(width: size.width, height: buttonHeight * 2 + ceil(rect.height) + contentInset + imageLength)
     }
     
     private func drawImagesWithInfo(imageAtt: [ImageInfo]) {

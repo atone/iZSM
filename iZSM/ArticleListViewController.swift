@@ -171,7 +171,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                 }
             }
         } else {
-            self.refreshControl?.endRefreshing()
+            self.tableView.mj_header.endRefreshing()
         }
     }
     

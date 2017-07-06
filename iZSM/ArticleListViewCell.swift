@@ -14,7 +14,6 @@ class ArticleListViewCell: UITableViewCell {
     let titleLabel = UILabel()
     let authorLabel = UILabel()
     let timeLabel = UILabel()
-    let replyLabel = UILabel()
     let unreadLabel = UILabel()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -30,7 +29,7 @@ class ArticleListViewCell: UITableViewCell {
     var thread: SMThread? {
         didSet {
             if let thread = self.thread {
-                titleLabel.text = thread.subject + (hasAttachment ? " 🔗" : "")
+                titleLabel.text = thread.subject + (hasAttachment ? " 📎" : "") + " (\(thread.count - 1))"
                 if isAlwaysTop {
                     titleLabel.textColor = UIColor.red
                 } else {
@@ -38,7 +37,6 @@ class ArticleListViewCell: UITableViewCell {
                 }
                 authorLabel.text = thread.authorID
                 timeLabel.text = thread.lastReplyTime.relativeDateString
-                replyLabel.text = "\(thread.count-1)💬"
                 if thread.flags.hasPrefix("*") {
                     unreadLabel.isHidden = false
                 } else {
@@ -58,23 +56,15 @@ class ArticleListViewCell: UITableViewCell {
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(timeLabel)
-        contentView.addSubview(replyLabel)
         contentView.addSubview(authorLabel)
         contentView.addSubview(unreadLabel)
         
         titleLabel.snp.makeConstraints { (make) in
             make.leading.equalTo(contentView.snp.leadingMargin)
+            make.trailing.equalTo(contentView.snp.trailingMargin)
             make.top.equalTo(contentView.snp.topMargin)
         }
-        replyLabel.snp.makeConstraints { (make) in
-            make.leading.equalTo(titleLabel.snp.trailing)
-            make.trailing.equalTo(contentView.snp.trailingMargin)
-            make.centerY.equalTo(titleLabel.snp.centerY)
-        }
-        replyLabel.setContentHuggingPriority(titleLabel.contentHuggingPriority(for: .horizontal) + 1,
-                                             for: .horizontal)
-        replyLabel.setContentCompressionResistancePriority(titleLabel.contentCompressionResistancePriority(for: .horizontal) + 1,
-                                                           for: .horizontal)
+
         authorLabel.snp.makeConstraints { (make) in
             make.top.equalTo(titleLabel.snp.bottom).offset(5)
             make.leading.equalTo(titleLabel.snp.leading)
@@ -82,7 +72,7 @@ class ArticleListViewCell: UITableViewCell {
         }
         timeLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(authorLabel.snp.centerY)
-            make.trailing.equalTo(replyLabel.snp.trailing)
+            make.trailing.equalTo(titleLabel.snp.trailing)
         }
         unreadLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(titleLabel.snp.centerY)
@@ -94,7 +84,6 @@ class ArticleListViewCell: UITableViewCell {
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
         titleLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
         timeLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-        replyLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         authorLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         
         authorLabel.textColor = UIApplication.shared.keyWindow?.tintColor

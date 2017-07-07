@@ -17,22 +17,40 @@ class ArticleContentViewController: UITableViewController {
 
     private let kArticleContentCellIdentifier = "ArticleContentCell"
     
-    private var smarticles = [[SMArticle]]()
+    fileprivate var isScrollingStart = true // detect whether scrolling is end
+    
+    fileprivate var smarticles = [[SMArticle]]()
     
     fileprivate let api = SmthAPI()
-    private let setting = AppSetting.sharedSetting
+    fileprivate let setting = AppSetting.sharedSetting
     
-    private var totalArticleNumber: Int = 0
-    private var currentArticleNumber: Int = 0
+    fileprivate var totalArticleNumber: Int = 0
+    fileprivate var currentForwardNumber: Int = 0
+    fileprivate var currentBackwardNumber: Int = 0
+    fileprivate var currentSection: Int = 0
+    fileprivate var totalSection: Int {
+        return Int(ceil(Double(totalArticleNumber) / Double(setting.articleCountPerSection)))
+    }
     
-    private var threadRange: NSRange {
-        return NSMakeRange(currentArticleNumber, setting.articleCountPerSection)
+    private var forwardThreadRange: NSRange {
+        return NSMakeRange(currentForwardNumber, setting.articleCountPerSection)
+    }
+    private var backwardThreadRange: NSRange {
+        return NSMakeRange(currentBackwardNumber - setting.articleCountPerSection,
+                           setting.articleCountPerSection)
     }
     
     var boardID: String?
     var boardName: String? // if fromTopTen, this will not be set, so we must query this using api
     var articleID: Int?
     var fromTopTen: Bool = false
+    var section: Int = 0 {
+        didSet {
+            currentSection = section
+            currentForwardNumber = section * setting.articleCountPerSection
+            currentBackwardNumber = section * setting.articleCountPerSection
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,59 +60,72 @@ class ArticleContentViewController: UITableViewController {
         footerView.backgroundColor = UIColor.clear
         tableView.tableFooterView = footerView
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action,
-                                                            target: self,
-                                                            action: #selector(reverse(sender:)))
-        header = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(fetchData))
+        var barButtonItems = [UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(tapPageButton(sender:)))]
+        if fromTopTen {
+            barButtonItems.insert(UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(sender:))), at: 0)
+        }
+        navigationItem.rightBarButtonItems = barButtonItems
+        header = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(refreshAction))
         header?.lastUpdatedTimeLabel.isHidden = true
         tableView.mj_header = header
         footer = MJRefreshAutoNormalFooter(refreshingTarget: self, refreshingAction: #selector(fetchMoreData))
         tableView.mj_footer = footer
-        fetchData()
+        fetchData(resetSection: false)
     }
     
-    func reverse(sender: UIBarButtonItem) {
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        switch setting.sortMode {
-        case .LaterPostFirst:
-            let action = UIAlertAction(title: "最早回复在前", style: .default) { [unowned self] action in
-                self.setting.sortMode = .Normal
-                self.fetchData()
-            }
-            actionSheet.addAction(action)
-        case .Normal:
-            let action = UIAlertAction(title: "最新回复在前", style: .default) { [unowned self] action in
-                self.setting.sortMode = .LaterPostFirst
-                self.fetchData()
-            }
-            actionSheet.addAction(action)
+    func refreshAction() {
+        if currentBackwardNumber > 0 {
+            fetchPrevData()
+        } else {
+            fetchData(resetSection: true)
         }
-        if fromTopTen {
-            if let boardID = self.boardID, let boardName = self.boardName {
-                let gotoBoardAction = UIAlertAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] action in
-                    let alvc = ArticleListViewController()
-                    alvc.boardID = boardID
-                    alvc.boardName = boardName
-                    alvc.hidesBottomBarWhenPushed = true
-                    self.show(alvc, sender: self)
-                }
-                actionSheet.addAction(gotoBoardAction)
+    }
+    
+    func tapPageButton(sender: UIBarButtonItem) {
+        let pageListViewController = PageListViewController()
+        pageListViewController.preferredContentSize = CGSize(width: UIScreen.screenWidth() / 2, height: UIScreen.screenHeight() / 2)
+        pageListViewController.modalPresentationStyle = .popover
+        pageListViewController.currentPage = currentSection
+        pageListViewController.totalPage = totalSection
+        pageListViewController.delegate = self
+        let presentationCtr = pageListViewController.presentationController as! UIPopoverPresentationController
+        presentationCtr.barButtonItem = navigationItem.rightBarButtonItems?.last
+        presentationCtr.backgroundColor = UIColor.white
+        presentationCtr.delegate = self
+        present(pageListViewController, animated: true, completion: nil)
+    }
+    
+    func action(sender: UIBarButtonItem) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if let boardID = self.boardID, let boardName = self.boardName {
+            let gotoBoardAction = UIAlertAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] action in
+                let alvc = ArticleListViewController()
+                alvc.boardID = boardID
+                alvc.boardName = boardName
+                alvc.hidesBottomBarWhenPushed = true
+                self.show(alvc, sender: self)
             }
+            actionSheet.addAction(gotoBoardAction)
         }
         actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         actionSheet.popoverPresentationController?.barButtonItem = sender
         present(actionSheet, animated: true, completion: nil)
     }
     
-    func fetchData() {
+    func fetchData(resetSection: Bool) {
         self.smarticles.removeAll()
-        self.currentArticleNumber = 0
+        if resetSection {
+            self.currentSection = 0
+            self.currentForwardNumber = 0
+            self.currentBackwardNumber = 0
+        }
         if let boardID = self.boardID, let articleID = self.articleID {
             networkActivityIndicatorStart()
+            self.tableView.mj_footer.isHidden = true
             DispatchQueue.global().async {
                 let smArticles = self.api.getThreadContentInBoard(boardID: boardID,
                                                                   articleID: articleID,
-                                                                  threadRange: self.threadRange,
+                                                                  threadRange: self.forwardThreadRange,
                                                                   replyMode: self.setting.sortMode)
                 let totalArticleNumber = self.api.getLastThreadCount()
                 
@@ -112,11 +143,17 @@ class ArticleContentViewController: UITableViewController {
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
                     self.tableView.mj_header.endRefreshing()
+                    self.tableView.mj_footer.isHidden = false
                     if let smArticles = smArticles {
                         self.smarticles.append(smArticles)
-                        self.currentArticleNumber += smArticles.count
+                        self.currentForwardNumber += smArticles.count
                         self.totalArticleNumber = totalArticleNumber
-                        self.tableView?.reloadData()
+                        self.tableView.reloadData()
+                        self.tableView.scrollToTop()
+                        UIView.performWithoutAnimation {
+                            self.navigationItem.rightBarButtonItems?.last?.title
+                                = "\(self.currentSection + 1)/\(self.totalSection)"
+                        }
                     }
                     self.api.displayErrorIfNeeded()
                 }
@@ -126,28 +163,59 @@ class ArticleContentViewController: UITableViewController {
         }
     }
     
-    func fetchMoreData() {
+    func fetchPrevData() {
         if let boardID = self.boardID, let articleID = self.articleID {
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
                 let smArticles = self.api.getThreadContentInBoard(boardID: boardID,
                                                                   articleID: articleID,
-                                                                  threadRange: self.threadRange,
+                                                                  threadRange: self.backwardThreadRange,
                                                                   replyMode: self.setting.sortMode)
                 let totalArticleNumber = self.api.getLastThreadCount()
                 
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
                     if let smArticles = smArticles {
-                        let newIndexSet = IndexSet(integer: self.smarticles.count)
-                        self.smarticles.append(smArticles)
-                        self.currentArticleNumber += smArticles.count
+                        self.smarticles.insert(smArticles, at: 0)
+                        self.currentBackwardNumber -= smArticles.count
                         self.totalArticleNumber = totalArticleNumber
-                        self.tableView.insertSections(newIndexSet, with: .none)
+                        self.tableView.reloadData()
+                        var delayOffest = self.tableView.contentOffset
+                        for i in 0..<smArticles.count {
+                            delayOffest.y += self.tableView(self.tableView, heightForRowAt: IndexPath(row: i, section: 0))
+                        }
+                        self.tableView.setContentOffset(delayOffest, animated: false)
+                    }
+                    self.api.displayErrorIfNeeded()
+                    self.tableView.mj_header.endRefreshing()
+                }
+            }
+        } else {
+            tableView.mj_header.endRefreshing()
+        }
+    }
+    
+    func fetchMoreData() {
+        if let boardID = self.boardID, let articleID = self.articleID {
+            networkActivityIndicatorStart()
+            DispatchQueue.global().async {
+                let smArticles = self.api.getThreadContentInBoard(boardID: boardID,
+                                                                  articleID: articleID,
+                                                                  threadRange: self.forwardThreadRange,
+                                                                  replyMode: self.setting.sortMode)
+                let totalArticleNumber = self.api.getLastThreadCount()
+                
+                DispatchQueue.main.async {
+                    networkActivityIndicatorStop()
+                    if let smArticles = smArticles {
+                        self.smarticles.append(smArticles)
+                        self.currentForwardNumber += smArticles.count
+                        self.totalArticleNumber = totalArticleNumber
+                        self.tableView.reloadData()
                     }
                     self.api.displayErrorIfNeeded()
                     self.tableView.mj_footer.endRefreshing()
-                    if self.totalArticleNumber == self.currentArticleNumber {
+                    if self.totalArticleNumber == self.currentForwardNumber {
                         self.footer?.setTitle("没有新帖子了", for: MJRefreshState.idle)
                     }else {
                         self.footer?.setTitle("点击或上拉加载更多", for: MJRefreshState.idle)
@@ -195,6 +263,61 @@ class ArticleContentViewController: UITableViewController {
                 self.configureArticleCell(cell: cell, atIndexPath: indexPath)
             } else {
                 print("ERROR: cell is not ArticleContentCell!")
+            }
+        }
+    }
+}
+
+extension ArticleContentViewController: PageListViewControllerDelegate {
+    func pageListViewController(_ controller: PageListViewController, currentPageChangedTo currentPage: Int) {
+        section = currentPage
+        fetchData(resetSection: false)
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ArticleContentViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+}
+
+extension ArticleContentViewController {
+    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            if isScrollingStart {
+                isScrollingStart = false
+                scrollingStopped()
+            }
+        }
+    }
+    
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if isScrollingStart {
+            isScrollingStart = false
+            scrollingStopped()
+        }
+    }
+
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        isScrollingStart = true
+    }
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isScrollingStart = true
+    }
+    
+    override func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+        scrollingStopped()
+    }
+    
+    func scrollingStopped() {
+        let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + 64)
+        if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
+            let article = smarticles[indexPath.section][indexPath.row]
+            currentSection = article.floor / setting.articleCountPerSection
+            UIView.performWithoutAnimation {
+                navigationItem.rightBarButtonItems?.last?.title = "\(currentSection + 1)/\(totalSection)"
             }
         }
     }

@@ -10,9 +10,9 @@
 
 @interface UIScreen (Additions)
 
-+ (float)screenWidth;
-+ (float)screenHeight;
++ (CGFloat)screenWidth;
++ (CGFloat)screenHeight;
 + (BOOL)isRetina;
-+ (float)scale;
++ (CGFloat)scale;
 
 @end

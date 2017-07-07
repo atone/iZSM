@@ -111,8 +111,8 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         authorButton.frame = CGRect(origin: CGPoint(x: contentInset, y: 0), size: authorButton.bounds.size)
         floorAndTimeLabel.sizeToFit()
         floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: contentInset, y: buttonHeight), size: floorAndTimeLabel.bounds.size)
-        replyButton.frame = CGRect(x: CGFloat(UIScreen.screenWidth()) - contentInset * 2 - replyButtonWidth - moreButtonWidth, y: buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
-        moreButton.frame = CGRect(x: CGFloat(UIScreen.screenWidth()) - contentInset - moreButtonWidth, y: buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
+        replyButton.frame = CGRect(x: UIScreen.screenWidth() - contentInset * 2 - replyButtonWidth - moreButtonWidth, y: buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
+        moreButton.frame = CGRect(x: UIScreen.screenWidth() - contentInset - moreButtonWidth, y: buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
         
         let size = contentView.bounds.size
         var imageLength: CGFloat = 0
@@ -122,7 +122,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
         }
-        contentLabel.frame = CGRect(x: contentInset, y: buttonHeight * 2, width: CGFloat(UIScreen.screenWidth()) - 2 * contentInset, height: size.height - buttonHeight * 2 - contentInset - imageLength + 1)
+        contentLabel.frame = CGRect(x: contentInset, y: buttonHeight * 2, width: UIScreen.screenWidth() - 2 * contentInset, height: size.height - buttonHeight * 2 - contentInset - imageLength + 1)
         
         if imageViews.count == 1 {
             imageViews.first!.frame = CGRect(x: 0, y: size.height - size.width, width: size.width, height: size.width)

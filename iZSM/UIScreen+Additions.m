@@ -10,7 +10,7 @@
 
 @implementation UIScreen (Additions)
 
-+ (float)screenWidth{
++ (CGFloat)screenWidth{
     if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
         if ([[UIDevice currentDevice].systemVersion floatValue]>=8.0) {
             return [UIScreen mainScreen].nativeBounds.size.height/[UIScreen mainScreen].nativeScale;
@@ -26,7 +26,7 @@
     }
 }
 
-+ (float)screenHeight{
++ (CGFloat)screenHeight{
     if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
         if ([[UIDevice currentDevice].systemVersion floatValue]>=8.0) {
             if ([UIApplication sharedApplication].statusBarFrame.size.width>20) {
@@ -62,7 +62,7 @@
     }
 }
 
-+ (float)scale{
++ (CGFloat)scale{
     if ([[UIDevice currentDevice].systemVersion floatValue]>=8.0) {
         return [UIScreen mainScreen].nativeScale;
     } else {

@@ -12,11 +12,10 @@ import SVProgressHUD
 class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDelegate {
     
     private let kMailListCellIdentifier = "MailListCell"
-    var segment: UISegmentedControl = UISegmentedControl(items: ["收件箱", "发件箱"])
     
     var inbox: Bool = true {
         didSet {
-            segment.selectedSegmentIndex = inbox ? 0 : 1
+            title = inbox ? "收件箱" : "发件箱"
         }
     }
     
@@ -38,26 +37,9 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
         mails.removeAll()
     }
     
-    func segmentAction(sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0:
-            inbox = true
-            fetchData()
-        case 1:
-            inbox = false
-            fetchData()
-        default:
-            break
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(MailListCell.self, forCellReuseIdentifier: kMailListCellIdentifier)
-        segment.addTarget(self, action: #selector(segmentAction(sender:)), for: .valueChanged)
-        segment.setWidth(100, forSegmentAt: 0)
-        segment.setWidth(100, forSegmentAt: 1)
-        navigationItem.titleView = segment
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self,
                                                             action: #selector(composeEmail(sender:)))

@@ -12,11 +12,10 @@ import SVProgressHUD
 class ReminderViewController: BaseTableViewController {
 
     private let kReminderListCellIdentifier = "ReminderListCell"
-    var segment: UISegmentedControl = UISegmentedControl(items: ["回复我", "提到我"])
     
     var replyMe: Bool = true {
         didSet {
-            segment.selectedSegmentIndex = replyMe ? 0 : 1
+            title = replyMe ? "回复我" : "提到我"
         }
     }
     
@@ -37,26 +36,9 @@ class ReminderViewController: BaseTableViewController {
         references.removeAll()
     }
     
-    func segmentAction(sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0:
-            replyMe = true
-            fetchData()
-        case 1:
-            replyMe = false
-            fetchData()
-        default:
-            break
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(ReminderListCell.self, forCellReuseIdentifier: kReminderListCellIdentifier)
-        segment.addTarget(self, action: #selector(segmentAction(sender:)), for: .valueChanged)
-        segment.setWidth(100, forSegmentAt: 0)
-        segment.setWidth(100, forSegmentAt: 1)
-        navigationItem.titleView = segment
     }
     
     override func fetchDataDirectly() {

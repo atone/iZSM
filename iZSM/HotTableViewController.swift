@@ -8,7 +8,6 @@
 
 import UIKit
 import SVProgressHUD
-import RealmSwift
 
 class HotTableViewController: BaseTableViewController {
     
@@ -94,14 +93,11 @@ class HotTableViewController: BaseTableViewController {
         acvc.fromTopTen = true
         acvc.hidesBottomBarWhenPushed = true
         
-        let realm = try! Realm()
-        let results = realm.objects(ArticleReadStatus.self)
-            .filter("boardID == '\(thread.boardID)' AND articleID == \(thread.id)")
-        if results.count > 0 {
-            let status = results.first!
-            acvc.section = status.section
-            acvc.row = status.row
+        if let result = ArticleReadStatusUtil.getStatus(boardID: thread.boardID, articleID: thread.id) {
+            acvc.section = result.section
+            acvc.row = result.row
         }
+        
         show(acvc, sender: self)
     }
 }
@@ -121,13 +117,9 @@ extension HotTableViewController : UIViewControllerPreviewingDelegate {
         acvc.fromTopTen = true
         acvc.hidesBottomBarWhenPushed = true
         
-        let realm = try! Realm()
-        let results = realm.objects(ArticleReadStatus.self)
-            .filter("boardID == '\(thread.boardID)' AND articleID == \(thread.id)")
-        if results.count > 0 {
-            let status = results.first!
-            acvc.section = status.section
-            acvc.row = status.row
+        if let result = ArticleReadStatusUtil.getStatus(boardID: thread.boardID, articleID: thread.id) {
+            acvc.section = result.section
+            acvc.row = result.row
         }
 
         // Set the source rect to the cell frame, so surrounding elements are blurred.

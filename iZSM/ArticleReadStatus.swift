@@ -14,3 +14,41 @@ class ArticleReadStatus: Object {
     dynamic var boardID: String = ""
     dynamic var articleID: Int = 0
 }
+
+class ArticleReadStatusUtil {
+    class func saveStatus(section: Int, row: Int, boardID: String, articleID: Int) {
+        let realm = try! Realm()
+        let results = realm.objects(ArticleReadStatus.self)
+            .filter("boardID == '\(boardID)' AND articleID == \(articleID)")
+        if results.count == 0 {
+            let status = ArticleReadStatus()
+            status.boardID = boardID
+            status.articleID = articleID
+            status.section = section
+            status.row = row
+            try! realm.write {
+                realm.add(status)
+            }
+            print("add new status: \(status)")
+        } else {
+            let status = results.first!
+            try! realm.write {
+                status.section = section
+                status.row = row
+            }
+            print("update \(results.count) status: \(status)")
+        }
+    }
+    
+    class func getStatus(boardID: String, articleID: Int) -> (section: Int, row: Int)? {
+        let realm = try! Realm()
+        let results = realm.objects(ArticleReadStatus.self)
+            .filter("boardID == '\(boardID)' AND articleID == \(articleID)")
+        if results.count > 0 {
+            let status = results.first!
+            return (section: status.section, row: status.row)
+        } else {
+            return nil
+        }
+    }
+}

@@ -10,7 +10,6 @@ import UIKit
 import SafariServices
 import SVProgressHUD
 import SnapKit
-import RealmSwift
 
 class ArticleContentViewController: UITableViewController {
     
@@ -261,27 +260,10 @@ class ArticleContentViewController: UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + 64)
         if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
-            let realm = try! Realm()
-            let results = realm.objects(ArticleReadStatus.self)
-                .filter("boardID == '\(boardID!)' AND articleID == \(articleID!)")
-            if results.count == 0 {
-                let status = ArticleReadStatus()
-                status.boardID = boardID!
-                status.articleID = articleID!
-                status.section = currentSection
-                status.row = indexPath.row
-                try! realm.write {
-                    realm.add(status)
-                }
-                print("add new status: \(status)")
-            } else {
-                let status = results.first!
-                try! realm.write {
-                    status.section = self.currentSection
-                    status.row = indexPath.row
-                }
-                print("update \(results.count) status: \(status)")
-            }
+            ArticleReadStatusUtil.saveStatus(section: currentSection,
+                                             row: indexPath.row,
+                                             boardID: boardID!,
+                                             articleID: articleID!)
         }
         
         super.viewWillDisappear(animated)

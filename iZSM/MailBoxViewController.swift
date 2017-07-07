@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SVProgressHUD
 
 class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDelegate {
     
@@ -30,9 +31,7 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
         }
     }
     
-    private var mails: [[SMMail]] = [[SMMail]]() {
-        didSet { tableView?.reloadData() }
-    }
+    private var mails: [[SMMail]] = [[SMMail]]()
     
     override func clearContent() {
         super.clearContent()
@@ -80,11 +79,13 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
             
             DispatchQueue.main.async {
                 self.tableView.mj_header.endRefreshing()
+                SVProgressHUD.dismiss()
                 networkActivityIndicatorStop()
                 if let fetchedMails = fetchedMails {
                     self.mailCountLoaded -= fetchedMails.count
                     self.mails.removeAll()
                     self.mails.append(Array(fetchedMails.reversed()))
+                    self.tableView.reloadData()
                 }
                 self.api.displayErrorIfNeeded()
             }
@@ -106,6 +107,7 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
                 if let fetchedMails = fetchedMails {
                     self.mailCountLoaded -= fetchedMails.count
                     self.mails.append(Array(fetchedMails.reversed()))
+                    self.tableView.reloadData()
                 }
                 self.api.displayErrorIfNeeded()
             }

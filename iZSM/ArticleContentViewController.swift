@@ -61,10 +61,8 @@ class ArticleContentViewController: UITableViewController {
         let footerView = UIView()
         footerView.backgroundColor = UIColor.clear
         tableView.tableFooterView = footerView
-        
-        setupTitleView()
-        
-        var barButtonItems = [UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(tapPageButton(sender:)))]
+
+        var barButtonItems = [UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(tapPageButton(sender:)))]
         if fromTopTen {
             barButtonItems.insert(UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(sender:))), at: 0)
         }
@@ -78,22 +76,6 @@ class ArticleContentViewController: UITableViewController {
         fetchData(resetSection: false, restorePosition: true)
     }
     
-    func setupTitleView() {
-        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth(), height: 44))
-        titleView.backgroundColor = UIColor.clear
-        let titleLabel = UILabel()
-        titleLabel.numberOfLines = 0
-        titleLabel.textAlignment = .center
-        titleLabel.textColor = UIColor.white
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 15)
-        titleLabel.text = title
-        titleView.addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { (make) in
-            make.edges.equalTo(titleView)
-        }
-        navigationItem.titleView = titleView
-    }
-    
     func refreshAction() {
         if currentBackwardNumber > 0 {
             fetchPrevData()
@@ -104,7 +86,8 @@ class ArticleContentViewController: UITableViewController {
     
     func tapPageButton(sender: UIBarButtonItem) {
         let pageListViewController = PageListViewController()
-        pageListViewController.preferredContentSize = CGSize(width: UIScreen.screenWidth() / 2, height: UIScreen.screenHeight() / 2)
+        let height = min(CGFloat(44 * totalSection), UIScreen.screenHeight() / 2)
+        pageListViewController.preferredContentSize = CGSize(width: UIScreen.screenWidth() / 2, height: height)
         pageListViewController.modalPresentationStyle = .popover
         pageListViewController.currentPage = currentSection
         pageListViewController.totalPage = totalSection
@@ -177,10 +160,6 @@ class ArticleContentViewController: UITableViewController {
                                                        animated: false)
                         } else {
                             self.tableView.scrollToTop()
-                        }
-                        UIView.performWithoutAnimation {
-                            self.navigationItem.rightBarButtonItems?.last?.title
-                                = "\(self.currentSection + 1) / \(self.totalSection)"
                         }
                     }
                     self.api.displayErrorIfNeeded()
@@ -358,9 +337,6 @@ extension ArticleContentViewController {
         if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
             let article = smarticles[indexPath.section][indexPath.row]
             currentSection = article.floor / setting.articleCountPerSection
-            UIView.performWithoutAnimation {
-                navigationItem.rightBarButtonItems?.last?.title = "\(currentSection + 1) / \(totalSection)"
-            }
         }
     }
 }

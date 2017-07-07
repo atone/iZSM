@@ -161,6 +161,8 @@ class ArticleContentViewController: UITableViewController {
                         } else {
                             self.tableView.scrollToTop()
                         }
+                    } else {
+                        SVProgressHUD.showError(withStatus: "指定的文章不存在\n或链接错误")
                     }
                     self.api.displayErrorIfNeeded()
                 }

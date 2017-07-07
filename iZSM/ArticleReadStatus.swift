@@ -17,6 +17,9 @@ class ArticleReadStatus: Object {
 
 class ArticleReadStatusUtil {
     class func saveStatus(section: Int, row: Int, boardID: String, articleID: Int) {
+        if !AppSetting.sharedSetting.rememberLast {
+            return
+        }
         let realm = try! Realm()
         let results = realm.objects(ArticleReadStatus.self)
             .filter("boardID == '\(boardID)' AND articleID == \(articleID)")
@@ -41,6 +44,9 @@ class ArticleReadStatusUtil {
     }
     
     class func getStatus(boardID: String, articleID: Int) -> (section: Int, row: Int)? {
+        if !AppSetting.sharedSetting.rememberLast {
+            return nil
+        }
         let realm = try! Realm()
         let results = realm.objects(ArticleReadStatus.self)
             .filter("boardID == '\(boardID)' AND articleID == \(articleID)")

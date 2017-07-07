@@ -107,12 +107,41 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="FMy-Cl-XDp">
+                                        <rect key="frame" x="0.0" y="187.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FMy-Cl-XDp" id="jkB-Ea-etv">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="记住上次阅读位置" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YXQ-Rw-Xq2">
+                                                    <rect key="frame" x="15" y="8" width="139" height="27"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="7Yb-KJ-UdP">
+                                                    <rect key="frame" x="318" y="6" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="rememberLastChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="mEj-f3-ORC"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerY" secondItem="7Yb-KJ-UdP" secondAttribute="centerY" id="C3c-Yl-eMI"/>
+                                                <constraint firstItem="YXQ-Rw-Xq2" firstAttribute="leading" secondItem="jkB-Ea-etv" secondAttribute="leading" constant="15" id="Wdx-mY-dQL"/>
+                                                <constraint firstItem="YXQ-Rw-Xq2" firstAttribute="top" secondItem="jkB-Ea-etv" secondAttribute="topMargin" id="bUV-bs-tfV"/>
+                                                <constraint firstItem="7Yb-KJ-UdP" firstAttribute="trailing" secondItem="jkB-Ea-etv" secondAttribute="trailingMargin" id="bqq-gQ-rUs"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="YXQ-Rw-Xq2" secondAttribute="bottom" id="oKX-u0-iJX"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="后台任务" footerTitle="启用后台刷新后，iOS 会根据应用的使用情况，定期后台获取新邮件、新回复的提醒。" id="BuB-XN-oan">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="1jr-45-R6a">
-                                        <rect key="frame" x="0.0" y="243" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="287" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1jr-45-R6a" id="Xw6-GQ-vVw">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -145,7 +174,7 @@
                             <tableViewSection id="MUy-Sl-HQT">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="4au-nR-xNV">
-                                        <rect key="frame" x="0.0" y="343" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="387" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4au-nR-xNV" id="fkQ-07-iVN">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -179,7 +208,7 @@
                             <tableViewSection id="QU1-xP-SWW">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="wxx-M6-Cp4">
-                                        <rect key="frame" x="0.0" y="407" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="451" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wxx-M6-Cp4" id="qsY-uX-Wg3">
                                             <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
@@ -207,7 +236,7 @@
                             <tableViewSection headerTitle="注销帐户" id="fBH-nR-TdT">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="LvP-NI-cZy">
-                                        <rect key="frame" x="0.0" y="499" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="543" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LvP-NI-cZy" id="k5i-TI-8XD">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -250,6 +279,8 @@
                         <outlet property="logoutLabel" destination="mg8-Gm-82m" id="0lV-Qc-vdF"/>
                         <outlet property="newReplyFirstLabel" destination="zGy-98-WHJ" id="iPQ-ap-6gi"/>
                         <outlet property="newReplyFirstSwitch" destination="JXU-55-QNf" id="46F-KQ-8lK"/>
+                        <outlet property="rememberLastLabel" destination="YXQ-Rw-Xq2" id="Py4-kA-ISS"/>
+                        <outlet property="rememberLastSwitch" destination="7Yb-KJ-UdP" id="Cwj-vN-EDu"/>
                         <outlet property="showSignatureLabel" destination="hBc-Ge-FAr" id="c8K-Nw-3Xd"/>
                         <outlet property="showSignatureSwitch" destination="11I-Qr-V6U" id="62s-B9-dMP"/>
                     </connections>

@@ -28,6 +28,7 @@ class AppSetting {
         static let MailCountKey = "SmthAPI.mailCountKey"
         static let ReplyCountKey = "SmthAPI.replyCountKey"
         static let ReferCountKey = "SmthAPI.referCountKey"
+        static let RememberLastKey = "SmthAPI.rememberLastKey"
     }
 
     private let defaults = UserDefaults.standard
@@ -44,7 +45,8 @@ class AppSetting {
             Static.EulaAgreedKey : false,
             Static.MailCountKey : 0,
             Static.ReplyCountKey : 0,
-            Static.ReferCountKey : 0
+            Static.ReferCountKey : 0,
+            Static.RememberLastKey : true
         ]
         defaults.register(defaults: initialSettings)
     }
@@ -154,6 +156,13 @@ class AppSetting {
         get { return defaults.integer(forKey: Static.ReferCountKey) }
         set {
             defaults.set(newValue, forKey: Static.ReferCountKey)
+        }
+    }
+    
+    var rememberLast: Bool {
+        get { return defaults.bool(forKey: Static.RememberLastKey) }
+        set {
+            defaults.set(newValue, forKey: Static.RememberLastKey)
         }
     }
 }

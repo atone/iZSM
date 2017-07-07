@@ -9,11 +9,13 @@
 import UIKit
 import YYKit
 import SVProgressHUD
+import RealmSwift
 
 class SettingsViewController: UITableViewController {
     @IBOutlet weak var hideTopLabel: UILabel!
     @IBOutlet weak var showSignatureLabel: UILabel!
     @IBOutlet weak var newReplyFirstLabel: UILabel!
+    @IBOutlet weak var rememberLastLabel: UILabel!
     @IBOutlet weak var backgroundTaskLabel: UILabel!
     @IBOutlet weak var clearCacheLabel: UILabel!
     @IBOutlet weak var cacheSizeLabel: UILabel!
@@ -23,6 +25,7 @@ class SettingsViewController: UITableViewController {
     @IBOutlet weak var hideTopSwitch: UISwitch!
     @IBOutlet weak var showSignatureSwitch: UISwitch!
     @IBOutlet weak var newReplyFirstSwitch: UISwitch!
+    @IBOutlet weak var rememberLastSwitch: UISwitch!
     @IBOutlet weak var backgroundTaskSwitch: UISwitch!
 
 
@@ -66,6 +69,16 @@ class SettingsViewController: UITableViewController {
             setting.sortMode = .Normal
         }
     }
+    
+    @IBAction func rememberLastChanged(sender: UISwitch) {
+        setting.rememberLast = sender.isOn
+        if !sender.isOn {
+            let realm = try! Realm()
+            try! realm.write {
+                realm.deleteAll()
+            }
+        }
+    }
 
     @IBAction func backgroundTaskChanged(sender: UISwitch) {
         setting.backgroundTaskEnabled = sender.isOn
@@ -81,6 +94,7 @@ class SettingsViewController: UITableViewController {
         hideTopLabel.font = UIFont.preferredFont(forTextStyle: .body)
         showSignatureLabel.font = UIFont.preferredFont(forTextStyle: .body)
         newReplyFirstLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        rememberLastLabel.font = UIFont.preferredFont(forTextStyle: .body)
         backgroundTaskLabel.font = UIFont.preferredFont(forTextStyle: .body)
         clearCacheLabel.font = UIFont.preferredFont(forTextStyle: .body)
         cacheSizeLabel.font = UIFont.preferredFont(forTextStyle: .body)
@@ -99,6 +113,7 @@ class SettingsViewController: UITableViewController {
         hideTopSwitch.isOn = setting.hideAlwaysOnTopThread
         showSignatureSwitch.isOn = setting.showSignature
         newReplyFirstSwitch.isOn = (setting.sortMode == .LaterPostFirst)
+        rememberLastSwitch.isOn = setting.rememberLast
         backgroundTaskSwitch.isOn = setting.backgroundTaskEnabled
     }
 

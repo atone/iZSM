@@ -117,7 +117,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search,
                                            target: self,
                                            action: #selector(pressSearchButton(sender:)))
-        let composeButton = UIBarButtonItem(barButtonSystemItem: .compose,
+        let composeButton = UIBarButtonItem(barButtonSystemItem: .add,
                                             target: self,
                                             action: #selector(composeArticle(sender:)))
         navigationItem.rightBarButtonItems = [composeButton, searchButton]

@@ -62,10 +62,8 @@ class ArticleContentViewController: UITableViewController {
         footerView.backgroundColor = UIColor.clear
         tableView.tableFooterView = footerView
 
-        var barButtonItems = [UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(tapPageButton(sender:)))]
-        if fromTopTen {
-            barButtonItems.insert(UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(sender:))), at: 0)
-        }
+        let barButtonItems = [UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(sender:))),
+                              UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(tapPageButton(sender:)))]
         navigationItem.rightBarButtonItems = barButtonItems
         header = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(refreshAction))
         header?.lastUpdatedTimeLabel.isHidden = true
@@ -101,15 +99,31 @@ class ArticleContentViewController: UITableViewController {
     
     func action(sender: UIBarButtonItem) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        if let boardID = self.boardID, let boardName = self.boardName {
-            let gotoBoardAction = UIAlertAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] action in
-                let alvc = ArticleListViewController()
-                alvc.boardID = boardID
-                alvc.boardName = boardName
-                alvc.hidesBottomBarWhenPushed = true
-                self.show(alvc, sender: self)
+        if fromTopTen {
+            if let boardID = self.boardID, let boardName = self.boardName {
+                let gotoBoardAction = UIAlertAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] action in
+                    let alvc = ArticleListViewController()
+                    alvc.boardID = boardID
+                    alvc.boardName = boardName
+                    alvc.hidesBottomBarWhenPushed = true
+                    self.show(alvc, sender: self)
+                }
+                actionSheet.addAction(gotoBoardAction)
             }
-            actionSheet.addAction(gotoBoardAction)
+        }
+        if let boardID = self.boardID, let articleID = self.articleID {
+            let openComputerAction = UIAlertAction(title: "浏览（电脑版）网页", style: .default) {[unowned self] action in
+                let urlString = "http://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
+                let webViewController = SFSafariViewController(url: URL(string: urlString)!)
+                self.present(webViewController, animated: true, completion: nil)
+            }
+            actionSheet.addAction(openComputerAction)
+            let openMobileAction = UIAlertAction(title: "浏览（移动版）网页", style: .default) {[unowned self] action in
+                let urlString = "http://m.newsmth.net/article/\(boardID)/\(articleID)"
+                let webViewController = SFSafariViewController(url: URL(string: urlString)!)
+                self.present(webViewController, animated: true, completion: nil)
+            }
+            actionSheet.addAction(openMobileAction)
         }
         actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         actionSheet.popoverPresentationController?.barButtonItem = sender

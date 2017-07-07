@@ -59,7 +59,7 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
         segment.setWidth(100, forSegmentAt: 0)
         segment.setWidth(100, forSegmentAt: 1)
         navigationItem.titleView = segment
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose,
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self,
                                                             action: #selector(composeEmail(sender:)))
     }

@@ -46,6 +46,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     
     
     private func setupUI() {
+        let cornerRadius: CGFloat = 4
         view.backgroundColor = UIColor.white
         title = "发表文章"
         titleHintLabel.text = "标题"
@@ -53,7 +54,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         titleHintLabel.textColor = UIColor.white
         titleHintLabel.backgroundColor = UIColor.lightGray
         titleHintLabel.textAlignment = .center
-        titleHintLabel.layer.cornerRadius = 2
+        titleHintLabel.layer.cornerRadius = cornerRadius
         titleHintLabel.layer.masksToBounds = true
         titleTextField.delegate = self
         titleTextField.addTarget(self, action: #selector(change(textField:)), for: .editingChanged)
@@ -69,6 +70,8 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
         contentTextView.autocapitalizationType = .sentences
         contentTextView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
+        contentTextView.layer.cornerRadius = cornerRadius
+        contentTextView.layer.masksToBounds = true
         countLabel.text = "0"
         countLabel.font = UIFont.systemFont(ofSize: 16)
         countLabel.textColor = UIColor.lightGray

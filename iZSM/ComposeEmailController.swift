@@ -52,6 +52,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     private let setting = AppSetting.sharedSetting
     
     private func setupUI() {
+        let cornerRadius: CGFloat = 4
         view.backgroundColor = UIColor.white
         title = "写邮件"
         sendToLabel.text = "寄给"
@@ -59,14 +60,14 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         sendToLabel.textColor = UIColor.white
         sendToLabel.backgroundColor = UIColor.lightGray
         sendToLabel.textAlignment = .center
-        sendToLabel.layer.cornerRadius = 2
+        sendToLabel.layer.cornerRadius = cornerRadius
         sendToLabel.layer.masksToBounds = true
         titleHintLabel.text = "标题"
         titleHintLabel.font = UIFont.systemFont(ofSize: 14)
         titleHintLabel.textColor = UIColor.white
         titleHintLabel.backgroundColor = UIColor.lightGray
         titleHintLabel.textAlignment = .center
-        titleHintLabel.layer.cornerRadius = 2
+        titleHintLabel.layer.cornerRadius = cornerRadius
         titleHintLabel.layer.masksToBounds = true
         titleTextField.delegate = self
         titleTextField.addTarget(self, action: #selector(change(textField:)), for: .editingChanged)
@@ -91,6 +92,8 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
         contentTextView.autocapitalizationType = .sentences
         contentTextView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
+        contentTextView.layer.cornerRadius = cornerRadius
+        contentTextView.layer.masksToBounds = true
         countLabel.text = "0"
         countLabel.font = UIFont.systemFont(ofSize: 16)
         countLabel.textColor = UIColor.lightGray

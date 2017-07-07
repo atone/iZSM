@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SVProgressHUD
 
 class BaseTableViewController: UITableViewController {
     let api = SmthAPI()
@@ -69,6 +70,7 @@ class BaseTableViewController: UITableViewController {
                         self.fetchDataDirectly()
                     } else {
                         self.tableView.mj_header.endRefreshing()
+                        SVProgressHUD.dismiss()
                         self.api.displayErrorIfNeeded()
                     }
                 }
@@ -100,6 +102,7 @@ class BaseTableViewController: UITableViewController {
         super.viewDidAppear(animated)
         // refresh when needed
         if needRefresh {
+            SVProgressHUD.show()
             fetchData()
             needRefresh = false
         }

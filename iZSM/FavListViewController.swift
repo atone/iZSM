@@ -52,6 +52,7 @@ class FavListViewController: BaseTableViewController {
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
                 self.tableView.mj_header.endRefreshing()
+                SVProgressHUD.dismiss()
                 if let favBoards = favBoards {
                     self.favorites.removeAll()
                     self.favorites += favBoards

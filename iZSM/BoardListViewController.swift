@@ -40,6 +40,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     func didPresentSearchController(_ searchController: UISearchController) {
         searchMode = true
         tableView.mj_header.endRefreshing()
+        SVProgressHUD.dismiss()
         tableView.mj_header.isHidden = true
         originalBoards = boards
         boards = [SMBoard]()
@@ -145,6 +146,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
                 self.tableView.mj_header.endRefreshing()
+                SVProgressHUD.dismiss()
                 self.boards.removeAll()
                 self.boards += boardList
                 self.api.displayErrorIfNeeded()

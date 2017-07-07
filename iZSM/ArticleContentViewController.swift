@@ -70,6 +70,7 @@ class ArticleContentViewController: UITableViewController {
         tableView.mj_header = header
         footer = MJRefreshAutoNormalFooter(refreshingTarget: self, refreshingAction: #selector(fetchMoreData))
         tableView.mj_footer = footer
+        SVProgressHUD.show()
         fetchData(resetSection: false)
     }
     
@@ -143,6 +144,7 @@ class ArticleContentViewController: UITableViewController {
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
                     self.tableView.mj_header.endRefreshing()
+                    SVProgressHUD.dismiss()
                     self.tableView.mj_footer.isHidden = false
                     if let smArticles = smArticles {
                         self.smarticles.append(smArticles)
@@ -160,6 +162,7 @@ class ArticleContentViewController: UITableViewController {
             }
         } else {
             self.tableView.mj_header.endRefreshing()
+            SVProgressHUD.dismiss()
         }
     }
     

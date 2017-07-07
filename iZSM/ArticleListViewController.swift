@@ -50,6 +50,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     func didPresentSearchController(_ searchController: UISearchController) {
         searchMode = true
         tableView.mj_header.endRefreshing()
+        SVProgressHUD.dismiss()
         tableView.mj_header.isHidden = true
         originalThread = threads
         originalThreadLoaded = threadLoaded
@@ -156,6 +157,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
                     self.tableView.mj_header.endRefreshing()
+                    SVProgressHUD.dismiss()
                     if currentMode != self.searchMode { return } //如果模式已经被切换，则数据丢弃
                     if var threadSection = threadSection {
                         self.threads.removeAll()
@@ -172,6 +174,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             }
         } else {
             self.tableView.mj_header.endRefreshing()
+            SVProgressHUD.dismiss()
         }
     }
     

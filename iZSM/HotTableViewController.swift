@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SVProgressHUD
 
 class HotTableViewController: BaseTableViewController {
     
@@ -40,6 +41,7 @@ class HotTableViewController: BaseTableViewController {
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
                 self.tableView.mj_header.endRefreshing()
+                SVProgressHUD.dismiss()
                 self.content.removeAll()
                 self.content += content
                 self.api.displayErrorIfNeeded()

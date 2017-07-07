@@ -10,6 +10,7 @@ import UIKit
 import SafariServices
 import SVProgressHUD
 import SnapKit
+import RealmSwift
 
 class ArticleContentViewController: UITableViewController {
     
@@ -52,6 +53,7 @@ class ArticleContentViewController: UITableViewController {
             currentBackwardNumber = section * setting.articleCountPerSection
         }
     }
+    var row: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,7 +76,7 @@ class ArticleContentViewController: UITableViewController {
         footer = MJRefreshAutoNormalFooter(refreshingTarget: self, refreshingAction: #selector(fetchMoreData))
         tableView.mj_footer = footer
         SVProgressHUD.show()
-        fetchData(resetSection: false)
+        fetchData(resetSection: false, restorePosition: true)
     }
     
     func setupTitleView() {
@@ -97,7 +99,7 @@ class ArticleContentViewController: UITableViewController {
         if currentBackwardNumber > 0 {
             fetchPrevData()
         } else {
-            fetchData(resetSection: true)
+            fetchData(resetSection: true, restorePosition: false)
         }
     }
     
@@ -132,7 +134,7 @@ class ArticleContentViewController: UITableViewController {
         present(actionSheet, animated: true, completion: nil)
     }
     
-    func fetchData(resetSection: Bool) {
+    func fetchData(resetSection: Bool, restorePosition: Bool) {
         self.smarticles.removeAll()
         if resetSection {
             self.currentSection = 0
@@ -170,7 +172,13 @@ class ArticleContentViewController: UITableViewController {
                         self.currentForwardNumber += smArticles.count
                         self.totalArticleNumber = totalArticleNumber
                         self.tableView.reloadData()
-                        self.tableView.scrollToTop()
+                        if restorePosition {
+                            self.tableView.scrollToRow(at: IndexPath(row: self.row, section: 0),
+                                                       at: .top,
+                                                       animated: false)
+                        } else {
+                            self.tableView.scrollToTop()
+                        }
                         UIView.performWithoutAnimation {
                             self.navigationItem.rightBarButtonItems?.last?.title
                                 = "\(self.currentSection + 1) / \(self.totalSection)"
@@ -207,6 +215,7 @@ class ArticleContentViewController: UITableViewController {
                             delayOffest.y += self.tableView(self.tableView, heightForRowAt: IndexPath(row: i, section: 0))
                         }
                         self.tableView.setContentOffset(delayOffest, animated: false)
+                        self.updateCurrentSection()
                     }
                     self.api.displayErrorIfNeeded()
                     self.tableView.mj_header.endRefreshing()
@@ -247,6 +256,35 @@ class ArticleContentViewController: UITableViewController {
         } else {
             tableView.mj_footer.endRefreshing()
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + 64)
+        if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
+            let realm = try! Realm()
+            let results = realm.objects(ArticleReadStatus.self)
+                .filter("boardID == '\(boardID!)' AND articleID == \(articleID!)")
+            if results.count == 0 {
+                let status = ArticleReadStatus()
+                status.boardID = boardID!
+                status.articleID = articleID!
+                status.section = currentSection
+                status.row = indexPath.row
+                try! realm.write {
+                    realm.add(status)
+                }
+                print("add new status: \(status)")
+            } else {
+                let status = results.first!
+                try! realm.write {
+                    status.section = self.currentSection
+                    status.row = indexPath.row
+                }
+                print("update \(results.count) status: \(status)")
+            }
+        }
+        
+        super.viewWillDisappear(animated)
     }
     
     // MARK: - Table view data source
@@ -293,7 +331,7 @@ class ArticleContentViewController: UITableViewController {
 extension ArticleContentViewController: PageListViewControllerDelegate {
     func pageListViewController(_ controller: PageListViewController, currentPageChangedTo currentPage: Int) {
         section = currentPage
-        fetchData(resetSection: false)
+        fetchData(resetSection: false, restorePosition: false)
         dismiss(animated: true, completion: nil)
     }
 }
@@ -309,7 +347,7 @@ extension ArticleContentViewController {
         if !decelerate {
             if isScrollingStart {
                 isScrollingStart = false
-                scrollingStopped()
+                updateCurrentSection()
             }
         }
     }
@@ -317,7 +355,7 @@ extension ArticleContentViewController {
     override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if isScrollingStart {
             isScrollingStart = false
-            scrollingStopped()
+            updateCurrentSection()
         }
     }
 
@@ -330,10 +368,10 @@ extension ArticleContentViewController {
     }
     
     override func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
-        scrollingStopped()
+        updateCurrentSection()
     }
     
-    func scrollingStopped() {
+    func updateCurrentSection() {
         let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + 64)
         if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
             let article = smarticles[indexPath.section][indexPath.row]

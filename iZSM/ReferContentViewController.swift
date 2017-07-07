@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import SVProgressHUD
 import SafariServices
+import RealmSwift
 
 class ReferContentViewController: UIViewController, UITextViewDelegate {
     
@@ -104,6 +105,14 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
             acvc.title = title
             acvc.fromTopTen = true
             acvc.hidesBottomBarWhenPushed = true
+            let realm = try! Realm()
+            let results = realm.objects(ArticleReadStatus.self)
+                .filter("boardID == '\(reference.boardID)' AND articleID == \(reference.groupID)")
+            if results.count > 0 {
+                let status = results.first!
+                acvc.section = status.section
+                acvc.row = status.row
+            }
             self.show(acvc, sender: sender)
         }
     }

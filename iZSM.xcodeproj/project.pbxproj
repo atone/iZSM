@@ -28,6 +28,7 @@
 		9C25D5AF1DE56FC9005CB55C /* MailListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5AE1DE56FC9005CB55C /* MailListCell.swift */; };
 		9C4728F01F0FC64D00C289FC /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4728EE1F0FC64D00C289FC /* Realm.framework */; };
 		9C4728F11F0FC64D00C289FC /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4728EF1F0FC64D00C289FC /* RealmSwift.framework */; };
+		9C4728F31F0FC80100C289FC /* ArticleReadStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */; };
 		9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */; };
 		9C56E1D51F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CF1F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m */; };
 		9C56E1D61F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1D11F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m */; };
@@ -107,6 +108,7 @@
 		9C25D5AE1DE56FC9005CB55C /* MailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailListCell.swift; sourceTree = "<group>"; };
 		9C4728EE1F0FC64D00C289FC /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		9C4728EF1F0FC64D00C289FC /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Carthage/Build/iOS/RealmSwift.framework; sourceTree = "<group>"; };
+		9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleReadStatus.swift; sourceTree = "<group>"; };
 		9C56E1CC1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDIndexPathHeightCache.h"; sourceTree = "<group>"; };
 		9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDIndexPathHeightCache.m"; sourceTree = "<group>"; };
 		9C56E1CE1F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDKeyedHeightCache.h"; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 				9C1A3BC61DE2C0ED00CF4A43 /* Assets.xcassets */,
 				9C1A3BDA1DE2CDB100CF4A43 /* EULA.rtf */,
 				9C1A3BBF1DE2C0ED00CF4A43 /* AppDelegate.swift */,
+				9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */,
 				9CB573C31DE5B61800CD6F3E /* LogoView.swift */,
 				9C1A3BCB1DE2C0ED00CF4A43 /* Info.plist */,
 				9C1A3BC81DE2C0ED00CF4A43 /* LaunchScreen.storyboard */,
@@ -615,6 +618,7 @@
 				9C56E1D51F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m in Sources */,
 				9CA3B1981DE3359200E9B121 /* MJRefreshBackStateFooter.m in Sources */,
 				9CA3B19D1DE3359200E9B121 /* MJRefreshConst.m in Sources */,
+				9C4728F31F0FC80100C289FC /* ArticleReadStatus.swift in Sources */,
 				9C889FBF1DE4271200C33A8D /* ArticleContentCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

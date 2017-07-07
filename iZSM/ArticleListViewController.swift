@@ -8,6 +8,7 @@
 
 import UIKit
 import SVProgressHUD
+import RealmSwift
 
 class ArticleListViewController: BaseTableViewController, UISearchControllerDelegate, UISearchBarDelegate {
     
@@ -259,6 +260,14 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             readThread.flags = " " + flags.substring(from: flags.index(after: flags.startIndex))
             threads[indexPath.section][indexPath.row] = readThread
         }
+        let realm = try! Realm()
+        let results = realm.objects(ArticleReadStatus.self)
+            .filter("boardID == '\(thread.boardID)' AND articleID == \(thread.id)")
+        if results.count > 0 {
+            let status = results.first!
+            acvc.section = status.section
+            acvc.row = status.row
+        }
         show(acvc, sender: self)
     }
     
@@ -288,6 +297,15 @@ extension ArticleListViewController: UIViewControllerPreviewingDelegate {
         acvc.boardName = thread.boardName
         acvc.title = thread.subject
         acvc.hidesBottomBarWhenPushed = true
+        
+        let realm = try! Realm()
+        let results = realm.objects(ArticleReadStatus.self)
+            .filter("boardID == '\(thread.boardID)' AND articleID == \(thread.id)")
+        if results.count > 0 {
+            let status = results.first!
+            acvc.section = status.section
+            acvc.row = status.row
+        }
         
         // Set the source rect to the cell frame, so surrounding elements are blurred.
         previewingContext.sourceRect = cell.frame

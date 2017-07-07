@@ -77,6 +77,7 @@ class BaseTableViewController: UITableViewController {
             }
             
         } else { // present login view controller
+            SVProgressHUD.dismiss()
             let loginViewController = LoginViewController()
             loginViewController.delegate = self
             let navigationController = UINavigationController(rootViewController: loginViewController)
@@ -121,6 +122,7 @@ class BaseTableViewController: UITableViewController {
 
 extension BaseTableViewController: LoginViewControllerDelegate {
     func loginDidSuccessful() {
+        SVProgressHUD.show()
         fetchDataDirectly()
     }
 }

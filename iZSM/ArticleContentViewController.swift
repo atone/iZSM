@@ -9,6 +9,7 @@
 import UIKit
 import SafariServices
 import SVProgressHUD
+import SnapKit
 
 class ArticleContentViewController: UITableViewController {
     
@@ -60,6 +61,8 @@ class ArticleContentViewController: UITableViewController {
         footerView.backgroundColor = UIColor.clear
         tableView.tableFooterView = footerView
         
+        setupTitleView()
+        
         var barButtonItems = [UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(tapPageButton(sender:)))]
         if fromTopTen {
             barButtonItems.insert(UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(sender:))), at: 0)
@@ -72,6 +75,22 @@ class ArticleContentViewController: UITableViewController {
         tableView.mj_footer = footer
         SVProgressHUD.show()
         fetchData(resetSection: false)
+    }
+    
+    func setupTitleView() {
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth(), height: 44))
+        titleView.backgroundColor = UIColor.clear
+        let titleLabel = UILabel()
+        titleLabel.numberOfLines = 0
+        titleLabel.textAlignment = .center
+        titleLabel.textColor = UIColor.white
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 15)
+        titleLabel.text = title
+        titleView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { (make) in
+            make.edges.equalTo(titleView)
+        }
+        navigationItem.titleView = titleView
     }
     
     func refreshAction() {
@@ -154,7 +173,7 @@ class ArticleContentViewController: UITableViewController {
                         self.tableView.scrollToTop()
                         UIView.performWithoutAnimation {
                             self.navigationItem.rightBarButtonItems?.last?.title
-                                = "\(self.currentSection + 1)/\(self.totalSection)"
+                                = "\(self.currentSection + 1) / \(self.totalSection)"
                         }
                     }
                     self.api.displayErrorIfNeeded()
@@ -320,7 +339,7 @@ extension ArticleContentViewController {
             let article = smarticles[indexPath.section][indexPath.row]
             currentSection = article.floor / setting.articleCountPerSection
             UIView.performWithoutAnimation {
-                navigationItem.rightBarButtonItems?.last?.title = "\(currentSection + 1)/\(totalSection)"
+                navigationItem.rightBarButtonItems?.last?.title = "\(currentSection + 1) / \(totalSection)"
             }
         }
     }

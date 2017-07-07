@@ -90,6 +90,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         contentTextView.setContentCompressionResistancePriority(titleHintLabel.contentCompressionResistancePriority(for: .vertical) - 1, for: .vertical)
         contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
         contentTextView.autocapitalizationType = .sentences
+        contentTextView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
         countLabel.text = "0"
         countLabel.font = UIFont.systemFont(ofSize: 16)
         countLabel.textColor = UIColor.lightGray

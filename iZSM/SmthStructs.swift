@@ -254,6 +254,19 @@ struct SMUser {
     var posts: Int
     var faceURL: String
     var nick: String
+    
+    static func faceURL(for userID: String, withFaceURL faceURL: String?) -> URL {
+        let prefix = userID.substring(to: userID.index(after: userID.startIndex)).uppercased()
+        let faceString: String
+        if let faceURL = faceURL, faceURL.characters.count > 0 {
+            faceString = "http://images.newsmth.net/nForum/uploadFace/\(prefix)/\(faceURL)"
+        } else if userID.contains(".") {
+            faceString = "http://images.newsmth.net/nForum/uploadFace/\(prefix)/\(userID)"
+        } else {
+            faceString = "http://images.newsmth.net/nForum/uploadFace/\(prefix)/\(userID).jpg"
+        }
+        return URL(string: faceString)!
+    }
 }
 
 struct SMMember {

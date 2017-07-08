@@ -288,6 +288,18 @@ class ArticleContentViewController: UITableViewController {
         cell.setData(displayFloor: floor, smarticle: smarticle, delegate: self)
         cell.preservesSuperviewLayoutMargins = false
         cell.fd_enforceFrameLayout = true
+        
+        DispatchQueue.global().async {
+            let userID = smarticle.authorID
+            if let smuser = self.api.getUserInfo(userID: userID) {
+                DispatchQueue.main.async {
+                    print("success get user \(userID): \(smuser)")
+                    print("faceURL: \(SMUser.faceURL(for: userID, withFaceURL: smuser.faceURL))")
+                }
+            } else {
+                print("get nil response for user \(userID)")
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

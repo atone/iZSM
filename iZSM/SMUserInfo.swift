@@ -37,59 +37,66 @@ class SMUserInfo: Object {
 class SMUserInfoUtil {
     private static var queryingSet = Set<String>()
     private static let lockQueue = DispatchQueue(label: "cn.yunaitong.iZSM.lockQueue")
+
     class func querySMUser(for userID: String, callback: @escaping (SMUser?) -> Void) {
         DispatchQueue.global().async {
-            let realm = try! Realm()
-            let results = realm.objects(SMUserInfo.self).filter("id == '\(userID)'")
-            if results.count == 0 {
-                var shouldMakeQuery: Bool = false
-                lockQueue.sync {
-                    if queryingSet.contains(userID) {
-                        shouldMakeQuery = false
-                    } else {
-                        shouldMakeQuery = true
-                        queryingSet.insert(userID)
+            autoreleasepool {
+                let realm = try! Realm()
+                let results = realm.objects(SMUserInfo.self).filter("id == '\(userID)'")
+                if results.count == 0
+                    || results.first!.lastUpdateTime < Date(timeIntervalSinceNow: -60 * 60) {
+                    var shouldMakeQuery: Bool = false
+                    lockQueue.sync {
+                        if queryingSet.contains(userID) {
+                            shouldMakeQuery = false
+                        } else {
+                            shouldMakeQuery = true
+                            queryingSet.insert(userID)
+                        }
                     }
-                }
-                if shouldMakeQuery {
-                    let api = SmthAPI()
-                    let user = api.getUserInfo(userID: userID)
-                    queryingSet.remove(userID)
-                    if let user = user {
-                        DispatchQueue.global().async {
-                            autoreleasepool {
-                                let realm = try! Realm()
-                                let results = realm.objects(SMUserInfo.self).filter("id == '\(userID)'")
-                                if results.count == 0 {
-                                    let userInfo = userInfoFrom(user: user, updateTime: Date())
-                                    try! realm.write {
-                                        realm.add(userInfo)
-                                    }
-                                }
+                    if shouldMakeQuery {
+                        let api = SmthAPI()
+                        print("start querying info for \(userID)...")
+                        let user = api.getUserInfo(userID: userID)
+                        queryingSet.remove(userID)
+                        DispatchQueue.main.async {
+                            callback(user)
+                        }
+                        if let user = user {
+                            let userInfo = userInfoFrom(user: user, updateTime: Date())
+                            try! realm.write {
+                                realm.add(userInfo)
+                            }
+                            print("write user info for \(userID) success!")
+                        } else {
+                            print("write user info for \(userID) failure!")
+                        }
+                    } else {  // 有人查，那就等结果
+                        var counter = 0
+                        while results.count == 0 && counter < 10 { // 最多等待1s
+                            usleep(1000 * 100) // 100ms
+                            counter += 1
+                            realm.refresh()
+                        }
+                        if results.count > 0 {
+                            let userInfo = results.first!
+                            let user = userFrom(userInfo: userInfo)
+                            DispatchQueue.main.async {
+                                callback(user)
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                callback(nil)
                             }
                         }
                     }
-                    callback(user)
-                } else {  // 有人查，那就等结果
-                    var i = 0
-                    while queryingSet.contains(userID) {
-                        sleep(100)
-                        print("sleeping...\(i)")
-                        i += 1
-                    }
-                    if results.count == 0 {
-                        callback(nil)
-                    } else {
-                        let userInfo = results.first!
-                        let user = userFrom(userInfo: userInfo)
+                } else {
+                    let userInfo = results.first!
+                    let user = userFrom(userInfo: userInfo)
+                    DispatchQueue.main.async {
                         callback(user)
                     }
                 }
-                
-            } else {
-                let userInfo = results.first!
-                let user = userFrom(userInfo: userInfo)
-                callback(user)
             }
         }
     }

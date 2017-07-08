@@ -23,7 +23,6 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     private var delegate: ArticleContentCellDelegate?
     
     var article: SMArticle?
-    var user: SMUser?
     private var displayFloor: Int = 0
     
     private let blankWidth: CGFloat = 4
@@ -91,14 +90,9 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.displayFloor = floor
         self.delegate = delegate
         self.article = smarticle
-        self.user = smarticle.user
         
         UIView.performWithoutAnimation {
-            if let user = self.user {
-                self.authorButton.setTitle("\(user.id) (\(user.nick))", for: .normal)
-            } else {
-                self.authorButton.setTitle(smarticle.authorID, for: .normal)
-            }
+            self.authorButton.setTitle(smarticle.authorID, for: .normal)
             self.authorButton.layoutIfNeeded()
         }
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"

@@ -26,7 +26,7 @@ struct SMThread {
     var lastReplyTime: Date
 }
 
-struct SMArticle {
+class SMArticle {
     var id: Int
     var time: Date
     var subject: String
@@ -39,6 +39,8 @@ struct SMArticle {
 
     var floor: Int
     var boardID: String
+    
+    var user: SMUser?
 
     //一些用于cell显示的计算属性，但是为了加载速度，需要提前计算
     var timeString: String
@@ -62,7 +64,7 @@ struct SMArticle {
         self.imageAtt = [ImageInfo]()
     }
 
-    mutating func extraConfigure() {
+    func extraConfigure() {
         // configure
         if attachments.count > 0 {
             imageAtt += generateImageAtt()
@@ -143,7 +145,7 @@ struct SMArticle {
         }
     }
 
-    private mutating func removeImageURLsFromBody() {
+    private func removeImageURLsFromBody() {
         let pattern = "\\[img=.*\\]\\[/img\\]"
         let regularExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
         self.body = regularExpression.stringByReplacingMatches(in: self.body, range: NSMakeRange(0, self.body.characters.count), withTemplate: "").trimmingCharacters(in: .whitespacesAndNewlines)

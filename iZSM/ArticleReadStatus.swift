@@ -20,26 +20,30 @@ class ArticleReadStatusUtil {
         if !AppSetting.sharedSetting.rememberLast {
             return
         }
-        let realm = try! Realm()
-        let results = realm.objects(ArticleReadStatus.self)
-            .filter("boardID == '\(boardID)' AND articleID == \(articleID)")
-        if results.count == 0 {
-            let status = ArticleReadStatus()
-            status.boardID = boardID
-            status.articleID = articleID
-            status.section = section
-            status.row = row
-            try! realm.write {
-                realm.add(status)
+        DispatchQueue.global().async {
+            autoreleasepool {
+                let realm = try! Realm()
+                let results = realm.objects(ArticleReadStatus.self)
+                    .filter("boardID == '\(boardID)' AND articleID == \(articleID)")
+                if results.count == 0 {
+                    let status = ArticleReadStatus()
+                    status.boardID = boardID
+                    status.articleID = articleID
+                    status.section = section
+                    status.row = row
+                    try! realm.write {
+                        realm.add(status)
+                    }
+                    print("add new status: \(status)")
+                } else {
+                    let status = results.first!
+                    try! realm.write {
+                        status.section = section
+                        status.row = row
+                    }
+                    print("update \(results.count) status: \(status)")
+                }
             }
-            print("add new status: \(status)")
-        } else {
-            let status = results.first!
-            try! realm.write {
-                status.section = section
-                status.row = row
-            }
-            print("update \(results.count) status: \(status)")
         }
     }
     

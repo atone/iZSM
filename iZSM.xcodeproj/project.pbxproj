@@ -69,6 +69,7 @@
 		9CA3B1A31DE33C0800E9B121 /* HotTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */; };
 		9CA3B1A61DE33E8D00E9B121 /* HotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA3B1A51DE33E8D00E9B121 /* HotTableViewCell.swift */; };
 		9CA3B1A81DE35A2300E9B121 /* BoardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */; };
+		9CAD5A2F1F10A2950008E62C /* SMUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CAD5A2E1F10A2950008E62C /* SMUserInfo.swift */; };
 		9CB573B71DE588EC00CD6F3E /* ReminderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */; };
 		9CB573B91DE58E8800CD6F3E /* MailContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573B81DE58E8800CD6F3E /* MailContentViewController.swift */; };
 		9CB573BB1DE59A2E00CD6F3E /* ReferContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573BA1DE59A2E00CD6F3E /* ReferContentViewController.swift */; };
@@ -175,6 +176,7 @@
 		9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotTableViewController.swift; sourceTree = "<group>"; };
 		9CA3B1A51DE33E8D00E9B121 /* HotTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotTableViewCell.swift; sourceTree = "<group>"; };
 		9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardListViewController.swift; sourceTree = "<group>"; };
+		9CAD5A2E1F10A2950008E62C /* SMUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMUserInfo.swift; sourceTree = "<group>"; };
 		9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderListCell.swift; sourceTree = "<group>"; };
 		9CB573B81DE58E8800CD6F3E /* MailContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailContentViewController.swift; sourceTree = "<group>"; };
 		9CB573BA1DE59A2E00CD6F3E /* ReferContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReferContentViewController.swift; sourceTree = "<group>"; };
@@ -227,6 +229,7 @@
 				9CA3B1A41DE33E6F00E9B121 /* TableViewCells */,
 				9CA3B15C1DE331F800E9B121 /* ViewControllers */,
 				9C1A3BEE1DE2EA8B00CF4A43 /* SmthAPI */,
+				9CAD5A301F10A2AA0008E62C /* Persistence */,
 				9C1A3BD11DE2C3EA00CF4A43 /* Support Files */,
 			);
 			path = iZSM;
@@ -243,7 +246,6 @@
 				9C1A3BC61DE2C0ED00CF4A43 /* Assets.xcassets */,
 				9C1A3BDA1DE2CDB100CF4A43 /* EULA.rtf */,
 				9C1A3BBF1DE2C0ED00CF4A43 /* AppDelegate.swift */,
-				9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */,
 				9CB573C31DE5B61800CD6F3E /* LogoView.swift */,
 				9C1A3BCB1DE2C0ED00CF4A43 /* Info.plist */,
 				9C1A3BC81DE2C0ED00CF4A43 /* LaunchScreen.storyboard */,
@@ -449,6 +451,15 @@
 			name = TableViewCells;
 			sourceTree = "<group>";
 		};
+		9CAD5A301F10A2AA0008E62C /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */,
+				9CAD5A2E1F10A2950008E62C /* SMUserInfo.swift */,
+			);
+			name = Persistence;
+			sourceTree = "<group>";
+		};
 		9CDC486D1DEDB3FB00482408 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -606,6 +617,7 @@
 				9CA3B1921DE3359200E9B121 /* MJRefreshHeader.m in Sources */,
 				9C1A3BC01DE2C0ED00CF4A43 /* AppDelegate.swift in Sources */,
 				9C889FB41DE3E24B00C33A8D /* ArticleListViewController.swift in Sources */,
+				9CAD5A2F1F10A2950008E62C /* SMUserInfo.swift in Sources */,
 				9C1A3BF31DE2EA9900CF4A43 /* SmthAPI.swift in Sources */,
 				9CA3B18E1DE3359200E9B121 /* MJRefreshAutoFooter.m in Sources */,
 				9CA3B1A81DE35A2300E9B121 /* BoardListViewController.swift in Sources */,

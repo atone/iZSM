@@ -147,6 +147,18 @@ class ArticleContentViewController: UITableViewController {
                                                                   replyMode: self.setting.sortMode)
                 let totalArticleNumber = self.api.getLastThreadCount()
                 
+                if smArticles != nil {
+                    let getUserInfoGroup = DispatchGroup()
+                    for article in smArticles! {
+                        getUserInfoGroup.enter()
+                        SMUserInfoUtil.querySMUser(for: article.authorID) { user in
+                            article.user = user
+                            getUserInfoGroup.leave()
+                        }
+                    }
+                    getUserInfoGroup.wait()
+                }
+                
                 if self.fromTopTen && self.boardName == nil { // get boardName
                     if let boards = self.api.queryBoard(query: boardID) {
                         for board in boards {
@@ -197,6 +209,18 @@ class ArticleContentViewController: UITableViewController {
                                                                   replyMode: self.setting.sortMode)
                 let totalArticleNumber = self.api.getLastThreadCount()
                 
+                if smArticles != nil {
+                    let getUserInfoGroup = DispatchGroup()
+                    for article in smArticles! {
+                        getUserInfoGroup.enter()
+                        SMUserInfoUtil.querySMUser(for: article.authorID) { user in
+                            article.user = user
+                            getUserInfoGroup.leave()
+                        }
+                    }
+                    getUserInfoGroup.wait()
+                }
+                
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
                     if let smArticles = smArticles {
@@ -229,6 +253,20 @@ class ArticleContentViewController: UITableViewController {
                                                                   threadRange: self.forwardThreadRange,
                                                                   replyMode: self.setting.sortMode)
                 let totalArticleNumber = self.api.getLastThreadCount()
+                
+                if smArticles != nil {
+                    let getUserInfoGroup = DispatchGroup()
+                    for article in smArticles! {
+                        getUserInfoGroup.enter()
+                        SMUserInfoUtil.querySMUser(for: article.authorID) { user in
+                            article.user = user
+                            getUserInfoGroup.leave()
+                        }
+                    }
+                    print("waiting...")
+                    getUserInfoGroup.wait()
+                    print("done.")
+                }
                 
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
@@ -288,18 +326,6 @@ class ArticleContentViewController: UITableViewController {
         cell.setData(displayFloor: floor, smarticle: smarticle, delegate: self)
         cell.preservesSuperviewLayoutMargins = false
         cell.fd_enforceFrameLayout = true
-        
-        DispatchQueue.global().async {
-            let userID = smarticle.authorID
-            if let smuser = self.api.getUserInfo(userID: userID) {
-                DispatchQueue.main.async {
-                    print("success get user \(userID): \(smuser)")
-                    print("faceURL: \(SMUser.faceURL(for: userID, withFaceURL: smuser.faceURL))")
-                }
-            } else {
-                print("get nil response for user \(userID)")
-            }
-        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

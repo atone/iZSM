@@ -159,6 +159,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         timeLabel.text = nil
         contentTextView.text = nil
         networkActivityIndicatorStart()
+        SVProgressHUD.show()
         DispatchQueue.global().async {
             if let mail = self.mail {
                 if self.inbox {
@@ -169,6 +170,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
             }
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
+                SVProgressHUD.dismiss()
                 if let detailMail = self.detailMail {
                     if self.inbox {
                         self.title = "来自 \(detailMail.authorID) 的邮件"

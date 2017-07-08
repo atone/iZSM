@@ -51,6 +51,12 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     private let api = SmthAPI()
     private let setting = AppSetting.sharedSetting
     
+    func setEditable(_ editable: Bool) {
+        receiverTextField.isEnabled = editable
+        titleTextField.isEnabled = editable
+        contentTextView.isEditable = editable
+    }
+    
     private func setupUI() {
         let cornerRadius: CGFloat = 4
         view.backgroundColor = UIColor.white
@@ -179,6 +185,8 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     
     func done(sender: UIBarButtonItem) {
         networkActivityIndicatorStart()
+        SVProgressHUD.show()
+        setEditable(false)
         DispatchQueue.global().async {
             var content = self.emailContent!
             if content.hasSuffix("\n") {
@@ -190,6 +198,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             print("send mail status: \(result)")
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
+                SVProgressHUD.dismiss()
                 if self.api.errorCode == 0 {
                     if self.replyMode {
                         SVProgressHUD.showSuccess(withStatus: "回信成功")
@@ -206,8 +215,10 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                     } else {
                         SVProgressHUD.showError(withStatus: "出错了")
                     }
+                    self.setEditable(true)
                 } else {
                     SVProgressHUD.showError(withStatus: "出错了")
+                    self.setEditable(true)
                 }
             }
         }

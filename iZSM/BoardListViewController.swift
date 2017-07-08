@@ -238,10 +238,12 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     
     func addFavoriteWithBoardID(boardID: String) {
         networkActivityIndicatorStart()
+        SVProgressHUD.show()
         DispatchQueue.global().async {
             self.api.addFavorite(boardID: boardID)
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
+                SVProgressHUD.dismiss()
                 if self.api.errorCode == 0 {
                     SVProgressHUD.showSuccess(withStatus: "添加成功")
                     NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,

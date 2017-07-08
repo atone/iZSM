@@ -139,6 +139,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         timeLabel.text = nil
         contentTextView.text = nil
         networkActivityIndicatorStart()
+        SVProgressHUD.show()
         DispatchQueue.global().async {
             if let reference = self.reference {
                 self.article = self.api.getArticleInBoard(boardID: reference.boardID, articleID: reference.id)
@@ -151,6 +152,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
             }
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
+                SVProgressHUD.dismiss()
                 if let article = self.article {
                     if self.replyMe {
                         self.title = "\(article.authorID) 回复了我"

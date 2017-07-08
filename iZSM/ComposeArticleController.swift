@@ -44,6 +44,10 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     
     private var attachedImage: UIImage? //图片附件，如果为nil，则表示不含附件
     
+    func setEditable(_ editable: Bool) {
+        titleTextField.isEnabled = editable
+        contentTextView.isEditable = editable
+    }
     
     private func setupUI() {
         let cornerRadius: CGFloat = 4
@@ -136,6 +140,8 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     func done(sender: UIBarButtonItem) {
         if let boardID = self.boardID {
             networkActivityIndicatorStart()
+            SVProgressHUD.show()
+            setEditable(false)
             DispatchQueue.global().async {
                 var attachmentUploadSuccessFul = true
                 if let image = self.attachedImage {
@@ -162,6 +168,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                 }
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
+                    SVProgressHUD.dismiss()
                     if self.api.errorCode == 0 {
                         if attachmentUploadSuccessFul {
                             SVProgressHUD.showSuccess(withStatus: self.replyMode ? "回复成功":"发表成功")
@@ -178,8 +185,10 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                         } else {
                             SVProgressHUD.showError(withStatus: "出错了")
                         }
+                        self.setEditable(true)
                     } else {
                         SVProgressHUD.showError(withStatus: "出错了")
+                        self.setEditable(true)
                     }
                 }
             }

@@ -379,9 +379,9 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     
     func cell(_ cell: ArticleContentCell, didClickUser button: UIButton) {
         if let userID = cell.article?.authorID {
-            SVProgressHUD.show()
+            networkActivityIndicatorStart()
             SMUserInfoUtil.querySMUser(for: userID) { (user) in
-                SVProgressHUD.dismiss()
+                networkActivityIndicatorStop()
                 let userInfoVC = UserInfoViewController()
                 userInfoVC.modalPresentationStyle = .popover
                 userInfoVC.user = user

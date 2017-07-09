@@ -43,6 +43,7 @@ class SMUserInfoUtil {
             autoreleasepool {
                 let realm = try! Realm()
                 let results = realm.objects(SMUserInfo.self).filter("id == '\(userID)'")
+                // 如果数据库中没有记录，或者记录更新时间在1小时之前，那么就进行查询
                 if results.count == 0
                     || results.first!.lastUpdateTime < Date(timeIntervalSinceNow: -60 * 60) {
                     var shouldMakeQuery: Bool = false
@@ -65,7 +66,7 @@ class SMUserInfoUtil {
                         if let user = user {
                             let userInfo = userInfoFrom(user: user, updateTime: Date())
                             try! realm.write {
-                                realm.add(userInfo)
+                                realm.add(userInfo, update: true)
                             }
                             print("write user info for \(userID) success!")
                         } else {

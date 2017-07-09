@@ -378,9 +378,14 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     }
     
     func cell(_ cell: ArticleContentCell, didClickUser button: UIButton) {
-        let userInfoVC = UserInfoViewController()
-        userInfoVC.userID = cell.article?.authorID
-        show(userInfoVC, sender: button)
+        if let userID = cell.article?.authorID {
+            SMUserInfoUtil.querySMUser(for: userID) { (user) in
+                let userInfoVC = UserInfoViewController()
+                userInfoVC.user = user
+                self.show(userInfoVC, sender: button)
+            }
+        }
+        
     }
     
     func cell(_ cell: ArticleContentCell, didClickReply button: UIButton) {

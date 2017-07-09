@@ -14,25 +14,41 @@ class UserInfoViewController: UIViewController {
     
     var user: SMUser?
     
-    let containerView = UIView()
-    let backgroundView = UIView()
+    private let idLabelFontSize: CGFloat = 20
+    private let nickLabelFontSize: CGFloat = 15
+    private let otherLabelFontSize: CGFloat = 13
+    private let otherContentLabelFontSize: CGFloat = 13
+    private let avatarWidth: CGFloat = 100
+    private let margin: CGFloat = 15
+    private let margin2: CGFloat = 5
+    private let nickLabelOffset: CGFloat = 36
+    private let width: CGFloat = 280
+    private let height: CGFloat = 320
     
-    let avatarImageView = UIImageView()
-    let idLabel = UILabel()
-    let nickLabel = UILabel()
+    private let backgroundImageView = UIImageView()
+    private let backgroundView = UIView()
     
-    let titleLabel = UILabel()
-    let levelLabel = UILabel()
-    let postsLabel = UILabel()
-    let scoreLabel = UILabel()
-    let loginLabel = UILabel()
-    let titleContentLabel = UILabel()
-    let levelContentLabel = UILabel()
-    let postsContentLabel = UILabel()
-    let scoreContentLabel = UILabel()
-    let loginContentLabel = UILabel()
+    private let avatarImageView = UIImageView()
+    private let idLabel = UILabel()
+    private let nickLabel = UILabel()
     
-    let infoStackView = UIStackView()
+    private let titleLabel = UILabel()
+    private let levelLabel = UILabel()
+    private let postsLabel = UILabel()
+    private let scoreLabel = UILabel()
+    private let loginLabel = UILabel()
+    private let titleContentLabel = UILabel()
+    private let levelContentLabel = UILabel()
+    private let postsContentLabel = UILabel()
+    private let scoreContentLabel = UILabel()
+    private let loginContentLabel = UILabel()
+    private let infoStackView = UIStackView()
+    
+    private let toolbar = UIToolbar()
+    private let lastLoginLabel = UILabel()
+    private let padding = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+    private let search = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
+    private let compose = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,40 +56,61 @@ class UserInfoViewController: UIViewController {
         setupContent()
     }
     
-    func setupUI() {
+    private func setupUI() {
+        preferredContentSize = CGSize(width: width, height: height)
         view.backgroundColor = UIColor.white
-        view.addSubview(containerView)
-        containerView.snp.makeConstraints { (make) in
-            make.leading.trailing.equalTo(view)
-            make.top.equalTo(topLayoutGuide.snp.bottom)
-            make.bottom.equalTo(bottomLayoutGuide.snp.top)
+        backgroundImageView.frame = view.bounds
+        backgroundImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(backgroundImageView)
+        if !UIAccessibilityIsReduceTransparencyEnabled() {
+            let blurEffect = UIBlurEffect(style: .dark)
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
+            blurEffectView.frame = view.bounds
+            blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            view.addSubview(blurEffectView)
+            backgroundView.backgroundColor = UIColor.clear
+        } else {
+            backgroundView.backgroundColor = UIColor.black
         }
-        containerView.addSubview(backgroundView)
-        backgroundView.backgroundColor = UIColor.black
+        view.addSubview(toolbar)
+        toolbar.snp.makeConstraints { (make) in
+            make.leading.trailing.bottom.equalTo(view)
+        }
+        toolbar.items = [padding, search, compose]
+        view.addSubview(lastLoginLabel)
+        lastLoginLabel.textColor = UIColor.gray
+        lastLoginLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
+        lastLoginLabel.snp.makeConstraints { (make) in
+            make.top.bottom.equalTo(toolbar)
+            make.leading.equalTo(toolbar).offset(margin)
+        }
+        view.addSubview(backgroundView)
         backgroundView.snp.makeConstraints { (make) in
-            make.leading.trailing.top.equalTo(containerView)
-            make.height.equalTo(containerView.snp.height).dividedBy(2)
+            make.leading.trailing.top.equalTo(view)
+            make.bottom.equalTo(toolbar.snp.top)
         }
         backgroundView.addSubview(idLabel)
         idLabel.textColor = UIColor.white
-        idLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        idLabel.font = UIFont.boldSystemFont(ofSize: idLabelFontSize)
+        idLabel.textAlignment = .center
         idLabel.snp.makeConstraints { (make) in
-            make.center.equalTo(backgroundView)
+            make.center.equalTo(view)
         }
         backgroundView.addSubview(avatarImageView)
         avatarImageView.clipsToBounds = true
         avatarImageView.snp.makeConstraints { (make) in
-            make.width.equalTo(100)
-            make.height.equalTo(100)
-            make.centerX.equalTo(backgroundView)
-            make.centerY.equalTo(backgroundView).dividedBy(2)
+            make.width.equalTo(avatarWidth)
+            make.height.equalTo(avatarWidth)
+            make.centerX.equalTo(view)
+            make.centerY.equalTo(view).dividedBy(2)
         }
         backgroundView.addSubview(nickLabel)
         nickLabel.textColor = UIColor.white
-        nickLabel.font = UIFont.systemFont(ofSize: 15)
+        nickLabel.font = UIFont.systemFont(ofSize: nickLabelFontSize)
+        nickLabel.textAlignment = .center
         nickLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(idLabel)
-            make.centerY.equalTo(idLabel).offset(50)
+            make.centerY.equalTo(idLabel).offset(nickLabelOffset)
         }
         backgroundView.addSubview(infoStackView)
         infoStackView.axis = .horizontal
@@ -84,30 +121,76 @@ class UserInfoViewController: UIViewController {
         infoStackView.addArrangedSubview(scoreLabel)
         infoStackView.addArrangedSubview(loginLabel)
         infoStackView.snp.makeConstraints { (make) in
-            make.leading.equalTo(backgroundView).offset(20)
-            make.trailing.equalTo(backgroundView).offset(-20)
-            make.bottom.equalTo(backgroundView).offset(-20)
+            make.leading.equalTo(backgroundView).offset(margin)
+            make.trailing.equalTo(backgroundView).offset(-margin)
+            make.bottom.equalTo(backgroundView).offset(-margin)
         }
-        titleLabel.textColor = UIColor.white
-        titleLabel.font = UIFont.systemFont(ofSize: 14)
-        levelLabel.textColor = UIColor.white
-        levelLabel.font = UIFont.systemFont(ofSize: 14)
-        postsLabel.textColor = UIColor.white
-        postsLabel.font = UIFont.systemFont(ofSize: 14)
-        scoreLabel.textColor = UIColor.white
-        scoreLabel.font = UIFont.systemFont(ofSize: 14)
-        loginLabel.textColor = UIColor.white
-        loginLabel.font = UIFont.systemFont(ofSize: 14)
-        
+        titleLabel.textColor = UIColor.lightGray
+        titleLabel.textAlignment = .center
+        titleLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
+        levelLabel.textColor = UIColor.lightGray
+        levelLabel.textAlignment = .center
+        levelLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
+        postsLabel.textColor = UIColor.lightGray
+        postsLabel.textAlignment = .center
+        postsLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
+        scoreLabel.textColor = UIColor.lightGray
+        scoreLabel.textAlignment = .center
+        scoreLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
+        loginLabel.textColor = UIColor.lightGray
+        loginLabel.textAlignment = .center
+        loginLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
+        backgroundView.addSubview(titleContentLabel)
+        backgroundView.addSubview(levelContentLabel)
+        backgroundView.addSubview(postsContentLabel)
+        backgroundView.addSubview(scoreContentLabel)
+        backgroundView.addSubview(loginContentLabel)
+        titleContentLabel.textColor = UIColor.white
+        titleContentLabel.textAlignment = .center
+        titleContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
+        levelContentLabel.textColor = UIColor.white
+        levelContentLabel.textAlignment = .center
+        levelContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
+        postsContentLabel.textColor = UIColor.white
+        postsContentLabel.textAlignment = .center
+        postsContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
+        scoreContentLabel.textColor = UIColor.white
+        scoreContentLabel.textAlignment = .center
+        scoreContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
+        loginContentLabel.textColor = UIColor.white
+        loginContentLabel.textAlignment = .center
+        loginContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
+        titleContentLabel.snp.makeConstraints { (make) in
+            make.centerX.equalTo(titleLabel)
+            make.bottom.equalTo(titleLabel.snp.top).offset(-margin2)
+        }
+        levelContentLabel.snp.makeConstraints { (make) in
+            make.centerX.equalTo(levelLabel)
+            make.bottom.equalTo(levelLabel.snp.top).offset(-margin2)
+        }
+        postsContentLabel.snp.makeConstraints { (make) in
+            make.centerX.equalTo(postsLabel)
+            make.bottom.equalTo(postsLabel.snp.top).offset(-margin2)
+        }
+        scoreContentLabel.snp.makeConstraints { (make) in
+            make.centerX.equalTo(scoreLabel)
+            make.bottom.equalTo(scoreLabel.snp.top).offset(-margin2)
+        }
+        loginContentLabel.snp.makeConstraints { (make) in
+            make.centerX.equalTo(loginLabel)
+            make.bottom.equalTo(loginLabel.snp.top).offset(-margin2)
+        }
     }
     
-    func setupContent() {
+    private func setupContent() {
         if let user = user {
             let genderSymbol = user.gender == 0 ? "♂" : "♀"
             idLabel.text = "\(user.id) \(genderSymbol)"
             nickLabel.text = user.nick
             let defaultImage = user.gender == 0 ? #imageLiteral(resourceName: "face_default_m") : #imageLiteral(resourceName: "face_default_f")
             avatarImageView.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
+                                         placeholder: defaultImage)
+            backgroundImageView.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
                                          placeholder: defaultImage)
             titleLabel.text = "身份"
             levelLabel.text = "等级"
@@ -119,11 +202,12 @@ class UserInfoViewController: UIViewController {
             postsContentLabel.text = "\(user.posts)"
             scoreContentLabel.text = "\(user.score)"
             loginContentLabel.text = "\(user.loginCount)"
+            lastLoginLabel.text = user.lastLoginTime.shortDateString
         }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        avatarImageView.layer.cornerRadius = 50
+        avatarImageView.layer.cornerRadius = avatarWidth / 2
     }
 }

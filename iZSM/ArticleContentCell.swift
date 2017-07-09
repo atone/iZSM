@@ -12,7 +12,7 @@ import TTTAttributedLabel
 
 class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
-    private var authorButton = UIButton(type: .system)
+    var authorButton = UIButton(type: .system)
     private var floorAndTimeLabel = UILabel(frame: CGRect.zero)
     private var replyButton = UIButton(type: .system)
     private var moreButton = UIButton(type: .system)

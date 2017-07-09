@@ -379,10 +379,16 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     
     func cell(_ cell: ArticleContentCell, didClickUser button: UIButton) {
         if let userID = cell.article?.authorID {
+            SVProgressHUD.show()
             SMUserInfoUtil.querySMUser(for: userID) { (user) in
+                SVProgressHUD.dismiss()
                 let userInfoVC = UserInfoViewController()
+                userInfoVC.modalPresentationStyle = .popover
                 userInfoVC.user = user
-                self.show(userInfoVC, sender: button)
+                let presentationCtr = userInfoVC.presentationController as! UIPopoverPresentationController
+                presentationCtr.sourceView = cell.authorButton
+                presentationCtr.delegate = self
+                self.present(userInfoVC, animated: true)
             }
         }
         

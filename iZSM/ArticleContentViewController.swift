@@ -169,9 +169,15 @@ class ArticleContentViewController: UITableViewController {
                         self.totalArticleNumber = totalArticleNumber
                         self.tableView.reloadData()
                         if restorePosition {
-                            self.tableView.scrollToRow(at: IndexPath(row: self.row, section: 0),
-                                                       at: .top,
-                                                       animated: false)
+                            if self.row < smArticles.count {
+                                self.tableView.scrollToRow(at: IndexPath(row: self.row, section: 0),
+                                                           at: .top,
+                                                           animated: false)
+                            } else {
+                                self.tableView.scrollToRow(at: IndexPath(row: smArticles.count - 1, section: 0),
+                                                           at: .top,
+                                                           animated: false)
+                            }
                         } else {
                             self.tableView.scrollToTop()
                         }
@@ -357,6 +363,39 @@ extension ArticleContentViewController {
     }
 }
 
+extension ArticleContentViewController: UserInfoViewControllerDelegate {
+    
+    func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
+        
+    }
+    
+    func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem) {
+        if let userID = controller.user?.id {
+            dismiss(animated: true, completion: nil)
+            
+            if let article = controller.article { //若有文章上下文，则按照回文章格式，否则按照写信格式
+                let cavc = ComposeArticleController()
+                cavc.boardID = article.boardID
+                cavc.delegate = self
+                cavc.replyMode = true
+                cavc.originalArticle = article
+                cavc.replyByMail = true
+                let navigationController = UINavigationController(rootViewController: cavc)
+                navigationController.modalPresentationStyle = .formSheet
+                present(navigationController, animated: true, completion: nil)
+            } else {
+                let cevc = ComposeEmailController()
+                cevc.preReceiver = userID
+                let navigationController = UINavigationController(rootViewController: cevc)
+                navigationController.modalPresentationStyle = .formSheet
+                present(navigationController, animated: true, completion: nil)
+            }
+            
+        }
+    }
+    
+}
+
 extension ArticleContentViewController: ArticleContentCellDelegate {
     
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int) {
@@ -374,7 +413,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             }
         }
         let v = YYPhotoGroupView(groupItems: items)
-        v?.present(fromImageView: fromView, toContainer: self.navigationController?.view, animated: true, completion: nil)
+        v?.present(fromImageView: fromView, toContainer: self.navigationController?.view, in: self, animated: true, completion: nil)
     }
     
     func cell(_ cell: ArticleContentCell, didClickUser button: UIButton) {
@@ -385,6 +424,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 let userInfoVC = UserInfoViewController()
                 userInfoVC.modalPresentationStyle = .popover
                 userInfoVC.user = user
+                userInfoVC.article = cell.article
+                userInfoVC.delegate = self
                 let presentationCtr = userInfoVC.presentationController as! UIPopoverPresentationController
                 presentationCtr.sourceView = cell.authorButton
                 presentationCtr.delegate = self
@@ -395,7 +436,15 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     }
     
     func cell(_ cell: ArticleContentCell, didClickReply button: UIButton) {
-        reply(ByMail: false, in: cell)
+        let cavc = ComposeArticleController()
+        cavc.boardID = cell.article?.boardID
+        cavc.delegate = self
+        cavc.replyMode = true
+        cavc.originalArticle = cell.article
+        cavc.replyByMail = false
+        let navigationController = UINavigationController(rootViewController: cavc)
+        navigationController.modalPresentationStyle = .formSheet
+        present(navigationController, animated: true, completion: nil)
     }
     
     func cell(_ cell: ArticleContentCell, didClickMore button: UIButton) {
@@ -406,10 +455,6 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             SVProgressHUD.showSuccess(withStatus: "复制成功")
         }
         actionSheet.addAction(copyArticleAction)
-        let replyByMailAction = UIAlertAction(title: "私信回复", style: .default) { action in
-            self.reply(ByMail: true, in: cell)
-        }
-        actionSheet.addAction(replyByMailAction)
         let forwardAction = UIAlertAction(title: "转寄给用户", style: .default) { action in
             self.forward(ToBoard: false, in: cell)
         }
@@ -438,18 +483,6 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         } else {
             UIApplication.shared.openURL(url)
         }
-    }
-    
-    private func reply(ByMail: Bool, in cell: ArticleContentCell) {
-        let cavc = ComposeArticleController()
-        cavc.boardID = cell.article?.boardID
-        cavc.delegate = self
-        cavc.replyMode = true
-        cavc.originalArticle = cell.article
-        cavc.replyByMail = ByMail
-        let navigationController = UINavigationController(rootViewController: cavc)
-        navigationController.modalPresentationStyle = .formSheet
-        present(navigationController, animated: true, completion: nil)
     }
     
     private func reportJunk(in cell: ArticleContentCell) {

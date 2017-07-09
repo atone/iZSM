@@ -162,20 +162,22 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             handleReplyMode()
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
-        } else if
-            let preTitle = preTitle,
-            let preContent = preContent,
-            let preReceiver = preReceiver {
+        } else {
             emailTitle = preTitle
             emailContent = preContent
             emailReceiver = preReceiver
-            title = "邮件反馈"
-            doneButton?.isEnabled = true
-            countLabel.text = "\((emailTitle!).characters.count)"
-            contentTextView.becomeFirstResponder()
-            contentTextView.selectedRange = NSMakeRange(0, 0)
-        } else {
-            receiverTextField.becomeFirstResponder()
+            if let emailTitle = emailTitle {
+                countLabel.text = "\((emailTitle).characters.count)"
+            }
+            
+            if emailReceiver == nil || emailReceiver!.characters.count == 0 {
+                receiverTextField.becomeFirstResponder()
+            } else if emailTitle == nil || emailTitle!.characters.count == 0 {
+                titleTextField.becomeFirstResponder()
+            } else {
+                contentTextView.becomeFirstResponder()
+                contentTextView.selectedRange = NSMakeRange(0, 0)
+            }
         }
     }
     

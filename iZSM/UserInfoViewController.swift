@@ -13,6 +13,8 @@ import SnapKit
 class UserInfoViewController: UIViewController {
     
     var user: SMUser?
+    var article: SMArticle?
+    var delegate: UserInfoViewControllerDelegate?
     
     private let idLabelFontSize: CGFloat = 20
     private let nickLabelFontSize: CGFloat = 15
@@ -47,8 +49,8 @@ class UserInfoViewController: UIViewController {
     private let toolbar = UIToolbar()
     private let lastLoginLabel = UILabel()
     private let padding = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-    private let search = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
-    private let compose = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: nil)
+    private let search = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(clickSearch(sender:)))
+    private let compose = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(clickCompose(sender:)))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -203,12 +205,25 @@ class UserInfoViewController: UIViewController {
             postsContentLabel.text = "\(user.posts)"
             scoreContentLabel.text = "\(user.score)"
             loginContentLabel.text = "\(user.loginCount)"
-            lastLoginLabel.text = user.lastLoginTime.shortDateString
+            lastLoginLabel.text = "上次登录: \(user.lastLoginTime.shortDateString)"
         }
+    }
+    
+    @objc private func clickCompose(sender: UIBarButtonItem) {
+        delegate?.userInfoViewController(self, didClickCompose: sender)
+    }
+    
+    @objc private func clickSearch(sender: UIBarButtonItem) {
+        delegate?.userInfoViewController(self, didClickSearch: sender)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         avatarImageView.layer.cornerRadius = avatarWidth / 2
     }
+}
+
+protocol UserInfoViewControllerDelegate {
+    func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem)
+    func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem)
 }

@@ -255,7 +255,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     }
     
     func handleReplyMode() {
-        title = replyByMail ? "私信回复" : "回复文章"
+        title = replyByMail ? "邮件回复" : "回复文章"
         doneButton?.isEnabled = true
         if let article = originalArticle {
             // 处理标题

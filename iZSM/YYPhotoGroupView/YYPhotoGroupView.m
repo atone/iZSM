@@ -224,6 +224,7 @@
 @interface YYPhotoGroupView() <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, weak) UIView *fromView;
 @property (nonatomic, weak) UIView *toContainerView;
+@property (nonatomic, weak) UIViewController *containerController;
 
 @property (nonatomic, strong) UIImage *snapshotImage;
 @property (nonatomic, strong) UIImage *snapshorImageHideFromView;
@@ -360,12 +361,18 @@
 
 - (void)presentFromImageView:(UIView *)fromView
                  toContainer:(UIView *)toContainer
+            inViewController:(UIViewController *)controller
                     animated:(BOOL)animated
                   completion:(void (^)(void))completion {
     if (!toContainer) return;
     
     _fromView = fromView;
     _toContainerView = toContainer;
+    _containerController = controller;
+    
+    if (controller) {
+        [controller.navigationController.interactivePopGestureRecognizer setEnabled:NO];
+    }
     
     NSInteger page = -1;
     for (NSUInteger i = 0; i < self.groupItems.count; i++) {
@@ -523,6 +530,7 @@
         }completion:^(BOOL finished) {
             self.scrollView.layer.transformScale = 1;
             [self removeFromSuperview];
+            [self enableBackGesture];
             [self cancelAllImageLoad];
             if (completion) completion();
         }];
@@ -567,6 +575,7 @@
         } completion:^(BOOL finished) {
             cell.imageContainerView.layer.anchorPoint = CGPointMake(0.5, 0.5);
             [self removeFromSuperview];
+            [self enableBackGesture];
             if (completion) completion();
         }];
     }];
@@ -820,6 +829,7 @@
                     }
                 } completion:^(BOOL finished) {
                     [self removeFromSuperview];
+                    [self enableBackGesture];
                 }];
                 
                 _background.image = _snapshotImage;
@@ -841,6 +851,12 @@
             _blurBackground.alpha = 1;
         }
         default:break;
+    }
+}
+
+- (void)enableBackGesture {
+    if (_containerController) {
+        [_containerController.navigationController.interactivePopGestureRecognizer setEnabled:YES];
     }
 }
 

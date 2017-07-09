@@ -31,6 +31,7 @@
 
 - (void)presentFromImageView:(UIView *)fromView
                  toContainer:(UIView *)container
+            inViewController:(UIViewController *)controller
                     animated:(BOOL)animated
                   completion:(void (^)(void))completion;
 

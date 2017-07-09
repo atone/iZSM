@@ -162,8 +162,8 @@ class ArticleContentViewController: UITableViewController {
                     networkActivityIndicatorStop()
                     self.tableView.mj_header.endRefreshing()
                     SVProgressHUD.dismiss()
-                    self.tableView.mj_footer.isHidden = false
                     if let smArticles = smArticles {
+                        self.tableView.mj_footer.isHidden = false
                         self.smarticles.append(smArticles)
                         self.currentForwardNumber += smArticles.count
                         self.totalArticleNumber = totalArticleNumber
@@ -375,6 +375,12 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
         let v = YYPhotoGroupView(groupItems: items)
         v?.present(fromImageView: fromView, toContainer: self.navigationController?.view, animated: true, completion: nil)
+    }
+    
+    func cell(_ cell: ArticleContentCell, didClickUser button: UIButton) {
+        let userInfoVC = UserInfoViewController()
+        userInfoVC.userID = cell.article?.authorID
+        show(userInfoVC, sender: button)
     }
     
     func cell(_ cell: ArticleContentCell, didClickReply button: UIButton) {

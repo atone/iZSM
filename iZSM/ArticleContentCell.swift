@@ -52,6 +52,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.selectionStyle = .none
         
         authorButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+        authorButton.addTarget(self, action: #selector(showUserInfo(sender:)), for: .touchUpInside)
         self.contentView.addSubview(authorButton)
         
         floorAndTimeLabel.font = UIFont.systemFont(ofSize: fontSize)
@@ -195,6 +196,10 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         delegate?.cell(self, didClickMore: sender)
     }
     
+    @objc private func showUserInfo(sender: UIButton) {
+        delegate?.cell(self, didClickUser: sender)
+    }
+    
 }
 
 protocol ArticleContentCellDelegate {
@@ -202,4 +207,5 @@ protocol ArticleContentCellDelegate {
     func cell(_ cell: ArticleContentCell, didClick url: URL)
     func cell(_ cell: ArticleContentCell, didClickReply button: UIButton)
     func cell(_ cell: ArticleContentCell, didClickMore button: UIButton)
+    func cell(_ cell: ArticleContentCell, didClickUser button: UIButton)
 }

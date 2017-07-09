@@ -111,6 +111,7 @@ class UserInfoViewController: UIViewController {
         nickLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(idLabel)
             make.centerY.equalTo(idLabel).offset(nickLabelOffset)
+            make.width.lessThanOrEqualToSuperview()
         }
         backgroundView.addSubview(infoStackView)
         infoStackView.axis = .horizontal

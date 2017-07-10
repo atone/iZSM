@@ -13,7 +13,7 @@ class BaseTableViewController: UITableViewController {
     let api = SmthAPI()
     let setting = AppSetting.sharedSetting
     
-    var needRefresh = true
+    private var needRefresh = true
     
     // subclass need override this and add clear content
     func clearContent() {

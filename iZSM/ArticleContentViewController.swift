@@ -365,7 +365,16 @@ extension ArticleContentViewController {
 extension ArticleContentViewController: UserInfoViewControllerDelegate {
     
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
-        
+        if let userID = controller.user?.id, let boardID = controller.article?.boardID {
+            dismiss(animated: true, completion: nil)
+            SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (boardInfo) in
+                let searchResultController = ArticleListSearchResultViewController()
+                searchResultController.boardID = boardID
+                searchResultController.boardName = boardInfo?.name
+                searchResultController.userID = userID
+                self.show(searchResultController, sender: button)
+            }
+        }
     }
     
     func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem) {
@@ -398,7 +407,7 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
     }
     
     func shouldEnableSearch() -> Bool {
-        return false
+        return true
     }
 }
 

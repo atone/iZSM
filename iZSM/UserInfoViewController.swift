@@ -77,9 +77,13 @@ class UserInfoViewController: UIViewController {
         toolbar.snp.makeConstraints { (make) in
             make.leading.trailing.bottom.equalTo(view)
         }
-        toolbar.items = [padding, search, compose]
-        search.isEnabled = delegate?.shouldEnableSearch() ?? true
-        compose.isEnabled = delegate?.shouldEnableCompose() ?? true
+        toolbar.items = [padding]
+        if delegate?.shouldEnableSearch() ?? true {
+            toolbar.items?.append(search)
+        }
+        if delegate?.shouldEnableCompose() ?? true {
+            toolbar.items?.append(compose)
+        }
         view.addSubview(lastLoginLabel)
         lastLoginLabel.textColor = UIColor.gray
         lastLoginLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)

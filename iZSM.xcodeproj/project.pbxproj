@@ -36,6 +36,7 @@
 		9C56E1D71F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1D31F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m */; };
 		9C5E17121F0F77F100AA5368 /* PageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5E17111F0F77F100AA5368 /* PageListViewController.swift */; };
 		9C7C6B131F1364E800940300 /* SMBoardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7C6B121F1364E800940300 /* SMBoardInfo.swift */; };
+		9C7C6B151F13BD9D00940300 /* ArticleListSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */; };
 		9C889FB41DE3E24B00C33A8D /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */; };
 		9C889FB71DE3EEEF00C33A8D /* ArticleListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FB61DE3EEEF00C33A8D /* ArticleListViewCell.swift */; };
 		9C889FB91DE409B100C33A8D /* YYKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C889FB81DE409B100C33A8D /* YYKit.framework */; };
@@ -123,6 +124,7 @@
 		9C56E1D31F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCellDebug.m"; sourceTree = "<group>"; };
 		9C5E17111F0F77F100AA5368 /* PageListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageListViewController.swift; sourceTree = "<group>"; };
 		9C7C6B121F1364E800940300 /* SMBoardInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBoardInfo.swift; sourceTree = "<group>"; };
+		9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListSearchResultViewController.swift; sourceTree = "<group>"; };
 		9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListViewController.swift; sourceTree = "<group>"; };
 		9C889FB61DE3EEEF00C33A8D /* ArticleListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListViewCell.swift; sourceTree = "<group>"; };
 		9C889FB81DE409B100C33A8D /* YYKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYKit.framework; path = Carthage/Build/iOS/YYKit.framework; sourceTree = "<group>"; };
@@ -333,6 +335,7 @@
 				9C889FCE1DE4995300C33A8D /* FavListViewController.swift */,
 				9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */,
 				9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */,
+				9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */,
 				9C889FBC1DE4222000C33A8D /* ArticleContentViewController.swift */,
 				9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */,
 				9C5E17111F0F77F100AA5368 /* PageListViewController.swift */,
@@ -591,6 +594,7 @@
 				9C1A3BF41DE2EA9900CF4A43 /* SmthStructs.swift in Sources */,
 				9C889FCD1DE4832E00C33A8D /* YYPhotoGroupView.m in Sources */,
 				9CA3B1A01DE3359200E9B121 /* UIScrollView+MJRefresh.m in Sources */,
+				9C7C6B151F13BD9D00940300 /* ArticleListSearchResultViewController.swift in Sources */,
 				9C889FCF1DE4995300C33A8D /* FavListViewController.swift in Sources */,
 				9CA3B15E1DE3323B00E9B121 /* BaseTableViewController.swift in Sources */,
 				9C1A3BD91DE2CBAF00CF4A43 /* EulaViewController.swift in Sources */,

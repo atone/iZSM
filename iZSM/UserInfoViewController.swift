@@ -78,6 +78,8 @@ class UserInfoViewController: UIViewController {
             make.leading.trailing.bottom.equalTo(view)
         }
         toolbar.items = [padding, search, compose]
+        search.isEnabled = delegate?.shouldEnableSearch() ?? true
+        compose.isEnabled = delegate?.shouldEnableCompose() ?? true
         view.addSubview(lastLoginLabel)
         lastLoginLabel.textColor = UIColor.gray
         lastLoginLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
@@ -229,4 +231,6 @@ class UserInfoViewController: UIViewController {
 protocol UserInfoViewControllerDelegate {
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem)
     func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem)
+    func shouldEnableCompose() -> Bool
+    func shouldEnableSearch() -> Bool
 }

@@ -391,6 +391,13 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
         }
     }
     
+    func shouldEnableCompose() -> Bool {
+        return true
+    }
+    
+    func shouldEnableSearch() -> Bool {
+        return false
+    }
 }
 
 extension ArticleContentViewController: ArticleContentCellDelegate {

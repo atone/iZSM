@@ -227,4 +227,12 @@ extension UserViewController: UserInfoViewControllerDelegate {
             present(navigationController, animated: true, completion: nil)
         }
     }
+    
+    func shouldEnableSearch() -> Bool {
+        return false
+    }
+    
+    func shouldEnableCompose() -> Bool {
+        return false
+    }
 }

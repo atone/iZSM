@@ -21,12 +21,13 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     var reference: SMReference?
     var replyMe: Bool = true
     private let api = SmthAPI()
-    private var article: SMArticle?
+    fileprivate var article: SMArticle?
     
     func setupUI() {
         view.backgroundColor = UIColor.white
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         userButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        userButton.addTarget(self, action: #selector(clickUserButton(button:)), for: .touchUpInside)
         timeLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         timeLabel.textColor = UIColor.gray
         contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
@@ -75,6 +76,23 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
                                                object: nil)
         setupUI()
         fetchData()
+    }
+    
+    func clickUserButton(button: UIButton) {
+        if let userID = button.titleLabel?.text {
+            networkActivityIndicatorStart()
+            SMUserInfoUtil.querySMUser(for: userID) { (user) in
+                networkActivityIndicatorStop()
+                let userInfoVC = UserInfoViewController()
+                userInfoVC.modalPresentationStyle = .popover
+                userInfoVC.user = user
+                userInfoVC.delegate = self
+                let presentationCtr = userInfoVC.presentationController as! UIPopoverPresentationController
+                presentationCtr.sourceView = button
+                presentationCtr.delegate = self
+                self.present(userInfoVC, animated: true)
+            }
+        }
     }
     
     func reply(sender: UIBarButtonItem) {
@@ -190,4 +208,57 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         return attributeText
     }
     
+}
+
+extension ReferContentViewController: UserInfoViewControllerDelegate {
+    func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
+        if let userID = reference?.userID, let boardID = reference?.boardID {
+            dismiss(animated: true, completion: nil)
+            SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (boardInfo) in
+                let searchResultController = ArticleListSearchResultViewController()
+                searchResultController.boardID = boardID
+                searchResultController.boardName = boardInfo?.name
+                searchResultController.userID = userID
+                self.show(searchResultController, sender: button)
+            }
+        }
+    }
+    
+    func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem) {
+        if let userID = reference?.userID {
+            dismiss(animated: true, completion: nil)
+            
+            if let article = self.article { //若有文章上下文，则按照回文章格式，否则按照写信格式
+                let cavc = ComposeArticleController()
+                cavc.boardID = article.boardID
+                cavc.replyMode = true
+                cavc.originalArticle = article
+                cavc.replyByMail = true
+                let navigationController = UINavigationController(rootViewController: cavc)
+                navigationController.modalPresentationStyle = .formSheet
+                present(navigationController, animated: true, completion: nil)
+            } else {
+                let cevc = ComposeEmailController()
+                cevc.preReceiver = userID
+                let navigationController = UINavigationController(rootViewController: cevc)
+                navigationController.modalPresentationStyle = .formSheet
+                present(navigationController, animated: true, completion: nil)
+            }
+            
+        }
+    }
+    
+    func shouldEnableCompose() -> Bool {
+        return true
+    }
+    
+    func shouldEnableSearch() -> Bool {
+        return true
+    }
+}
+
+extension ReferContentViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
 }

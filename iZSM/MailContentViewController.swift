@@ -27,6 +27,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         view.backgroundColor = UIColor.white
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         userButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        userButton.addTarget(self, action: #selector(clickUserButton(button:)), for: .touchUpInside)
         timeLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         timeLabel.textColor = UIColor.gray
         contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
@@ -82,6 +83,23 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
                                                object: nil)
         setupUI()
         fetchData()
+    }
+    
+    func clickUserButton(button: UIButton) {
+        if let userID = button.titleLabel?.text {
+            networkActivityIndicatorStart()
+            SMUserInfoUtil.querySMUser(for: userID) { (user) in
+                networkActivityIndicatorStop()
+                let userInfoVC = UserInfoViewController()
+                userInfoVC.modalPresentationStyle = .popover
+                userInfoVC.user = user
+                userInfoVC.delegate = self
+                let presentationCtr = userInfoVC.presentationController as! UIPopoverPresentationController
+                presentationCtr.sourceView = button
+                presentationCtr.delegate = self
+                self.present(userInfoVC, animated: true)
+            }
+        }
     }
     
     func reply(sender: UIBarButtonItem) {
@@ -206,4 +224,28 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         return attributeText
     }
     
+}
+
+extension MailContentViewController: UserInfoViewControllerDelegate {
+    func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
+
+    }
+    
+    func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem) {
+
+    }
+    
+    func shouldEnableCompose() -> Bool {
+        return false
+    }
+    
+    func shouldEnableSearch() -> Bool {
+        return false
+    }
+}
+
+extension MailContentViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
 }

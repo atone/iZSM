@@ -23,7 +23,6 @@ class UserInfoViewController: UIViewController {
     private let avatarWidth: CGFloat = 100
     private let margin: CGFloat = 15
     private let margin2: CGFloat = 5
-    private let nickLabelOffset: CGFloat = 36
     private let width: CGFloat = 280
     private let height: CGFloat = 320
     
@@ -107,15 +106,6 @@ class UserInfoViewController: UIViewController {
             make.centerX.equalTo(view)
             make.centerY.equalTo(view).dividedBy(2)
         }
-        backgroundView.addSubview(nickLabel)
-        nickLabel.textColor = UIColor.white
-        nickLabel.font = UIFont.systemFont(ofSize: nickLabelFontSize)
-        nickLabel.textAlignment = .center
-        nickLabel.snp.makeConstraints { (make) in
-            make.centerX.equalTo(idLabel)
-            make.centerY.equalTo(idLabel).offset(nickLabelOffset)
-            make.width.lessThanOrEqualToSuperview()
-        }
         backgroundView.addSubview(infoStackView)
         infoStackView.axis = .horizontal
         infoStackView.distribution = .equalSpacing
@@ -183,6 +173,18 @@ class UserInfoViewController: UIViewController {
         loginContentLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(loginLabel)
             make.bottom.equalTo(loginLabel.snp.top).offset(-margin2)
+        }
+        
+        backgroundView.addSubview(nickLabel)
+        nickLabel.textColor = UIColor.white
+        nickLabel.font = UIFont.systemFont(ofSize: nickLabelFontSize)
+        nickLabel.textAlignment = .center
+        nickLabel.setContentHuggingPriority(idLabel.contentHuggingPriority(for: .vertical) - 1, for: .vertical)
+        nickLabel.snp.makeConstraints { (make) in
+            make.centerX.equalTo(idLabel)
+            make.top.equalTo(idLabel.snp.bottom)
+            make.bottom.equalTo(postsContentLabel.snp.top)
+            make.width.lessThanOrEqualToSuperview()
         }
     }
     

@@ -176,7 +176,9 @@ class ArticleContentViewController: UITableViewController {
                                                            animated: false)
                             }
                         } else {
-                            self.tableView.scrollToTop()
+                            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0),
+                                                       at: .top,
+                                                       animated: false)
                         }
                     } else {
                         SVProgressHUD.showError(withStatus: "指定的文章不存在\n或链接错误")

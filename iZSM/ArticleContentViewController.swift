@@ -85,7 +85,7 @@ class ArticleContentViewController: UITableViewController {
     func tapPageButton(sender: UIBarButtonItem) {
         let pageListViewController = PageListViewController()
         let height = min(CGFloat(44 * totalSection), UIScreen.screenHeight() / 2)
-        pageListViewController.preferredContentSize = CGSize(width: UIScreen.screenWidth() / 2, height: height)
+        pageListViewController.preferredContentSize = CGSize(width: 200, height: height)
         pageListViewController.modalPresentationStyle = .popover
         pageListViewController.currentPage = currentSection
         pageListViewController.totalPage = totalSection
@@ -289,7 +289,7 @@ class ArticleContentViewController: UITableViewController {
             floor = totalArticleNumber - floor
         }
         cell.setData(displayFloor: floor, smarticle: smarticle, delegate: self)
-        cell.preservesSuperviewLayoutMargins = false
+        cell.preservesSuperviewLayoutMargins = true
         cell.fd_enforceFrameLayout = true
     }
     

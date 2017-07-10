@@ -68,7 +68,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.cornerRadius = avatarWidth / 2
-        avatarImageView.layer.borderWidth = 1
+        avatarImageView.layer.borderWidth = 1.0 / UIScreen.scale()
         avatarImageView.layer.borderColor = UIColor.black.withAlphaComponent(0.2).cgColor
         avatarImageView.clipsToBounds = true
         avatarTapRecognizer.addTarget(self, action: #selector(showUserInfo(recognizer:)))

@@ -12,10 +12,18 @@ import TTTAttributedLabel
 
 class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
-    var authorButton = UIButton(type: .system)
-    private var floorAndTimeLabel = UILabel(frame: CGRect.zero)
-    private var replyButton = UIButton(type: .system)
-    private var moreButton = UIButton(type: .system)
+    private let avatarImageView = UIImageView()
+    
+    private let authorLabel = UILabel()
+    private let floorAndTimeLabel = UILabel()
+    private let replyLabel = UILabel()
+    private let moreLabel = UILabel()
+    
+    private let avatarTapRecognizer = UITapGestureRecognizer()
+    private let authorTapRecognizer = UITapGestureRecognizer()
+    private let replyTapRecognizer = UITapGestureRecognizer()
+    private let moreTapRecognizer = UITapGestureRecognizer()
+    
     var imageViews = [UIImageView]()
     
     private var contentLabel = TTTAttributedLabel(frame: CGRect.zero)
@@ -32,8 +40,15 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     private let replyButtonWidth: CGFloat = 40
     private let moreButtonWidth: CGFloat = 36
     private let buttonHeight: CGFloat = 26
+    private let avatarWidth: CGFloat = 40
     
-    private let fontSize: CGFloat = 15
+    private let authorFontSize: CGFloat = 18
+    private let floorTimeFontSize: CGFloat = 13
+    private let replyMoreFontSize: CGFloat = 15
+    
+    private let margin1: CGFloat = 6
+    private let margin2: CGFloat = 2
+    private let margin3: CGFloat = 6
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -51,30 +66,56 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.separatorInset = .zero
         self.selectionStyle = .none
         
-        authorButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
-        authorButton.addTarget(self, action: #selector(showUserInfo(sender:)), for: .touchUpInside)
-        self.contentView.addSubview(authorButton)
+        avatarImageView.contentMode = .scaleAspectFill
+        avatarImageView.layer.cornerRadius = avatarWidth / 2
+        avatarImageView.layer.borderWidth = 1
+        avatarImageView.layer.borderColor = UIColor.black.withAlphaComponent(0.2).cgColor
+        avatarImageView.clipsToBounds = true
+        avatarTapRecognizer.addTarget(self, action: #selector(showUserInfo(recognizer:)))
+        avatarTapRecognizer.numberOfTapsRequired = 1
+        avatarImageView.addGestureRecognizer(avatarTapRecognizer)
+        avatarImageView.isUserInteractionEnabled = true
+        self.contentView.addSubview(avatarImageView)
         
-        floorAndTimeLabel.font = UIFont.systemFont(ofSize: fontSize)
+        authorLabel.font = UIFont.boldSystemFont(ofSize: authorFontSize)
+        authorLabel.textColor = UIColor.black
+        authorTapRecognizer.addTarget(self, action: #selector(showUserInfo(recognizer:)))
+        authorTapRecognizer.numberOfTapsRequired = 1
+        authorLabel.addGestureRecognizer(authorTapRecognizer)
+        authorLabel.isUserInteractionEnabled = true
+        self.contentView.addSubview(authorLabel)
+        
+        floorAndTimeLabel.font = UIFont.systemFont(ofSize: floorTimeFontSize)
         floorAndTimeLabel.textColor = UIColor.gray
         self.contentView.addSubview(floorAndTimeLabel)
         
-        replyButton.setTitle("回复", for: .normal)
-        replyButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
-        replyButton.layer.cornerRadius = 4
-        replyButton.layer.borderWidth = 1
-        replyButton.layer.borderColor = tintColor.cgColor
-        replyButton.clipsToBounds = true
-        replyButton.addTarget(self, action: #selector(reply(sender:)), for: .touchUpInside)
-        self.contentView.addSubview(replyButton)
+        replyLabel.text = "回复"
+        replyLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
+        replyLabel.textColor = tintColor
+        replyLabel.textAlignment = .center
+        replyLabel.layer.cornerRadius = 4
+        replyLabel.layer.borderWidth = 1
+        replyLabel.layer.borderColor = tintColor.cgColor
+        replyLabel.clipsToBounds = true
+        replyTapRecognizer.addTarget(self, action: #selector(reply(recognizer:)))
+        replyTapRecognizer.numberOfTapsRequired = 1
+        replyLabel.addGestureRecognizer(replyTapRecognizer)
+        replyLabel.isUserInteractionEnabled = true
+        self.contentView.addSubview(replyLabel)
         
-        moreButton.setTitle("•••", for: .normal)
-        moreButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: fontSize)
-        moreButton.layer.cornerRadius = 4
-        moreButton.layer.borderWidth = 1
-        moreButton.layer.borderColor = tintColor.cgColor
-        moreButton.addTarget(self, action: #selector(action(sender:)), for: .touchUpInside)
-        self.contentView.addSubview(moreButton)
+        moreLabel.text = "•••"
+        moreLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
+        moreLabel.textColor = tintColor
+        moreLabel.textAlignment = .center
+        moreLabel.layer.cornerRadius = 4
+        moreLabel.layer.borderWidth = 1
+        moreLabel.layer.borderColor = tintColor.cgColor
+        moreLabel.clipsToBounds = true
+        moreTapRecognizer.addTarget(self, action: #selector(action(recognizer:)))
+        moreTapRecognizer.numberOfTapsRequired = 1
+        moreLabel.addGestureRecognizer(moreTapRecognizer)
+        moreLabel.isUserInteractionEnabled = true
+        self.contentView.addSubview(moreLabel)
         
         contentLabel.lineBreakMode = .byWordWrapping
         contentLabel.numberOfLines = 0
@@ -92,10 +133,8 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.delegate = delegate
         self.article = smarticle
         
-        UIView.performWithoutAnimation {
-            self.authorButton.setTitle(smarticle.authorID, for: .normal)
-            self.authorButton.layoutIfNeeded()
-        }
+        avatarImageView.setImageWith(SMUser.faceURL(for: smarticle.authorID, withFaceURL: nil), placeholder: #imageLiteral(resourceName: "face_default"))
+        authorLabel.text = smarticle.authorID
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
         floorAndTimeLabel.text = "\(floorText)  \(smarticle.timeString)"
         
@@ -108,12 +147,14 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        authorButton.sizeToFit()
-        authorButton.frame = CGRect(origin: CGPoint(x: contentInset, y: 0), size: authorButton.bounds.size)
+        avatarImageView.frame = CGRect(x: contentInset, y: buttonHeight - avatarWidth / 2, width: avatarWidth, height: avatarWidth)
+        
+        authorLabel.sizeToFit()
+        authorLabel.frame = CGRect(origin: CGPoint(x: contentInset * 2 + avatarWidth, y: margin1), size: authorLabel.bounds.size)
         floorAndTimeLabel.sizeToFit()
-        floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: contentInset, y: buttonHeight), size: floorAndTimeLabel.bounds.size)
-        replyButton.frame = CGRect(x: UIScreen.screenWidth() - contentInset * 2 - replyButtonWidth - moreButtonWidth, y: buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
-        moreButton.frame = CGRect(x: UIScreen.screenWidth() - contentInset - moreButtonWidth, y: buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
+        floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: contentInset * 2 + avatarWidth, y: margin1 + authorLabel.frame.height + margin2), size: floorAndTimeLabel.bounds.size)
+        replyLabel.frame = CGRect(x: UIScreen.screenWidth() - contentInset * 2 - replyButtonWidth - moreButtonWidth, y: buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
+        moreLabel.frame = CGRect(x: UIScreen.screenWidth() - contentInset - moreButtonWidth, y: buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
         
         let size = contentView.bounds.size
         var imageLength: CGFloat = 0
@@ -123,7 +164,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
         }
-        contentLabel.frame = CGRect(x: contentInset, y: buttonHeight * 2, width: UIScreen.screenWidth() - 2 * contentInset, height: size.height - buttonHeight * 2 - contentInset - imageLength + 1)
+        contentLabel.frame = CGRect(x: contentInset, y: buttonHeight * 2 + margin3, width: UIScreen.screenWidth() - 2 * contentInset, height: size.height - buttonHeight * 2 - contentInset - imageLength + 1)
         
         if imageViews.count == 1 {
             imageViews.first!.frame = CGRect(x: 0, y: size.height - size.width, width: size.width, height: size.width)
@@ -149,7 +190,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
         }
-        return CGSize(width: size.width, height: buttonHeight * 2 + ceil(rect.height) + contentInset + imageLength)
+        return CGSize(width: size.width, height: buttonHeight * 2 + margin3 + ceil(rect.height) + contentInset + imageLength)
     }
     
     private func drawImagesWithInfo(imageAtt: [ImageInfo]) {
@@ -188,16 +229,16 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         }
     }
     
-    @objc private func reply(sender: UIButton) {
-        delegate?.cell(self, didClickReply: sender)
+    @objc private func reply(recognizer: UITapGestureRecognizer) {
+        delegate?.cell(self, didClickReply: recognizer.view)
     }
     
-    @objc private func action(sender: UIButton) {
-        delegate?.cell(self, didClickMore: sender)
+    @objc private func action(recognizer: UITapGestureRecognizer) {
+        delegate?.cell(self, didClickMore: recognizer.view)
     }
     
-    @objc private func showUserInfo(sender: UIButton) {
-        delegate?.cell(self, didClickUser: sender)
+    @objc private func showUserInfo(recognizer: UITapGestureRecognizer) {
+        delegate?.cell(self, didClickUser: recognizer.view)
     }
     
 }
@@ -205,7 +246,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
 protocol ArticleContentCellDelegate {
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int)
     func cell(_ cell: ArticleContentCell, didClick url: URL)
-    func cell(_ cell: ArticleContentCell, didClickReply button: UIButton)
-    func cell(_ cell: ArticleContentCell, didClickMore button: UIButton)
-    func cell(_ cell: ArticleContentCell, didClickUser button: UIButton)
+    func cell(_ cell: ArticleContentCell, didClickReply sender: UIView?)
+    func cell(_ cell: ArticleContentCell, didClickMore sender: UIView?)
+    func cell(_ cell: ArticleContentCell, didClickUser sender: UIView?)
 }

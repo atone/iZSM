@@ -100,6 +100,7 @@ class UserInfoViewController: UIViewController {
         }
         backgroundView.addSubview(avatarImageView)
         avatarImageView.clipsToBounds = true
+        avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.snp.makeConstraints { (make) in
             make.width.equalTo(avatarWidth)
             make.height.equalTo(avatarWidth)

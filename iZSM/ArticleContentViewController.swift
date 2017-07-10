@@ -416,7 +416,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         v?.present(fromImageView: fromView, toContainer: self.navigationController?.view, in: self, animated: true, completion: nil)
     }
     
-    func cell(_ cell: ArticleContentCell, didClickUser button: UIButton) {
+    func cell(_ cell: ArticleContentCell, didClickUser sender: UIView?) {
         if let userID = cell.article?.authorID {
             networkActivityIndicatorStart()
             SMUserInfoUtil.querySMUser(for: userID) { (user) in
@@ -427,7 +427,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 userInfoVC.article = cell.article
                 userInfoVC.delegate = self
                 let presentationCtr = userInfoVC.presentationController as! UIPopoverPresentationController
-                presentationCtr.sourceView = cell.authorButton
+                presentationCtr.sourceView = sender
                 presentationCtr.delegate = self
                 self.present(userInfoVC, animated: true)
             }
@@ -435,7 +435,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         
     }
     
-    func cell(_ cell: ArticleContentCell, didClickReply button: UIButton) {
+    func cell(_ cell: ArticleContentCell, didClickReply sender: UIView?) {
         let cavc = ComposeArticleController()
         cavc.boardID = cell.article?.boardID
         cavc.delegate = self
@@ -447,7 +447,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         present(navigationController, animated: true, completion: nil)
     }
     
-    func cell(_ cell: ArticleContentCell, didClickMore button: UIButton) {
+    func cell(_ cell: ArticleContentCell, didClickMore sender: UIView?) {
         
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let copyArticleAction = UIAlertAction(title: "复制文章", style: .default) { action in
@@ -469,8 +469,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         actionSheet.addAction(reportJunkAction)
         let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
         actionSheet.addAction(cancelAction)
-        actionSheet.popoverPresentationController?.sourceView = button
-        actionSheet.popoverPresentationController?.sourceRect = button.bounds
+        actionSheet.popoverPresentationController?.sourceView = sender
+        actionSheet.popoverPresentationController?.sourceRect = sender!.bounds
         present(actionSheet, animated: true, completion: nil)
     }
     

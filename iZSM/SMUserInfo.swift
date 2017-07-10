@@ -36,7 +36,7 @@ class SMUserInfo: Object {
 
 class SMUserInfoUtil {
     private static var queryingSet = Set<String>()
-    private static let lockQueue = DispatchQueue(label: "cn.yunaitong.iZSM.lockQueue")
+    private static let lockQueue = DispatchQueue(label: "cn.yunaitong.iZSM.userLockQueue")
 
     class func querySMUser(for userID: String, callback: @escaping (SMUser?) -> Void) {
         DispatchQueue.global().async {

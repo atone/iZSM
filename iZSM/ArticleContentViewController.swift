@@ -112,18 +112,20 @@ class ArticleContentViewController: UITableViewController {
             }
         }
         if let boardID = self.boardID, let articleID = self.articleID {
-            let openComputerAction = UIAlertAction(title: "浏览（电脑版）网页", style: .default) {[unowned self] action in
-                let urlString = "http://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
+            let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] action in
+                let urlString: String
+                switch self.setting.displayMode {
+                case .nForum:
+                    urlString = "http://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
+                case .www2:
+                    urlString = "http://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
+                case .mobile:
+                    urlString = "http://m.newsmth.net/article/\(boardID)/\(articleID)"
+                }
                 let webViewController = SFSafariViewController(url: URL(string: urlString)!)
                 self.present(webViewController, animated: true, completion: nil)
             }
-            actionSheet.addAction(openComputerAction)
-            let openMobileAction = UIAlertAction(title: "浏览（移动版）网页", style: .default) {[unowned self] action in
-                let urlString = "http://m.newsmth.net/article/\(boardID)/\(articleID)"
-                let webViewController = SFSafariViewController(url: URL(string: urlString)!)
-                self.present(webViewController, animated: true, completion: nil)
-            }
-            actionSheet.addAction(openMobileAction)
+            actionSheet.addAction(openAction)
         }
         actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         actionSheet.popoverPresentationController?.barButtonItem = sender
@@ -148,13 +150,8 @@ class ArticleContentViewController: UITableViewController {
                 let totalArticleNumber = self.api.getLastThreadCount()
                 
                 if self.fromTopTen && self.boardName == nil { // get boardName
-                    if let boards = self.api.queryBoard(query: boardID) {
-                        for board in boards {
-                            if board.boardID == boardID {
-                                self.boardName = board.name
-                                break
-                            }
-                        }
+                    SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (boardInfo) in
+                        self.boardName = boardInfo?.name
                     }
                 }
                 

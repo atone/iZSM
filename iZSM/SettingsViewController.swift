@@ -16,6 +16,7 @@ class SettingsViewController: UITableViewController {
     @IBOutlet weak var showSignatureLabel: UILabel!
     @IBOutlet weak var newReplyFirstLabel: UILabel!
     @IBOutlet weak var rememberLastLabel: UILabel!
+    @IBOutlet weak var displayModeLabel: UILabel!
     @IBOutlet weak var backgroundTaskLabel: UILabel!
     @IBOutlet weak var clearCacheLabel: UILabel!
     @IBOutlet weak var cacheSizeLabel: UILabel!
@@ -27,6 +28,7 @@ class SettingsViewController: UITableViewController {
     @IBOutlet weak var newReplyFirstSwitch: UISwitch!
     @IBOutlet weak var rememberLastSwitch: UISwitch!
     @IBOutlet weak var backgroundTaskSwitch: UISwitch!
+    @IBOutlet weak var displayModeSegmentedControl: UISegmentedControl!
 
 
     let setting = AppSetting.sharedSetting
@@ -79,6 +81,10 @@ class SettingsViewController: UITableViewController {
             }
         }
     }
+    
+    @IBAction func displayModeChanged(sender: UISegmentedControl) {
+        setting.displayMode = AppSetting.DisplayMode(rawValue: sender.selectedSegmentIndex)!
+    }
 
     @IBAction func backgroundTaskChanged(sender: UISwitch) {
         setting.backgroundTaskEnabled = sender.isOn
@@ -95,6 +101,7 @@ class SettingsViewController: UITableViewController {
         showSignatureLabel.font = UIFont.preferredFont(forTextStyle: .body)
         newReplyFirstLabel.font = UIFont.preferredFont(forTextStyle: .body)
         rememberLastLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        displayModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
         backgroundTaskLabel.font = UIFont.preferredFont(forTextStyle: .body)
         clearCacheLabel.font = UIFont.preferredFont(forTextStyle: .body)
         cacheSizeLabel.font = UIFont.preferredFont(forTextStyle: .body)
@@ -114,6 +121,7 @@ class SettingsViewController: UITableViewController {
         showSignatureSwitch.isOn = setting.showSignature
         newReplyFirstSwitch.isOn = (setting.sortMode == .LaterPostFirst)
         rememberLastSwitch.isOn = setting.rememberLast
+        displayModeSegmentedControl.selectedSegmentIndex = setting.displayMode.rawValue
         backgroundTaskSwitch.isOn = setting.backgroundTaskEnabled
     }
 

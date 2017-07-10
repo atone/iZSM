@@ -11,6 +11,10 @@ import Foundation
 class AppSetting {
 
     static let sharedSetting = AppSetting()
+    
+    enum DisplayMode: Int {
+        case nForum = 0, www2, mobile
+    }
 
     private struct Static {
         static let UsernameKey = "SmthAPI.username"
@@ -29,6 +33,7 @@ class AppSetting {
         static let ReplyCountKey = "SmthAPI.replyCountKey"
         static let ReferCountKey = "SmthAPI.referCountKey"
         static let RememberLastKey = "SmthAPI.rememberLastKey"
+        static let DisplayModeKey = "SmthAPI.displayModeKey"
     }
 
     private let defaults = UserDefaults.standard
@@ -46,7 +51,8 @@ class AppSetting {
             Static.MailCountKey : 0,
             Static.ReplyCountKey : 0,
             Static.ReferCountKey : 0,
-            Static.RememberLastKey : true
+            Static.RememberLastKey : true,
+            Static.DisplayModeKey : DisplayMode.mobile.rawValue
         ]
         defaults.register(defaults: initialSettings)
     }
@@ -163,6 +169,13 @@ class AppSetting {
         get { return defaults.bool(forKey: Static.RememberLastKey) }
         set {
             defaults.set(newValue, forKey: Static.RememberLastKey)
+        }
+    }
+    
+    var displayMode:  DisplayMode {
+        get { return DisplayMode(rawValue: defaults.integer(forKey: Static.DisplayModeKey))! }
+        set {
+            defaults.set(newValue.rawValue, forKey: Static.DisplayModeKey)
         }
     }
 }

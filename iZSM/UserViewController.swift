@@ -14,6 +14,8 @@ class UserViewController: UITableViewController {
     private let kLabelIdentifier = "LabelIdentifier"
     private let labelContents = ["收件箱", "发件箱", "回复我", "提到我"]
     
+    private let userInfoContainerView = UIView()
+    
     let api = SmthAPI()
     let setting = AppSetting.sharedSetting
 
@@ -22,11 +24,33 @@ class UserViewController: UITableViewController {
         tableView.estimatedRowHeight = 44
         tableView.rowHeight = UITableViewAutomaticDimension
         
+        if let username = setting.username {
+            SMUserInfoUtil.querySMUser(for: username) { (user) in
+                if let user = user {
+                    self.userInfoContainerView.frame = CGRect(x: 0, y: 0, width: UIScreen.screenWidth(), height: UIScreen.screenWidth() * 3 / 4)
+                    self.tableView.tableHeaderView = self.userInfoContainerView
+                    self.addUserInfoView(user: user)
+                }
+                
+            }
+        }
+        
         // add observer to font size change
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(preferredFontSizeChanged(notification:)),
                                                name: .UIContentSizeCategoryDidChange,
                                                object: nil)
+    }
+    
+    func addUserInfoView(user: SMUser) {
+        let userInfoVC = UserInfoViewController()
+        userInfoVC.user = user
+        userInfoVC.delegate = self
+        userInfoVC.willMove(toParentViewController: self)
+        userInfoVC.view.frame.size = userInfoContainerView.bounds.size
+        userInfoContainerView.addSubview(userInfoVC.view)
+        addChildViewController(userInfoVC)
+        userInfoVC.didMove(toParentViewController: self)
     }
 
     override func didReceiveMemoryWarning() {
@@ -54,16 +78,20 @@ class UserViewController: UITableViewController {
     func preferredFontSizeChanged(notification: Notification) {
         tableView.reloadData()
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 1:
+        case 0:
             return labelContents.count
         default:
             return 1
@@ -73,24 +101,22 @@ class UserViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath {
         case IndexPath(row: 0, section: 0):
-            tableView.deselectRow(at: indexPath, animated: true)
-        case IndexPath(row: 0, section: 1):
             let mbvc = MailBoxViewController()
             mbvc.inbox = true
             show(mbvc, sender: self)
-        case IndexPath(row: 1, section: 1):
+        case IndexPath(row: 1, section: 0):
             let mbvc = MailBoxViewController()
             mbvc.inbox = false
             show(mbvc, sender: self)
-        case IndexPath(row: 2, section: 1):
+        case IndexPath(row: 2, section: 0):
             let rvc = ReminderViewController()
             rvc.replyMe = true
             show(rvc, sender: self)
-        case IndexPath(row: 3, section: 1):
+        case IndexPath(row: 3, section: 0):
             let rvc = ReminderViewController()
             rvc.replyMe = false
             show(rvc, sender: self)
-        case IndexPath(row: 0, section: 2):
+        case IndexPath(row: 0, section: 1):
             let storyBoard = UIStoryboard(name: "Settings", bundle: nil)
             let settingsVC = storyBoard.instantiateViewController(withIdentifier: "SettingsViewController")
             show(settingsVC, sender: self)
@@ -101,13 +127,6 @@ class UserViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if indexPath.section == 0 {
-            let cell = UITableViewCell(style: .default, reuseIdentifier: "AvatarViewCell")
-            cell.textLabel?.text = setting.username
-            cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .title1)
-            return cell
-        }
-        
         let cell: UITableViewCell
         if let newCell = tableView.dequeueReusableCell(withIdentifier: kLabelIdentifier) {
             cell = newCell
@@ -116,12 +135,12 @@ class UserViewController: UITableViewController {
         }
         // Configure the cell...
         switch indexPath {
-        case let index where index.section == 1:
+        case let index where index.section == 0:
             let flag = (index.row == 0 && setting.mailCount > 0)
             || (index.row == 2 && setting.replyCount > 0)
             || (index.row == 3 && setting.referCount > 0)
             cell.textLabel?.attributedText = attrTextFromString(string: labelContents[index.row], withNewFlag: flag)
-        case let index where index.section == 2:
+        case let index where index.section == 1:
             cell.textLabel?.attributedText = attrTextFromString(string: "设置", withNewFlag: false)
         default:
             cell.textLabel?.text = nil
@@ -188,6 +207,24 @@ class UserViewController: UITableViewController {
                     self.tabBarController?.selectedIndex = 0
                 }
             }
+        }
+    }
+}
+
+extension UserViewController: UserInfoViewControllerDelegate {
+    
+    func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
+        
+    }
+    
+    func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem) {
+        if let userID = controller.user?.id {
+            dismiss(animated: true, completion: nil)
+            let cevc = ComposeEmailController()
+            cevc.preReceiver = userID
+            let navigationController = UINavigationController(rootViewController: cevc)
+            navigationController.modalPresentationStyle = .formSheet
+            present(navigationController, animated: true, completion: nil)
         }
     }
 }

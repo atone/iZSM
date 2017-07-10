@@ -26,7 +26,7 @@ class AboutViewController: UITableViewController {
             object: nil)
 
         let width = UIScreen.screenWidth() < UIScreen.screenHeight() ? UIScreen.screenWidth() : UIScreen.screenHeight()
-        let logoView = LogoView(frame: CGRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(width)))
+        let logoView = LogoView(frame: CGRect(x: 0, y: 0, width: width, height: width * 3 / 4))
         tableView.tableHeaderView = logoView
     }
 

@@ -93,7 +93,9 @@ class FavListViewController: BaseTableViewController {
                 SVProgressHUD.dismiss()
                 if self.api.errorCode == 0 {
                     SVProgressHUD.showSuccess(withStatus: "添加成功")
-                    self.fetchData()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.fetchData()
+                    }
                 } else if self.api.errorCode == 10319 {
                     SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")
                 } else if self.api.errorDescription != nil && self.api.errorDescription != "" {

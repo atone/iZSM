@@ -41,19 +41,22 @@ class ArticleContentViewController: UITableViewController {
                            setting.articleCountPerSection)
     }
     
-    var boardID: String?
-    var boardName: String? // if fromTopTen, this will not be set, so we must query this using api
-    var articleID: Int?
-    var fromTopTen: Bool = false
-    var section: Int = 0 {
+    fileprivate var section: Int = 0 {
         didSet {
             currentSection = section
             currentForwardNumber = section * setting.articleCountPerSection
             currentBackwardNumber = section * setting.articleCountPerSection
         }
     }
-    var row: Int = 0
+    fileprivate var row: Int = 0
+    fileprivate var soloUser: String?
     
+    var boardID: String?
+    var boardName: String? // if fromTopTen, this will not be set, so we must query this using api
+    var articleID: Int?
+    var fromTopTen: Bool = false
+    
+    // MARK: - ViewController Related
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(ArticleContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)
@@ -71,83 +74,69 @@ class ArticleContentViewController: UITableViewController {
         footer = MJRefreshAutoNormalFooter(refreshingTarget: self, refreshingAction: #selector(fetchMoreData))
         tableView.mj_footer = footer
         SVProgressHUD.show()
-        fetchData(resetSection: false, restorePosition: true)
+        restorePosition()
+        fetchData(restorePosition: true)
     }
     
-    func refreshAction() {
-        if currentBackwardNumber > 0 {
-            fetchPrevData()
-        } else {
-            fetchData(resetSection: true, restorePosition: false)
+    override func viewWillDisappear(_ animated: Bool) {
+        if self.soloUser == nil { // 只看某人模式下，不保存位置
+            savePosition()
+        }
+        super.viewWillDisappear(animated)
+    }
+    
+    fileprivate func restorePosition() {
+        if let boardID = self.boardID, let articleID = self.articleID,
+            let result = ArticleReadStatusUtil.getStatus(boardID: boardID, articleID: articleID)
+        {
+            self.section = result.section
+            self.row = result.row
         }
     }
     
-    func tapPageButton(sender: UIBarButtonItem) {
-        let pageListViewController = PageListViewController()
-        let height = min(CGFloat(44 * totalSection), UIScreen.screenHeight() / 2)
-        pageListViewController.preferredContentSize = CGSize(width: 200, height: height)
-        pageListViewController.modalPresentationStyle = .popover
-        pageListViewController.currentPage = currentSection
-        pageListViewController.totalPage = totalSection
-        pageListViewController.delegate = self
-        let presentationCtr = pageListViewController.presentationController as! UIPopoverPresentationController
-        presentationCtr.barButtonItem = navigationItem.rightBarButtonItems?.last
-        presentationCtr.backgroundColor = UIColor.white
-        presentationCtr.delegate = self
-        present(pageListViewController, animated: true, completion: nil)
+    fileprivate func savePosition() {
+        let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + 64)
+        if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
+            ArticleReadStatusUtil.saveStatus(section: currentSection,
+                                             row: indexPath.row,
+                                             boardID: boardID!,
+                                             articleID: articleID!)
+        }
     }
     
-    func action(sender: UIBarButtonItem) {
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        if fromTopTen {
-            if let boardID = self.boardID, let boardName = self.boardName {
-                let gotoBoardAction = UIAlertAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] action in
-                    let alvc = ArticleListViewController()
-                    alvc.boardID = boardID
-                    alvc.boardName = boardName
-                    alvc.hidesBottomBarWhenPushed = true
-                    self.show(alvc, sender: self)
-                }
-                actionSheet.addAction(gotoBoardAction)
-            }
-        }
-        if let boardID = self.boardID, let articleID = self.articleID {
-            let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] action in
-                let urlString: String
-                switch self.setting.displayMode {
-                case .nForum:
-                    urlString = "http://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
-                case .www2:
-                    urlString = "http://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
-                case .mobile:
-                    urlString = "http://m.newsmth.net/article/\(boardID)/\(articleID)"
-                }
-                let webViewController = SFSafariViewController(url: URL(string: urlString)!)
-                self.present(webViewController, animated: true, completion: nil)
-            }
-            actionSheet.addAction(openAction)
-        }
-        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-        actionSheet.popoverPresentationController?.barButtonItem = sender
-        present(actionSheet, animated: true, completion: nil)
-    }
-    
-    func fetchData(resetSection: Bool, restorePosition: Bool) {
+    // MARK: - Fetch Data
+    func fetchData(restorePosition: Bool) {
         self.smarticles.removeAll()
-        if resetSection {
-            self.currentSection = 0
-            self.currentForwardNumber = 0
-            self.currentBackwardNumber = 0
-        }
         if let boardID = self.boardID, let articleID = self.articleID {
             networkActivityIndicatorStart()
             self.tableView.mj_footer.isHidden = true
             DispatchQueue.global().async {
-                let smArticles = self.api.getThreadContentInBoard(boardID: boardID,
-                                                                  articleID: articleID,
-                                                                  threadRange: self.forwardThreadRange,
-                                                                  replyMode: self.setting.sortMode)
-                let totalArticleNumber = self.api.getLastThreadCount()
+                var smArticles = [SMArticle]()
+                if let soloUser = self.soloUser { // 只看某人模式
+                    while smArticles.count < self.setting.articleCountPerSection
+                        && self.currentForwardNumber < self.totalArticleNumber
+                    {
+                        if let articles = self.api.getThreadContentInBoard(boardID: boardID,
+                                                                           articleID: articleID,
+                                                                           threadRange: self.forwardThreadRange,
+                                                                           replyMode: self.setting.sortMode)
+                        {
+                            smArticles += articles.filter({ $0.authorID == soloUser })
+                            self.currentForwardNumber += articles.count
+                            self.totalArticleNumber = self.api.getLastThreadCount()
+                        }
+                    }
+                } else {  // 正常模式
+                    if let articles = self.api.getThreadContentInBoard(boardID: boardID,
+                                                                       articleID: articleID,
+                                                                       threadRange: self.forwardThreadRange,
+                                                                       replyMode: self.setting.sortMode)
+                    {
+                        smArticles += articles
+                        self.currentForwardNumber += articles.count
+                        self.totalArticleNumber = self.api.getLastThreadCount()
+                    }
+                }
                 
                 if self.fromTopTen && self.boardName == nil { // get boardName
                     SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (boardInfo) in
@@ -159,11 +148,9 @@ class ArticleContentViewController: UITableViewController {
                     networkActivityIndicatorStop()
                     self.tableView.mj_header.endRefreshing()
                     SVProgressHUD.dismiss()
-                    if let smArticles = smArticles {
+                    if smArticles.count > 0 {
                         self.tableView.mj_footer.isHidden = false
                         self.smarticles.append(smArticles)
-                        self.currentForwardNumber += smArticles.count
-                        self.totalArticleNumber = totalArticleNumber
                         self.tableView.reloadData()
                         if restorePosition {
                             if self.row < smArticles.count {
@@ -229,18 +216,37 @@ class ArticleContentViewController: UITableViewController {
         if let boardID = self.boardID, let articleID = self.articleID {
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
-                let smArticles = self.api.getThreadContentInBoard(boardID: boardID,
-                                                                  articleID: articleID,
-                                                                  threadRange: self.forwardThreadRange,
-                                                                  replyMode: self.setting.sortMode)
-                let totalArticleNumber = self.api.getLastThreadCount()
+                var smArticles = [SMArticle]()
+                if let soloUser = self.soloUser { // 只看某人模式
+                    while smArticles.count < self.setting.articleCountPerSection
+                        && self.currentForwardNumber < self.totalArticleNumber
+                    {
+                        if let articles = self.api.getThreadContentInBoard(boardID: boardID,
+                                                                           articleID: articleID,
+                                                                           threadRange: self.forwardThreadRange,
+                                                                           replyMode: self.setting.sortMode)
+                        {
+                            smArticles += articles.filter({ $0.authorID == soloUser })
+                            self.currentForwardNumber += articles.count
+                            self.totalArticleNumber = self.api.getLastThreadCount()
+                        }
+                    }
+                } else { // 正常模式
+                    if let articles = self.api.getThreadContentInBoard(boardID: boardID,
+                                                                       articleID: articleID,
+                                                                       threadRange: self.forwardThreadRange,
+                                                                       replyMode: self.setting.sortMode)
+                    {
+                        smArticles += articles
+                        self.currentForwardNumber += articles.count
+                        self.totalArticleNumber = self.api.getLastThreadCount()
+                    }
+                }
                 
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
-                    if let smArticles = smArticles {
+                    if smArticles.count > 0 {
                         self.smarticles.append(smArticles)
-                        self.currentForwardNumber += smArticles.count
-                        self.totalArticleNumber = totalArticleNumber
                         self.tableView.reloadData()
                     }
                     self.api.displayErrorIfNeeded()
@@ -257,19 +263,9 @@ class ArticleContentViewController: UITableViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + 64)
-        if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
-            ArticleReadStatusUtil.saveStatus(section: currentSection,
-                                             row: indexPath.row,
-                                             boardID: boardID!,
-                                             articleID: articleID!)
-        }
-        
-        super.viewWillDisappear(animated)
-    }
+
     
-    // MARK: - Table view data source
+    // MARK: - TableView Data Source and Delegate
     override func numberOfSections(in tableView: UITableView) -> Int {
         return smarticles.count
     }
@@ -310,12 +306,73 @@ class ArticleContentViewController: UITableViewController {
             }
         }
     }
+    
+    // MARK: - Actions
+    func refreshAction() {
+        if soloUser == nil && currentBackwardNumber > 0 {
+            fetchPrevData()
+        } else {
+            section = 0
+            fetchData(restorePosition: false)
+        }
+    }
+    
+    func action(sender: UIBarButtonItem) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if fromTopTen {
+            if let boardID = self.boardID, let boardName = self.boardName {
+                let gotoBoardAction = UIAlertAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] action in
+                    let alvc = ArticleListViewController()
+                    alvc.boardID = boardID
+                    alvc.boardName = boardName
+                    alvc.hidesBottomBarWhenPushed = true
+                    self.show(alvc, sender: self)
+                }
+                actionSheet.addAction(gotoBoardAction)
+            }
+        }
+        if let boardID = self.boardID, let articleID = self.articleID {
+            let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] action in
+                let urlString: String
+                switch self.setting.displayMode {
+                case .nForum:
+                    urlString = "http://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
+                case .www2:
+                    urlString = "http://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
+                case .mobile:
+                    urlString = "http://m.newsmth.net/article/\(boardID)/\(articleID)"
+                }
+                let webViewController = SFSafariViewController(url: URL(string: urlString)!)
+                self.present(webViewController, animated: true, completion: nil)
+            }
+            actionSheet.addAction(openAction)
+        }
+        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        actionSheet.popoverPresentationController?.barButtonItem = sender
+        present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func tapPageButton(sender: UIBarButtonItem) {
+        let pageListViewController = PageListViewController()
+        let height = min(CGFloat(44 * totalSection), UIScreen.screenHeight() / 2)
+        pageListViewController.preferredContentSize = CGSize(width: 200, height: height)
+        pageListViewController.modalPresentationStyle = .popover
+        pageListViewController.currentPage = currentSection
+        pageListViewController.totalPage = totalSection
+        pageListViewController.delegate = self
+        let presentationCtr = pageListViewController.presentationController as! UIPopoverPresentationController
+        presentationCtr.barButtonItem = navigationItem.rightBarButtonItems?.last
+        presentationCtr.backgroundColor = UIColor.white
+        presentationCtr.delegate = self
+        present(pageListViewController, animated: true, completion: nil)
+    }
 }
 
+// MARK: - Extensions for ArticleContentViewController
 extension ArticleContentViewController: PageListViewControllerDelegate {
     func pageListViewController(_ controller: PageListViewController, currentPageChangedTo currentPage: Int) {
         section = currentPage
-        fetchData(resetSection: false, restorePosition: false)
+        fetchData(restorePosition: false)
         dismiss(animated: true, completion: nil)
     }
 }
@@ -467,6 +524,26 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     func cell(_ cell: ArticleContentCell, didClickMore sender: UIView?) {
         
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        if let currentUser = cell.article?.authorID {
+            let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
+            let soloAction = UIAlertAction(title: soloTitle, style: .default) { (action) in
+                if self.soloUser == nil {
+                    self.soloUser = currentUser
+                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = false
+                    self.savePosition()
+                    self.section = 0
+                    self.fetchData(restorePosition: false)
+                } else {
+                    self.soloUser = nil
+                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = true
+                    self.restorePosition()
+                    self.fetchData(restorePosition: true)
+                }
+            }
+            actionSheet.addAction(soloAction)
+        }
+        
         let copyArticleAction = UIAlertAction(title: "复制文章", style: .default) { action in
             UIPasteboard.general.string = cell.article!.body
             SVProgressHUD.showSuccess(withStatus: "复制成功")

@@ -187,8 +187,9 @@ class UserViewController: UITableViewController {
         DispatchQueue.global().async {
             self.api.logoutBBS()
             let realm = try! Realm()
+            let readStatus = realm.objects(ArticleReadStatus.self)
             try! realm.write {
-                realm.deleteAll()
+                realm.delete(readStatus)
             }
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()

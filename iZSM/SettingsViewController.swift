@@ -76,8 +76,9 @@ class SettingsViewController: UITableViewController {
         setting.rememberLast = sender.isOn
         if !sender.isOn {
             let realm = try! Realm()
+            let readStatus = realm.objects(ArticleReadStatus.self)
             try! realm.write {
-                realm.deleteAll()
+                realm.delete(readStatus)
             }
         }
     }
@@ -140,6 +141,10 @@ class SettingsViewController: UITableViewController {
             DispatchQueue.global().async {
                 self.cache?.memoryCache.removeAllObjects()
                 self.cache?.diskCache.removeAllObjects()
+                let realm = try! Realm()
+                try! realm.write {
+                    realm.deleteAll()
+                }
                 DispatchQueue.main.async {
                     SVProgressHUD.dismiss()
                     SVProgressHUD.showSuccess(withStatus: "清除成功")

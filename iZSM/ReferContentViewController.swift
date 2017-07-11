@@ -123,11 +123,6 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
             acvc.fromTopTen = true
             acvc.hidesBottomBarWhenPushed = true
             
-            if let result = ArticleReadStatusUtil.getStatus(boardID: reference.boardID, articleID: reference.groupID) {
-                acvc.section = result.section
-                acvc.row = result.row
-            }
-            
             self.show(acvc, sender: sender)
         }
     }

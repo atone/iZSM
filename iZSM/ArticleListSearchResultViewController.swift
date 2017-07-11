@@ -128,11 +128,6 @@ class ArticleListSearchResultViewController: BaseTableViewController {
             threads[indexPath.section][indexPath.row] = readThread
         }
         
-        if let result = ArticleReadStatusUtil.getStatus(boardID: thread.boardID, articleID: thread.id) {
-            acvc.section = result.section
-            acvc.row = result.row
-        }
-        
         show(acvc, sender: self)
     }
 }
@@ -153,11 +148,6 @@ extension ArticleListSearchResultViewController: UIViewControllerPreviewingDeleg
         acvc.boardName = thread.boardName
         acvc.title = thread.subject
         acvc.hidesBottomBarWhenPushed = true
-        
-        if let result = ArticleReadStatusUtil.getStatus(boardID: thread.boardID, articleID: thread.id) {
-            acvc.section = result.section
-            acvc.row = result.row
-        }
         
         // Set the source rect to the cell frame, so surrounding elements are blurred.
         previewingContext.sourceRect = cell.frame

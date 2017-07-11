@@ -93,11 +93,6 @@ class HotTableViewController: BaseTableViewController {
         acvc.fromTopTen = true
         acvc.hidesBottomBarWhenPushed = true
         
-        if let result = ArticleReadStatusUtil.getStatus(boardID: thread.boardID, articleID: thread.id) {
-            acvc.section = result.section
-            acvc.row = result.row
-        }
-        
         show(acvc, sender: self)
     }
 }
@@ -116,11 +111,6 @@ extension HotTableViewController : UIViewControllerPreviewingDelegate {
         acvc.title = thread.subject
         acvc.fromTopTen = true
         acvc.hidesBottomBarWhenPushed = true
-        
-        if let result = ArticleReadStatusUtil.getStatus(boardID: thread.boardID, articleID: thread.id) {
-            acvc.section = result.section
-            acvc.row = result.row
-        }
 
         // Set the source rect to the cell frame, so surrounding elements are blurred.
         previewingContext.sourceRect = cell.frame

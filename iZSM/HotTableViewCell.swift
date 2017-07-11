@@ -53,7 +53,7 @@ class HotTableViewCell: UITableViewCell {
     /// Update font size and color
     func updateUI() {
         titleLabel.textColor = UIColor.black
-        boardLabel.textColor = UIApplication.shared.keyWindow?.tintColor
+        boardLabel.textColor = UIColor.gray
         authorLabel.textColor = UIApplication.shared.keyWindow?.tintColor
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
         titleLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
@@ -63,10 +63,12 @@ class HotTableViewCell: UITableViewCell {
     
     var hotThread: SMHotThread? {
         didSet {
-            titleLabel.text = hotThread!.subject + " (\(hotThread!.count))"
-            boardLabel.text = hotThread!.boardID
-            authorLabel.text = hotThread!.authorID
-            updateUI()
+            if let hotThread = hotThread {
+                titleLabel.text = hotThread.subject + " (\(hotThread.count))"
+                boardLabel.text = hotThread.boardID
+                authorLabel.text = hotThread.authorID
+                updateUI()
+            }
         }
     }
 

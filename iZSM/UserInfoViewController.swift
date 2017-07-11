@@ -57,6 +57,11 @@ class UserInfoViewController: UIViewController {
         setupContent()
     }
     
+    func updateUserInfoView(with user: SMUser?) {
+        self.user = user
+        setupContent()
+    }
+    
     private func setupUI() {
         preferredContentSize = CGSize(width: width, height: height)
         view.backgroundColor = UIColor.white
@@ -196,6 +201,7 @@ class UserInfoViewController: UIViewController {
     
     private func setupContent() {
         if let user = user {
+            setContent(hidden: false)
             let genderSymbol = user.gender == 0 ? "♂" : "♀"
             idLabel.text = "\(user.id) \(genderSymbol)"
             nickLabel.text = user.nick
@@ -215,7 +221,27 @@ class UserInfoViewController: UIViewController {
             scoreContentLabel.text = "\(user.score)"
             loginContentLabel.text = "\(user.loginCount)"
             lastLoginLabel.text = "上次登录: \(user.lastLoginTime.shortDateString)"
+        } else {
+            avatarImageView.image = #imageLiteral(resourceName: "face_default")
+            backgroundImageView.image = #imageLiteral(resourceName: "face_default")
+            setContent(hidden: true)
         }
+    }
+    
+    private func setContent(hidden: Bool) {
+        avatarImageView.isHidden = hidden
+        idLabel.isHidden = hidden
+        nickLabel.isHidden = hidden
+        titleLabel.isHidden = hidden
+        levelLabel.isHidden = hidden
+        postsLabel.isHidden = hidden
+        scoreLabel.isHidden = hidden
+        loginLabel.isHidden = hidden
+        titleContentLabel.isHidden = hidden
+        levelContentLabel.isHidden = hidden
+        postsContentLabel.isHidden = hidden
+        scoreContentLabel.isHidden = hidden
+        loginContentLabel.isHidden = hidden
     }
     
     @objc private func clickCompose(sender: UIBarButtonItem) {

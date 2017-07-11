@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 import SVProgressHUD
 
 class UserViewController: UITableViewController {
@@ -14,7 +15,7 @@ class UserViewController: UITableViewController {
     private let kLabelIdentifier = "LabelIdentifier"
     private let labelContents = ["收件箱", "发件箱", "回复我", "提到我"]
     
-    private let userInfoContainerView = UIView()
+    private let userInfoVC = UserInfoViewController()
     
     let api = SmthAPI()
     let setting = AppSetting.sharedSetting
@@ -23,17 +24,8 @@ class UserViewController: UITableViewController {
         super.viewDidLoad()
         tableView.estimatedRowHeight = 44
         tableView.rowHeight = UITableViewAutomaticDimension
-        
-        if let username = setting.username {
-            SMUserInfoUtil.querySMUser(for: username) { (user) in
-                if let user = user {
-                    self.userInfoContainerView.frame = CGRect(x: 0, y: 0, width: UIScreen.screenWidth(), height: UIScreen.screenWidth() * 3 / 4)
-                    self.tableView.tableHeaderView = self.userInfoContainerView
-                    self.addUserInfoView(user: user)
-                }
-                
-            }
-        }
+        tableView.reloadData()
+        setupUserInfoView()
         
         // add observer to font size change
         NotificationCenter.default.addObserver(self,
@@ -42,15 +34,28 @@ class UserViewController: UITableViewController {
                                                object: nil)
     }
     
-    func addUserInfoView(user: SMUser) {
-        let userInfoVC = UserInfoViewController()
-        userInfoVC.user = user
+    func setupUserInfoView() {
         userInfoVC.delegate = self
         userInfoVC.willMove(toParentViewController: self)
-        userInfoVC.view.frame.size = userInfoContainerView.bounds.size
-        userInfoContainerView.addSubview(userInfoVC.view)
+        tableView.tableHeaderView = userInfoVC.view
         addChildViewController(userInfoVC)
         userInfoVC.didMove(toParentViewController: self)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        userInfoVC.view.frame = CGRect(x: 0,
+                                       y: 0,
+                                       width: UIScreen.screenWidth(),
+                                       height: UIScreen.screenWidth() * 3 / 4)
+    }
+    
+    func updateUserInfoView() {
+        if let username = setting.username {
+            SMUserInfoUtil.querySMUser(for: username) { (user) in
+                self.userInfoVC.updateUserInfoView(with: user)
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -65,7 +70,7 @@ class UserViewController: UITableViewController {
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRow, animated: true)
         }
-        
+        updateUserInfoView()
         checkUnreadMessage()
     }
     
@@ -77,10 +82,6 @@ class UserViewController: UITableViewController {
     // handle font size change
     func preferredFontSizeChanged(notification: Notification) {
         tableView.reloadData()
-    }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
     }
 
     // MARK: - Table view data source
@@ -185,6 +186,10 @@ class UserViewController: UITableViewController {
         networkActivityIndicatorStart()
         DispatchQueue.global().async {
             self.api.logoutBBS()
+            let realm = try! Realm()
+            try! realm.write {
+                realm.deleteAll()
+            }
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
                 if self.api.errorCode == 0 {
@@ -197,11 +202,12 @@ class UserViewController: UITableViewController {
                 self.setting.username = nil
                 self.setting.password = nil
                 self.setting.accessToken = nil
-                for navvc in self.tabBarController?.viewControllers as! [UINavigationController] {
-                    if let basevc = navvc.visibleViewController as? BaseTableViewController {
-                        basevc.clearContent()
-                    }
-                }
+                self.setting.mailCount = 0
+                self.setting.replyCount = 0
+                self.setting.referCount = 0
+                self.userInfoVC.updateUserInfoView(with: nil)
+                NotificationCenter.default.post(name: BaseTableViewController.kNeedRefreshNotification,
+                                                object: nil)
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self.tabBarController?.selectedIndex = 0

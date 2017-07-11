@@ -19,6 +19,7 @@ class ArticleContentViewController: UITableViewController {
     private let kArticleContentCellIdentifier = "ArticleContentCell"
     
     fileprivate var isScrollingStart = true // detect whether scrolling is end
+    fileprivate var isFetchingData = false // whether the app is fetching data
     
     fileprivate var smarticles = [[SMArticle]]()
     
@@ -106,7 +107,10 @@ class ArticleContentViewController: UITableViewController {
     
     // MARK: - Fetch Data
     func fetchData(restorePosition: Bool) {
-        self.smarticles.removeAll()
+        if self.isFetchingData {
+            return
+        }
+        self.isFetchingData = true
         if let boardID = self.boardID, let articleID = self.articleID {
             networkActivityIndicatorStart()
             self.tableView.mj_footer.isHidden = true
@@ -145,9 +149,12 @@ class ArticleContentViewController: UITableViewController {
                 }
                 
                 DispatchQueue.main.async {
+                    self.isFetchingData = false
                     networkActivityIndicatorStop()
                     self.tableView.mj_header.endRefreshing()
+                    self.tableView.mj_footer.endRefreshing()
                     SVProgressHUD.dismiss()
+                    self.smarticles.removeAll()
                     if smArticles.count > 0 {
                         self.tableView.mj_footer.isHidden = false
                         self.smarticles.append(smArticles)
@@ -168,6 +175,7 @@ class ArticleContentViewController: UITableViewController {
                                                        animated: false)
                         }
                     } else {
+                        self.tableView.reloadData()
                         SVProgressHUD.showError(withStatus: "指定的文章不存在\n或链接错误")
                     }
                     self.api.displayErrorIfNeeded()
@@ -175,11 +183,16 @@ class ArticleContentViewController: UITableViewController {
             }
         } else {
             self.tableView.mj_header.endRefreshing()
+            self.tableView.mj_footer.endRefreshing()
             SVProgressHUD.dismiss()
         }
     }
     
     func fetchPrevData() {
+        if self.isFetchingData {
+            return
+        }
+        self.isFetchingData = true
         if let boardID = self.boardID, let articleID = self.articleID {
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
@@ -190,6 +203,7 @@ class ArticleContentViewController: UITableViewController {
                 let totalArticleNumber = self.api.getLastThreadCount()
                 
                 DispatchQueue.main.async {
+                    self.isFetchingData = false
                     networkActivityIndicatorStop()
                     if let smArticles = smArticles {
                         self.smarticles.insert(smArticles, at: 0)
@@ -205,14 +219,20 @@ class ArticleContentViewController: UITableViewController {
                     }
                     self.api.displayErrorIfNeeded()
                     self.tableView.mj_header.endRefreshing()
+                    self.tableView.mj_footer.endRefreshing()
                 }
             }
         } else {
             tableView.mj_header.endRefreshing()
+            tableView.mj_footer.endRefreshing()
         }
     }
     
     func fetchMoreData() {
+        if self.isFetchingData {
+            return
+        }
+        self.isFetchingData = true
         if let boardID = self.boardID, let articleID = self.articleID {
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
@@ -244,12 +264,14 @@ class ArticleContentViewController: UITableViewController {
                 }
                 
                 DispatchQueue.main.async {
+                    self.isFetchingData = false
                     networkActivityIndicatorStop()
                     if smArticles.count > 0 {
                         self.smarticles.append(smArticles)
                         self.tableView.reloadData()
                     }
                     self.api.displayErrorIfNeeded()
+                    self.tableView.mj_header.endRefreshing()
                     self.tableView.mj_footer.endRefreshing()
                     if self.totalArticleNumber == self.currentForwardNumber {
                         self.footer?.setTitle("没有新帖子了", for: MJRefreshState.idle)
@@ -259,6 +281,7 @@ class ArticleContentViewController: UITableViewController {
                 }
             }
         } else {
+            tableView.mj_header.endRefreshing()
             tableView.mj_footer.endRefreshing()
         }
     }

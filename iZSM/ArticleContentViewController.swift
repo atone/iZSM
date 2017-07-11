@@ -293,6 +293,8 @@ class ArticleContentViewController: UITableViewController {
         cell.setData(displayFloor: floor, smarticle: smarticle, delegate: self)
         cell.preservesSuperviewLayoutMargins = true
         cell.fd_enforceFrameLayout = true
+        cell.leftMargin = tableView.layoutMargins.left
+        cell.rightMargin = tableView.layoutMargins.right
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

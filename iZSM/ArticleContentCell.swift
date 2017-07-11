@@ -49,6 +49,9 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     private let margin2: CGFloat = 2
     private let margin3: CGFloat = 8
     
+    var leftMargin: CGFloat = 0 //get from viewcontroller to prevent bug
+    var rightMargin: CGFloat = 0 //get from viewcontroller to prevent bug
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
@@ -145,14 +148,14 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        avatarImageView.frame = CGRect(x: layoutMargins.left, y: buttonHeight - avatarWidth / 2, width: avatarWidth, height: avatarWidth)
+        avatarImageView.frame = CGRect(x: leftMargin, y: buttonHeight - avatarWidth / 2, width: avatarWidth, height: avatarWidth)
         
         authorLabel.sizeToFit()
-        authorLabel.frame = CGRect(origin: CGPoint(x: layoutMargins.left + margin3 + avatarWidth, y: margin1), size: authorLabel.bounds.size)
+        authorLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1), size: authorLabel.bounds.size)
         floorAndTimeLabel.sizeToFit()
-        floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: layoutMargins.left + margin3 + avatarWidth, y: margin1 + authorLabel.frame.height + margin2), size: floorAndTimeLabel.bounds.size)
-        replyLabel.frame = CGRect(x: UIScreen.screenWidth() - layoutMargins.right - margin3 - replyButtonWidth - moreButtonWidth, y: buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
-        moreLabel.frame = CGRect(x: UIScreen.screenWidth() - layoutMargins.right - moreButtonWidth, y: buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
+        floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 + authorLabel.frame.height + margin2), size: floorAndTimeLabel.bounds.size)
+        replyLabel.frame = CGRect(x: UIScreen.screenWidth() - rightMargin - margin3 - replyButtonWidth - moreButtonWidth, y: buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
+        moreLabel.frame = CGRect(x: UIScreen.screenWidth() - rightMargin - moreButtonWidth, y: buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
         
         let size = contentView.bounds.size
         var imageLength: CGFloat = 0
@@ -162,7 +165,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
         }
-        contentLabel.frame = CGRect(x: layoutMargins.left, y: buttonHeight * 2 + margin3, width: UIScreen.screenWidth() - layoutMargins.left - layoutMargins.right, height: size.height - buttonHeight * 2 - margin3 - margin3 - imageLength + 1)
+        contentLabel.frame = CGRect(x: leftMargin, y: buttonHeight * 2 + margin3, width: UIScreen.screenWidth() - leftMargin - rightMargin, height: size.height - buttonHeight * 2 - margin3 - margin3 - imageLength)
         
         if imageViews.count == 1 {
             imageViews.first!.frame = CGRect(x: 0, y: size.height - size.width, width: size.width, height: size.width)
@@ -179,7 +182,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     //MARK: - Calculate Fitting Size
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let boundingSize = CGSize(width: size.width - layoutMargins.left - layoutMargins.right, height: size.height)
+        let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: size.height)
         let rect = TTTAttributedLabel.sizeThatFitsAttributedString(article!.attributedBody, withConstraints: boundingSize, limitedToNumberOfLines: 0)
         var imageLength: CGFloat = 0
         if imageViews.count == 1 {

@@ -14,10 +14,15 @@ class BaseTableViewController: UITableViewController {
     let setting = AppSetting.sharedSetting
     
     private var needRefresh = true
+    static let kNeedRefreshNotification = Notification.Name("NeedRefreshContentNotification")
     
     // subclass need override this and add clear content
     func clearContent() {
         needRefresh = true
+    }
+    
+    func needRefreshNotificationDidPosted(notification: Notification) {
+        clearContent()
     }
     
     func fetchMoreData() {
@@ -42,6 +47,11 @@ class BaseTableViewController: UITableViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(preferredFontSizeChanged(notification:)),
                                                name: .UIContentSizeCategoryDidChange,
+                                               object: nil)
+        // add observer to set need refresh
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(needRefreshNotificationDidPosted(notification:)),
+                                               name: BaseTableViewController.kNeedRefreshNotification,
                                                object: nil)
         
         // set extra cells hidden

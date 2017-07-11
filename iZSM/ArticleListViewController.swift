@@ -115,6 +115,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         searchController?.dimsBackgroundDuringPresentation = false
         searchController?.delegate = self
         searchController?.searchBar.delegate = self
+        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search,
                                            target: self,
                                            action: #selector(pressSearchButton(sender:)))
@@ -126,6 +127,10 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         if traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: view)
         }
+    }
+    
+    deinit {
+        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
     }
     
     override func clearContent() {

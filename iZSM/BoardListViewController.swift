@@ -88,7 +88,8 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         searchController?.dimsBackgroundDuringPresentation = false
         searchController?.delegate = self
         searchController?.searchBar.delegate = self
-        searchController?.hidesNavigationBarDuringPresentation = false
+        //searchController?.hidesNavigationBarDuringPresentation = false
+        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
         if boardID == 0 { //只在根目录下显示搜索
             let searchButton = UIBarButtonItem(barButtonSystemItem: .search,
                                                target: self,
@@ -99,6 +100,10 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         // add long press gesture recognizer
         tableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self,
                                                                     action: #selector(handleLongPress(gestureRecognizer:))))
+    }
+    
+    deinit {
+        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
     }
     
     override func clearContent() {

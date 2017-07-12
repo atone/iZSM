@@ -211,10 +211,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             imageView.removeFromSuperview()
         }
         imageViews.removeAll()
-        // notify the delegate
-        if imageAtt.count > 0 {
-            delegate?.cell(self, didLoadImageInfos: imageAtt)
-        }
+
         // add new image views
         for imageInfo in imageAtt {
             let imageView = UIImageView()
@@ -264,5 +261,4 @@ protocol ArticleContentCellDelegate {
     func cell(_ cell: ArticleContentCell, didClickReply sender: UIView?)
     func cell(_ cell: ArticleContentCell, didClickMore sender: UIView?)
     func cell(_ cell: ArticleContentCell, didClickUser sender: UIView?)
-    func cell(_ cell: ArticleContentCell, didLoadImageInfos infos: [ImageInfo])
 }

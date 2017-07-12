@@ -14,7 +14,6 @@ class AboutViewController: UITableViewController {
     @IBOutlet weak var rateLabel: UILabel!
     @IBOutlet weak var mailLabel: UILabel!
     @IBOutlet weak var websiteLabel: UILabel!
-    @IBOutlet weak var supportLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,7 +76,6 @@ class AboutViewController: UITableViewController {
         rateLabel.font = UIFont.preferredFont(forTextStyle: .body)
         mailLabel.font = UIFont.preferredFont(forTextStyle: .body)
         websiteLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        supportLabel.font = UIFont.preferredFont(forTextStyle: .body)
     }
 
     override func viewDidLayoutSubviews() {

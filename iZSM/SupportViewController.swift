@@ -9,7 +9,7 @@
 import UIKit
 import SafariServices
 
-class DonationViewController: UIViewController {
+class SupportViewController: UIViewController {
 
     @IBOutlet weak var textLabel: UILabel!
     
@@ -45,9 +45,13 @@ class DonationViewController: UIViewController {
             present(ac, animated: true)
         } else {
             let ac = UIAlertController(title: "保存成功", message: "最水木已经将微信二维码保存到您的相册中，请打开微信扫一扫并从相册中选择刚刚保存的二维码。再次感谢您对最水木的支持！", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "打开微信", style: .default, handler: { (action) in
-                UIApplication.shared.openURL(URL(string: "weixin://")!)
-            }))
+            if UIApplication.shared.canOpenURL(URL(string: "weixin://")!) {
+                ac.addAction(UIAlertAction(title: "打开微信", style: .default, handler: { (action) in
+                    UIApplication.shared.openURL(URL(string: "weixin://")!)
+                }))
+            } else {
+                ac.addAction(UIAlertAction(title: "好的", style: .default, handler: nil))
+            }
             ac.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel))
             present(ac, animated: true)
         }

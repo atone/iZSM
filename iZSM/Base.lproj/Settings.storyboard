@@ -343,7 +343,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GPC-4X-Cao" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1409" y="4375"/>
+            <point key="canvasLocation" x="1404" y="4375"/>
         </scene>
         <!--最水木-->
         <scene sceneID="U5I-Xs-3Pv">
@@ -419,30 +419,6 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="6e6-sO-Bau">
-                                        <rect key="frame" x="0.0" y="167" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" tableViewCell="6e6-sO-Bau" id="6XF-U9-43Z">
-                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="赞助最水木" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Ht-wW-22u">
-                                                    <rect key="frame" x="15" y="11" width="87" height="22"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="6Ht-wW-22u" firstAttribute="leading" secondItem="6XF-U9-43Z" secondAttribute="leadingMargin" id="DEu-Xm-tkM"/>
-                                                <constraint firstItem="6Ht-wW-22u" firstAttribute="bottom" secondItem="6XF-U9-43Z" secondAttribute="bottomMargin" id="KYs-9g-AgM"/>
-                                                <constraint firstItem="6Ht-wW-22u" firstAttribute="top" secondItem="6XF-U9-43Z" secondAttribute="topMargin" id="ln8-Pb-xVN"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="hBc-Fr-Xbh" kind="show" id="zHI-xx-bmD"/>
-                                        </connections>
-                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -454,7 +430,6 @@
                     <connections>
                         <outlet property="mailLabel" destination="SvJ-az-b6O" id="k7n-ni-D0w"/>
                         <outlet property="rateLabel" destination="Dbu-P5-4FN" id="e8I-FE-tNb"/>
-                        <outlet property="supportLabel" destination="6Ht-wW-22u" id="cRc-Dx-x0L"/>
                         <outlet property="websiteLabel" destination="NAj-6P-0vY" id="McL-q0-QIA"/>
                     </connections>
                 </tableViewController>
@@ -465,7 +440,7 @@
         <!--赞助最水木-->
         <scene sceneID="g7o-7m-Hu0">
             <objects>
-                <viewController title="赞助最水木" id="hBc-Fr-Xbh" customClass="DonationViewController" customModule="iZSM" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SupportViewController" title="赞助最水木" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hBc-Fr-Xbh" customClass="SupportViewController" customModule="iZSM" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2hm-Xy-5x4"/>
                         <viewControllerLayoutGuide type="bottom" id="FkB-NN-tPp"/>
@@ -534,7 +509,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LJb-LI-cyT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3980" y="4374.96251874063"/>
+            <point key="canvasLocation" x="3982" y="4375"/>
         </scene>
     </scenes>
     <resources>

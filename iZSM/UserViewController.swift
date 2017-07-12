@@ -95,8 +95,10 @@ class UserViewController: UITableViewController {
         switch section {
         case 0:
             return labelContents.count
+        case 1:
+            return 2
         default:
-            return 1
+            return 0
         }
     }
     
@@ -122,6 +124,10 @@ class UserViewController: UITableViewController {
             let storyBoard = UIStoryboard(name: "Settings", bundle: nil)
             let settingsVC = storyBoard.instantiateViewController(withIdentifier: "SettingsViewController")
             show(settingsVC, sender: self)
+        case IndexPath(row: 1, section: 1):
+            let storyBoard = UIStoryboard(name: "Settings", bundle: nil)
+            let supportVC = storyBoard.instantiateViewController(withIdentifier: "SupportViewController")
+            show(supportVC, sender: self)
         default:
             break
         }
@@ -142,8 +148,10 @@ class UserViewController: UITableViewController {
             || (index.row == 2 && setting.replyCount > 0)
             || (index.row == 3 && setting.referCount > 0)
             cell.textLabel?.attributedText = attrTextFromString(string: labelContents[index.row], withNewFlag: flag)
-        case let index where index.section == 1:
+        case IndexPath(row: 0, section: 1):
             cell.textLabel?.attributedText = attrTextFromString(string: "设置", withNewFlag: false)
+        case IndexPath(row: 1, section: 1):
+            cell.textLabel?.attributedText = attrTextFromString(string: "我要赞助", withNewFlag: false)
         default:
             cell.textLabel?.text = nil
         }

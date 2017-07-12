@@ -95,13 +95,20 @@ class ArticleContentViewController: UITableViewController {
         }
     }
     
-    fileprivate func savePosition() {
-        let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + 64)
-        if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
+    fileprivate func savePosition(currentRow :Int? = nil) {
+        if let currentRow = currentRow {
             ArticleReadStatusUtil.saveStatus(section: currentSection,
-                                             row: indexPath.row,
+                                             row: currentRow,
                                              boardID: boardID!,
                                              articleID: articleID!)
+        } else {
+            let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + 64)
+            if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
+                ArticleReadStatusUtil.saveStatus(section: currentSection,
+                                                 row: indexPath.row,
+                                                 boardID: boardID!,
+                                                 articleID: articleID!)
+            }
         }
     }
     
@@ -548,13 +555,13 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        if let currentUser = cell.article?.authorID {
+        if let currentUser = cell.article?.authorID, let currentIndexPath = tableView.indexPath(for: cell) {
             let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
             let soloAction = UIAlertAction(title: soloTitle, style: .default) { (action) in
                 if self.soloUser == nil {
                     self.soloUser = currentUser
                     self.navigationItem.rightBarButtonItems?.last?.isEnabled = false
-                    self.savePosition()
+                    self.savePosition(currentRow: currentIndexPath.row)
                     self.section = 0
                     self.fetchData(restorePosition: false)
                 } else {

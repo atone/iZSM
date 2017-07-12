@@ -206,7 +206,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             let imageView = UIImageView()
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
-            imageView.imageURL = imageInfo.thumbnailURL
+            imageView.setImageWith(imageInfo.thumbnailURL, placeholder: #imageLiteral(resourceName: "loading"))
             imageView.isUserInteractionEnabled = true
             let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapOnImage(recognizer:)))
             singleTap.numberOfTapsRequired = 1

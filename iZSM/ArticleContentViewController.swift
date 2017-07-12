@@ -457,6 +457,7 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
         if let userID = controller.user?.id, let boardID = controller.article?.boardID {
             dismiss(animated: true, completion: nil)
+            SVProgressHUD.show()
             SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (boardInfo) in
                 let searchResultController = ArticleListSearchResultViewController()
                 searchResultController.boardID = boardID

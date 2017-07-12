@@ -395,6 +395,7 @@ class ArticleContentViewController: UITableViewController {
                 let logo = self.getThumbnailImage() ?? #imageLiteral(resourceName: "Logo")
                 let activityViewController = UIActivityViewController(activityItems: [title, url, logo],
                                                                       applicationActivities: nil)
+                activityViewController.popoverPresentationController?.barButtonItem = sender
                 self.present(activityViewController, animated: true, completion: nil)
             }
             actionSheet.addAction(shareAction)

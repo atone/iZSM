@@ -119,6 +119,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(_ animated: Bool) {
         if !setting.eulaAgreed {
             let eulaViewController = UINavigationController(rootViewController: EulaViewController())
+            eulaViewController.modalPresentationStyle = .formSheet
             present(eulaViewController, animated: true, completion: nil)
         }
     }

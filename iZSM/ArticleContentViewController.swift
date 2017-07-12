@@ -558,6 +558,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         if let currentUser = cell.article?.authorID, let currentIndexPath = tableView.indexPath(for: cell) {
             let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
             let soloAction = UIAlertAction(title: soloTitle, style: .default) { (action) in
+                SVProgressHUD.show() // 切换场景，加入提示会比较好
                 if self.soloUser == nil {
                     self.soloUser = currentUser
                     self.navigationItem.rightBarButtonItems?.last?.isEnabled = false

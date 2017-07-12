@@ -402,6 +402,7 @@ class ArticleContentViewController: UITableViewController {
 extension ArticleContentViewController: PageListViewControllerDelegate {
     func pageListViewController(_ controller: PageListViewController, currentPageChangedTo currentPage: Int) {
         section = currentPage
+        SVProgressHUD.show()
         fetchData(restorePosition: false)
         dismiss(animated: true, completion: nil)
     }

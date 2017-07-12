@@ -10,6 +10,7 @@ import UIKit
 import SafariServices
 import SVProgressHUD
 import SnapKit
+import YYKit
 
 class ArticleContentViewController: UITableViewController {
     
@@ -51,8 +52,6 @@ class ArticleContentViewController: UITableViewController {
     }
     fileprivate var row: Int = 0
     fileprivate var soloUser: String?
-    
-    fileprivate var thumbnailImage: UIImage?
     
     var boardID: String?
     var boardName: String? // if fromTopTen, this will not be set, so we must query this using api
@@ -393,7 +392,7 @@ class ArticleContentViewController: UITableViewController {
             let shareAction = UIAlertAction(title: "分享本帖", style: .default) { [unowned self] (action) in
                 let title = "水木\(self.boardName ?? boardID)版：\(self.title ?? "无标题")"
                 let url = URL(string: urlString)!
-                let logo = self.thumbnailImage ?? #imageLiteral(resourceName: "Logo")
+                let logo = self.getThumbnailImage() ?? #imageLiteral(resourceName: "Logo")
                 let activityViewController = UIActivityViewController(activityItems: [title, url, logo],
                                                                       applicationActivities: nil)
                 self.present(activityViewController, animated: true, completion: nil)
@@ -403,6 +402,28 @@ class ArticleContentViewController: UITableViewController {
         actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         actionSheet.popoverPresentationController?.barButtonItem = sender
         present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func getThumbnailImage() -> UIImage? {
+        for articles in self.smarticles {
+            for article in articles {
+                for imageInfo in article.imageAtt {
+                    let thumbURL = imageInfo.thumbnailURL
+                    let manager = YYWebImageManager.shared()
+                    if let cache = manager.cache {
+                        let imageFromMemory = cache.getImageForKey(manager.cacheKey(for: thumbURL))
+                        if imageFromMemory != nil {
+                            print("hit! successfully get image from cache!")
+                        } else {
+                            print("miss! image is not in cache!")
+                        }
+                        return imageFromMemory
+                    }
+                }
+            }
+        }
+        print("miss! threads contains no image!")
+        return nil
     }
     
     func tapPageButton(sender: UIBarButtonItem) {
@@ -526,24 +547,6 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
 }
 
 extension ArticleContentViewController: ArticleContentCellDelegate {
-    
-    func cell(_ cell: ArticleContentCell, didLoadImageInfos infos: [ImageInfo]) {
-        if self.thumbnailImage == nil {
-            if let imageURL = infos.first?.thumbnailURL {
-                DispatchQueue.global().async {
-                    let imageData = try! Data(contentsOf: imageURL)
-                    DispatchQueue.main.async {
-                        if let image = UIImage(data: imageData) {
-                            if self.thumbnailImage == nil {
-                                self.thumbnailImage = image
-                                print("successfully set thumbnail image!")
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
     
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int) {
         guard let imageInfos = cell.article?.imageAtt else { return }

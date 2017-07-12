@@ -52,6 +52,8 @@ class ArticleContentViewController: UITableViewController {
     fileprivate var row: Int = 0
     fileprivate var soloUser: String?
     
+    fileprivate var thumbnailImage: UIImage?
+    
     var boardID: String?
     var boardName: String? // if fromTopTen, this will not be set, so we must query this using api
     var articleID: Int?
@@ -337,6 +339,18 @@ class ArticleContentViewController: UITableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let cell = cell as? ArticleContentCell {
+            cell.isVisible = true
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let cell = cell as? ArticleContentCell {
+            cell.isVisible = false
+        }
+    }
+    
     // MARK: - Actions
     func refreshAction() {
         if soloUser == nil && currentBackwardNumber > 0 {
@@ -362,20 +376,29 @@ class ArticleContentViewController: UITableViewController {
             }
         }
         if let boardID = self.boardID, let articleID = self.articleID {
+            let urlString: String
+            switch self.setting.displayMode {
+            case .nForum:
+                urlString = "http://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
+            case .www2:
+                urlString = "http://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
+            case .mobile:
+                urlString = "http://m.newsmth.net/article/\(boardID)/\(articleID)"
+            }
             let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] action in
-                let urlString: String
-                switch self.setting.displayMode {
-                case .nForum:
-                    urlString = "http://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
-                case .www2:
-                    urlString = "http://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
-                case .mobile:
-                    urlString = "http://m.newsmth.net/article/\(boardID)/\(articleID)"
-                }
                 let webViewController = SFSafariViewController(url: URL(string: urlString)!)
                 self.present(webViewController, animated: true, completion: nil)
             }
             actionSheet.addAction(openAction)
+            let shareAction = UIAlertAction(title: "分享本帖", style: .default) { [unowned self] (action) in
+                let title = "水木\(self.boardName ?? boardID)版：\(self.title ?? "无标题")"
+                let url = URL(string: urlString)!
+                let logo = self.thumbnailImage ?? #imageLiteral(resourceName: "Logo")
+                let activityViewController = UIActivityViewController(activityItems: [title, url, logo],
+                                                                      applicationActivities: nil)
+                self.present(activityViewController, animated: true, completion: nil)
+            }
+            actionSheet.addAction(shareAction)
         }
         actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         actionSheet.popoverPresentationController?.barButtonItem = sender
@@ -503,6 +526,24 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
 }
 
 extension ArticleContentViewController: ArticleContentCellDelegate {
+    
+    func cell(_ cell: ArticleContentCell, didLoadImageInfos infos: [ImageInfo]) {
+        if self.thumbnailImage == nil {
+            if let imageURL = infos.first?.thumbnailURL {
+                DispatchQueue.global().async {
+                    let imageData = try! Data(contentsOf: imageURL)
+                    DispatchQueue.main.async {
+                        if let image = UIImage(data: imageData) {
+                            if self.thumbnailImage == nil {
+                                self.thumbnailImage = image
+                                print("successfully set thumbnail image!")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int) {
         guard let imageInfos = cell.article?.imageAtt else { return }

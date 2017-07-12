@@ -52,6 +52,18 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     var leftMargin: CGFloat = 0 //get from viewcontroller to prevent bug
     var rightMargin: CGFloat = 0 //get from viewcontroller to prevent bug
     
+    var isVisible: Bool = false {
+        didSet {
+            if isVisible {
+                if let imageAtt = self.article?.imageAtt {
+                    drawImagesWithInfo(imageAtt: imageAtt)
+                }
+            } else {
+                drawImagesWithInfo(imageAtt: [ImageInfo]())
+            }
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
@@ -140,8 +152,6 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         floorAndTimeLabel.text = "\(floorText)  \(smarticle.timeString)"
         
         contentLabel.setText(smarticle.attributedBody)
-        
-        drawImagesWithInfo(imageAtt: smarticle.imageAtt)
     }
     
     //MARK: - Layout Subviews
@@ -185,11 +195,12 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: size.height)
         let rect = TTTAttributedLabel.sizeThatFitsAttributedString(article!.attributedBody, withConstraints: boundingSize, limitedToNumberOfLines: 0)
         var imageLength: CGFloat = 0
-        if imageViews.count == 1 {
+        let imageCount = article?.imageAtt.count ?? 0
+        if imageCount == 1 {
             imageLength = size.width
-        } else if imageViews.count > 1 {
+        } else if imageCount > 1 {
             let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-            imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
+            imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageCount) / picNumPerLine) - blankWidth
         }
         return CGSize(width: size.width, height: margin1 * 2 + ceil(rect.height) + margin3 + imageLength)
     }
@@ -200,7 +211,10 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             imageView.removeFromSuperview()
         }
         imageViews.removeAll()
-        
+        // notify the delegate
+        if imageAtt.count > 0 {
+            delegate?.cell(self, didLoadImageInfos: imageAtt)
+        }
         // add new image views
         for imageInfo in imageAtt {
             let imageView = UIImageView()
@@ -250,4 +264,5 @@ protocol ArticleContentCellDelegate {
     func cell(_ cell: ArticleContentCell, didClickReply sender: UIView?)
     func cell(_ cell: ArticleContentCell, didClickMore sender: UIView?)
     func cell(_ cell: ArticleContentCell, didClickUser sender: UIView?)
+    func cell(_ cell: ArticleContentCell, didLoadImageInfos infos: [ImageInfo])
 }

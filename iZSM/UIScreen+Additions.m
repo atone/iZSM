@@ -70,4 +70,8 @@
     }
 }
 
++ (BOOL)isSmallScreen {
+    return [UIScreen screenWidth] < 350;
+}
+
 @end

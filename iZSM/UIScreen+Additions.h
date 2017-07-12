@@ -14,5 +14,6 @@
 + (CGFloat)screenHeight;
 + (BOOL)isRetina;
 + (CGFloat)scale;
++ (BOOL)isSmallScreen;
 
 @end

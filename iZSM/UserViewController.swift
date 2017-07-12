@@ -44,10 +44,11 @@ class UserViewController: UITableViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        let scale: CGFloat = UIScreen.isSmallScreen() ? 1 : 0.75
         userInfoVC.view.frame = CGRect(x: 0,
                                        y: 0,
                                        width: UIScreen.screenWidth(),
-                                       height: UIScreen.screenWidth() * 3 / 4)
+                                       height: UIScreen.screenWidth() * scale)
     }
     
     func updateUserInfoView() {

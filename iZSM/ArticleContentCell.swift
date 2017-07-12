@@ -41,11 +41,11 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     private let buttonHeight: CGFloat = 26
     private let avatarWidth: CGFloat = 40
     
-    private let authorFontSize: CGFloat = 18
-    private let floorTimeFontSize: CGFloat = 13
+    private let authorFontSize: CGFloat = UIScreen.isSmallScreen() ? 16 : 18
+    private let floorTimeFontSize: CGFloat = UIScreen.isSmallScreen() ? 11 : 13
     private let replyMoreFontSize: CGFloat = 15
     
-    private let margin1: CGFloat = 6
+    private let margin1: CGFloat = 30
     private let margin2: CGFloat = 2
     private let margin3: CGFloat = 8
     
@@ -148,14 +148,14 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        avatarImageView.frame = CGRect(x: leftMargin, y: buttonHeight - avatarWidth / 2, width: avatarWidth, height: avatarWidth)
+        avatarImageView.frame = CGRect(x: leftMargin, y: margin1 - avatarWidth / 2, width: avatarWidth, height: avatarWidth)
         
         authorLabel.sizeToFit()
-        authorLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1), size: authorLabel.bounds.size)
+        authorLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 - margin2 / 2 - authorLabel.bounds.height), size: authorLabel.bounds.size)
         floorAndTimeLabel.sizeToFit()
-        floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 + authorLabel.frame.height + margin2), size: floorAndTimeLabel.bounds.size)
-        replyLabel.frame = CGRect(x: UIScreen.screenWidth() - rightMargin - margin3 - replyButtonWidth - moreButtonWidth, y: buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
-        moreLabel.frame = CGRect(x: UIScreen.screenWidth() - rightMargin - moreButtonWidth, y: buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
+        floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 + margin2 / 2), size: floorAndTimeLabel.bounds.size)
+        replyLabel.frame = CGRect(x: UIScreen.screenWidth() - rightMargin - margin3 - replyButtonWidth - moreButtonWidth, y: margin1 - buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
+        moreLabel.frame = CGRect(x: UIScreen.screenWidth() - rightMargin - moreButtonWidth, y: margin1 - buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
         
         let size = contentView.bounds.size
         var imageLength: CGFloat = 0
@@ -165,7 +165,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
         }
-        contentLabel.frame = CGRect(x: leftMargin, y: buttonHeight * 2 + margin3, width: UIScreen.screenWidth() - leftMargin - rightMargin, height: size.height - buttonHeight * 2 - margin3 - margin3 - imageLength)
+        contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: UIScreen.screenWidth() - leftMargin - rightMargin, height: size.height - margin1 * 2 - margin3 - imageLength)
         
         if imageViews.count == 1 {
             imageViews.first!.frame = CGRect(x: 0, y: size.height - size.width, width: size.width, height: size.width)
@@ -191,7 +191,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
         }
-        return CGSize(width: size.width, height: buttonHeight * 2 + margin3 + ceil(rect.height) + margin3 + imageLength)
+        return CGSize(width: size.width, height: margin1 * 2 + ceil(rect.height) + margin3 + imageLength)
     }
     
     private func drawImagesWithInfo(imageAtt: [ImageInfo]) {

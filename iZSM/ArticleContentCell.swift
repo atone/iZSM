@@ -24,7 +24,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     private let replyTapRecognizer = UITapGestureRecognizer()
     private let moreTapRecognizer = UITapGestureRecognizer()
     
-    var imageViews = [UIImageView]()
+    var imageViews = [YYAnimatedImageView]()
     
     private var contentLabel = TTTAttributedLabel(frame: CGRect.zero)
     
@@ -214,10 +214,13 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
 
         // add new image views
         for imageInfo in imageAtt {
-            let imageView = UIImageView()
+            let imageView = YYAnimatedImageView()
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
-            imageView.setImageWith(imageInfo.thumbnailURL, placeholder: #imageLiteral(resourceName: "loading"))
+            imageView.setImageWith(imageInfo.thumbnailURL,
+                                   placeholder: #imageLiteral(resourceName: "loading"),
+                                   options: [.progressiveBlur, .showNetworkActivity, .setImageWithFadeAnimation],
+                                   completion: nil)
             imageView.isUserInteractionEnabled = true
             let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapOnImage(recognizer:)))
             singleTap.numberOfTapsRequired = 1
@@ -234,7 +237,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     //MARK: - Action
     @objc private func singleTapOnImage(recognizer: UIGestureRecognizer) {
         if
-            let imageView = recognizer.view as? UIImageView,
+            let imageView = recognizer.view as? YYAnimatedImageView,
             let index = imageViews.index(of: imageView)
         {
             delegate?.cell(self, didClickImageAt: index)

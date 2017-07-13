@@ -262,7 +262,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-func networkActivityIndicatorStart(_ withHUD: Bool = false) {
+func networkActivityIndicatorStart(withHUD: Bool = false) {
     UIApplication.shared.isNetworkActivityIndicatorVisible = true
     if withHUD {
         SVProgressHUD.show()

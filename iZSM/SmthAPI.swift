@@ -54,7 +54,7 @@ class SmthAPI {
         let attImageName = "image.jpg"
         let localPath = api.apiGetUserdata_attpost_path(attImageName)!
         let localURL = URL(fileURLWithPath: localPath)
-        let data = convertedDataFromImage(image: image)
+        let data = convertedAttData(from: image)
         try! data.write(to: localURL, options: .atomic)
         var error:Int32 = 0
         let ret = apiNetAddAttachment(localPath, &error)
@@ -496,12 +496,26 @@ class SmthAPI {
     }
 
     // modify user face image
-    func modifyFaceImage(imageName: String) -> SMUser? {
+    func modifyFaceImage(image: UIImage) -> SMUser? {
+        let faceImageName = "face.jpg"
+        let localPath = api.apiGetUserdata_attpost_path(faceImageName)!
+        let localURL = URL(fileURLWithPath: localPath)
+        let data = convertedFaceData(from: image)
+        try! data.write(to: localURL, options: .atomic)
         api.reset_status()
-        if let raw = api.net_modifyFace(imageName) as? [String:Any] {
-            return userFromDictionary(dict: raw)
+        var result: SMUser? = nil
+        if let raw = api.net_modifyFace(localPath) as? [String:Any],
+            let ret = userFromDictionary(dict: raw) {
+            print("modify face successfully!")
+            result = ret
+        } else {
+            print("modify face failed!")
         }
-        return nil
+        if FileManager.default.fileExists(atPath: localPath) {
+            try! FileManager.default.removeItem(atPath: localPath)
+            print("local cached face image removed!")
+        }
+        return result
     }
 
     // login to the bbs
@@ -797,26 +811,30 @@ class SmthAPI {
         content = regularExpression.stringByReplacingMatches(in: content, range: NSMakeRange(0, content.characters.count), withTemplate: "")
         return content as String
     }
-
-    private func resizedImageFromImage(image: UIImage) -> UIImage {
-        let width: CGFloat = 1280
-        let currentWidth = image.size.width
-        if currentWidth <= width {
-            return image
-        }
-        let height = image.size.height * width / currentWidth
-        let newImageSize = CGSize(width: width, height: height)
-        UIGraphicsBeginImageContext(newImageSize)
-        image.draw(in: CGRect(origin: CGPoint.zero, size: newImageSize))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()!
-        return newImage
+    
+    private func image(with image: UIImage, scaledTo newSize: CGSize) -> UIImage {
+        UIGraphicsBeginImageContext(newSize)
+        image.draw(in: CGRect(origin: CGPoint.zero, size: newSize))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage ?? UIImage()
     }
 
-    private func convertedDataFromImage(image: UIImage) -> Data {
-        let newImage = resizedImageFromImage(image: image)
+    private func resizedAttImage(from attImage: UIImage) -> UIImage {
+        let width: CGFloat = 1280
+        let currentWidth = attImage.size.width
+        if currentWidth <= width {
+            return attImage
+        }
+        let height = attImage.size.height * width / currentWidth
+        let newImageSize = CGSize(width: width, height: height)
+        return image(with: attImage, scaledTo: newImageSize)
+    }
+
+    private func convertedAttData(from image: UIImage) -> Data {
+        let newImage = resizedAttImage(from: image)
         var compressionQuality: CGFloat = 1
         var data = UIImageJPEGRepresentation(newImage, compressionQuality)!
-
         let maxSize = 1 * 1024 * 1024
         while data.count > maxSize && compressionQuality > 0.1 {
             compressionQuality -= 0.1
@@ -824,5 +842,27 @@ class SmthAPI {
         }
         return data
     }
-
+    
+    private func resizedFaceImage(from faceImage: UIImage) -> UIImage {
+        let width: CGFloat = 120
+        let height: CGFloat = 120
+        let currentWidth = faceImage.size.width
+        if currentWidth <= width {
+            return faceImage
+        }
+        let newImageSize = CGSize(width: width, height: height)
+        return image(with: faceImage, scaledTo: newImageSize)
+    }
+    
+    private func convertedFaceData(from image: UIImage) -> Data {
+        let newImage = resizedFaceImage(from: image)
+        var compressionQuality: CGFloat = 1
+        var data = UIImageJPEGRepresentation(newImage, compressionQuality)!
+        let maxSize = 50 * 1024
+        while data.count > maxSize && compressionQuality > 0.1 {
+            compressionQuality -= 0.1
+            data = UIImageJPEGRepresentation(newImage, compressionQuality)!
+        }
+        return data
+    }
 }

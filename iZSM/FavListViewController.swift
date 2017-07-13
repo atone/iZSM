@@ -14,6 +14,23 @@ class FavListViewController: BaseTableViewController {
     private let kBoardIdentifier = "Board"
     private let kDirectoryIdentifier = "Directory"
     
+    private lazy var switcher: UISegmentedControl = {
+        let switcher = UISegmentedControl(items: ["收藏夹", "驻版"])
+        switcher.selectedSegmentIndex = 0
+        switcher.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        switcher.addTarget(self, action: #selector(indexChanged(sender:)), for: .valueChanged)
+        return switcher
+    }()
+    
+    var index: Int {
+        set {
+            switcher.selectedSegmentIndex = newValue
+        }
+        get {
+            return switcher.selectedSegmentIndex
+        }
+    }
+    
     var boardID: Int = 0
     private var favorites = [SMBoard]()
     
@@ -28,11 +45,12 @@ class FavListViewController: BaseTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if boardID == 0 { //不能在子目录下进行收藏删除和添加
+        if boardID == 0 { //不能在子目录下进行收藏删除和添加，驻版没有子版面
             navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                                 target: self,
                                                                 action: #selector(addFavorite(sender:)))
             navigationItem.leftBarButtonItem = editButtonItem
+            navigationItem.titleView = switcher
         }
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(setUpdateFavList(notification:)),
@@ -46,26 +64,38 @@ class FavListViewController: BaseTableViewController {
     
     
     override func fetchDataDirectly() {
+        guard let userID =  AppSetting.sharedSetting.username else { return }
         networkActivityIndicatorStart()
         DispatchQueue.global().async {
-            let favBoards = self.api.getFavBoardList(group: self.boardID)
+            var favBoards = [SMBoard]()
+            if self.index == 0 {
+                let ret = self.api.getFavBoardList(group: self.boardID) ?? [SMBoard]()
+                favBoards += ret
+            } else {
+                let ret = self.api.getUserMemberList(userID: userID) ?? [SMMember]()
+                favBoards += ret.map { $0.board }
+            }
+            
             DispatchQueue.main.async {
                 networkActivityIndicatorStop(withHUD: true)
                 self.tableView.mj_header.endRefreshing()
-                if let favBoards = favBoards {
-                    self.favorites.removeAll()
-                    self.favorites += favBoards
-                }
+                self.favorites.removeAll()
+                self.favorites += favBoards
                 self.tableView?.reloadData()
                 self.api.displayErrorIfNeeded()
             }
         }
     }
     
+    func indexChanged(sender: UISegmentedControl) {
+        SVProgressHUD.show()
+        fetchDataDirectly()
+    }
+    
     
     func addFavorite(sender: UIBarButtonItem) {
-        let favMessage = "提示：记不住版面ID？没关系，在版面列表下面长按待收藏的版面，也可以将版面添加到收藏夹。"
-        let alert = UIAlertController(title: "请输入要收藏的版面ID", message: favMessage, preferredStyle: .alert)
+        let favMessage = "提示：记不住版面ID？没关系，在版面列表（支持搜索）下面长按待\(self.index == 0 ? "收藏" : "关注")的版面，也可以\(self.index == 0 ? "将版面添加到收藏夹" : "关注版面（驻版）")。"
+        let alert = UIAlertController(title: "请输入要\(self.index == 0 ? "收藏" : "关注")的版面ID", message: favMessage, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert] action in
             if let textField = alert.textFields?.first {
                 let board = textField.text!
@@ -85,15 +115,26 @@ class FavListViewController: BaseTableViewController {
     func addFavoriteWithBoardID(boardID: String) {
         networkActivityIndicatorStart(withHUD: true)
         DispatchQueue.global().async {
-            self.api.addFavorite(boardID: boardID)
+            var joinResult = 0
+            if self.index == 0 {
+                self.api.addFavorite(boardID: boardID)
+            } else {
+                joinResult = self.api.joinMemberOfBoard(boardID: boardID)
+            }
             DispatchQueue.main.async {
                 networkActivityIndicatorStop(withHUD: true)
                 if self.api.errorCode == 0 {
-                    SVProgressHUD.showSuccess(withStatus: "添加成功")
+                    if self.index == 0 {
+                        SVProgressHUD.showSuccess(withStatus: "添加成功")
+                    } else if joinResult == 0 {
+                        SVProgressHUD.showSuccess(withStatus: "关注成功，您已是正式驻版用户")
+                    } else {
+                        SVProgressHUD.showSuccess(withStatus: "关注成功，尚需管理员审核成为正式驻版用户")
+                    }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         self.fetchData()
                     }
-                } else if self.api.errorCode == 10319 {
+                } else if self.api.errorCode == 10319 && self.index == 0 {
                     SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")
                 } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
                     SVProgressHUD.showInfo(withStatus: self.api.errorDescription)
@@ -167,7 +208,11 @@ class FavListViewController: BaseTableViewController {
             let boardID = favorites[indexPath.row].boardID
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
-                self.api.deleteFavorite(boardID: boardID)
+                if self.index == 0 {
+                    self.api.deleteFavorite(boardID: boardID)
+                } else {
+                    let _ = self.api.quitMemberOfBoard(boardID: boardID)
+                }
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
                     if self.api.errorCode == 0 {

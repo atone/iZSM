@@ -230,6 +230,10 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                         self.addFavoriteWithBoardID(boardID: board.boardID)
                     }
                     actionSheet.addAction(addFavAction)
+                    let addMemAction = UIAlertAction(title: "关注版面（驻版）", style: .default) { (action) in
+                        self.addMemberWithBoardID(boardID: board.boardID)
+                    }
+                    actionSheet.addAction(addMemAction)
                     actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
                     let cell = tableView.cellForRow(at: indexPath)!
                     actionSheet.popoverPresentationController?.sourceView = cell
@@ -261,4 +265,26 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         }
     }
     
+    func addMemberWithBoardID(boardID: String) {
+        networkActivityIndicatorStart(withHUD: true)
+        DispatchQueue.global().async {
+            let joinResult = self.api.joinMemberOfBoard(boardID: boardID)
+            DispatchQueue.main.async {
+                networkActivityIndicatorStop(withHUD: true)
+                if self.api.errorCode == 0 {
+                    if joinResult == 0 {
+                        SVProgressHUD.showSuccess(withStatus: "关注成功，您已是正式驻版用户")
+                    } else {
+                        SVProgressHUD.showSuccess(withStatus: "关注成功，尚需管理员审核成为正式驻版用户")
+                    }
+                    NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
+                                                    object: nil)
+                } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
+                    SVProgressHUD.showError(withStatus: self.api.errorDescription)
+                } else {
+                    SVProgressHUD.showError(withStatus: "出错了")
+                }
+            }
+        }
+    }
 }

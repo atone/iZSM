@@ -145,7 +145,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
             DispatchQueue.global().async {
                 var attachmentUploadSuccessFul = true
                 if let image = self.attachedImage {
-                    attachmentUploadSuccessFul = self.api.uploadImage(image: image)
+                    attachmentUploadSuccessFul = self.api.uploadAttImage(image: image)
                 }
                 
                 var content = self.articleContent!
@@ -157,14 +157,14 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                 if self.replyMode {
                     if self.replyByMail {
                         let result = self.api.sendMailTo(user: self.originalArticle!.authorID, withTitle: self.articleTitle!, content: content)
-                        print("send mail status: \(result)")
+                        print("send mail done. ret = \(result)")
                     } else {
                         let result = self.api.replyArticle(articleID: self.originalArticle!.id, title: self.articleTitle!, content: content, inBoard: boardID)
-                        print("reply article status: \(result)")
+                        print("reply article done. ret = \(result)")
                     }
                 } else {
                     let result = self.api.postArticle(title: self.articleTitle!, content: content, inBoard: boardID)
-                    print("post article status: \(result)")
+                    print("post article done. ret = \(result)")
                 }
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
@@ -175,6 +175,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                         } else {
                             SVProgressHUD.showError(withStatus: "附件上传失败")
                         }
+                        self.api.removeAttImage()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.delegate?.articleDidPosted()
                             self.presentingViewController?.dismiss(animated: true, completion: nil)

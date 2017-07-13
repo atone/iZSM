@@ -107,7 +107,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
             let cevc = ComposeEmailController()
             cevc.originalEmail = mail
             cevc.replyMode = true
-            let navigationController = UINavigationController(rootViewController: cevc)
+            let navigationController = NTNavigationController(rootViewController: cevc)
             navigationController.modalPresentationStyle = .formSheet
             present(navigationController, animated: true, completion: nil)
             

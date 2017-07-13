@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// Saved shortcut item used as a result of an app launch, used later when app is activated.
     var launchedShortcutItem: UIApplicationShortcutItem?
     
-    let mainController = UITabBarController()
+    let mainController = NTTabBarController()
     let setting = AppSetting.sharedSetting
     let api = SmthAPI()
     let tintColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
@@ -117,7 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func rootViewControllers() -> [UIViewController] {
-        var controllerArray = [UINavigationController]()
+        var controllerArray = [NTNavigationController]()
         let hotTableViewController = HotTableViewController()
         hotTableViewController.title = "热点话题"
         hotTableViewController.tabBarItem = UITabBarItem(title: "十大", image: #imageLiteral(resourceName: "Hot"), tag: 0)
@@ -130,10 +130,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let userViewController = UserViewController(style: .grouped)
         userViewController.title = "我"
         userViewController.tabBarItem = UITabBarItem(title: "用户", image: #imageLiteral(resourceName: "User"), tag: 3)
-        controllerArray.append(UINavigationController(rootViewController: hotTableViewController))
-        controllerArray.append(UINavigationController(rootViewController: boardListViewController))
-        controllerArray.append(UINavigationController(rootViewController: favListViewController))
-        controllerArray.append(UINavigationController(rootViewController: userViewController))
+        controllerArray.append(NTNavigationController(rootViewController: hotTableViewController))
+        controllerArray.append(NTNavigationController(rootViewController: boardListViewController))
+        controllerArray.append(NTNavigationController(rootViewController: favListViewController))
+        controllerArray.append(NTNavigationController(rootViewController: userViewController))
         return controllerArray
     }
     
@@ -240,7 +240,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func navigateToNewMessagePage(notification: UILocalNotification) {
         mainController.selectedIndex = 3
-        if let nvc = mainController.selectedViewController as? UINavigationController {
+        if let nvc = mainController.selectedViewController as? NTNavigationController {
             switch notification.alertTitle! {
             case "新邮件":
                 let mbvc = MailBoxViewController()

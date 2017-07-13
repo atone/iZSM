@@ -16,6 +16,7 @@ class SettingsViewController: UITableViewController {
     @IBOutlet weak var showSignatureLabel: UILabel!
     @IBOutlet weak var newReplyFirstLabel: UILabel!
     @IBOutlet weak var rememberLastLabel: UILabel!
+    @IBOutlet weak var portraitLockLabel: UILabel!
     @IBOutlet weak var displayModeLabel: UILabel!
     @IBOutlet weak var backgroundTaskLabel: UILabel!
     @IBOutlet weak var clearCacheLabel: UILabel!
@@ -27,6 +28,7 @@ class SettingsViewController: UITableViewController {
     @IBOutlet weak var showSignatureSwitch: UISwitch!
     @IBOutlet weak var newReplyFirstSwitch: UISwitch!
     @IBOutlet weak var rememberLastSwitch: UISwitch!
+    @IBOutlet weak var portraitLockSwitch: UISwitch!
     @IBOutlet weak var backgroundTaskSwitch: UISwitch!
     @IBOutlet weak var displayModeSegmentedControl: UISegmentedControl!
 
@@ -83,6 +85,10 @@ class SettingsViewController: UITableViewController {
         }
     }
     
+    @IBAction func portraitLockChanged(sender: UISwitch) {
+        setting.portraitLock = sender.isOn
+    }
+    
     @IBAction func displayModeChanged(sender: UISegmentedControl) {
         setting.displayMode = AppSetting.DisplayMode(rawValue: sender.selectedSegmentIndex)!
     }
@@ -102,6 +108,7 @@ class SettingsViewController: UITableViewController {
         showSignatureLabel.font = UIFont.preferredFont(forTextStyle: .body)
         newReplyFirstLabel.font = UIFont.preferredFont(forTextStyle: .body)
         rememberLastLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        portraitLockLabel.font = UIFont.preferredFont(forTextStyle: .body)
         displayModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
         backgroundTaskLabel.font = UIFont.preferredFont(forTextStyle: .body)
         clearCacheLabel.font = UIFont.preferredFont(forTextStyle: .body)
@@ -122,6 +129,7 @@ class SettingsViewController: UITableViewController {
         showSignatureSwitch.isOn = setting.showSignature
         newReplyFirstSwitch.isOn = (setting.sortMode == .LaterPostFirst)
         rememberLastSwitch.isOn = setting.rememberLast
+        portraitLockSwitch.isOn = setting.portraitLock
         displayModeSegmentedControl.selectedSegmentIndex = setting.displayMode.rawValue
         backgroundTaskSwitch.isOn = setting.backgroundTaskEnabled
     }

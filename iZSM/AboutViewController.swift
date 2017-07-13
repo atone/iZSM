@@ -63,7 +63,7 @@ class AboutViewController: UITableViewController {
             cevc.preTitle = "『\(versionText)』应用问题反馈"
             cevc.preReceiver = "atone"
             cevc.preContent = "\n\n设备类型: \(UIDevice.current.model)\n系统版本: \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)\n应用版本: \(versionText)"
-            let navigationController = UINavigationController(rootViewController: cevc)
+            let navigationController = NTNavigationController(rootViewController: cevc)
             navigationController.modalPresentationStyle = .formSheet
             present(navigationController, animated: true, completion: nil)
         case IndexPath(row: 2, section: 0):

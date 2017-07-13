@@ -134,7 +134,7 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
         if !inbox {
             cec.delegate = self
         }
-        let navigationController = UINavigationController(rootViewController: cec)
+        let navigationController = NTNavigationController(rootViewController: cec)
         navigationController.modalPresentationStyle = .formSheet
         present(navigationController, animated: true, completion: nil)
     }

@@ -90,7 +90,7 @@ class BaseTableViewController: UITableViewController {
             SVProgressHUD.dismiss()
             let loginViewController = LoginViewController()
             loginViewController.delegate = self
-            let navigationController = UINavigationController(rootViewController: loginViewController)
+            let navigationController = NTNavigationController(rootViewController: loginViewController)
             let rootvc = UIApplication.shared.keyWindow?.rootViewController
             rootvc?.present(navigationController, animated: false, completion: nil)
         }

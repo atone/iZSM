@@ -269,7 +269,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         let cavc = ComposeArticleController()
         cavc.boardID = boardID
         cavc.delegate = self
-        let nvc = UINavigationController(rootViewController: cavc)
+        let nvc = NTNavigationController(rootViewController: cavc)
         nvc.modalPresentationStyle = .formSheet
         present(nvc, animated: true, completion: nil)
     }

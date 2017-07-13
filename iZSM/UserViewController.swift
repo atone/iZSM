@@ -28,6 +28,8 @@ class UserViewController: UITableViewController {
         tableView.reloadData()
         setupUserInfoView()
         
+        
+        
         // add observer to font size change
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(preferredFontSizeChanged(notification:)),
@@ -35,21 +37,21 @@ class UserViewController: UITableViewController {
                                                object: nil)
     }
     
-    func setupUserInfoView() {
-        userInfoVC.delegate = self
-        userInfoVC.willMove(toParentViewController: self)
-        tableView.tableHeaderView = userInfoVC.view
-        addChildViewController(userInfoVC)
-        userInfoVC.didMove(toParentViewController: self)
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let scale: CGFloat = view.bounds.width < 350 ? 1 : 0.75
-        userInfoVC.view.frame = CGRect(x: 0,
-                                       y: 0,
-                                       width: view.bounds.width,
-                                       height: view.bounds.width * scale)
+        let newSize = CGSize(width: view.bounds.width, height: view.bounds.width * scale)
+        if userInfoVC.view.frame.size != newSize {
+            userInfoVC.view.frame.size = newSize
+            tableView.tableHeaderView = userInfoVC.view
+        }
+    }
+    
+    func setupUserInfoView() {
+        userInfoVC.delegate = self
+        userInfoVC.willMove(toParentViewController: self)
+        addChildViewController(userInfoVC)
+        userInfoVC.didMove(toParentViewController: self)
     }
     
     func updateUserInfoView() {
@@ -294,7 +296,7 @@ extension UserViewController: UserInfoViewControllerDelegate {
             dismiss(animated: true, completion: nil)
             let cevc = ComposeEmailController()
             cevc.preReceiver = userID
-            let navigationController = UINavigationController(rootViewController: cevc)
+            let navigationController = NTNavigationController(rootViewController: cevc)
             navigationController.modalPresentationStyle = .formSheet
             present(navigationController, animated: true, completion: nil)
         }

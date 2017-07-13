@@ -527,13 +527,13 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
                 cavc.replyMode = true
                 cavc.originalArticle = article
                 cavc.replyByMail = true
-                let navigationController = UINavigationController(rootViewController: cavc)
+                let navigationController = NTNavigationController(rootViewController: cavc)
                 navigationController.modalPresentationStyle = .formSheet
                 present(navigationController, animated: true, completion: nil)
             } else {
                 let cevc = ComposeEmailController()
                 cevc.preReceiver = userID
-                let navigationController = UINavigationController(rootViewController: cevc)
+                let navigationController = NTNavigationController(rootViewController: cevc)
                 navigationController.modalPresentationStyle = .formSheet
                 present(navigationController, animated: true, completion: nil)
             }
@@ -596,7 +596,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         cavc.replyMode = true
         cavc.originalArticle = cell.article
         cavc.replyByMail = false
-        let navigationController = UINavigationController(rootViewController: cavc)
+        let navigationController = NTNavigationController(rootViewController: cavc)
         navigationController.modalPresentationStyle = .formSheet
         present(navigationController, animated: true, completion: nil)
     }

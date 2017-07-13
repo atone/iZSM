@@ -26,10 +26,10 @@ class UserInfoViewController: UIViewController {
     private let width: CGFloat = 280
     private let height: CGFloat = 320
     
-    private let backgroundImageView = UIImageView()
+    private let backgroundImageView = YYAnimatedImageView()
     private let backgroundView = UIView()
     
-    private let avatarImageView = UIImageView()
+    private let avatarImageView = YYAnimatedImageView()
     private let idLabel = UILabel()
     private let nickLabel = UILabel()
     
@@ -210,9 +210,11 @@ class UserInfoViewController: UIViewController {
             nickLabel.text = user.nick
             let defaultImage = user.gender == 0 ? #imageLiteral(resourceName: "face_default_m") : #imageLiteral(resourceName: "face_default_f")
             avatarImageView.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
-                                         placeholder: defaultImage)
+                                         placeholder: defaultImage,
+                                         options: [.progressiveBlur, .setImageWithFadeAnimation])
             backgroundImageView.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
-                                         placeholder: defaultImage)
+                                         placeholder: defaultImage,
+                                         options: [.progressiveBlur, .setImageWithFadeAnimation])
             titleLabel.text = "身份"
             levelLabel.text = "等级"
             postsLabel.text = "发帖"

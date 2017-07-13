@@ -12,7 +12,7 @@ import TTTAttributedLabel
 
 class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
-    private let avatarImageView = UIImageView()
+    private let avatarImageView = YYAnimatedImageView()
     
     private let authorLabel = UILabel()
     private let floorAndTimeLabel = UILabel()
@@ -146,7 +146,6 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.delegate = delegate
         self.article = smarticle
         
-        avatarImageView.setImageWith(SMUser.faceURL(for: smarticle.authorID, withFaceURL: nil), placeholder: #imageLiteral(resourceName: "face_default"))
         authorLabel.text = smarticle.authorID
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
         floorAndTimeLabel.text = "\(floorText)  \(smarticle.timeString)"
@@ -206,6 +205,12 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     }
     
     private func drawImagesWithInfo(imageAtt: [ImageInfo]) {
+        if let article = self.article {
+            avatarImageView.setImageWith(SMUser.faceURL(for: article.authorID, withFaceURL: nil),
+                                         placeholder: #imageLiteral(resourceName: "face_default"),
+                                         options: [.progressiveBlur, .setImageWithFadeAnimation])
+        }
+        
         // remove old image views
         for imageView in imageViews {
             imageView.removeFromSuperview()
@@ -219,8 +224,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             imageView.clipsToBounds = true
             imageView.setImageWith(imageInfo.thumbnailURL,
                                    placeholder: #imageLiteral(resourceName: "loading"),
-                                   options: [.progressiveBlur, .showNetworkActivity, .setImageWithFadeAnimation],
-                                   completion: nil)
+                                   options: [.progressiveBlur, .showNetworkActivity, .setImageWithFadeAnimation])
             imageView.isUserInteractionEnabled = true
             let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapOnImage(recognizer:)))
             singleTap.numberOfTapsRequired = 1

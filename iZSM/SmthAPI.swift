@@ -47,11 +47,11 @@ class SmthAPI {
             print("\(errorMsg), error code \(errorCode)")
         }
     }
-
-    private let attImageName = "image.jpg"
+    
     //MARK: - Up Load Attachments
     //if upload succeed, return true, otherwise, false
     func uploadAttImage(image: UIImage) -> Bool {
+        let attImageName = "image.jpg"
         let localPath = api.apiGetUserdata_attpost_path(attImageName)!
         let localURL = URL(fileURLWithPath: localPath)
         let data = convertedDataFromImage(image: image)
@@ -59,15 +59,11 @@ class SmthAPI {
         var error:Int32 = 0
         let ret = apiNetAddAttachment(localPath, &error)
         print("upload attachment done! ret = \(ret)")
-        return (ret == 0)
-    }
-    
-    func removeAttImage() {
-        let localPath = api.apiGetUserdata_attpost_path(attImageName)!
         if FileManager.default.fileExists(atPath: localPath) {
             try! FileManager.default.removeItem(atPath: localPath)
             print("local cached attachment removed!")
         }
+        return (ret == 0)
     }
 
     //MARK: - Reset API's Status

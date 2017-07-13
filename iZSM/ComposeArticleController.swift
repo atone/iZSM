@@ -175,7 +175,6 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                         } else {
                             SVProgressHUD.showError(withStatus: "附件上传失败")
                         }
-                        self.api.removeAttImage()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.delegate?.articleDidPosted()
                             self.presentingViewController?.dismiss(animated: true, completion: nil)

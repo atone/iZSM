@@ -44,7 +44,6 @@
 		9C889FBB1DE4215100C33A8D /* TTTAttributedLabel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C889FBA1DE4215100C33A8D /* TTTAttributedLabel.framework */; };
 		9C889FBD1DE4222000C33A8D /* ArticleContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FBC1DE4222000C33A8D /* ArticleContentViewController.swift */; };
 		9C889FBF1DE4271200C33A8D /* ArticleContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FBE1DE4271200C33A8D /* ArticleContentCell.swift */; };
-		9C889FC51DE429A800C33A8D /* UIScreen+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FC41DE429A800C33A8D /* UIScreen+Additions.m */; };
 		9C889FC71DE4733A00C33A8D /* OnePasswordExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */; };
 		9C889FCD1DE4832E00C33A8D /* YYPhotoGroupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FCC1DE4832E00C33A8D /* YYPhotoGroupView.m */; };
 		9C889FCF1DE4995300C33A8D /* FavListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FCE1DE4995300C33A8D /* FavListViewController.swift */; };
@@ -133,8 +132,6 @@
 		9C889FBA1DE4215100C33A8D /* TTTAttributedLabel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TTTAttributedLabel.framework; path = Carthage/Build/iOS/TTTAttributedLabel.framework; sourceTree = "<group>"; };
 		9C889FBC1DE4222000C33A8D /* ArticleContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleContentViewController.swift; sourceTree = "<group>"; };
 		9C889FBE1DE4271200C33A8D /* ArticleContentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleContentCell.swift; sourceTree = "<group>"; };
-		9C889FC31DE429A800C33A8D /* UIScreen+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+Additions.h"; sourceTree = "<group>"; };
-		9C889FC41DE429A800C33A8D /* UIScreen+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+Additions.m"; sourceTree = "<group>"; };
 		9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OnePasswordExtension.framework; path = Carthage/Build/iOS/OnePasswordExtension.framework; sourceTree = "<group>"; };
 		9C889FCB1DE4832E00C33A8D /* YYPhotoGroupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYPhotoGroupView.h; sourceTree = "<group>"; };
 		9C889FCC1DE4832E00C33A8D /* YYPhotoGroupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYPhotoGroupView.m; sourceTree = "<group>"; };
@@ -259,8 +256,6 @@
 				9C1A3BC81DE2C0ED00CF4A43 /* LaunchScreen.storyboard */,
 				9CB573BC1DE5B32100CD6F3E /* Settings.storyboard */,
 				9C1A3BDC1DE2E28500CF4A43 /* iZSM-Bridging-Header.h */,
-				9C889FC31DE429A800C33A8D /* UIScreen+Additions.h */,
-				9C889FC41DE429A800C33A8D /* UIScreen+Additions.m */,
 			);
 			name = "Support Files";
 			sourceTree = "<group>";
@@ -638,7 +633,6 @@
 				9CA3B18E1DE3359200E9B121 /* MJRefreshAutoFooter.m in Sources */,
 				9CA3B1A81DE35A2300E9B121 /* BoardListViewController.swift in Sources */,
 				9C889FB71DE3EEEF00C33A8D /* ArticleListViewCell.swift in Sources */,
-				9C889FC51DE429A800C33A8D /* UIScreen+Additions.m in Sources */,
 				9CA3B1911DE3359200E9B121 /* MJRefreshFooter.m in Sources */,
 				9C56E1D71F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */,
 				9CB573C41DE5B61800CD6F3E /* LogoView.swift in Sources */,

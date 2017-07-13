@@ -41,10 +41,6 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     private let buttonHeight: CGFloat = 26
     private let avatarWidth: CGFloat = 40
     
-    private let authorFontSize: CGFloat = UIScreen.isSmallScreen() ? 16 : 18
-    private let floorTimeFontSize: CGFloat = UIScreen.isSmallScreen() ? 11 : 13
-    private let replyMoreFontSize: CGFloat = 15
-    
     private let margin1: CGFloat = 30
     private let margin2: CGFloat = 2
     private let margin3: CGFloat = 8
@@ -81,7 +77,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.cornerRadius = avatarWidth / 2
-        avatarImageView.layer.borderWidth = 1.0 / UIScreen.scale()
+        avatarImageView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
         avatarImageView.layer.borderColor = UIColor.black.withAlphaComponent(0.2).cgColor
         avatarImageView.clipsToBounds = true
         avatarTapRecognizer.addTarget(self, action: #selector(showUserInfo(recognizer:)))
@@ -90,7 +86,6 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         avatarImageView.isUserInteractionEnabled = true
         self.contentView.addSubview(avatarImageView)
         
-        authorLabel.font = UIFont.boldSystemFont(ofSize: authorFontSize)
         authorLabel.textColor = UIColor.black
         authorTapRecognizer.addTarget(self, action: #selector(showUserInfo(recognizer:)))
         authorTapRecognizer.numberOfTapsRequired = 1
@@ -98,12 +93,10 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         authorLabel.isUserInteractionEnabled = true
         self.contentView.addSubview(authorLabel)
         
-        floorAndTimeLabel.font = UIFont.systemFont(ofSize: floorTimeFontSize)
         floorAndTimeLabel.textColor = UIColor.gray
         self.contentView.addSubview(floorAndTimeLabel)
         
         replyLabel.text = "回复"
-        replyLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
         replyLabel.textColor = tintColor
         replyLabel.textAlignment = .center
         replyLabel.layer.cornerRadius = 4
@@ -117,7 +110,6 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.contentView.addSubview(replyLabel)
         
         moreLabel.text = "•••"
-        moreLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
         moreLabel.textColor = tintColor
         moreLabel.textAlignment = .center
         moreLabel.layer.cornerRadius = 4
@@ -156,17 +148,25 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     //MARK: - Layout Subviews
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        let size = contentView.bounds.size
+        
+        let authorFontSize: CGFloat = size.width < 350 ? 16 : 18
+        let floorTimeFontSize: CGFloat = size.width < 350 ? 11 : 13
+        let replyMoreFontSize: CGFloat = 15
+        
         avatarImageView.frame = CGRect(x: leftMargin, y: margin1 - avatarWidth / 2, width: avatarWidth, height: avatarWidth)
         
+        authorLabel.font = UIFont.boldSystemFont(ofSize: authorFontSize)
         authorLabel.sizeToFit()
         authorLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 - margin2 / 2 - authorLabel.bounds.height), size: authorLabel.bounds.size)
+        floorAndTimeLabel.font = UIFont.systemFont(ofSize: floorTimeFontSize)
         floorAndTimeLabel.sizeToFit()
         floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 + margin2 / 2), size: floorAndTimeLabel.bounds.size)
-        replyLabel.frame = CGRect(x: UIScreen.screenWidth() - rightMargin - margin3 - replyButtonWidth - moreButtonWidth, y: margin1 - buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
-        moreLabel.frame = CGRect(x: UIScreen.screenWidth() - rightMargin - moreButtonWidth, y: margin1 - buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
+        replyLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
+        replyLabel.frame = CGRect(x: size.width - rightMargin - margin3 - replyButtonWidth - moreButtonWidth, y: margin1 - buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
+        moreLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
+        moreLabel.frame = CGRect(x: size.width - rightMargin - moreButtonWidth, y: margin1 - buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
         
-        let size = contentView.bounds.size
         var imageLength: CGFloat = 0
         if imageViews.count == 1 {
             imageLength = size.width
@@ -174,7 +174,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
         }
-        contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: UIScreen.screenWidth() - leftMargin - rightMargin, height: size.height - margin1 * 2 - margin3 - imageLength)
+        contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: size.width - leftMargin - rightMargin, height: size.height - margin1 * 2 - margin3 - imageLength)
         
         if imageViews.count == 1 {
             imageViews.first!.frame = CGRect(x: 0, y: size.height - size.width, width: size.width, height: size.width)

@@ -14,6 +14,8 @@ class AboutViewController: UITableViewController {
     @IBOutlet weak var rateLabel: UILabel!
     @IBOutlet weak var mailLabel: UILabel!
     @IBOutlet weak var websiteLabel: UILabel!
+    
+    let logoView = LogoView(frame: CGRect.zero)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,11 +26,13 @@ class AboutViewController: UITableViewController {
             selector: #selector(preferredFontSizeChanged(notification:)),
             name: .UIContentSizeCategoryDidChange,
             object: nil)
-
-        let width = UIScreen.screenWidth() < UIScreen.screenHeight() ? UIScreen.screenWidth() : UIScreen.screenHeight()
-        let logoView = LogoView(frame: CGRect(x: 0, y: 0, width: width, height: width * 3 / 4))
+        
+        let size = self.view.bounds.size
+        let width = size.width < size.height ? size.width : size.height
+        logoView.frame = CGRect(x: 0, y: 0, width: width, height: width * 3 / 4)
         tableView.tableHeaderView = logoView
     }
+    
 
     // remove observer of notification
     deinit {

@@ -428,7 +428,7 @@ class ArticleContentViewController: UITableViewController {
     
     func tapPageButton(sender: UIBarButtonItem) {
         let pageListViewController = PageListViewController()
-        let height = min(CGFloat(44 * totalSection), UIScreen.screenHeight() / 2)
+        let height = min(CGFloat(44 * totalSection), view.bounds.height / 2)
         pageListViewController.preferredContentSize = CGSize(width: 200, height: height)
         pageListViewController.modalPresentationStyle = .popover
         pageListViewController.currentPage = currentSection

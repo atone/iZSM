@@ -12,7 +12,6 @@ import SVProgressHUD
 class SmthAPI {
     init() {
         api.init_smth()
-        SVProgressHUD.setMinimumDismissTimeInterval(2)
     }
 
     private let setting = AppSetting.sharedSetting

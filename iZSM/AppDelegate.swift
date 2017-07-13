@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SVProgressHUD
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -81,6 +82,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barStyle = .black
         UINavigationBar.appearance().barTintColor = tintColor
         UINavigationBar.appearance().tintColor = UIColor.white
+        
+        // set the SVProgressHUD setting
+        SVProgressHUD.setMinimumDismissTimeInterval(2)
         
         // set the background fetch mode
         if setting.backgroundTaskEnabled {
@@ -258,12 +262,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-func networkActivityIndicatorStart() {
+func networkActivityIndicatorStart(_ withHUD: Bool = false) {
     UIApplication.shared.isNetworkActivityIndicatorVisible = true
+    if withHUD {
+        SVProgressHUD.show()
+    }
 }
 
-func networkActivityIndicatorStop() {
+func networkActivityIndicatorStop(_ withHUD: Bool = false) {
     UIApplication.shared.isNetworkActivityIndicatorVisible = false
+    if withHUD {
+        SVProgressHUD.dismiss()
+    }
 }
 
 private let formatter = DateFormatter()

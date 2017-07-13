@@ -319,8 +319,6 @@ class ArticleContentViewController: UITableViewController {
         cell.setData(displayFloor: floor, smarticle: smarticle, delegate: self)
         cell.preservesSuperviewLayoutMargins = true
         cell.fd_enforceFrameLayout = true
-        cell.leftMargin = tableView.layoutMargins.left
-        cell.rightMargin = tableView.layoutMargins.right
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -551,6 +549,14 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
 }
 
 extension ArticleContentViewController: ArticleContentCellDelegate {
+    
+    var leftMargin: CGFloat {
+        return view.layoutMargins.left
+    }
+    
+    var rightMargin: CGFloat {
+        return view.layoutMargins.right
+    }
     
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int) {
         guard let imageInfos = cell.article?.imageAtt else { return }

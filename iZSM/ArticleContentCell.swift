@@ -45,9 +45,6 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     private let margin2: CGFloat = 2
     private let margin3: CGFloat = 8
     
-    var leftMargin: CGFloat = 0 //get from viewcontroller to prevent bug
-    var rightMargin: CGFloat = 0 //get from viewcontroller to prevent bug
-    
     var isVisible: Bool = false {
         didSet {
             if isVisible {
@@ -147,6 +144,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     //MARK: - Layout Subviews
     override func layoutSubviews() {
+        guard let leftMargin = delegate?.leftMargin, let rightMargin = delegate?.rightMargin else { return }
         super.layoutSubviews()
         let size = contentView.bounds.size
         
@@ -191,6 +189,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     //MARK: - Calculate Fitting Size
     override func sizeThatFits(_ size: CGSize) -> CGSize {
+        guard let leftMargin = delegate?.leftMargin, let rightMargin = delegate?.rightMargin else { return CGSize.zero }
         let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: size.height)
         let rect = TTTAttributedLabel.sizeThatFitsAttributedString(article!.attributedBody, withConstraints: boundingSize, limitedToNumberOfLines: 0)
         var imageLength: CGFloat = 0
@@ -263,6 +262,8 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
 }
 
 protocol ArticleContentCellDelegate {
+    var leftMargin: CGFloat { get }
+    var rightMargin: CGFloat { get }
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int)
     func cell(_ cell: ArticleContentCell, didClick url: URL)
     func cell(_ cell: ArticleContentCell, didClickReply sender: UIView?)

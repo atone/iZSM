@@ -72,8 +72,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         if let boardID = self.boardID {
             self.threadLoaded = 0
             let currentMode = searchMode
-            SVProgressHUD.show()
-            networkActivityIndicatorStart()
+            networkActivityIndicatorStart(withHUD: true)
             var result: [SMThread]?
             DispatchQueue.global().async {
                 if scope == 0 {
@@ -88,8 +87,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                                                            inRange: self.threadRange)
                 }
                 DispatchQueue.main.async {
-                    SVProgressHUD.dismiss()
-                    networkActivityIndicatorStop()
+                    networkActivityIndicatorStop(withHUD: true)
                     if currentMode != self.searchMode { return } //模式已经改变，则丢弃数据
                     self.threads.removeAll()
                     if let result = result {
@@ -160,9 +158,8 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                                                                    inRange: self.threadRange,
                                                                    brcmode: .NotClear)
                 DispatchQueue.main.async {
-                    networkActivityIndicatorStop()
+                    networkActivityIndicatorStop(withHUD: true)
                     self.tableView.mj_header.endRefreshing()
-                    SVProgressHUD.dismiss()
                     if currentMode != self.searchMode { return } //如果模式已经被切换，则数据丢弃
                     if var threadSection = threadSection {
                         self.threads.removeAll()

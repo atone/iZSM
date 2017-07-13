@@ -186,8 +186,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     }
     
     func done(sender: UIBarButtonItem) {
-        networkActivityIndicatorStart()
-        SVProgressHUD.show()
+        networkActivityIndicatorStart(withHUD: true)
         setEditable(false)
         DispatchQueue.global().async {
             var content = self.emailContent!
@@ -199,8 +198,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             let result = self.api.sendMailTo(user: self.emailReceiver!, withTitle: self.emailTitle!, content: content)
             print("send mail status: \(result)")
             DispatchQueue.main.async {
-                networkActivityIndicatorStop()
-                SVProgressHUD.dismiss()
+                networkActivityIndicatorStop(withHUD: true)
                 if self.api.errorCode == 0 {
                     if self.replyMode {
                         SVProgressHUD.showSuccess(withStatus: "回信成功")

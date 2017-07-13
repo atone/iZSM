@@ -140,8 +140,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     
     func done(sender: UIBarButtonItem) {
         if let boardID = self.boardID {
-            networkActivityIndicatorStart()
-            SVProgressHUD.show()
+            networkActivityIndicatorStart(withHUD: true)
             setEditable(false)
             DispatchQueue.global().async {
                 var attachmentUploadSuccessFul = true
@@ -168,8 +167,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                     print("post article done. ret = \(result)")
                 }
                 DispatchQueue.main.async {
-                    networkActivityIndicatorStop()
-                    SVProgressHUD.dismiss()
+                    networkActivityIndicatorStop(withHUD: true)
                     if self.api.errorCode == 0 {
                         if attachmentUploadSuccessFul {
                             SVProgressHUD.showSuccess(withStatus: self.replyMode ? "回复成功":"发表成功")

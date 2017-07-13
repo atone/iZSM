@@ -31,16 +31,14 @@ class ArticleListSearchResultViewController: BaseTableViewController {
     override func fetchDataDirectly() {
         if let boardID = self.boardID, let userID = self.userID {
             self.threadLoaded = 0
-            networkActivityIndicatorStart()
-            SVProgressHUD.show()
+            networkActivityIndicatorStart(withHUD: true)
             DispatchQueue.global().async {
                 let threadSection = self.api.searchArticleInBoard(boardID: boardID,
                                                                   title: nil,
                                                                   user: userID,
                                                                   inRange: self.threadRange)
                 DispatchQueue.main.async {
-                    networkActivityIndicatorStop()
-                    SVProgressHUD.dismiss()
+                    networkActivityIndicatorStop(withHUD: true)
                     self.threads.removeAll()
                     if let threadSection = threadSection {
                         self.threadLoaded += threadSection.count

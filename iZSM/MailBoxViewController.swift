@@ -61,8 +61,7 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
             
             DispatchQueue.main.async {
                 self.tableView.mj_header.endRefreshing()
-                SVProgressHUD.dismiss()
-                networkActivityIndicatorStop()
+                networkActivityIndicatorStop(withHUD: true)
                 if let fetchedMails = fetchedMails {
                     self.mailCountLoaded -= fetchedMails.count
                     self.mails.removeAll()

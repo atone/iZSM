@@ -158,10 +158,9 @@ class ArticleContentViewController: UITableViewController {
                 
                 DispatchQueue.main.async {
                     self.isFetchingData = false
-                    networkActivityIndicatorStop()
+                    networkActivityIndicatorStop(withHUD: true)
                     self.tableView.mj_header.endRefreshing()
                     self.tableView.mj_footer.endRefreshing()
-                    SVProgressHUD.dismiss()
                     self.smarticles.removeAll()
                     if smArticles.count > 0 {
                         self.tableView.mj_footer.isHidden = false

@@ -176,8 +176,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         userButton.setTitle(nil, for: .normal)
         timeLabel.text = nil
         contentTextView.text = nil
-        networkActivityIndicatorStart()
-        SVProgressHUD.show()
+        networkActivityIndicatorStart(withHUD: true)
         DispatchQueue.global().async {
             if let mail = self.mail {
                 if self.inbox {
@@ -187,8 +186,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
                 }
             }
             DispatchQueue.main.async {
-                networkActivityIndicatorStop()
-                SVProgressHUD.dismiss()
+                networkActivityIndicatorStop(withHUD: true)
                 if let detailMail = self.detailMail {
                     if self.inbox {
                         self.title = "来自 \(detailMail.authorID) 的邮件"

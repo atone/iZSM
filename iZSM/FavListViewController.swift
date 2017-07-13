@@ -50,9 +50,8 @@ class FavListViewController: BaseTableViewController {
         DispatchQueue.global().async {
             let favBoards = self.api.getFavBoardList(group: self.boardID)
             DispatchQueue.main.async {
-                networkActivityIndicatorStop()
+                networkActivityIndicatorStop(withHUD: true)
                 self.tableView.mj_header.endRefreshing()
-                SVProgressHUD.dismiss()
                 if let favBoards = favBoards {
                     self.favorites.removeAll()
                     self.favorites += favBoards
@@ -84,13 +83,11 @@ class FavListViewController: BaseTableViewController {
     }
     
     func addFavoriteWithBoardID(boardID: String) {
-        networkActivityIndicatorStart()
-        SVProgressHUD.show()
+        networkActivityIndicatorStart(withHUD: true)
         DispatchQueue.global().async {
             self.api.addFavorite(boardID: boardID)
             DispatchQueue.main.async {
-                networkActivityIndicatorStop()
-                SVProgressHUD.dismiss()
+                networkActivityIndicatorStop(withHUD: true)
                 if self.api.errorCode == 0 {
                     SVProgressHUD.showSuccess(withStatus: "添加成功")
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

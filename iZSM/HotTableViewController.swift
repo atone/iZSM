@@ -55,9 +55,8 @@ class HotTableViewController: BaseTableViewController {
             }
             content.insert(SMHotSection(id: 0, name: "本日十大热门话题", hotThreads: topTen), at: 0)
             DispatchQueue.main.async {
-                networkActivityIndicatorStop()
+                networkActivityIndicatorStop(withHUD: true)
                 self.tableView.mj_header.endRefreshing()
-                SVProgressHUD.dismiss()
                 self.content.removeAll()
                 self.content += content
                 self.api.displayErrorIfNeeded()

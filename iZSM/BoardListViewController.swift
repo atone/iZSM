@@ -149,9 +149,8 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             }
             
             DispatchQueue.main.async {
-                networkActivityIndicatorStop()
+                networkActivityIndicatorStop(withHUD: true)
                 self.tableView.mj_header.endRefreshing()
-                SVProgressHUD.dismiss()
                 self.boards.removeAll()
                 self.boards += boardList
                 self.api.displayErrorIfNeeded()
@@ -242,13 +241,11 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     }
     
     func addFavoriteWithBoardID(boardID: String) {
-        networkActivityIndicatorStart()
-        SVProgressHUD.show()
+        networkActivityIndicatorStart(withHUD: true)
         DispatchQueue.global().async {
             self.api.addFavorite(boardID: boardID)
             DispatchQueue.main.async {
-                networkActivityIndicatorStop()
-                SVProgressHUD.dismiss()
+                networkActivityIndicatorStop(withHUD: true)
                 if self.api.errorCode == 0 {
                     SVProgressHUD.showSuccess(withStatus: "添加成功")
                     NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,

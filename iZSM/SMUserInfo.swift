@@ -38,13 +38,13 @@ class SMUserInfoUtil {
     private static var queryingSet = Set<String>()
     private static let lockQueue = DispatchQueue(label: "cn.yunaitong.iZSM.userLockQueue")
 
-    class func querySMUser(for userID: String, callback: @escaping (SMUser?) -> Void) {
+    class func querySMUser(for userID: String, forceUpdate: Bool = false, callback: @escaping (SMUser?) -> Void) {
         DispatchQueue.global().async {
             autoreleasepool {
                 let realm = try! Realm()
                 let results = realm.objects(SMUserInfo.self).filter("id == '\(userID)'")
-                // 如果数据库中没有记录，或者记录更新时间在1小时之前，那么就进行查询
-                if results.count == 0
+                // 如果数据库中没有记录，或者需要强制更新，或者记录更新时间在1小时之前，那么就进行查询
+                if results.count == 0 || forceUpdate
                     || results.first!.lastUpdateTime < Date(timeIntervalSinceNow: -60 * 60) {
                     var shouldMakeQuery: Bool = false
                     lockQueue.sync {
@@ -60,9 +60,6 @@ class SMUserInfoUtil {
                         print("start querying info for \(userID)...")
                         let user = api.getUserInfo(userID: userID)
                         queryingSet.remove(userID)
-                        DispatchQueue.main.async {
-                            callback(user)
-                        }
                         if let user = user {
                             let userInfo = userInfoFrom(user: user, updateTime: Date())
                             try! realm.write {
@@ -78,6 +75,9 @@ class SMUserInfoUtil {
                             print("write user info for \(userID) success!")
                         } else {
                             print("write user info for \(userID) failure!")
+                        }
+                        DispatchQueue.main.async {
+                            callback(user)
                         }
                     } else {  // 有人查，那就等结果
                         var counter = 0
@@ -126,7 +126,7 @@ class SMUserInfoUtil {
                       nick: userInfo.nick)
     }
     
-    class func userInfoFrom(user: SMUser, updateTime: Date) -> SMUserInfo {
+    private class func userInfoFrom(user: SMUser, updateTime: Date) -> SMUserInfo {
         let userInfo = SMUserInfo()
         userInfo.title = user.title
         userInfo.level = user.level

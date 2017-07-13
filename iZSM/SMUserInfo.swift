@@ -68,6 +68,13 @@ class SMUserInfoUtil {
                             try! realm.write {
                                 realm.add(userInfo, update: true)
                             }
+                            let userID = userInfo.id
+                            if let username = AppSetting.sharedSetting.username {
+                                if username.lowercased() == userID.lowercased() && username != userID {
+                                    print("change saved user id from \(username) to \(userID)")
+                                    AppSetting.sharedSetting.username = userID
+                                }
+                            }
                             print("write user info for \(userID) success!")
                         } else {
                             print("write user info for \(userID) failure!")
@@ -119,7 +126,7 @@ class SMUserInfoUtil {
                       nick: userInfo.nick)
     }
     
-    private class func userInfoFrom(user: SMUser, updateTime: Date) -> SMUserInfo {
+    class func userInfoFrom(user: SMUser, updateTime: Date) -> SMUserInfo {
         let userInfo = SMUserInfo()
         userInfo.title = user.title
         userInfo.level = user.level

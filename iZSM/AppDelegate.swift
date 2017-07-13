@@ -269,7 +269,7 @@ func networkActivityIndicatorStart(_ withHUD: Bool = false) {
     }
 }
 
-func networkActivityIndicatorStop(_ withHUD: Bool = false) {
+func networkActivityIndicatorStop(withHUD: Bool = false) {
     UIApplication.shared.isNetworkActivityIndicatorVisible = false
     if withHUD {
         SVProgressHUD.dismiss()

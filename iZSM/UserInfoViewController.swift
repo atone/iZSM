@@ -111,6 +111,9 @@ class UserInfoViewController: UIViewController {
         backgroundView.addSubview(avatarImageView)
         avatarImageView.clipsToBounds = true
         avatarImageView.contentMode = .scaleAspectFill
+        avatarImageView.isUserInteractionEnabled = true
+        avatarImageView.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                                    action: #selector(tapUserImage(sender:))))
         avatarImageView.snp.makeConstraints { (make) in
             make.width.equalTo(avatarWidth)
             make.height.equalTo(avatarWidth)
@@ -252,6 +255,10 @@ class UserInfoViewController: UIViewController {
         delegate?.userInfoViewController(self, didClickSearch: sender)
     }
     
+    @objc private func tapUserImage(sender: UIGestureRecognizer) {
+        delegate?.userInfoViewController(self, didTapUserImageView: avatarImageView)
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         avatarImageView.layer.cornerRadius = avatarWidth / 2
@@ -261,6 +268,7 @@ class UserInfoViewController: UIViewController {
 protocol UserInfoViewControllerDelegate {
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem)
     func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem)
+    func userInfoViewController(_ controller: UserInfoViewController, didTapUserImageView imageView: UIImageView)
     func shouldEnableCompose() -> Bool
     func shouldEnableSearch() -> Bool
 }

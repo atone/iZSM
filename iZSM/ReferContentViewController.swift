@@ -206,6 +206,11 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
 }
 
 extension ReferContentViewController: UserInfoViewControllerDelegate {
+    
+    func userInfoViewController(_ controller: UserInfoViewController, didTapUserImageView imageView: UIImageView) {
+        
+    }
+
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
         if let userID = reference?.userID, let boardID = reference?.boardID {
             dismiss(animated: true, completion: nil)

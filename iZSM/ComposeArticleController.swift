@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MobileCoreServices
 import SnapKit
 import SVProgressHUD
 
@@ -212,7 +213,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     
     func addPhoto(sender: UIBarButtonItem) {
         if attachedImage == nil {
-            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            let actionSheet = UIAlertController(title: "添加照片", message: nil, preferredStyle: .actionSheet)
             if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
                 let camera = UIAlertAction(title: "从图库中选择", style: .default) { [unowned self] action in
                     let picker = UIImagePickerController()
@@ -249,9 +250,13 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         dismiss(animated: true, completion: nil)
         let type = info[UIImagePickerControllerMediaType] as! String
-        if type == "public.image" {
+        if type == kUTTypeImage as String {
             attachedImage = info[UIImagePickerControllerOriginalImage] as? UIImage
         }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
     func handleReplyMode() {

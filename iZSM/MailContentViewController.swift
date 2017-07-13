@@ -227,6 +227,11 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
 }
 
 extension MailContentViewController: UserInfoViewControllerDelegate {
+    
+    func userInfoViewController(_ controller: UserInfoViewController, didTapUserImageView imageView: UIImageView) {
+        
+    }
+
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
 
     }

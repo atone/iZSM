@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MobileCoreServices
 import RealmSwift
 import SVProgressHUD
 
@@ -227,8 +228,62 @@ class UserViewController: UITableViewController {
     }
 }
 
+extension UserViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        dismiss(animated: true, completion: nil)
+        let type = info[UIImagePickerControllerMediaType] as! String
+        if type == kUTTypeImage as String {
+            if let selectedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+                networkActivityIndicatorStart()
+                DispatchQueue.global().async {
+                    self.api.modifyFaceImage(image: selectedImage)
+                    SMUserInfoUtil.querySMUser(for: self.setting.username!, forceUpdate: true) { (user) in
+                        self.updateUserInfoView()
+                    }
+                }
+            }
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+}
+
 extension UserViewController: UserInfoViewControllerDelegate {
     
+    func userInfoViewController(_ controller: UserInfoViewController, didTapUserImageView imageView: UIImageView) {
+        if setting.username == nil {
+            return
+        }
+        let actionSheet = UIAlertController(title: "修改头像", message: nil, preferredStyle: .actionSheet)
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            let camera = UIAlertAction(title: "从图库中选择", style: .default) { [unowned self] action in
+                let picker = UIImagePickerController()
+                picker.delegate = self
+                picker.allowsEditing = true
+                picker.sourceType = .photoLibrary
+                picker.modalPresentationStyle = .formSheet
+                self.present(picker, animated: true, completion: nil)
+            }
+            actionSheet.addAction(camera)
+        }
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let camera = UIAlertAction(title: "使用相机拍照", style: .default) { [unowned self] action in
+                let picker = UIImagePickerController()
+                picker.delegate = self
+                picker.allowsEditing = true
+                picker.sourceType = .camera
+                self.present(picker, animated: true, completion: nil)
+            }
+            actionSheet.addAction(camera)
+        }
+        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        actionSheet.popoverPresentationController?.sourceView = imageView
+        present(actionSheet, animated: true, completion: nil)
+    }
+
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
         
     }

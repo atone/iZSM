@@ -499,6 +499,10 @@ extension ArticleContentViewController {
 
 extension ArticleContentViewController: UserInfoViewControllerDelegate {
     
+    func userInfoViewController(_ controller: UserInfoViewController, didTapUserImageView imageView: UIImageView) {
+        
+    }
+    
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
         if let userID = controller.user?.id, let boardID = controller.article?.boardID {
             dismiss(animated: true, completion: nil)

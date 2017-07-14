@@ -47,7 +47,7 @@ class AboutViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath {
         case IndexPath(row: 0, section: 0):
-            let urlAddress = "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=979484184&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"
+            let urlAddress = "https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=979484184&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"
             UIApplication.shared.openURL(URL(string: urlAddress)!)
         case IndexPath(row: 1, section: 0):
             let cevc = ComposeEmailController()
@@ -67,7 +67,7 @@ class AboutViewController: UITableViewController {
             navigationController.modalPresentationStyle = .formSheet
             present(navigationController, animated: true, completion: nil)
         case IndexPath(row: 2, section: 0):
-            let urlAddress = "http://www.yunaitong.cn/zsmth-released.html"
+            let urlAddress = "https://www.yunaitong.cn/zsmth-released.html"
             let webViewController = SFSafariViewController(url: URL(string: urlAddress)!)
             present(webViewController, animated: true, completion: nil)
         default:

@@ -375,11 +375,11 @@ class ArticleContentViewController: UITableViewController {
             let urlString: String
             switch self.setting.displayMode {
             case .nForum:
-                urlString = "http://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
+                urlString = "https://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
             case .www2:
-                urlString = "http://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
+                urlString = "https://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
             case .mobile:
-                urlString = "http://m.newsmth.net/article/\(boardID)/\(articleID)"
+                urlString = "https://m.newsmth.net/article/\(boardID)/\(articleID)"
             }
             let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] action in
                 let webViewController = SFSafariViewController(url: URL(string: urlString)!)

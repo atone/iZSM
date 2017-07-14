@@ -111,7 +111,7 @@ struct SMArticle {
             if fileName.hasSuffix(".jpg") || fileName.hasSuffix(".jpeg")
                 || fileName.hasSuffix(".gif") || fileName.hasSuffix(".bmp")
                 || fileName.hasSuffix(".png") {
-                    let baseURLString = "http://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
+                    let baseURLString = "https://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
                     let thumbnailURL = URL(string: baseURLString + (attachments.count==1 ? "" : "/middle"))!
                     let fullImageURL = URL(string: baseURLString)!
                     let imageName = attachment.name
@@ -259,11 +259,11 @@ struct SMUser {
         let prefix = userID.substring(to: userID.index(after: userID.startIndex)).uppercased()
         let faceString: String
         if let faceURL = faceURL, faceURL.characters.count > 0 {
-            faceString = "http://images.newsmth.net/nForum/uploadFace/\(prefix)/\(faceURL)"
+            faceString = "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(faceURL)"
         } else if userID.contains(".") {
-            faceString = "http://images.newsmth.net/nForum/uploadFace/\(prefix)/\(userID)"
+            faceString = "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(userID)"
         } else {
-            faceString = "http://images.newsmth.net/nForum/uploadFace/\(prefix)/\(userID).jpg"
+            faceString = "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(userID).jpg"
         }
         return URL(string: faceString.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)!
     }

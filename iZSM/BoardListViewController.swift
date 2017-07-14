@@ -230,7 +230,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                         self.addFavoriteWithBoardID(boardID: board.boardID)
                     }
                     actionSheet.addAction(addFavAction)
-                    let addMemAction = UIAlertAction(title: "关注版面（驻版）", style: .default) { (action) in
+                    let addMemAction = UIAlertAction(title: "关注版面 (驻版)", style: .default) { (action) in
                         self.addMemberWithBoardID(boardID: board.boardID)
                     }
                     actionSheet.addAction(addMemAction)

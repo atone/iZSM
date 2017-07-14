@@ -207,11 +207,11 @@ class SmthAPI {
         api.reset_status()
         if
             let rawValue = api.net_GetMailCount() as? [String:Any],
-            let is_full = (rawValue["is_full"] as? NSNumber)?.boolValue,
+            let is_full = rawValue["is_full"] as? Bool,
             let error_description = rawValue["error_description"] as? String,
-            let total_count = (rawValue["total_count"] as? NSNumber)?.intValue,
-            let error = (rawValue["error"] as? NSNumber)?.intValue,
-            let new_count = (rawValue["new_count"] as? NSNumber)?.intValue
+            let total_count = rawValue["total_count"] as? Int,
+            let error = rawValue["error"] as? Int,
+            let new_count = rawValue["new_count"] as? Int
         {
             return SMMailStatus(isFull: is_full, totalCount: total_count, newCount: new_count, error: error, errorDescription: error_description)
         }
@@ -299,9 +299,9 @@ class SmthAPI {
         if
             let dict = api.net_GetReferCount(mode.rawValue) as? [String:Any],
             let error_description = dict["error_description"] as? String,
-            let total_count = (dict["total_count"] as? NSNumber)?.intValue,
-            let error = (dict["error"] as? NSNumber)?.intValue,
-            let new_count = (dict["new_count"] as? NSNumber)?.intValue
+            let total_count = dict["total_count"] as? Int,
+            let error = dict["error"] as? Int,
+            let new_count = dict["new_count"] as? Int
         {
             return SMReferenceStatus(totalCount: total_count, newCount: new_count, error: error, errorDescription: error_description)
         }
@@ -422,7 +422,7 @@ class SmthAPI {
                     let code = raw["code"] as? String,
                     let desc = raw["desc"] as? String,
                     let name = raw["name"] as? String,
-                    let id = (raw["id"] as? NSNumber)?.intValue
+                    let id = raw["id"] as? Int
                 {
                     sectionList.append(SMSection(code: code, description: desc, name: name, id: id))
                 }
@@ -560,9 +560,9 @@ class SmthAPI {
     // private implementation of smth API
     private func threadFromDictionary(dict: [String:Any]) -> SMThread? {
         if
-            let id = (dict["id"] as? NSNumber)?.intValue,
-            let count = (dict["count"] as? NSNumber)?.intValue,
-            let last_reply_id = (dict["last_reply_id"] as? NSNumber)?.intValue,
+            let id = dict["id"] as? Int,
+            let count = dict["count"] as? Int,
+            let last_reply_id = dict["last_reply_id"] as? Int,
 
             let subject = dict["subject"] as? String,
             let author_id = dict["author_id"] as? String,
@@ -571,8 +571,8 @@ class SmthAPI {
             let last_user_id = dict["last_user_id"] as? String,
             let board_name = dict["board_name"] as? String,
 
-            let timeInterval = (dict["time"] as? NSNumber)?.doubleValue,
-            let lastTimeInterval = (dict["last_time"] as? NSNumber)?.doubleValue
+            let timeInterval = dict["time"] as? Double,
+            let lastTimeInterval = dict["last_time"] as? Double
 
         {
             let time = Date(timeIntervalSince1970: timeInterval)
@@ -585,13 +585,13 @@ class SmthAPI {
 
     private func articleFromDictionary(dict: [String:Any]) -> SMArticle? {
         if
-            let id = (dict["id"] as? NSNumber)?.intValue,
+            let id = dict["id"] as? Int,
             let subject = dict["subject"] as? String,
             let rawBody = dict["body"] as? String,
             let author_id = dict["author_id"] as? String,
-            let effsize = (dict["effsize"] as? NSNumber)?.intValue,
+            let effsize = dict["effsize"] as? Int,
             let flags = dict["flags"] as? String,
-            let timeInterval = (dict["time"] as? NSNumber)?.doubleValue
+            let timeInterval = dict["time"] as? Double
         {
             let body = cleanedStringFrom(string: rawBody)
             let time = Date(timeIntervalSince1970: timeInterval)
@@ -600,8 +600,8 @@ class SmthAPI {
                 for rawAttachment in rawAttachments {
                     if
                         let name = rawAttachment["name"] as? String,
-                        let pos = (rawAttachment["pos"] as? NSNumber)?.intValue,
-                        let size = (rawAttachment["size"] as? NSNumber)?.intValue
+                        let pos = rawAttachment["pos"] as? Int,
+                        let size = rawAttachment["size"] as? Int
                     {
                         attachments.append(SMAttachment(name: name, pos: pos, size: size))
                     }
@@ -618,12 +618,12 @@ class SmthAPI {
             let rawBody = dict["body"] as? String,
             let flags = dict["flags"] as? String,
             let subject = dict["subject"] as? String,
-            let timeInterval = (dict["time"] as? NSNumber)?.doubleValue
+            let timeInterval = dict["time"] as? Double
         {
             let time = Date(timeIntervalSince1970: timeInterval)
             var position = 0
-            if let rawPosition = dict["position"] as? NSNumber {
-                position = rawPosition.intValue
+            if let rawPosition = dict["position"] as? Int {
+                position = rawPosition
             } else if let rawPosition = dict["position"] as? String {
                 position = Int(rawPosition) ?? 0
             }
@@ -633,8 +633,8 @@ class SmthAPI {
                 for rawAttachment in rawAttachments {
                     if
                         let name = rawAttachment["name"] as? String,
-                        let pos = (rawAttachment["pos"] as? NSNumber)?.intValue,
-                        let size = (rawAttachment["size"] as? NSNumber)?.intValue
+                        let pos = rawAttachment["pos"] as? Int,
+                        let size = rawAttachment["size"] as? Int
                     {
                         attachments.append(SMAttachment(name: name, pos: pos, size: size))
                     }
@@ -649,20 +649,20 @@ class SmthAPI {
     private func referenceFromDictionary(dict: [String:Any]) -> SMReference? {
         if
             let subject = dict["subject"] as? String,
-            let flag = (dict["flag"] as? NSNumber)?.intValue,
-            let re_id = (dict["re_id"] as? NSNumber)?.intValue,
-            let rawMode = (dict["mode"] as? NSNumber)?.int32Value,
+            let flag = dict["flag"] as? Int,
+            let re_id = dict["re_id"] as? Int,
+            let rawMode = dict["mode"] as? Int32,
             let mode = SmthAPI.ReferMode(rawValue: rawMode),
-            let id = (dict["id"] as? NSNumber)?.intValue,
+            let id = dict["id"] as? Int,
             let board_id = dict["board_id"] as? String,
             let user_id = dict["user_id"] as? String,
-            let group_id = (dict["group_id"] as? NSNumber)?.intValue,
-            let timeInterval = (dict["time"] as? NSNumber)?.doubleValue
+            let group_id = dict["group_id"] as? Int,
+            let timeInterval = dict["time"] as? Double
         {
             let time = Date(timeIntervalSince1970: timeInterval)
             var position = 0
-            if let rawPosition = dict["position"] as? NSNumber {
-                position = rawPosition.intValue
+            if let rawPosition = dict["position"] as? Int {
+                position = rawPosition
             } else if let rawPosition = dict["position"] as? String {
                 position = Int(rawPosition) ?? 0
             }
@@ -702,27 +702,27 @@ class SmthAPI {
 
     private func boardFromDictionary(dict: [String:Any]) -> SMBoard? {
         if
-            let level = (dict["level"] as? NSNumber)?.intValue,
-            let unread = (dict["unread"] as? NSNumber)?.boolValue,
-            let current_users = (dict["current_users"] as? NSNumber)?.intValue,
-            let max_online = (dict["max_online"] as? NSNumber)?.intValue,
-            let score_level = (dict["score_level"] as? NSNumber)?.intValue,
-            let total = (dict["total"] as? NSNumber)?.intValue,
-            let position = (dict["position"] as? NSNumber)?.intValue,
-            let last_post = (dict["last_post"] as? NSNumber)?.intValue,
+            let level = dict["level"] as? Int,
+            let unread = dict["unread"] as? Bool,
+            let current_users = dict["current_users"] as? Int,
+            let max_online = dict["max_online"] as? Int,
+            let score_level = dict["score_level"] as? Int,
+            let total = dict["total"] as? Int,
+            let position = dict["position"] as? Int,
+            let last_post = dict["last_post"] as? Int,
             let manager = dict["manager"] as? String,
             let type = dict["type"] as? String,
-            let flag = (dict["flag"] as? NSNumber)?.intValue,
-            let bid = (dict["bid"] as? NSNumber)?.intValue,
-            let max_timeInterval = (dict["max_time"] as? NSNumber)?.doubleValue,
+            let flag = dict["flag"] as? Int,
+            let bid = dict["bid"] as? Int,
+            let max_timeInterval = dict["max_time"] as? Double,
             let id = dict["id"] as? String,
             let name = dict["name"] as? String,
-            let score = (dict["score"] as? NSNumber)?.intValue,
-            let group = (dict["group"] as? NSNumber)?.intValue
+            let score = dict["score"] as? Int,
+            let group = dict["group"] as? Int
         {
             var section: Int = 0
-            if let sectionInt = dict["section"] as? NSNumber {
-                section = sectionInt.intValue
+            if let sectionInt = dict["section"] as? Int {
+                section = sectionInt
             } else if let sectionStr = dict["section"] as? String {
                 section = Int(sectionStr) ?? 10 // 10 means "A", aborted section
             }
@@ -735,19 +735,19 @@ class SmthAPI {
     private func userFromDictionary(dict:[String:Any]) -> SMUser? {
         if
             let title = dict["title"] as? String,
-            let level = (dict["level"] as? NSNumber)?.intValue,
-            let logins = (dict["logins"] as? NSNumber)?.intValue,
-            let first_login_timeInterval = (dict["first_login"] as? NSNumber)?.doubleValue,
-            let last_login_timeInterval = (dict["last_login"] as? NSNumber)?.doubleValue,
-            let age = (dict["age"] as? NSNumber)?.intValue,
-            let uid = (dict["uid"] as? NSNumber)?.intValue,
+            let level = dict["level"] as? Int,
+            let logins = dict["logins"] as? Int,
+            let first_login_timeInterval = dict["first_login"] as? Double,
+            let last_login_timeInterval = dict["last_login"] as? Double,
+            let age = dict["age"] as? Int,
+            let uid = dict["uid"] as? Int,
             let life = dict["life"] as? String,
             let id = dict["id"] as? String,
             let faceurl = dict["faceurl"] as? String,
             let nick = dict["nick"] as? String,
-            let gender = (dict["gender"] as? NSNumber)?.intValue,
-            let score = (dict["score"] as? NSNumber)?.intValue,
-            let posts = (dict["posts"] as? NSNumber)?.intValue
+            let gender = dict["gender"] as? Int,
+            let score = dict["score"] as? Int,
+            let posts = dict["posts"] as? Int
         {
             let first_login = Date(timeIntervalSince1970: first_login_timeInterval)
             let last_login = Date(timeIntervalSince1970: last_login_timeInterval)
@@ -761,10 +761,10 @@ class SmthAPI {
             let rawBoard = dict["board"] as? [String:Any],
             let board = boardFromDictionary(dict: rawBoard),
             let board_id = dict["board_id"] as? String,
-            let flag = (dict["flag"] as? NSNumber)?.intValue,
-            let score = (dict["score"] as? NSNumber)?.intValue,
-            let status = (dict["status"] as? NSNumber)?.intValue,
-            let timeInterval = (dict["time"] as? NSNumber)?.doubleValue,
+            let flag = dict["flag"] as? Int,
+            let score = dict["score"] as? Int,
+            let status = dict["status"] as? Int,
+            let timeInterval = dict["time"] as? Double,
             let title = dict["title"] as? String,
             let user_id = dict["user_id"] as? String
 

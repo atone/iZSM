@@ -298,8 +298,8 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     
     func keyboardWillShow(notification: Notification) {
         let info = notification.userInfo
-        let animationDuration = (info?[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
-        var keyboardFrame = (info?[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let animationDuration = info?[UIKeyboardAnimationDurationUserInfoKey] as! Double
+        var keyboardFrame = info?[UIKeyboardFrameEndUserInfoKey] as! CGRect
         keyboardFrame = view.convert(keyboardFrame, from: view.window)
         let height = keyboardFrame.size.height
         keyboardHeight?.update(offset: -height - 5)

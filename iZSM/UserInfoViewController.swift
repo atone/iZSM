@@ -218,8 +218,8 @@ class UserInfoViewController: UIViewController {
                                          placeholder: defaultImage,
                                          options: [.progressiveBlur, .setImageWithFadeAnimation])
             backgroundImageView.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
-                                         placeholder: defaultImage,
-                                         options: [.progressiveBlur, .setImageWithFadeAnimation])
+                                             placeholder: defaultImage,
+                                             options: [.progressiveBlur, .setImageWithFadeAnimation])
             titleLabel.text = "身份"
             levelLabel.text = "等级"
             postsLabel.text = "发帖"

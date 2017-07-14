@@ -22,12 +22,11 @@ class FavListViewController: BaseTableViewController {
         return switcher
     }()
     
-    var index: Int {
-        set {
-            switcher.selectedSegmentIndex = newValue
-        }
-        get {
-            return switcher.selectedSegmentIndex
+    var index: Int = 0 {
+        didSet {
+            if switcher.selectedSegmentIndex != index {
+                switcher.selectedSegmentIndex = index
+            }
         }
     }
     
@@ -88,6 +87,7 @@ class FavListViewController: BaseTableViewController {
     }
     
     func indexChanged(sender: UISegmentedControl) {
+        index = sender.selectedSegmentIndex
         SVProgressHUD.show()
         fetchDataDirectly()
     }

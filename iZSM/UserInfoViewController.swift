@@ -105,7 +105,8 @@ class UserInfoViewController: UIViewController {
         idLabel.textColor = UIColor.white
         idLabel.font = UIFont.boldSystemFont(ofSize: idLabelFontSize)
         idLabel.textAlignment = .center
-        idLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        idLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
+        idLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .vertical)
         idLabel.snp.makeConstraints { (make) in
             make.center.equalTo(view)
         }
@@ -163,7 +164,8 @@ class UserInfoViewController: UIViewController {
         postsContentLabel.textColor = UIColor.white
         postsContentLabel.textAlignment = .center
         postsContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
-        postsContentLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        postsContentLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
+        postsContentLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .vertical)
         scoreContentLabel.textColor = UIColor.white
         scoreContentLabel.textAlignment = .center
         scoreContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
@@ -195,7 +197,8 @@ class UserInfoViewController: UIViewController {
         nickLabel.textColor = UIColor.white
         nickLabel.font = UIFont.systemFont(ofSize: nickLabelFontSize)
         nickLabel.textAlignment = .center
-        nickLabel.setContentHuggingPriority(idLabel.contentHuggingPriority(for: .vertical) - 1, for: .vertical)
+        nickLabel.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .vertical)
+        nickLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .vertical)
         nickLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(idLabel)
             make.top.equalTo(idLabel.snp.bottom)

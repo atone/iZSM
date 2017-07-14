@@ -61,18 +61,19 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         titleHintLabel.textAlignment = .center
         titleHintLabel.layer.cornerRadius = cornerRadius
         titleHintLabel.layer.masksToBounds = true
-        titleHintLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        titleHintLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
+        titleHintLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         titleTextField.delegate = self
         titleTextField.addTarget(self, action: #selector(change(textField:)), for: .editingChanged)
-        titleTextField.setContentHuggingPriority(countLabel.contentHuggingPriority(for: .horizontal) - 1, for: .horizontal)
-        titleTextField.setContentCompressionResistancePriority(countLabel.contentCompressionResistancePriority(for: .horizontal) - 1, for: .horizontal)
+        titleTextField.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .horizontal)
+        titleTextField.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
         titleTextField.textColor = UIColor.lightGray
         titleTextField.font = UIFont.systemFont(ofSize: 16)
         titleTextField.placeholder = "添加标题"
         titleTextField.autocapitalizationType = .none
         titleTextField.returnKeyType = .next
-        contentTextView.setContentHuggingPriority(titleHintLabel.contentHuggingPriority(for: .vertical) - 1, for: .vertical)
-        contentTextView.setContentCompressionResistancePriority(titleHintLabel.contentCompressionResistancePriority(for: .vertical) - 1, for: .vertical)
+        contentTextView.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .vertical)
+        contentTextView.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .vertical)
         contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
         contentTextView.autocapitalizationType = .sentences
         contentTextView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
@@ -81,7 +82,8 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         countLabel.text = "0"
         countLabel.font = UIFont.systemFont(ofSize: 16)
         countLabel.textColor = UIColor.lightGray
-        countLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        countLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
+        countLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         
         doneButton = UIBarButtonItem(barButtonSystemItem: .done,
                                      target: self,

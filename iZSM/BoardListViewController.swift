@@ -17,7 +17,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     var boardID = 0
     var sectionID = 0
     var flag: Int = 0
-    private var boards: [SMBoard] = [SMBoard]() {
+    fileprivate var boards: [SMBoard] = [SMBoard]() {
         didSet { tableView?.reloadData() }
     }
     
@@ -100,6 +100,9 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         // add long press gesture recognizer
         tableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self,
                                                                     action: #selector(handleLongPress(gestureRecognizer:))))
+        if traitCollection.forceTouchCapability == .available {
+            registerForPreviewing(with: self, sourceView: view)
+        }
     }
     
     deinit {
@@ -286,5 +289,41 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                 }
             }
         }
+    }
+}
+
+extension BoardListViewController : UIViewControllerPreviewingDelegate {
+    /// Create a previewing view controller to be shown at "Peek".
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        // Obtain the index path and the cell that was pressed.
+        guard
+            let indexPath = tableView.indexPathForRow(at: location),
+            let cell = tableView.cellForRow(at: indexPath) else { return nil }
+        previewingContext.sourceRect = cell.frame
+        let board = boards[indexPath.row]
+        if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
+            let blvc =  BoardListViewController()
+            if let r = board.name.range(of: " ") {
+                blvc.title = board.name.substring(to: r.lowerBound)
+            } else {
+                blvc.title = board.name
+            }
+            blvc.boardID = board.bid
+            blvc.sectionID = board.section
+            blvc.flag = board.flag
+            return blvc
+        } else {
+            let alvc = ArticleListViewController()
+            alvc.boardID = board.boardID
+            alvc.boardName = board.name
+            alvc.hidesBottomBarWhenPushed = true
+            return alvc
+        }
+    }
+    
+    /// Present the view controller for the "Pop" action.
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        // Reuse the "Peek" view controller for presentation.
+        show(viewControllerToCommit, sender: self)
     }
 }

@@ -31,7 +31,7 @@ class FavListViewController: BaseTableViewController {
     }
     
     var boardID: Int = 0
-    private var favorites = [SMBoard]()
+    fileprivate var favorites = [SMBoard]()
     
     override func clearContent() {
         super.clearContent()
@@ -55,6 +55,9 @@ class FavListViewController: BaseTableViewController {
                                                selector: #selector(setUpdateFavList(notification:)),
                                                name: FavListViewController.kUpdateFavListNotification,
                                                object: nil)
+        if traitCollection.forceTouchCapability == .available {
+            registerForPreviewing(with: self, sourceView: view)
+        }
     }
     
     deinit {
@@ -183,7 +186,6 @@ class FavListViewController: BaseTableViewController {
             show(flvc, sender: self)
         } else {
             let alvc = ArticleListViewController()
-            let board = favorites[indexPath.row]
             alvc.boardID = board.boardID
             alvc.boardName = board.name
             alvc.hidesBottomBarWhenPushed = true
@@ -224,5 +226,35 @@ class FavListViewController: BaseTableViewController {
                 }
             }
         }
+    }
+}
+
+extension FavListViewController : UIViewControllerPreviewingDelegate {
+    /// Create a previewing view controller to be shown at "Peek".
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        // Obtain the index path and the cell that was pressed.
+        guard
+            let indexPath = tableView.indexPathForRow(at: location),
+            let cell = tableView.cellForRow(at: indexPath) else { return nil }
+        previewingContext.sourceRect = cell.frame
+        let board = favorites[indexPath.row]
+        if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
+            let flvc = FavListViewController()
+            flvc.title = board.name
+            flvc.boardID = board.bid
+            return flvc
+        } else {
+            let alvc = ArticleListViewController()
+            alvc.boardID = board.boardID
+            alvc.boardName = board.name
+            alvc.hidesBottomBarWhenPushed = true
+            return alvc
+        }
+    }
+    
+    /// Present the view controller for the "Pop" action.
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        // Reuse the "Peek" view controller for presentation.
+        show(viewControllerToCommit, sender: self)
     }
 }

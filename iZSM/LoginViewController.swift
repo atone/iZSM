@@ -125,7 +125,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     func findLoginFrom1Password(_ sender: UIBarButtonItem) {
-        OnePasswordExtension.shared().findLogin(forURLString: "http://www.newsmth.net", for: self, sender: sender, completion: { (loginDictionary, error) in
+        OnePasswordExtension.shared().findLogin(forURLString: "newsmth.net", for: self, sender: sender, completion: { (loginDictionary, error) in
             if loginDictionary == nil {
                 return
             }

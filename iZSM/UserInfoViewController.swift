@@ -105,6 +105,7 @@ class UserInfoViewController: UIViewController {
         idLabel.textColor = UIColor.white
         idLabel.font = UIFont.boldSystemFont(ofSize: idLabelFontSize)
         idLabel.textAlignment = .center
+        idLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         idLabel.snp.makeConstraints { (make) in
             make.center.equalTo(view)
         }
@@ -162,6 +163,7 @@ class UserInfoViewController: UIViewController {
         postsContentLabel.textColor = UIColor.white
         postsContentLabel.textAlignment = .center
         postsContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
+        postsContentLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         scoreContentLabel.textColor = UIColor.white
         scoreContentLabel.textAlignment = .center
         scoreContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)

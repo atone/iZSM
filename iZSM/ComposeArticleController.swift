@@ -61,6 +61,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         titleHintLabel.textAlignment = .center
         titleHintLabel.layer.cornerRadius = cornerRadius
         titleHintLabel.layer.masksToBounds = true
+        titleHintLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         titleTextField.delegate = self
         titleTextField.addTarget(self, action: #selector(change(textField:)), for: .editingChanged)
         titleTextField.setContentHuggingPriority(countLabel.contentHuggingPriority(for: .horizontal) - 1, for: .horizontal)
@@ -80,6 +81,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         countLabel.text = "0"
         countLabel.font = UIFont.systemFont(ofSize: 16)
         countLabel.textColor = UIColor.lightGray
+        countLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
         doneButton = UIBarButtonItem(barButtonSystemItem: .done,
                                      target: self,

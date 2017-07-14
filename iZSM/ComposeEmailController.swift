@@ -68,6 +68,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         sendToLabel.textAlignment = .center
         sendToLabel.layer.cornerRadius = cornerRadius
         sendToLabel.layer.masksToBounds = true
+        sendToLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         titleHintLabel.text = "标题"
         titleHintLabel.font = UIFont.systemFont(ofSize: 14)
         titleHintLabel.textColor = UIColor.white
@@ -75,6 +76,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         titleHintLabel.textAlignment = .center
         titleHintLabel.layer.cornerRadius = cornerRadius
         titleHintLabel.layer.masksToBounds = true
+        titleHintLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         titleTextField.delegate = self
         titleTextField.addTarget(self, action: #selector(change(textField:)), for: .editingChanged)
         titleTextField.setContentHuggingPriority(countLabel.contentHuggingPriority(for: .horizontal) - 1, for: .horizontal)
@@ -103,6 +105,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         countLabel.text = "0"
         countLabel.font = UIFont.systemFont(ofSize: 16)
         countLabel.textColor = UIColor.lightGray
+        countLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
         doneButton = UIBarButtonItem(barButtonSystemItem: .done,
                                      target: self,

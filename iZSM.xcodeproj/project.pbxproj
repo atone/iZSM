@@ -83,6 +83,7 @@
 		9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */; };
 		9CB573C41DE5B61800CD6F3E /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C31DE5B61800CD6F3E /* LogoView.swift */; };
 		9CDC486F1DEDB50A00482408 /* HYXinRenWenSongW.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9CDC486E1DEDB40A00482408 /* HYXinRenWenSongW.otf */; };
+		9CFEC1D41F19E330008E5976 /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -194,6 +195,7 @@
 		9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		9CB573C31DE5B61800CD6F3E /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		9CDC486E1DEDB40A00482408 /* HYXinRenWenSongW.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = HYXinRenWenSongW.otf; path = Resources/HYXinRenWenSongW.otf; sourceTree = "<group>"; };
+		9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KeychainSwift.framework; path = Carthage/Build/iOS/KeychainSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,13 +204,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C1A3BE01DE2E5AD00CF4A43 /* libSMTH_0.2.3.a in Frameworks */,
-				9C889FB91DE409B100C33A8D /* YYKit.framework in Frameworks */,
-				9C1A3BD61DE2C5EF00CF4A43 /* SnapKit.framework in Frameworks */,
-				9C1A3BF61DE2EEAA00CF4A43 /* SVProgressHUD.framework in Frameworks */,
-				9C889FBB1DE4215100C33A8D /* TTTAttributedLabel.framework in Frameworks */,
+				9CFEC1D41F19E330008E5976 /* KeychainSwift.framework in Frameworks */,
 				9C889FC71DE4733A00C33A8D /* OnePasswordExtension.framework in Frameworks */,
 				9C4728F01F0FC64D00C289FC /* Realm.framework in Frameworks */,
 				9C4728F11F0FC64D00C289FC /* RealmSwift.framework in Frameworks */,
+				9C1A3BD61DE2C5EF00CF4A43 /* SnapKit.framework in Frameworks */,
+				9C1A3BF61DE2EEAA00CF4A43 /* SVProgressHUD.framework in Frameworks */,
+				9C889FBB1DE4215100C33A8D /* TTTAttributedLabel.framework in Frameworks */,
+				9C889FB91DE409B100C33A8D /* YYKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,14 +270,15 @@
 		9C1A3BD21DE2C5E100CF4A43 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */,
+				9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */,
+				9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */,
 				9C4728EE1F0FC64D00C289FC /* Realm.framework */,
 				9C4728EF1F0FC64D00C289FC /* RealmSwift.framework */,
-				9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */,
+				9C1A3BD51DE2C5EF00CF4A43 /* SnapKit.framework */,
+				9C1A3BF51DE2EEAA00CF4A43 /* SVProgressHUD.framework */,
 				9C889FBA1DE4215100C33A8D /* TTTAttributedLabel.framework */,
 				9C889FB81DE409B100C33A8D /* YYKit.framework */,
-				9C1A3BF51DE2EEAA00CF4A43 /* SVProgressHUD.framework */,
-				9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */,
-				9C1A3BD51DE2C5EF00CF4A43 /* SnapKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -573,6 +577,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/OnePasswordExtension.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RealmSwift.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/KeychainSwift.framework",
 			);
 			name = "Run Script";
 			outputPaths = (
@@ -583,6 +588,7 @@
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/OnePasswordExtension.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Realm.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RealmSwift.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/KeychainSwift.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

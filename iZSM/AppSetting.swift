@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import KeychainSwift
 
 class AppSetting {
 
@@ -38,6 +39,8 @@ class AppSetting {
     }
 
     private let defaults = UserDefaults.standard
+    private let keychain = KeychainSwift()
+    
     private init () {
         // if some essential settings not set, then set them as default value
         let initialSettings: [String : Any] = [
@@ -67,9 +70,16 @@ class AppSetting {
     }
 
     var password: String? {
-        get { return defaults.string(forKey: Static.PasswordKey) }
+        get {
+            if let pass = keychain.get(Static.PasswordKey) {
+                if !pass.isEmpty {
+                    return pass
+                }
+            }
+            return nil
+        }
         set {
-            defaults.set(newValue, forKey: Static.PasswordKey)
+            keychain.set(newValue ?? "", forKey: Static.PasswordKey)
         }
     }
 

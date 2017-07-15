@@ -29,7 +29,9 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
         }
     }
     
-    private var mails: [[SMMail]] = [[SMMail]]()
+    private var mails: [[SMMail]] = [[SMMail]]() {
+        didSet { tableView?.reloadData() }
+    }
     
     override func clearContent() {
         mails.removeAll()
@@ -63,8 +65,7 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
                 if let fetchedMails = fetchedMails {
                     self.mailCountLoaded -= fetchedMails.count
                     self.mails.removeAll()
-                    self.mails.append(Array(fetchedMails.reversed()))
-                    self.tableView.reloadData()
+                    self.mails.append(fetchedMails.reversed())
                 }
                 self.api.displayErrorIfNeeded()
             }
@@ -85,8 +86,7 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
                 networkActivityIndicatorStop()
                 if let fetchedMails = fetchedMails {
                     self.mailCountLoaded -= fetchedMails.count
-                    self.mails.append(Array(fetchedMails.reversed()))
-                    self.tableView.reloadData()
+                    self.mails.append(fetchedMails.reversed())
                 }
                 self.api.displayErrorIfNeeded()
             }

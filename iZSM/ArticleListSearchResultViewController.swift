@@ -23,7 +23,7 @@ class ArticleListSearchResultViewController: BaseTableViewController {
     
     fileprivate var threads: [[SMThread]] = [[SMThread]]() {
         didSet {
-            tableView.reloadData()
+            tableView?.reloadData()
         }
     }
     

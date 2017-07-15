@@ -28,7 +28,9 @@ class ReminderViewController: BaseTableViewController {
         }
     }
     
-    private var references: [[SMReference]] = [[SMReference]]()
+    private var references: [[SMReference]] = [[SMReference]]() {
+        didSet { tableView?.reloadData() }
+    }
     
     override func clearContent() {
         references.removeAll()
@@ -61,8 +63,7 @@ class ReminderViewController: BaseTableViewController {
                 if let fetchedRefers = fetchedRefers {
                     self.referCountLoaded -= fetchedRefers.count
                     self.references.removeAll()
-                    self.references.append(Array(fetchedRefers.reversed()))
-                    self.tableView.reloadData()
+                    self.references.append(fetchedRefers.reversed())
                 }
                 self.api.displayErrorIfNeeded()
             }
@@ -83,8 +84,7 @@ class ReminderViewController: BaseTableViewController {
                 networkActivityIndicatorStop()
                 if let fetchedRefers = fetchedRefers {
                     self.referCountLoaded -= fetchedRefers.count
-                    self.references.append(Array(fetchedRefers.reversed()))
-                    self.tableView.reloadData()
+                    self.references.append(fetchedRefers.reversed())
                 }
                 self.api.displayErrorIfNeeded()
             }

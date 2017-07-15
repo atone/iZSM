@@ -35,6 +35,7 @@ class FavListViewController: BaseTableViewController {
     
     override func clearContent() {
         favorites.removeAll()
+        tableView?.reloadData()
     }
     
     func setUpdateFavList(notification: Notification) {

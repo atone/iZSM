@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SVProgressHUD
 
 class ReminderViewController: BaseTableViewController {
 
@@ -32,7 +31,6 @@ class ReminderViewController: BaseTableViewController {
     private var references: [[SMReference]] = [[SMReference]]()
     
     override func clearContent() {
-        super.clearContent()
         references.removeAll()
     }
     
@@ -41,8 +39,8 @@ class ReminderViewController: BaseTableViewController {
         tableView.register(ReminderListCell.self, forCellReuseIdentifier: kReminderListCellIdentifier)
     }
     
-    override func fetchDataDirectly() {
-        networkActivityIndicatorStart()
+    override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
+        networkActivityIndicatorStart(withHUD: showHUD)
         DispatchQueue.global().async {
             var fetchedRefers: [SMReference]?
             if self.replyMe {
@@ -58,8 +56,8 @@ class ReminderViewController: BaseTableViewController {
                 }
             }
             DispatchQueue.main.async {
-                networkActivityIndicatorStop(withHUD: true)
-                self.tableView.mj_header.endRefreshing()
+                networkActivityIndicatorStop(withHUD: showHUD)
+                completion?()
                 if let fetchedRefers = fetchedRefers {
                     self.referCountLoaded -= fetchedRefers.count
                     self.references.removeAll()

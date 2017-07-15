@@ -34,7 +34,6 @@ class FavListViewController: BaseTableViewController {
     fileprivate var favorites = [SMBoard]()
     
     override func clearContent() {
-        super.clearContent()
         favorites.removeAll()
     }
     
@@ -65,9 +64,12 @@ class FavListViewController: BaseTableViewController {
     }
     
     
-    override func fetchDataDirectly() {
-        guard let userID =  AppSetting.sharedSetting.username else { return }
-        networkActivityIndicatorStart()
+    override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
+        guard let userID =  AppSetting.sharedSetting.username else {
+            completion?()
+            return
+        }
+        networkActivityIndicatorStart(withHUD: showHUD)
         DispatchQueue.global().async {
             var favBoards = [SMBoard]()
             if self.index == 0 {
@@ -79,8 +81,8 @@ class FavListViewController: BaseTableViewController {
             }
             
             DispatchQueue.main.async {
-                networkActivityIndicatorStop(withHUD: true)
-                self.tableView.mj_header.endRefreshing()
+                networkActivityIndicatorStop(withHUD: showHUD)
+                completion?()
                 self.favorites.removeAll()
                 self.favorites += favBoards
                 self.tableView?.reloadData()
@@ -91,8 +93,7 @@ class FavListViewController: BaseTableViewController {
     
     func indexChanged(sender: UISegmentedControl) {
         index = sender.selectedSegmentIndex
-        SVProgressHUD.show()
-        fetchDataDirectly()
+        fetchDataDirectly(showHUD: true)
     }
     
     
@@ -135,7 +136,7 @@ class FavListViewController: BaseTableViewController {
                         SVProgressHUD.showSuccess(withStatus: "关注成功，尚需管理员审核成为正式驻版用户")
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        self.fetchData()
+                        self.fetchData(showHUD: false)
                     }
                 } else if self.api.errorCode == 10319 && self.index == 0 {
                     SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")

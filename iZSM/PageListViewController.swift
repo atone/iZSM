@@ -20,10 +20,6 @@ class PageListViewController: UITableViewController {
         super.viewDidLoad()
         tableView.reloadData()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

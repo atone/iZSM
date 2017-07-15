@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SVProgressHUD
 
 class ArticleListSearchResultViewController: BaseTableViewController {
     
@@ -28,17 +27,18 @@ class ArticleListSearchResultViewController: BaseTableViewController {
         }
     }
     
-    override func fetchDataDirectly() {
+    override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         if let boardID = self.boardID, let userID = self.userID {
             self.threadLoaded = 0
-            networkActivityIndicatorStart(withHUD: true)
+            networkActivityIndicatorStart(withHUD: showHUD)
             DispatchQueue.global().async {
                 let threadSection = self.api.searchArticleInBoard(boardID: boardID,
                                                                   title: nil,
                                                                   user: userID,
                                                                   inRange: self.threadRange)
                 DispatchQueue.main.async {
-                    networkActivityIndicatorStop(withHUD: true)
+                    networkActivityIndicatorStop(withHUD: showHUD)
+                    completion?()
                     self.threads.removeAll()
                     if let threadSection = threadSection {
                         self.threadLoaded += threadSection.count
@@ -47,6 +47,8 @@ class ArticleListSearchResultViewController: BaseTableViewController {
                     self.api.displayErrorIfNeeded()
                 }
             }
+        } else {
+            completion?()
         }
     }
     
@@ -83,7 +85,6 @@ class ArticleListSearchResultViewController: BaseTableViewController {
     }
     
     override func clearContent() {
-        super.clearContent()
         threads.removeAll()
     }
     

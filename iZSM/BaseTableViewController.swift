@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SVProgressHUD
 
 class BaseTableViewController: UITableViewController {
     let api = SmthAPI()
@@ -16,24 +15,25 @@ class BaseTableViewController: UITableViewController {
     fileprivate var needRefresh = true
     static let kNeedRefreshNotification = Notification.Name("NeedRefreshContentNotification")
     
-    // subclass need override this and add clear content
+    // subclass need override this to actual clear content
     func clearContent() {
-        needRefresh = true
+        fatalError("clearContent() NOT implemented")
     }
     
-    func needRefreshNotificationDidPosted(notification: Notification) {
+    @objc private func needRefreshNotificationDidPosted(notification: Notification) {
+        needRefresh = true
         clearContent()
     }
     
     func fetchMoreData() {
         // fetch more data as user scroll up
-        fatalError("fetchMoreData() Not implemented")
+        fatalError("fetchMoreData() NOT implemented")
     }
     
-    func fetchDataDirectly() {
+    func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         // subclass must override this method to fetch initial data
         // without check login status
-        fatalError("fetchDataDirectly() Not implemented")
+        fatalError("fetchDataDirectly(showHUD:completion:) NOT implemented")
     }
     
     override func viewDidLoad() {
@@ -59,16 +59,18 @@ class BaseTableViewController: UITableViewController {
         footerView.backgroundColor = UIColor.clear
         tableView.tableFooterView = footerView
         let header = MJRefreshNormalHeader(refreshingTarget: self,
-                                           refreshingAction: #selector(fetchData))
+                                           refreshingAction: #selector(fetchDataWithHeaderRefreshingAndNoHUD))
         header?.lastUpdatedTimeLabel.isHidden = true
         tableView.mj_header = header
     }
     
+    @objc private func fetchDataWithHeaderRefreshingAndNoHUD() {
+        fetchData(showHUD: false, headerRefreshing: true)
+    }
+    
     // check login status and fetch initial data
-    func fetchData() {
+    func fetchData(showHUD: Bool, headerRefreshing: Bool = false) {
         if !setting.eulaAgreed {
-            needRefresh = false // do not refresh when view appear, delegate method will handle refresh
-            SVProgressHUD.dismiss()
             let eulaViewController = EulaViewController()
             eulaViewController.delegate = self
             let navigationController = NTNavigationController(rootViewController: eulaViewController)
@@ -76,7 +78,11 @@ class BaseTableViewController: UITableViewController {
             present(navigationController, animated: true, completion: nil)
         } else if let accessToken = setting.accessToken { // fetch data directly
             api.accessToken = accessToken
-            fetchDataDirectly()
+            fetchDataDirectly(showHUD: showHUD) {
+                if headerRefreshing {
+                    self.tableView.mj_header.endRefreshing()
+                }
+            }
         } else if let username = setting.username, let password = setting.password { // silent login
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
@@ -85,18 +91,20 @@ class BaseTableViewController: UITableViewController {
                     networkActivityIndicatorStop()
                     if loginSuccess && self.api.errorCode == 0 {
                         self.setting.accessToken = self.api.accessToken
-                        self.fetchDataDirectly()
+                        self.fetchDataDirectly(showHUD: showHUD) {
+                            if headerRefreshing {
+                                self.tableView.mj_header.endRefreshing()
+                            }
+                        }
                     } else {
-                        self.tableView.mj_header.endRefreshing()
-                        SVProgressHUD.dismiss()
+                        if headerRefreshing {
+                            self.tableView.mj_header.endRefreshing()
+                        }
                         self.api.displayErrorIfNeeded()
                     }
                 }
             }
-            
         } else { // present login view controller
-            needRefresh = false // do not refresh when view appear, delegate method will handle refresh
-            SVProgressHUD.dismiss()
             let loginViewController = LoginViewController()
             loginViewController.delegate = self
             let navigationController = NTNavigationController(rootViewController: loginViewController)
@@ -121,8 +129,7 @@ class BaseTableViewController: UITableViewController {
         super.viewDidAppear(animated)
         // refresh when needed
         if needRefresh {
-            SVProgressHUD.show()
-            fetchData()
+            fetchData(showHUD: true)
             needRefresh = false
         }
     }
@@ -134,6 +141,7 @@ class BaseTableViewController: UITableViewController {
     
     override func didReceiveMemoryWarning() {
         needRefresh = true
+        clearContent()
         super.didReceiveMemoryWarning()
     }
 }
@@ -142,8 +150,7 @@ extension BaseTableViewController: LoginViewControllerDelegate {
     func loginDidSuccessful() {
         print("login successful")
         dismiss(animated: false, completion: nil)
-        SVProgressHUD.show()
-        fetchDataDirectly()
+        fetchDataDirectly(showHUD: true)
     }
 }
 
@@ -153,8 +160,7 @@ extension BaseTableViewController: EulaViewControllerDelegate {
         setting.eulaAgreed = true
         print("agree tapped")
         dismiss(animated: true, completion: nil)
-        SVProgressHUD.show()
-        fetchData()
+        fetchData(showHUD: true)
     }
     
     func userDeclinedEula(_ controller: EulaViewController) {

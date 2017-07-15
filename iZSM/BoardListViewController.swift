@@ -110,12 +110,11 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     }
     
     override func clearContent() {
-        super.clearContent()
         boards.removeAll()
     }
     
-    override func fetchDataDirectly() {
-        networkActivityIndicatorStart()
+    override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
+        networkActivityIndicatorStart(withHUD: showHUD)
         DispatchQueue.global().async {
             var boardList = [SMBoard]()
             if self.flag > 0  && (self.flag & 0x400 != 0) { //是目录
@@ -152,13 +151,12 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             }
             
             DispatchQueue.main.async {
-                networkActivityIndicatorStop(withHUD: true)
-                self.tableView.mj_header.endRefreshing()
+                networkActivityIndicatorStop(withHUD: showHUD)
+                completion?()
                 self.boards.removeAll()
                 self.boards += boardList
                 self.api.displayErrorIfNeeded()
             }
-            
         }
     }
     

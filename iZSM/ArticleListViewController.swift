@@ -132,7 +132,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
     
     override func clearContent() {
-        super.clearContent()
         threads.removeAll()
     }
     
@@ -148,18 +147,18 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
 
     
-    override func fetchDataDirectly() {
+    override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         threadLoaded = 0
         if let boardID = self.boardID {
             let currentMode = self.searchMode
-            networkActivityIndicatorStart()
+            networkActivityIndicatorStart(withHUD: showHUD)
             DispatchQueue.global().async {
                 let threadSection = self.api.getThreadListForBoard(boardID: boardID,
                                                                    inRange: self.threadRange,
                                                                    brcmode: .NotClear)
                 DispatchQueue.main.async {
-                    networkActivityIndicatorStop(withHUD: true)
-                    self.tableView.mj_header.endRefreshing()
+                    networkActivityIndicatorStop(withHUD: showHUD)
+                    completion?()
                     if currentMode != self.searchMode { return } //如果模式已经被切换，则数据丢弃
                     if var threadSection = threadSection {
                         self.threads.removeAll()
@@ -175,8 +174,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                 }
             }
         } else {
-            self.tableView.mj_header.endRefreshing()
-            SVProgressHUD.dismiss()
+            completion?()
         }
     }
     
@@ -319,6 +317,6 @@ extension ArticleListViewController: UIViewControllerPreviewingDelegate {
 extension ArticleListViewController: ComposeArticleControllerDelegate {
     // ComposeArticleControllerDelegate
     func articleDidPosted() {
-        fetchDataDirectly()
+        fetchDataDirectly(showHUD: false)
     }
 }

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SVProgressHUD
 
 struct SMHotSection {
     static let sections: [SMSection] = [
@@ -35,8 +34,8 @@ class HotTableViewController: BaseTableViewController {
         didSet { tableView?.reloadData() }
     }
     
-    override func fetchDataDirectly() {
-        networkActivityIndicatorStart()
+    override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
+        networkActivityIndicatorStart(withHUD: showHUD)
         DispatchQueue.global().async {
             let topTen = self.api.getHotThreadListInSection(section: 0) ?? [SMHotThread]()
             var content = [SMHotSection]()
@@ -55,8 +54,8 @@ class HotTableViewController: BaseTableViewController {
             }
             content.insert(SMHotSection(id: 0, name: "本日十大热门话题", hotThreads: topTen), at: 0)
             DispatchQueue.main.async {
-                networkActivityIndicatorStop(withHUD: true)
-                self.tableView.mj_header.endRefreshing()
+                networkActivityIndicatorStop(withHUD: showHUD)
+                completion?()
                 self.content.removeAll()
                 self.content += content
                 self.api.displayErrorIfNeeded()
@@ -65,7 +64,6 @@ class HotTableViewController: BaseTableViewController {
     }
     
     override func clearContent() {
-        super.clearContent()
         content.removeAll()
     }
     

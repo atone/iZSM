@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SVProgressHUD
 
 class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDelegate {
     
@@ -33,7 +32,6 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
     private var mails: [[SMMail]] = [[SMMail]]()
     
     override func clearContent() {
-        super.clearContent()
         mails.removeAll()
     }
     
@@ -45,8 +43,8 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
                                                             action: #selector(composeEmail(sender:)))
     }
     
-    override func fetchDataDirectly() {
-        networkActivityIndicatorStart()
+    override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
+        networkActivityIndicatorStart(withHUD: showHUD)
         DispatchQueue.global().async {
             var fetchedMails: [SMMail]?
             if self.inbox {
@@ -60,8 +58,8 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
             }
             
             DispatchQueue.main.async {
-                self.tableView.mj_header.endRefreshing()
-                networkActivityIndicatorStop(withHUD: true)
+                networkActivityIndicatorStop(withHUD: showHUD)
+                completion?()
                 if let fetchedMails = fetchedMails {
                     self.mailCountLoaded -= fetchedMails.count
                     self.mails.removeAll()
@@ -97,7 +95,7 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
     
     // ComposeEmailControllerDelegate
     func emailDidPosted() {
-        fetchDataDirectly()
+        fetchDataDirectly(showHUD: false)
     }
     
     // MARK: - Table view data source

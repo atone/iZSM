@@ -75,9 +75,8 @@ class ArticleContentViewController: UITableViewController {
         tableView.mj_header = header
         footer = MJRefreshAutoNormalFooter(refreshingTarget: self, refreshingAction: #selector(fetchMoreData))
         tableView.mj_footer = footer
-        SVProgressHUD.show()
         restorePosition()
-        fetchData(restorePosition: true)
+        fetchData(restorePosition: true, showHUD: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -114,13 +113,13 @@ class ArticleContentViewController: UITableViewController {
     }
     
     // MARK: - Fetch Data
-    func fetchData(restorePosition: Bool) {
+    func fetchData(restorePosition: Bool, showHUD: Bool) {
         if self.isFetchingData {
             return
         }
         self.isFetchingData = true
         if let boardID = self.boardID, let articleID = self.articleID {
-            networkActivityIndicatorStart()
+            networkActivityIndicatorStart(withHUD: showHUD)
             self.tableView.mj_footer.isHidden = true
             DispatchQueue.global().async {
                 var smArticles = [SMArticle]()
@@ -158,7 +157,7 @@ class ArticleContentViewController: UITableViewController {
                 
                 DispatchQueue.main.async {
                     self.isFetchingData = false
-                    networkActivityIndicatorStop(withHUD: true)
+                    networkActivityIndicatorStop(withHUD: showHUD)
                     self.tableView.mj_header.endRefreshing()
                     self.tableView.mj_footer.endRefreshing()
                     self.smarticles.removeAll()
@@ -191,7 +190,6 @@ class ArticleContentViewController: UITableViewController {
         } else {
             self.tableView.mj_header.endRefreshing()
             self.tableView.mj_footer.endRefreshing()
-            SVProgressHUD.dismiss()
         }
     }
     
@@ -353,7 +351,7 @@ class ArticleContentViewController: UITableViewController {
             fetchPrevData()
         } else {
             section = 0
-            fetchData(restorePosition: false)
+            fetchData(restorePosition: false, showHUD: false)
         }
     }
     
@@ -444,8 +442,7 @@ class ArticleContentViewController: UITableViewController {
 extension ArticleContentViewController: PageListViewControllerDelegate {
     func pageListViewController(_ controller: PageListViewController, currentPageChangedTo currentPage: Int) {
         section = currentPage
-        SVProgressHUD.show()
-        fetchData(restorePosition: false)
+        fetchData(restorePosition: false, showHUD: true)
         dismiss(animated: true, completion: nil)
     }
 }
@@ -614,18 +611,17 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         if let currentUser = cell.article?.authorID, let currentIndexPath = tableView.indexPath(for: cell) {
             let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
             let soloAction = UIAlertAction(title: soloTitle, style: .default) { (action) in
-                SVProgressHUD.show() // 切换场景，加入提示会比较好
                 if self.soloUser == nil {
                     self.soloUser = currentUser
                     self.navigationItem.rightBarButtonItems?.last?.isEnabled = false
                     self.savePosition(currentRow: currentIndexPath.row)
                     self.section = 0
-                    self.fetchData(restorePosition: false)
+                    self.fetchData(restorePosition: false, showHUD: true)
                 } else {
                     self.soloUser = nil
                     self.navigationItem.rightBarButtonItems?.last?.isEnabled = true
                     self.restorePosition()
-                    self.fetchData(restorePosition: true)
+                    self.fetchData(restorePosition: true, showHUD: true)
                 }
             }
             actionSheet.addAction(soloAction)

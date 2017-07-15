@@ -18,6 +18,8 @@ class SettingsViewController: UITableViewController {
     @IBOutlet weak var rememberLastLabel: UILabel!
     @IBOutlet weak var portraitLockLabel: UILabel!
     @IBOutlet weak var displayModeLabel: UILabel!
+    @IBOutlet weak var nightModelLabel: UILabel!
+    @IBOutlet weak var shakeToSwitchLabel: UILabel!
     @IBOutlet weak var backgroundTaskLabel: UILabel!
     @IBOutlet weak var clearCacheLabel: UILabel!
     @IBOutlet weak var cacheSizeLabel: UILabel!
@@ -29,6 +31,8 @@ class SettingsViewController: UITableViewController {
     @IBOutlet weak var newReplyFirstSwitch: UISwitch!
     @IBOutlet weak var rememberLastSwitch: UISwitch!
     @IBOutlet weak var portraitLockSwitch: UISwitch!
+    @IBOutlet weak var nightModeSwitch: UISwitch!
+    @IBOutlet weak var shakeToSwitchSwitch: UISwitch!
     @IBOutlet weak var backgroundTaskSwitch: UISwitch!
     @IBOutlet weak var displayModeSegmentedControl: UISegmentedControl!
 
@@ -92,6 +96,14 @@ class SettingsViewController: UITableViewController {
     @IBAction func displayModeChanged(sender: UISegmentedControl) {
         setting.displayMode = AppSetting.DisplayMode(rawValue: sender.selectedSegmentIndex)!
     }
+    
+    @IBAction func nightModeChanged(sender: UISwitch) {
+        setting.nightMode = sender.isOn
+    }
+    
+    @IBAction func shakeToSwitchChanged(sender: UISwitch) {
+        setting.shakeToSwitch = sender.isOn
+    }
 
     @IBAction func backgroundTaskChanged(sender: UISwitch) {
         setting.backgroundTaskEnabled = sender.isOn
@@ -110,6 +122,8 @@ class SettingsViewController: UITableViewController {
         rememberLastLabel.font = UIFont.preferredFont(forTextStyle: .body)
         portraitLockLabel.font = UIFont.preferredFont(forTextStyle: .body)
         displayModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        nightModelLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        shakeToSwitchLabel.font = UIFont.preferredFont(forTextStyle: .body)
         backgroundTaskLabel.font = UIFont.preferredFont(forTextStyle: .body)
         clearCacheLabel.font = UIFont.preferredFont(forTextStyle: .body)
         cacheSizeLabel.font = UIFont.preferredFont(forTextStyle: .body)
@@ -131,6 +145,8 @@ class SettingsViewController: UITableViewController {
         rememberLastSwitch.isOn = setting.rememberLast
         portraitLockSwitch.isOn = setting.portraitLock
         displayModeSegmentedControl.selectedSegmentIndex = setting.displayMode.rawValue
+        nightModeSwitch.isOn = setting.nightMode
+        shakeToSwitchSwitch.isOn = setting.shakeToSwitch
         backgroundTaskSwitch.isOn = setting.backgroundTaskEnabled
     }
 

@@ -12,16 +12,16 @@ import OnePasswordExtension
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
-    let logoView = UIImageView(image: #imageLiteral(resourceName: "Logo"))
-    let usernameField = UITextField()
-    let passwordField = UITextField()
-    let spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
-    let loginButton = UIButton(type: .system)
-    let containerView = UIView()
-    let lineView = UIView()
+    private let logoView = UIImageView(image: #imageLiteral(resourceName: "Logo"))
+    private let usernameField = UITextField()
+    private let passwordField = UITextField()
+    private let spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    private let loginButton = UIButton(type: .system)
+    private let containerView = UIView()
+    private let lineView = UIView()
     
-    let api = SmthAPI()
-    let setting = AppSetting.sharedSetting
+    private let api = SmthAPI()
+    private let setting = AppSetting.sharedSetting
     
     var delegate: LoginViewControllerDelegate?
     
@@ -116,14 +116,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        if !setting.eulaAgreed {
-            let eulaViewController = NTNavigationController(rootViewController: EulaViewController())
-            eulaViewController.modalPresentationStyle = .formSheet
-            present(eulaViewController, animated: true, completion: nil)
-        }
-    }
-    
     func findLoginFrom1Password(_ sender: UIBarButtonItem) {
         OnePasswordExtension.shared().findLogin(forURLString: "newsmth.net", for: self, sender: sender, completion: { (loginDictionary, error) in
             if loginDictionary == nil {
@@ -155,7 +147,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     self.setting.username = username
                     self.setting.password = password
                     self.setting.accessToken = self.api.accessToken
-                    self.dismiss(animated: false, completion: nil)
                     self.delegate?.loginDidSuccessful()
                 } else {
                     self.lockAnimation(forView: self.passwordField)
@@ -193,12 +184,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         return false
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 }
 
 protocol LoginViewControllerDelegate {

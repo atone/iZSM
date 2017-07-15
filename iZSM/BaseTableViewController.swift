@@ -13,7 +13,7 @@ class BaseTableViewController: UITableViewController {
     let api = SmthAPI()
     let setting = AppSetting.sharedSetting
     
-    private var needRefresh = true
+    fileprivate var needRefresh = true
     static let kNeedRefreshNotification = Notification.Name("NeedRefreshContentNotification")
     
     // subclass need override this and add clear content
@@ -66,7 +66,15 @@ class BaseTableViewController: UITableViewController {
     
     // check login status and fetch initial data
     func fetchData() {
-        if let accessToken = setting.accessToken { // fetch data directly
+        if !setting.eulaAgreed {
+            needRefresh = false // do not refresh when view appear, delegate method will handle refresh
+            SVProgressHUD.dismiss()
+            let eulaViewController = EulaViewController()
+            eulaViewController.delegate = self
+            let navigationController = NTNavigationController(rootViewController: eulaViewController)
+            navigationController.modalPresentationStyle = .formSheet
+            present(navigationController, animated: true, completion: nil)
+        } else if let accessToken = setting.accessToken { // fetch data directly
             api.accessToken = accessToken
             fetchDataDirectly()
         } else if let username = setting.username, let password = setting.password { // silent login
@@ -87,12 +95,12 @@ class BaseTableViewController: UITableViewController {
             }
             
         } else { // present login view controller
+            needRefresh = false // do not refresh when view appear, delegate method will handle refresh
             SVProgressHUD.dismiss()
             let loginViewController = LoginViewController()
             loginViewController.delegate = self
             let navigationController = NTNavigationController(rootViewController: loginViewController)
-            let rootvc = UIApplication.shared.keyWindow?.rootViewController
-            rootvc?.present(navigationController, animated: false, completion: nil)
+            present(navigationController, animated: false, completion: nil)
         }
     }
     
@@ -132,7 +140,27 @@ class BaseTableViewController: UITableViewController {
 
 extension BaseTableViewController: LoginViewControllerDelegate {
     func loginDidSuccessful() {
+        print("login successful")
+        dismiss(animated: false, completion: nil)
         SVProgressHUD.show()
         fetchDataDirectly()
+    }
+}
+
+extension BaseTableViewController: EulaViewControllerDelegate {
+    func userAcceptedEula(_ controller: EulaViewController) {
+        // set agree to true
+        setting.eulaAgreed = true
+        print("agree tapped")
+        dismiss(animated: true, completion: nil)
+        SVProgressHUD.show()
+        fetchData()
+    }
+    
+    func userDeclinedEula(_ controller: EulaViewController) {
+        let alert = UIAlertController(title: nil, message: "您必须同意《水木社区管理规则》才能使用本软件。", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "确定", style: .default, handler: nil))
+        controller.present(alert, animated: true, completion: nil)
+        print("decline tapped")
     }
 }

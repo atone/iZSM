@@ -10,8 +10,10 @@ import UIKit
 
 class EulaViewController: UIViewController {
     
-    let webView = UIWebView()
-    let setting = AppSetting.sharedSetting
+    private let webView = UIWebView()
+    private let setting = AppSetting.sharedSetting
+    
+    var delegate: EulaViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,21 +39,15 @@ class EulaViewController: UIViewController {
     }
     
     func agreeTapped(sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
-        print("agree tapped")
-        // set agree to true
-        setting.eulaAgreed = true
+        delegate?.userAcceptedEula(self)
     }
     
     func declineTapped(sender: UIBarButtonItem) {
-        let alert = UIAlertController(title: nil, message: "您必须同意《水木社区管理规则》才能使用本软件。", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "确定", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
-        print("decline tapped")
+        delegate?.userDeclinedEula(self)
     }
+}
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+protocol EulaViewControllerDelegate {
+    func userAcceptedEula(_ controller: EulaViewController)
+    func userDeclinedEula(_ controller: EulaViewController)
 }

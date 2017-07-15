@@ -63,9 +63,16 @@ class AppSetting {
     }
 
     var username: String? {
-        get { return defaults.string(forKey: Static.UsernameKey) }
+        get {
+            if let user = keychain.get(Static.UsernameKey) {
+                if !user.isEmpty {
+                    return user
+                }
+            }
+            return nil
+        }
         set {
-            defaults.set(newValue, forKey: Static.UsernameKey)
+            keychain.set(newValue ?? "", forKey: Static.UsernameKey)
         }
     }
 

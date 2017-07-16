@@ -20,7 +20,7 @@ class NTViewController: UIViewController {
         super.viewDidDisappear(animated)
     }
     
-    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
         if AppSetting.shared.shakeToSwitch && motion == .motionShake {
             print("shaking phone... switch color theme")
             AppSetting.shared.nightMode = !AppSetting.shared.nightMode

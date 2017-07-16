@@ -51,7 +51,7 @@ class NTTableViewController: UITableViewController {
         super.viewDidDisappear(animated)
     }
     
-    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
         if setting.shakeToSwitch && motion == .motionShake {
             print("shaking phone... switch color theme")
             setting.nightMode = !setting.nightMode

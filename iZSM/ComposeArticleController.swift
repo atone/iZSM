@@ -20,7 +20,7 @@ class ComposeArticleController: NTViewController, UITextFieldDelegate, UIImagePi
     var doneButton: UIBarButtonItem?
     
     var boardID: String?
-    var delegate: ComposeArticleControllerDelegate?
+    weak var delegate: ComposeArticleControllerDelegate?
     
     var replyMode: Bool = false
     var replyByMail: Bool = false
@@ -347,6 +347,6 @@ class ComposeArticleController: NTViewController, UITextFieldDelegate, UIImagePi
     }
 }
 
-protocol ComposeArticleControllerDelegate {
+protocol ComposeArticleControllerDelegate: class {
     func articleDidPosted()
 }

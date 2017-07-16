@@ -13,7 +13,7 @@ class EulaViewController: NTViewController {
     private let webView = UIWebView()
     private let setting = AppSetting.shared
     
-    var delegate: EulaViewControllerDelegate?
+    weak var delegate: EulaViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +47,7 @@ class EulaViewController: NTViewController {
     }
 }
 
-protocol EulaViewControllerDelegate {
+protocol EulaViewControllerDelegate: class {
     func userAcceptedEula(_ controller: EulaViewController)
     func userDeclinedEula(_ controller: EulaViewController)
 }

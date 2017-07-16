@@ -24,7 +24,7 @@ class ComposeEmailController: NTViewController, UITextFieldDelegate {
     var preContent: String?
     var preReceiver: String?
     
-    var delegate: ComposeEmailControllerDelegate?
+    weak var delegate: ComposeEmailControllerDelegate?
     
     var replyMode = false
     var originalEmail: SMMail?
@@ -339,6 +339,6 @@ class ComposeEmailController: NTViewController, UITextFieldDelegate {
 
 }
 
-protocol ComposeEmailControllerDelegate {
+protocol ComposeEmailControllerDelegate: class {
     func emailDidPosted()
 }

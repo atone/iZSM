@@ -23,7 +23,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     private let api = SmthAPI()
     private let setting = AppSetting.shared
     
-    var delegate: LoginViewControllerDelegate?
+    weak var delegate: LoginViewControllerDelegate?
     
     func setupUI() {
         title = "欢迎使用最水木"
@@ -186,6 +186,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
-protocol LoginViewControllerDelegate {
+protocol LoginViewControllerDelegate: class {
     func loginDidSuccessful()
 }

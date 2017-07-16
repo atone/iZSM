@@ -14,7 +14,7 @@ class UserInfoViewController: UIViewController {
     
     var user: SMUser?
     var article: SMArticle?
-    var delegate: UserInfoViewControllerDelegate?
+    weak var delegate: UserInfoViewControllerDelegate?
     
     private let idLabelFontSize: CGFloat = 20
     private let nickLabelFontSize: CGFloat = 15
@@ -285,7 +285,7 @@ class UserInfoViewController: UIViewController {
     }
 }
 
-protocol UserInfoViewControllerDelegate {
+protocol UserInfoViewControllerDelegate: class {
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem)
     func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem)
     func userInfoViewController(_ controller: UserInfoViewController, didTapUserImageView imageView: UIImageView)

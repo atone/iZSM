@@ -12,7 +12,7 @@ class PageListViewController: UITableViewController {
     
     var currentPage: Int = 0
     var totalPage: Int = 0
-    var delegate: PageListViewControllerDelegate?
+    weak var delegate: PageListViewControllerDelegate?
 
     private let kCellIdentifier = "PageListCell"
 
@@ -62,6 +62,6 @@ class PageListViewController: UITableViewController {
     }
 }
 
-protocol PageListViewControllerDelegate {
+protocol PageListViewControllerDelegate: class {
     func pageListViewController(_ controller: PageListViewController, currentPageChangedTo currentPage: Int)
 }

@@ -28,7 +28,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     private var contentLabel = TTTAttributedLabel(frame: CGRect.zero)
     
-    private var delegate: ArticleContentCellDelegate?
+    private weak var delegate: ArticleContentCellDelegate?
     
     var article: SMArticle?
     private var displayFloor: Int = 0
@@ -268,7 +268,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
 }
 
-protocol ArticleContentCellDelegate {
+protocol ArticleContentCellDelegate: class {
     var leftMargin: CGFloat { get }
     var rightMargin: CGFloat { get }
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int)

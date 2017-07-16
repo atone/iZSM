@@ -41,7 +41,7 @@ class AppTheme {
     
     var tintColor: UIColor {
         if setting.nightMode {
-            return UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
+            return UIColor(red: 220/255.0, green: 220/255.0, blue: 220/255.0, alpha: 1)
         } else {
             return UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
         }
@@ -49,7 +49,7 @@ class AppTheme {
     
     var naviContentColor: UIColor {
         if setting.nightMode {
-            return UIColor.lightGray
+            return UIColor(red: 220/255.0, green: 220/255.0, blue: 220/255.0, alpha: 1)
         } else {
             return UIColor.white
         }
@@ -73,7 +73,7 @@ class AppTheme {
     
     var lightBackgroundColor: UIColor {
         if setting.nightMode {
-            return UIColor(red: 0/255.0, green: 0/255.0, blue: 0/255.0, alpha: 1)
+            return UIColor(red: 80/255.0, green: 80/255.0, blue: 80/255.0, alpha: 1)
         } else {
             return UIColor.groupTableViewBackground
         }

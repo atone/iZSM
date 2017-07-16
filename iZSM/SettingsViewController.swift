@@ -192,6 +192,7 @@ class SettingsViewController: NTTableViewController {
     override func changeColor() {
         super.changeColor()
         updateUI()
+        tableView.reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -220,6 +221,12 @@ class SettingsViewController: NTTableViewController {
                 }
             }
             
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let headerFooterView = view as? UITableViewHeaderFooterView {
+            headerFooterView.textLabel?.textColor = AppTheme.shared.lightTextColor
         }
     }
 }

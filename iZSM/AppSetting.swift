@@ -11,7 +11,7 @@ import KeychainSwift
 
 class AppSetting {
 
-    static let sharedSetting = AppSetting()
+    static let shared = AppSetting()
     
     enum DisplayMode: Int {
         case nForum = 0, www2, mobile

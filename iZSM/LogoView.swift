@@ -22,10 +22,14 @@ class LogoView: UIView {
         super.init(coder: aDecoder)
         setup()
     }
+    
+    func updateUI() {
+        backgroundColor = AppTheme.shared.lightBackgroundColor
+        versionLabel.textColor = AppTheme.shared.lightTextColor
+    }
 
     func setup() {
         contentMode = .redraw
-        backgroundColor = UIColor.groupTableViewBackground
         imageView.image = UIImage(named: "Logo")
         addSubview(imageView)
         if
@@ -35,9 +39,9 @@ class LogoView: UIView {
         {
             versionLabel.text = "最水木(iZSM) \(appVersion)(\(appBuild))"
             versionLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
-            versionLabel.textColor = UIColor.darkGray
         }
         addSubview(versionLabel)
+        updateUI()
     }
 
     override func layoutSubviews() {

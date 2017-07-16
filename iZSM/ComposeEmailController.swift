@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import SVProgressHUD
 
-class ComposeEmailController: UIViewController, UITextFieldDelegate {
+class ComposeEmailController: NTViewController, UITextFieldDelegate {
 
     let sendToLabel = UILabel()
     let receiverTextField = UITextField()
@@ -49,7 +49,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     var keyboardHeight: Constraint?
     
     private let api = SmthAPI()
-    private let setting = AppSetting.sharedSetting
+    private let setting = AppSetting.shared
     
     func setEditable(_ editable: Bool) {
         receiverTextField.isEnabled = editable
@@ -59,7 +59,6 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     
     private func setupUI() {
         let cornerRadius: CGFloat = 4
-        view.backgroundColor = UIColor.white
         title = "写邮件"
         sendToLabel.text = "寄给"
         sendToLabel.font = UIFont.systemFont(ofSize: 14)
@@ -185,6 +184,16 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                 contentTextView.selectedRange = NSMakeRange(0, 0)
             }
         }
+        updateColor()
+    }
+    
+    func updateColor() {
+        view.backgroundColor = AppTheme.shared.backgroundColor
+        contentTextView.textColor = AppTheme.shared.textColor
+    }
+    
+    @objc private func nightModeChanged(_ notification: Notification) {
+        updateColor()
     }
     
     func cancel(sender: UIBarButtonItem) {
@@ -235,6 +244,10 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow(notification:)),
                                                name: .UIKeyboardWillChangeFrame,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(nightModeChanged(_:)),
+                                               name: AppTheme.kAppThemeChangedNotification,
                                                object: nil)
         setupUI()
     }

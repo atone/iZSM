@@ -29,8 +29,7 @@ class MailListCell: UITableViewCell {
         titleLabel.numberOfLines = 0
         unreadLabel.text = "⦁"
         unreadLabel.font = UIFont.systemFont(ofSize: 12)
-        unreadLabel.textColor = UIApplication.shared.keyWindow?.tintColor
-        timeLabel.textColor = UIColor.gray
+        updateUI()
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(timeLabel)
@@ -63,8 +62,11 @@ class MailListCell: UITableViewCell {
         timeLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         authorLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         
-        authorLabel.textColor = UIApplication.shared.keyWindow?.tintColor
-        unreadLabel.textColor = UIApplication.shared.keyWindow?.tintColor
+        titleLabel.textColor = AppTheme.shared.textColor
+        authorLabel.textColor = AppTheme.shared.tintColor
+        unreadLabel.textColor = AppTheme.shared.tintColor
+        timeLabel.textColor = AppTheme.shared.lightTextColor
+        self.backgroundColor = AppTheme.shared.backgroundColor
     }
     
 

@@ -8,10 +8,10 @@
 
 import UIKit
 
-class EulaViewController: UIViewController {
+class EulaViewController: NTViewController {
     
     private let webView = UIWebView()
-    private let setting = AppSetting.sharedSetting
+    private let setting = AppSetting.shared
     
     var delegate: EulaViewControllerDelegate?
 

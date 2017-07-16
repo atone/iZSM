@@ -217,6 +217,9 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         }
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        cell.textLabel?.textColor = AppTheme.shared.textColor
+        cell.detailTextLabel?.textColor = AppTheme.shared.lightTextColor
+        cell.backgroundColor = AppTheme.shared.backgroundColor
         return cell
     }
     

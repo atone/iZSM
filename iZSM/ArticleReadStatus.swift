@@ -17,7 +17,7 @@ class ArticleReadStatus: Object {
 
 class ArticleReadStatusUtil {
     class func saveStatus(section: Int, row: Int, boardID: String, articleID: Int) {
-        if !AppSetting.sharedSetting.rememberLast {
+        if !AppSetting.shared.rememberLast {
             return
         }
         DispatchQueue.global().async {
@@ -48,7 +48,7 @@ class ArticleReadStatusUtil {
     }
     
     class func getStatus(boardID: String, articleID: Int) -> (section: Int, row: Int)? {
-        if !AppSetting.sharedSetting.rememberLast {
+        if !AppSetting.shared.rememberLast {
             return nil
         }
         let realm = try! Realm()

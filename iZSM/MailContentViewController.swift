@@ -11,7 +11,7 @@ import SnapKit
 import SVProgressHUD
 import SafariServices
 
-class MailContentViewController: UIViewController, UITextViewDelegate {
+class MailContentViewController: NTViewController, UITextViewDelegate {
     
     let titleLabel = UILabel()
     let userButton = UIButton(type: .system)
@@ -24,12 +24,10 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     private var detailMail: SMMail?
     
     func setupUI() {
-        view.backgroundColor = UIColor.white
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         userButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
         userButton.addTarget(self, action: #selector(clickUserButton(button:)), for: .touchUpInside)
         timeLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        timeLabel.textColor = UIColor.gray
         contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
         contentTextView.isEditable = false
         contentTextView.dataDetectorTypes = [.phoneNumber, .link]
@@ -71,6 +69,23 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
                                             action: #selector(reply(sender:)))
             navigationItem.rightBarButtonItem = replyItem
         }
+        updateColor()
+    }
+    
+    private func updateColor() {
+        view.backgroundColor = AppTheme.shared.backgroundColor
+        view.tintColor = AppTheme.shared.tintColor
+        titleLabel.textColor = AppTheme.shared.textColor
+        userButton.tintColor = AppTheme.shared.tintColor
+        timeLabel.textColor = AppTheme.shared.lightTextColor
+        contentTextView.backgroundColor = UIColor.clear
+        if let body = detailMail?.body {
+            contentTextView.attributedText = attributedStringFromContent(body)
+        }
+    }
+    
+    @objc private func nightModeChanged(_ notification: Notification) {
+        updateColor()
     }
     
     override func viewDidLoad() {
@@ -80,6 +95,10 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(preferredFontSizeChanged(notification:)),
                                                name: .UIContentSizeCategoryDidChange,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(nightModeChanged(_:)),
+                                               name: AppTheme.kAppThemeChangedNotification,
                                                object: nil)
         setupUI()
         fetchData()
@@ -207,10 +226,10 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         
         let normal = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: .body),
                       NSParagraphStyleAttributeName: NSParagraphStyle.default,
-                      NSForegroundColorAttributeName: UIColor.black]
+                      NSForegroundColorAttributeName: AppTheme.shared.textColor]
         let quoted = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: .body),
                       NSParagraphStyleAttributeName: NSParagraphStyle.default,
-                      NSForegroundColorAttributeName: UIColor.gray]
+                      NSForegroundColorAttributeName: AppTheme.shared.lightTextColor]
         
         string.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(": ") {

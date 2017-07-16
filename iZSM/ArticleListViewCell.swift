@@ -31,9 +31,9 @@ class ArticleListViewCell: UITableViewCell {
             if let thread = self.thread {
                 titleLabel.text = thread.subject + (hasAttachment ? " 📎" : "") + " (\(thread.count - 1))"
                 if isAlwaysTop {
-                    titleLabel.textColor = UIColor.red
+                    titleLabel.textColor = AppTheme.shared.redColor
                 } else {
-                    titleLabel.textColor = UIColor.black
+                    titleLabel.textColor = AppTheme.shared.textColor
                 }
                 authorLabel.text = thread.authorID
                 timeLabel.text = thread.lastReplyTime.relativeDateString
@@ -52,9 +52,7 @@ class ArticleListViewCell: UITableViewCell {
         titleLabel.numberOfLines = 0
         unreadLabel.text = "⦁"
         unreadLabel.font = UIFont.systemFont(ofSize: 12)
-        unreadLabel.textColor = UIApplication.shared.keyWindow?.tintColor
-        timeLabel.textColor = UIColor.gray
-        
+        updateUI()
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(timeLabel)
@@ -88,8 +86,10 @@ class ArticleListViewCell: UITableViewCell {
         timeLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         authorLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         
-        authorLabel.textColor = UIApplication.shared.keyWindow?.tintColor
-        unreadLabel.textColor = UIApplication.shared.keyWindow?.tintColor
+        self.backgroundColor = AppTheme.shared.backgroundColor
+        authorLabel.textColor = AppTheme.shared.tintColor
+        unreadLabel.textColor = AppTheme.shared.tintColor
+        timeLabel.textColor = AppTheme.shared.lightTextColor
     }
     
     private var isAlwaysTop: Bool {

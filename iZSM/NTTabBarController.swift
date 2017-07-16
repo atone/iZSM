@@ -10,7 +10,7 @@ import UIKit
 
 class NTTabBarController: UITabBarController {
 
-    private let setting = AppSetting.sharedSetting
+    private let setting = AppSetting.shared
     
     override var shouldAutorotate: Bool {
         return true
@@ -22,6 +22,21 @@ class NTTabBarController: UITabBarController {
         } else {
             return .all
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        changeColor()
+        NotificationCenter.default.addObserver(self, selector: #selector(nightModeChanged(_:)), name: AppTheme.kAppThemeChangedNotification, object: nil)
+    }
+    
+    @objc private func nightModeChanged(_ notification: Notification) {
+        changeColor()
+    }
+    
+    private func changeColor() {
+        tabBar.tintColor = AppTheme.shared.tintColor
+        tabBar.barTintColor = AppTheme.shared.tabBackgroundColor
     }
 
 }

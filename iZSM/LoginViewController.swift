@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import OnePasswordExtension
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class LoginViewController: NTViewController, UITextFieldDelegate {
     
     private let logoView = UIImageView(image: #imageLiteral(resourceName: "Logo"))
     private let usernameField = UITextField()
@@ -21,7 +21,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     private let lineView = UIView()
     
     private let api = SmthAPI()
-    private let setting = AppSetting.sharedSetting
+    private let setting = AppSetting.shared
     
     var delegate: LoginViewControllerDelegate?
     

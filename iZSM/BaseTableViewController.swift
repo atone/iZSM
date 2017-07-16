@@ -8,9 +8,9 @@
 
 import UIKit
 
-class BaseTableViewController: UITableViewController {
+class BaseTableViewController: NTTableViewController {
     let api = SmthAPI()
-    let setting = AppSetting.sharedSetting
+    let setting = AppSetting.shared
     
     fileprivate var needRefresh = true
     static let kNeedRefreshNotification = Notification.Name("NeedRefreshContentNotification")
@@ -37,8 +37,6 @@ class BaseTableViewController: UITableViewController {
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
         // set tableview self-sizing cell
         tableView.estimatedRowHeight = 44
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -62,6 +60,8 @@ class BaseTableViewController: UITableViewController {
                                            refreshingAction: #selector(fetchDataWithHeaderRefreshingAndNoHUD))
         header?.lastUpdatedTimeLabel.isHidden = true
         tableView.mj_header = header
+        
+        super.viewDidLoad()
     }
     
     @objc private func fetchDataWithHeaderRefreshingAndNoHUD() {

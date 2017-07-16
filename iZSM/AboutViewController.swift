@@ -9,11 +9,14 @@
 import UIKit
 import SafariServices
 
-class AboutViewController: UITableViewController {
+class AboutViewController: NTTableViewController {
 
     @IBOutlet weak var rateLabel: UILabel!
+    @IBOutlet weak var rateCell: UITableViewCell!
     @IBOutlet weak var mailLabel: UILabel!
+    @IBOutlet weak var mailCell: UITableViewCell!
     @IBOutlet weak var websiteLabel: UILabel!
+    @IBOutlet weak var websiteCell: UITableViewCell!
     
     let logoView = LogoView(frame: CGRect.zero)
 
@@ -78,8 +81,16 @@ class AboutViewController: UITableViewController {
 
     func updateUI() {
         rateLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        rateLabel.textColor = AppTheme.shared.textColor
         mailLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        mailLabel.textColor = AppTheme.shared.textColor
         websiteLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        websiteLabel.textColor = AppTheme.shared.textColor
+        
+        rateCell.backgroundColor = AppTheme.shared.backgroundColor
+        mailCell.backgroundColor = AppTheme.shared.backgroundColor
+        websiteCell.backgroundColor = AppTheme.shared.backgroundColor
+        logoView.updateUI()
     }
 
     override func viewDidLayoutSubviews() {

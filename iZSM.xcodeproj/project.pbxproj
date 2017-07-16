@@ -26,9 +26,12 @@
 		9C25D5AB1DE56BAE005CB55C /* MailBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5AA1DE56BAE005CB55C /* MailBoxViewController.swift */; };
 		9C25D5AD1DE56BC8005CB55C /* ReminderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5AC1DE56BC8005CB55C /* ReminderViewController.swift */; };
 		9C25D5AF1DE56FC9005CB55C /* MailListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5AE1DE56FC9005CB55C /* MailListCell.swift */; };
+		9C39AD461F1B484A00197E8A /* NTViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C39AD451F1B484A00197E8A /* NTViewController.swift */; };
 		9C4728F01F0FC64D00C289FC /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4728EE1F0FC64D00C289FC /* Realm.framework */; };
 		9C4728F11F0FC64D00C289FC /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4728EF1F0FC64D00C289FC /* RealmSwift.framework */; };
 		9C4728F31F0FC80100C289FC /* ArticleReadStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */; };
+		9C4D0B071F1A5AAD007B4D83 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4D0B061F1A5AAD007B4D83 /* AppTheme.swift */; };
+		9C4D0B091F1A6F91007B4D83 /* NTTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */; };
 		9C4E6AB11F1158EB00ABAEFA /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */; };
 		9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */; };
 		9C56E1D51F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CF1F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m */; };
@@ -113,9 +116,12 @@
 		9C25D5AA1DE56BAE005CB55C /* MailBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailBoxViewController.swift; sourceTree = "<group>"; };
 		9C25D5AC1DE56BC8005CB55C /* ReminderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderViewController.swift; sourceTree = "<group>"; };
 		9C25D5AE1DE56FC9005CB55C /* MailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailListCell.swift; sourceTree = "<group>"; };
+		9C39AD451F1B484A00197E8A /* NTViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTViewController.swift; sourceTree = "<group>"; };
 		9C4728EE1F0FC64D00C289FC /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		9C4728EF1F0FC64D00C289FC /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Carthage/Build/iOS/RealmSwift.framework; sourceTree = "<group>"; };
 		9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleReadStatus.swift; sourceTree = "<group>"; };
+		9C4D0B061F1A5AAD007B4D83 /* AppTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTTableViewController.swift; sourceTree = "<group>"; };
 		9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
 		9C56E1CC1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDIndexPathHeightCache.h"; sourceTree = "<group>"; };
 		9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDIndexPathHeightCache.m"; sourceTree = "<group>"; };
@@ -300,6 +306,7 @@
 			isa = PBXGroup;
 			children = (
 				9C1A3BEF1DE2EA9900CF4A43 /* AppSetting.swift */,
+				9C4D0B061F1A5AAD007B4D83 /* AppTheme.swift */,
 				9C1A3BF01DE2EA9900CF4A43 /* SmthAPI.swift */,
 				9C1A3BF11DE2EA9900CF4A43 /* SmthStructs.swift */,
 			);
@@ -335,6 +342,8 @@
 			children = (
 				9C6EB72B1F177A3D00129EA3 /* NTTabBarController.swift */,
 				9C6EB7291F1776E200129EA3 /* NTNavigationController.swift */,
+				9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */,
+				9C39AD451F1B484A00197E8A /* NTViewController.swift */,
 				9C1A3BD81DE2CBAF00CF4A43 /* EulaViewController.swift */,
 				9C1A3BF71DE3076C00CF4A43 /* LoginViewController.swift */,
 				9CA3B15D1DE3323B00E9B121 /* BaseTableViewController.swift */,
@@ -622,6 +631,7 @@
 				9CA3B1971DE3359200E9B121 /* MJRefreshBackNormalFooter.m in Sources */,
 				9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */,
 				9CA3B19A1DE3359200E9B121 /* MJRefreshNormalHeader.m in Sources */,
+				9C4D0B071F1A5AAD007B4D83 /* AppTheme.swift in Sources */,
 				9CA3B1941DE3359200E9B121 /* MJRefreshAutoNormalFooter.m in Sources */,
 				9CA3B18F1DE3359200E9B121 /* MJRefreshBackFooter.m in Sources */,
 				9CA3B1A31DE33C0800E9B121 /* HotTableViewController.swift in Sources */,
@@ -634,6 +644,7 @@
 				9C25D5AF1DE56FC9005CB55C /* MailListCell.swift in Sources */,
 				9CA3B1931DE3359200E9B121 /* MJRefreshAutoGifFooter.m in Sources */,
 				9C56E1D61F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m in Sources */,
+				9C39AD461F1B484A00197E8A /* NTViewController.swift in Sources */,
 				9C1A3BEC1DE2E6EB00CF4A43 /* SMTHURLConnection+Addon.m in Sources */,
 				9CA3B19E1DE3359200E9B121 /* NSBundle+MJRefresh.m in Sources */,
 				9CA3B1A61DE33E8D00E9B121 /* HotTableViewCell.swift in Sources */,
@@ -663,6 +674,7 @@
 				9CA3B19D1DE3359200E9B121 /* MJRefreshConst.m in Sources */,
 				9C4728F31F0FC80100C289FC /* ArticleReadStatus.swift in Sources */,
 				9C889FBF1DE4271200C33A8D /* ArticleContentCell.swift in Sources */,
+				9C4D0B091F1A6F91007B4D83 /* NTTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

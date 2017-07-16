@@ -11,7 +11,7 @@ import MobileCoreServices
 import RealmSwift
 import SVProgressHUD
 
-class UserViewController: UITableViewController {
+class UserViewController: NTTableViewController {
     
     private let kLabelIdentifier = "LabelIdentifier"
     private let labelContents = ["收件箱", "发件箱", "回复我", "提到我"]
@@ -19,7 +19,7 @@ class UserViewController: UITableViewController {
     private let userInfoVC = UserInfoViewController()
     
     let api = SmthAPI()
-    let setting = AppSetting.sharedSetting
+    let setting = AppSetting.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -154,13 +154,16 @@ class UserViewController: UITableViewController {
             cell.textLabel?.text = nil
         }
         cell.accessoryType = .disclosureIndicator
+        cell.backgroundColor = AppTheme.shared.backgroundColor
         return cell
     }
     
     func attrTextFromString(string: String, withNewFlag flag: Bool) -> NSAttributedString {
-        let result = NSMutableAttributedString(string: string)
+        let normalColor = AppTheme.shared.textColor
+        let redColor = AppTheme.shared.redColor
+        let result = NSMutableAttributedString(string: string, attributes: [NSForegroundColorAttributeName: normalColor])
         if flag {
-            result.append(NSAttributedString(string: " [新]", attributes: [NSForegroundColorAttributeName: UIColor.red]))
+            result.append(NSAttributedString(string: " [新]", attributes: [NSForegroundColorAttributeName: redColor]))
         }
         result.addAttribute(NSFontAttributeName, value: UIFont.preferredFont(forTextStyle: .body), range: NSMakeRange(0, result.length))
         return result

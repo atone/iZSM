@@ -12,7 +12,7 @@ import SVProgressHUD
 import SnapKit
 import YYKit
 
-class ArticleContentViewController: UITableViewController {
+class ArticleContentViewController: NTTableViewController {
     
     private var header: MJRefreshNormalHeader?
     private var footer: MJRefreshAutoNormalFooter?
@@ -25,7 +25,7 @@ class ArticleContentViewController: UITableViewController {
     fileprivate var smarticles = [[SMArticle]]()
     
     fileprivate let api = SmthAPI()
-    fileprivate let setting = AppSetting.sharedSetting
+    fileprivate let setting = AppSetting.shared
     
     fileprivate var totalArticleNumber: Int = 0
     fileprivate var currentForwardNumber: Int = 0
@@ -60,7 +60,6 @@ class ArticleContentViewController: UITableViewController {
     
     // MARK: - ViewController Related
     override func viewDidLoad() {
-        super.viewDidLoad()
         tableView.register(ArticleContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)
         // set extra cells hidden
         let footerView = UIView()
@@ -75,6 +74,7 @@ class ArticleContentViewController: UITableViewController {
         tableView.mj_header = header
         footer = MJRefreshAutoNormalFooter(refreshingTarget: self, refreshingAction: #selector(fetchMoreData))
         tableView.mj_footer = footer
+        super.viewDidLoad()
         restorePosition()
         fetchData(restorePosition: true, showHUD: true)
     }
@@ -584,6 +584,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 userInfoVC.article = cell.article
                 userInfoVC.delegate = self
                 let presentationCtr = userInfoVC.presentationController as! UIPopoverPresentationController
+                presentationCtr.backgroundColor = AppTheme.shared.backgroundColor
                 presentationCtr.sourceView = sender
                 presentationCtr.delegate = self
                 self.present(userInfoVC, animated: true)
@@ -736,7 +737,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                                                           toBoard: textField.text!)
                             print("cross article status: \(result)")
                         } else {
-                            let user = textField.text!.isEmpty ? AppSetting.sharedSetting.username! : textField.text!
+                            let user = textField.text!.isEmpty ? AppSetting.shared.username! : textField.text!
                             let result = api.forwardArticle(articleID: originalArticle.id,
                                                             inBoard: cell.article!.boardID,
                                                             toUser: user)

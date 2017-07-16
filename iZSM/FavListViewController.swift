@@ -66,7 +66,7 @@ class FavListViewController: BaseTableViewController {
     
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
-        guard let userID =  AppSetting.sharedSetting.username else {
+        guard let userID =  AppSetting.shared.username else {
             completion?()
             return
         }
@@ -176,6 +176,9 @@ class FavListViewController: BaseTableViewController {
         cell.detailTextLabel?.text = fav.boardID
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        cell.textLabel?.textColor = AppTheme.shared.textColor
+        cell.detailTextLabel?.textColor = AppTheme.shared.lightTextColor
+        cell.backgroundColor = AppTheme.shared.backgroundColor
         return cell
     }
     

@@ -75,7 +75,14 @@ class HotTableViewController: BaseTableViewController {
         }
     }
     
-    // MARK: - Table view data source
+    // MARK: - Table view data source and delegate
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let headerFooterView = view as? UITableViewHeaderFooterView {
+            headerFooterView.contentView.backgroundColor = AppTheme.shared.lightBackgroundColor
+            headerFooterView.textLabel?.textColor = AppTheme.shared.textColor
+        }
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return content.count
     }

@@ -52,9 +52,10 @@ class HotTableViewCell: UITableViewCell {
     
     /// Update font size and color
     func updateUI() {
-        titleLabel.textColor = UIColor.black
-        boardLabel.textColor = UIColor.gray
-        authorLabel.textColor = UIApplication.shared.keyWindow?.tintColor
+        titleLabel.textColor = AppTheme.shared.textColor
+        boardLabel.textColor = AppTheme.shared.lightTextColor
+        authorLabel.textColor = AppTheme.shared.tintColor
+        self.backgroundColor = AppTheme.shared.backgroundColor
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
         titleLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
         boardLabel.font = UIFont.preferredFont(forTextStyle: .footnote)

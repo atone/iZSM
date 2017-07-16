@@ -11,7 +11,7 @@ import MobileCoreServices
 import SnapKit
 import SVProgressHUD
 
-class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ComposeArticleController: NTViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let titleHintLabel = UILabel()
     let titleTextField = UITextField()
@@ -41,7 +41,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     var keyboardHeight: Constraint?
     
     private let api = SmthAPI()
-    private let setting = AppSetting.sharedSetting
+    private let setting = AppSetting.shared
     
     private var attachedImage: UIImage? //图片附件，如果为nil，则表示不含附件
     
@@ -52,7 +52,6 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     
     private func setupUI() {
         let cornerRadius: CGFloat = 4
-        view.backgroundColor = UIColor.white
         title = "发表文章"
         titleHintLabel.text = "标题"
         titleHintLabel.font = UIFont.systemFont(ofSize: 14)
@@ -136,6 +135,16 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         } else {
             titleTextField.becomeFirstResponder()
         }
+        updateColor()
+    }
+    
+    func updateColor() {
+        view.backgroundColor = AppTheme.shared.backgroundColor
+        contentTextView.textColor = AppTheme.shared.textColor
+    }
+    
+    @objc private func nightModeChanged(_ notification: Notification) {
+        updateColor()
     }
     
     func cancel(sender: UIBarButtonItem) {
@@ -203,6 +212,10 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow(notification:)),
                                                name: .UIKeyboardWillChangeFrame,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(nightModeChanged(_:)),
+                                               name: AppTheme.kAppThemeChangedNotification,
                                                object: nil)
         api.resetStatus() //发文/回复文章时，必须手动resetStatus，因为中间可能会有添加附件等操作
         setupUI()

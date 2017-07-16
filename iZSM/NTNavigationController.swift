@@ -10,7 +10,7 @@ import UIKit
 
 class NTNavigationController: UINavigationController {
     
-    private let setting = AppSetting.sharedSetting
+    private let setting = AppSetting.shared
     
     override var shouldAutorotate: Bool {
         return true
@@ -22,5 +22,22 @@ class NTNavigationController: UINavigationController {
         } else {
             return .all
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        changeColor()
+        NotificationCenter.default.addObserver(self, selector: #selector(nightModeChanged(_:)), name: AppTheme.kAppThemeChangedNotification, object: nil)
+    }
+    
+    @objc private func nightModeChanged(_ notification: Notification) {
+        changeColor()
+    }
+    
+    private func changeColor() {
+        navigationBar.barStyle = .black
+        navigationBar.tintColor = AppTheme.shared.naviContentColor
+        navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: AppTheme.shared.naviContentColor]
+        navigationBar.barTintColor = AppTheme.shared.naviBackgroundColor
     }
 }

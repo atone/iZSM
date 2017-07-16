@@ -9,9 +9,10 @@
 import UIKit
 import SafariServices
 
-class SupportViewController: UIViewController {
+class SupportViewController: NTViewController {
 
     @IBOutlet weak var textLabel: UILabel!
+    @IBOutlet weak var hintLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,8 +20,21 @@ class SupportViewController: UIViewController {
         let textFont = UIFont(name: "HYXinRenWenSongW", size: fontDescriptor.pointSize)
         textLabel.font = textFont
         textLabel.text = "感谢您对最水木的支持与喜爱！\n您的赞助是我前进的最大动力！"
-        textLabel.textColor = UIColor.darkGray
-        view.backgroundColor = UIColor.white
+        updateColor()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(nightModeChanged(_:)),
+                                               name: AppTheme.kAppThemeChangedNotification,
+                                               object: nil)
+    }
+    
+    @objc private func nightModeChanged(_ notification: Notification) {
+        updateColor()
+    }
+    
+    func updateColor() {
+        textLabel.textColor = AppTheme.shared.textColor
+        hintLabel.textColor = AppTheme.shared.lightTextColor
+        view.backgroundColor = AppTheme.shared.backgroundColor
     }
 
     @IBAction func clickAliPayButton(_ sender: UIButton) {

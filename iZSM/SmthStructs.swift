@@ -40,9 +40,6 @@ struct SMArticle {
     var floor: Int
     var boardID: String
 
-    //一些用于cell显示的计算属性，但是为了加载速度，需要提前计算
-    var timeString: String
-    var attributedBody: NSAttributedString
     var imageAtt: [ImageInfo]
 
     init(id: Int, time: Date, subject: String, authorID: String, body: String, effsize: Int, flags: String, attachments: [SMAttachment]) {
@@ -57,8 +54,6 @@ struct SMArticle {
 
         self.floor = 0
         self.boardID = ""
-        self.timeString = time.shortDateString
-        self.attributedBody = NSAttributedString()
         self.imageAtt = [ImageInfo]()
     }
 
@@ -71,12 +66,15 @@ struct SMArticle {
             imageAtt += extraInfos
             removeImageURLsFromBody()
         }
-        attributedBody = generateAttributedString()
+    }
+    
+    var timeString: String {
+        return time.shortDateString
     }
 
-    private func generateAttributedString() -> NSAttributedString {
+    var attributedBody: NSAttributedString {
         let attributeText = NSMutableAttributedString()
-
+        
         let textFont = UIFont.preferredFont(forTextStyle: .body)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 4
@@ -84,14 +82,14 @@ struct SMArticle {
         paragraphStyle.minimumLineHeight = textFont.pointSize
         paragraphStyle.maximumLineHeight = textFont.pointSize
         paragraphStyle.lineBreakMode = .byWordWrapping
-
+        
         let normal : [String : Any] = [NSFontAttributeName: textFont,
-            NSParagraphStyleAttributeName: paragraphStyle,
-            NSForegroundColorAttributeName: UIColor.black]
+                                       NSParagraphStyleAttributeName: paragraphStyle,
+                                       NSForegroundColorAttributeName: AppTheme.shared.textColor]
         let quoted : [String : Any] = [NSFontAttributeName: textFont,
-            NSParagraphStyleAttributeName: paragraphStyle,
-            NSForegroundColorAttributeName: UIColor.gray]
-
+                                       NSParagraphStyleAttributeName: paragraphStyle,
+                                       NSForegroundColorAttributeName: AppTheme.shared.lightTextColor]
+        
         self.body.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(": ") {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: quoted))
@@ -99,7 +97,7 @@ struct SMArticle {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: normal))
             }
         }
-
+        
         return attributeText
     }
 

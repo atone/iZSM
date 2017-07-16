@@ -68,7 +68,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     }
     
     func setup() {
-        self.tintColor = UIApplication.shared.keyWindow?.tintColor
+        updateColor()
         self.clipsToBounds = true
         self.selectionStyle = .none
         
@@ -83,22 +83,18 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         avatarImageView.isUserInteractionEnabled = true
         self.contentView.addSubview(avatarImageView)
         
-        authorLabel.textColor = UIColor.black
         authorTapRecognizer.addTarget(self, action: #selector(showUserInfo(recognizer:)))
         authorTapRecognizer.numberOfTapsRequired = 1
         authorLabel.addGestureRecognizer(authorTapRecognizer)
         authorLabel.isUserInteractionEnabled = true
         self.contentView.addSubview(authorLabel)
         
-        floorAndTimeLabel.textColor = UIColor.gray
         self.contentView.addSubview(floorAndTimeLabel)
         
         replyLabel.text = "回复"
-        replyLabel.textColor = tintColor
         replyLabel.textAlignment = .center
         replyLabel.layer.cornerRadius = 4
         replyLabel.layer.borderWidth = 1
-        replyLabel.layer.borderColor = tintColor.cgColor
         replyLabel.clipsToBounds = true
         replyTapRecognizer.addTarget(self, action: #selector(reply(recognizer:)))
         replyTapRecognizer.numberOfTapsRequired = 1
@@ -107,11 +103,9 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.contentView.addSubview(replyLabel)
         
         moreLabel.text = "•••"
-        moreLabel.textColor = tintColor
         moreLabel.textAlignment = .center
         moreLabel.layer.cornerRadius = 4
         moreLabel.layer.borderWidth = 1
-        moreLabel.layer.borderColor = tintColor.cgColor
         moreLabel.clipsToBounds = true
         moreTapRecognizer.addTarget(self, action: #selector(action(recognizer:)))
         moreTapRecognizer.numberOfTapsRequired = 1
@@ -125,9 +119,19 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         contentLabel.delegate = self
         contentLabel.verticalAlignment = .top
         contentLabel.extendsLinkTouchArea = false
-        contentLabel.linkAttributes = [NSForegroundColorAttributeName:tintColor]
-        contentLabel.activeLinkAttributes = [NSForegroundColorAttributeName:tintColor.withAlphaComponent(0.6)]
         self.contentView.addSubview(contentLabel)
+    }
+    
+    func updateColor() {
+        self.backgroundColor = AppTheme.shared.backgroundColor
+        authorLabel.textColor = AppTheme.shared.textColor
+        floorAndTimeLabel.textColor = AppTheme.shared.lightTextColor
+        replyLabel.textColor = AppTheme.shared.tintColor
+        replyLabel.layer.borderColor = AppTheme.shared.tintColor.cgColor
+        moreLabel.textColor = AppTheme.shared.tintColor
+        moreLabel.layer.borderColor = AppTheme.shared.tintColor.cgColor
+        contentLabel.linkAttributes = [NSForegroundColorAttributeName:AppTheme.shared.urlColor]
+        contentLabel.activeLinkAttributes = [NSForegroundColorAttributeName:AppTheme.shared.activeUrlColor]
     }
     
     func setData(displayFloor floor: Int, smarticle: SMArticle, delegate: ArticleContentCellDelegate) {
@@ -135,6 +139,7 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.delegate = delegate
         self.article = smarticle
         
+        updateColor()
         authorLabel.text = smarticle.authorID
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
         floorAndTimeLabel.text = "\(floorText)  \(smarticle.timeString)"

@@ -66,10 +66,10 @@ class SMUserInfoUtil {
                                 realm.add(userInfo, update: true)
                             }
                             let userID = userInfo.id
-                            if let username = AppSetting.sharedSetting.username {
+                            if let username = AppSetting.shared.username {
                                 if username.lowercased() == userID.lowercased() && username != userID {
                                     print("change saved user id from \(username) to \(userID)")
-                                    AppSetting.sharedSetting.username = userID
+                                    AppSetting.shared.username = userID
                                 }
                             }
                             print("write user info for \(userID) success!")

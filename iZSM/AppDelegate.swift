@@ -36,9 +36,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var launchedShortcutItem: UIApplicationShortcutItem?
     
     let mainController = NTTabBarController()
-    let setting = AppSetting.sharedSetting
+    let setting = AppSetting.shared
     let api = SmthAPI()
-    let tintColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
     
     func handle(shortcutItem: UIApplicationShortcutItem) -> Bool {
         var handled = false
@@ -69,22 +68,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.backgroundColor = UIColor.white
+        window?.backgroundColor = AppTheme.shared.backgroundColor
+        window?.tintColor = AppTheme.shared.tintColor
         mainController.viewControllers = rootViewControllers()
         
         window?.rootViewController = mainController
         window?.makeKeyAndVisible()
         
-        window?.tintColor = tintColor
-        // set the appearance of the switch
-        UISwitch.appearance().onTintColor = tintColor
-        // set the appearance of the navigation bar
-        UINavigationBar.appearance().barStyle = .black
-        UINavigationBar.appearance().barTintColor = tintColor
-        UINavigationBar.appearance().tintColor = UIColor.white
-        
         // set the SVProgressHUD setting
         SVProgressHUD.setMinimumDismissTimeInterval(2)
+        
+        // register color change notification
+        NotificationCenter.default.addObserver(self, selector: #selector(nightModeChanged(_:)), name: AppTheme.kAppThemeChangedNotification, object: nil)
         
         // set the background fetch mode
         if setting.backgroundTaskEnabled {
@@ -258,7 +253,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 break
             }
         }
-        
+    }
+    
+    @objc private func nightModeChanged(_ notification: Notification) {
+        changeColor()
+    }
+    
+    private func changeColor() {
+        window?.backgroundColor = AppTheme.shared.backgroundColor
+        window?.tintColor = AppTheme.shared.tintColor
     }
 }
 

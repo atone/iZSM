@@ -14,7 +14,7 @@ class SmthAPI {
         api.init_smth()
     }
 
-    private let setting = AppSetting.sharedSetting
+    private let setting = AppSetting.shared
 
     // MARK: - Properties
     // error code and error description

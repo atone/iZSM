@@ -395,26 +395,38 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="设置" id="8IN-pc-Zmm"/>
                     <connections>
+                        <outlet property="aboutZSMCell" destination="wxx-M6-Cp4" id="HHb-oR-3IS"/>
                         <outlet property="aboutZSMLabel" destination="qaO-QN-pRe" id="YcW-qn-boC"/>
+                        <outlet property="backgroundTaskCell" destination="kx0-Ji-el2" id="hKb-yn-cjX"/>
                         <outlet property="backgroundTaskLabel" destination="B4r-K0-yXa" id="CUr-Ys-m5Q"/>
                         <outlet property="backgroundTaskSwitch" destination="9wJ-Ev-cvf" id="vK1-4T-LqZ"/>
                         <outlet property="cacheSizeLabel" destination="K4T-2K-nNj" id="BBG-1L-dqY"/>
+                        <outlet property="clearCacheCell" destination="4au-nR-xNV" id="cwF-Vq-jod"/>
                         <outlet property="clearCacheLabel" destination="ggg-Qv-CSK" id="xjS-tP-UU2"/>
+                        <outlet property="displayModeCell" destination="Y71-rk-0K5" id="EjB-RO-AXC"/>
                         <outlet property="displayModeLabel" destination="EPO-RB-8bD" id="wRn-wn-rfY"/>
                         <outlet property="displayModeSegmentedControl" destination="uxE-lG-02F" id="hHF-sw-DFG"/>
+                        <outlet property="hideTopCell" destination="qeH-vb-yDf" id="dnq-7O-hWh"/>
                         <outlet property="hideTopLabel" destination="Xet-7T-8hk" id="oK0-7r-cvR"/>
                         <outlet property="hideTopSwitch" destination="huG-zg-Xer" id="1HJ-Ut-dxE"/>
+                        <outlet property="logoutCell" destination="LvP-NI-cZy" id="Mnl-V4-fEh"/>
                         <outlet property="logoutLabel" destination="mg8-Gm-82m" id="0lV-Qc-vdF"/>
+                        <outlet property="newReplyFirstCell" destination="myD-gJ-Qci" id="70R-P8-2Yt"/>
                         <outlet property="newReplyFirstLabel" destination="zGy-98-WHJ" id="iPQ-ap-6gi"/>
                         <outlet property="newReplyFirstSwitch" destination="JXU-55-QNf" id="46F-KQ-8lK"/>
                         <outlet property="nightModeSwitch" destination="uPH-J1-U46" id="rZI-kU-WQQ"/>
+                        <outlet property="nightModelCell" destination="1jr-45-R6a" id="ZQa-ke-Av2"/>
                         <outlet property="nightModelLabel" destination="fNi-2a-684" id="cfC-dd-OuI"/>
+                        <outlet property="portraitLockCell" destination="Yo5-Zj-Y7C" id="CbM-uj-dMd"/>
                         <outlet property="portraitLockLabel" destination="NF8-5t-GSC" id="T3C-wF-vhV"/>
                         <outlet property="portraitLockSwitch" destination="fSh-TT-AFI" id="XJ8-RW-7wX"/>
+                        <outlet property="rememberLastCell" destination="FMy-Cl-XDp" id="vaN-6T-MUr"/>
                         <outlet property="rememberLastLabel" destination="YXQ-Rw-Xq2" id="Py4-kA-ISS"/>
                         <outlet property="rememberLastSwitch" destination="7Yb-KJ-UdP" id="Cwj-vN-EDu"/>
+                        <outlet property="shakeToSwitchCell" destination="jLh-rG-6CZ" id="mRo-d3-UXm"/>
                         <outlet property="shakeToSwitchLabel" destination="wKT-Ts-Y9w" id="Hoc-Wa-Hxj"/>
                         <outlet property="shakeToSwitchSwitch" destination="VNg-Hq-fbd" id="5dZ-2z-3YW"/>
+                        <outlet property="showSignatureCell" destination="N0e-zy-pW9" id="rHp-PF-cbY"/>
                         <outlet property="showSignatureLabel" destination="hBc-Ge-FAr" id="c8K-Nw-3Xd"/>
                         <outlet property="showSignatureSwitch" destination="11I-Qr-V6U" id="62s-B9-dMP"/>
                     </connections>
@@ -525,8 +537,11 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="mailCell" destination="Fty-Ar-9be" id="Bdv-t6-hZo"/>
                         <outlet property="mailLabel" destination="SvJ-az-b6O" id="k7n-ni-D0w"/>
+                        <outlet property="rateCell" destination="r25-2v-Ny9" id="Oh0-u9-c6N"/>
                         <outlet property="rateLabel" destination="Dbu-P5-4FN" id="e8I-FE-tNb"/>
+                        <outlet property="websiteCell" destination="vhb-fz-zHy" id="5Tp-oq-g7J"/>
                         <outlet property="websiteLabel" destination="NAj-6P-0vY" id="McL-q0-QIA"/>
                     </connections>
                 </tableViewController>
@@ -551,7 +566,6 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uch-J4-OaZ">
                                         <rect key="frame" x="0.0" y="123.5" width="80" height="80"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="80" id="hJk-M4-fqR"/>
                                             <constraint firstAttribute="height" constant="80" id="pjg-NN-hHU"/>
@@ -563,7 +577,6 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H3O-MY-GMn">
                                         <rect key="frame" x="160" y="123.5" width="80" height="80"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="80" id="dJW-UM-QT7"/>
                                             <constraint firstAttribute="width" constant="80" id="qmu-tM-GOt"/>
@@ -601,6 +614,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="hintLabel" destination="YZ9-Yo-cTn" id="Oyb-wz-OSE"/>
                         <outlet property="textLabel" destination="iUG-Ss-jHQ" id="fD4-rW-JBT"/>
                     </connections>
                 </viewController>

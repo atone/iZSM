@@ -11,20 +11,32 @@ import YYKit
 import SVProgressHUD
 import RealmSwift
 
-class SettingsViewController: UITableViewController {
+class SettingsViewController: NTTableViewController {
     @IBOutlet weak var hideTopLabel: UILabel!
+    @IBOutlet weak var hideTopCell: UITableViewCell!
     @IBOutlet weak var showSignatureLabel: UILabel!
+    @IBOutlet weak var showSignatureCell: UITableViewCell!
     @IBOutlet weak var newReplyFirstLabel: UILabel!
+    @IBOutlet weak var newReplyFirstCell: UITableViewCell!
     @IBOutlet weak var rememberLastLabel: UILabel!
+    @IBOutlet weak var rememberLastCell: UITableViewCell!
     @IBOutlet weak var portraitLockLabel: UILabel!
+    @IBOutlet weak var portraitLockCell: UITableViewCell!
     @IBOutlet weak var displayModeLabel: UILabel!
+    @IBOutlet weak var displayModeCell: UITableViewCell!
     @IBOutlet weak var nightModelLabel: UILabel!
+    @IBOutlet weak var nightModelCell: UITableViewCell!
     @IBOutlet weak var shakeToSwitchLabel: UILabel!
+    @IBOutlet weak var shakeToSwitchCell: UITableViewCell!
     @IBOutlet weak var backgroundTaskLabel: UILabel!
+    @IBOutlet weak var backgroundTaskCell: UITableViewCell!
     @IBOutlet weak var clearCacheLabel: UILabel!
+    @IBOutlet weak var clearCacheCell: UITableViewCell!
     @IBOutlet weak var cacheSizeLabel: UILabel!
     @IBOutlet weak var aboutZSMLabel: UILabel!
+    @IBOutlet weak var aboutZSMCell: UITableViewCell!
     @IBOutlet weak var logoutLabel: UILabel!
+    @IBOutlet weak var logoutCell: UITableViewCell!
 
     @IBOutlet weak var hideTopSwitch: UISwitch!
     @IBOutlet weak var showSignatureSwitch: UISwitch!
@@ -37,7 +49,8 @@ class SettingsViewController: UITableViewController {
     @IBOutlet weak var displayModeSegmentedControl: UISegmentedControl!
 
 
-    let setting = AppSetting.sharedSetting
+    let setting = AppSetting.shared
+    let theme = AppTheme.shared
     
     var cache: YYImageCache?
 
@@ -99,6 +112,7 @@ class SettingsViewController: UITableViewController {
     
     @IBAction func nightModeChanged(sender: UISwitch) {
         setting.nightMode = sender.isOn
+        NotificationCenter.default.post(name: AppTheme.kAppThemeChangedNotification, object: nil)
     }
     
     @IBAction func shakeToSwitchChanged(sender: UISwitch) {
@@ -117,28 +131,40 @@ class SettingsViewController: UITableViewController {
     func updateUI() {
         // update label fonts
         hideTopLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        hideTopLabel.textColor = theme.textColor
         showSignatureLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        showSignatureLabel.textColor = theme.textColor
         newReplyFirstLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        newReplyFirstLabel.textColor = theme.textColor
         rememberLastLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        rememberLastLabel.textColor = theme.textColor
         portraitLockLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        portraitLockLabel.textColor = theme.textColor
         displayModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        displayModeLabel.textColor = theme.textColor
         nightModelLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        nightModelLabel.textColor = theme.textColor
         shakeToSwitchLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        shakeToSwitchLabel.textColor = theme.textColor
         backgroundTaskLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        backgroundTaskLabel.textColor = theme.textColor
         clearCacheLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        clearCacheLabel.textColor = theme.textColor
         cacheSizeLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        cacheSizeLabel.textColor = UIColor.lightGray
+        cacheSizeLabel.textColor = theme.lightTextColor
         var cacheSize = 0
         if let cache = cache {
             cacheSize = cache.diskCache.totalCost() / 1024 / 1024
         }
         cacheSizeLabel.text = "\(cacheSize) MB"
         aboutZSMLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        aboutZSMLabel.textColor = theme.textColor
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
         logoutLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
-        logoutLabel.textColor = UIColor.red
+        logoutLabel.textColor = theme.redColor
 
         // update switch states
+        UISwitch.appearance().onTintColor = theme.tintColor
         hideTopSwitch.isOn = setting.hideAlwaysOnTopThread
         showSignatureSwitch.isOn = setting.showSignature
         newReplyFirstSwitch.isOn = (setting.sortMode == .LaterPostFirst)
@@ -148,6 +174,24 @@ class SettingsViewController: UITableViewController {
         nightModeSwitch.isOn = setting.nightMode
         shakeToSwitchSwitch.isOn = setting.shakeToSwitch
         backgroundTaskSwitch.isOn = setting.backgroundTaskEnabled
+        
+        hideTopCell.backgroundColor = theme.backgroundColor
+        showSignatureCell.backgroundColor = theme.backgroundColor
+        newReplyFirstCell.backgroundColor = theme.backgroundColor
+        rememberLastCell.backgroundColor = theme.backgroundColor
+        portraitLockCell.backgroundColor = theme.backgroundColor
+        displayModeCell.backgroundColor = theme.backgroundColor
+        nightModelCell.backgroundColor = theme.backgroundColor
+        shakeToSwitchCell.backgroundColor = theme.backgroundColor
+        backgroundTaskCell.backgroundColor = theme.backgroundColor
+        clearCacheCell.backgroundColor = theme.backgroundColor
+        aboutZSMCell.backgroundColor = theme.backgroundColor
+        logoutCell.backgroundColor = theme.backgroundColor
+    }
+    
+    override func changeColor() {
+        super.changeColor()
+        updateUI()
     }
 
     override func viewWillAppear(_ animated: Bool) {

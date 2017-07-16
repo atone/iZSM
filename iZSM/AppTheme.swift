@@ -39,6 +39,10 @@ class AppTheme {
         }
     }
     
+    var absoluteTintColor: UIColor {
+        return UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
+    }
+    
     var tintColor: UIColor {
         if setting.nightMode {
             return UIColor(red: 220/255.0, green: 220/255.0, blue: 220/255.0, alpha: 1)

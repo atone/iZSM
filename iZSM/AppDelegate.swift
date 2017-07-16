@@ -69,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = AppTheme.shared.backgroundColor
-        window?.tintColor = AppTheme.shared.tintColor
+        window?.tintColor = AppTheme.shared.absoluteTintColor
         mainController.viewControllers = rootViewControllers()
         
         window?.rootViewController = mainController

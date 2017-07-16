@@ -55,8 +55,6 @@ class ComposeArticleController: NTViewController, UITextFieldDelegate, UIImagePi
         title = "发表文章"
         titleHintLabel.text = "标题"
         titleHintLabel.font = UIFont.systemFont(ofSize: 14)
-        titleHintLabel.textColor = UIColor.white
-        titleHintLabel.backgroundColor = UIColor.lightGray
         titleHintLabel.textAlignment = .center
         titleHintLabel.layer.cornerRadius = cornerRadius
         titleHintLabel.layer.masksToBounds = true
@@ -66,9 +64,7 @@ class ComposeArticleController: NTViewController, UITextFieldDelegate, UIImagePi
         titleTextField.addTarget(self, action: #selector(change(textField:)), for: .editingChanged)
         titleTextField.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .horizontal)
         titleTextField.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
-        titleTextField.textColor = UIColor.lightGray
         titleTextField.font = UIFont.systemFont(ofSize: 16)
-        titleTextField.placeholder = "添加标题"
         titleTextField.autocapitalizationType = .none
         titleTextField.returnKeyType = .next
         contentTextView.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .vertical)
@@ -80,7 +76,6 @@ class ComposeArticleController: NTViewController, UITextFieldDelegate, UIImagePi
         contentTextView.layer.masksToBounds = true
         countLabel.text = "0"
         countLabel.font = UIFont.systemFont(ofSize: 16)
-        countLabel.textColor = UIColor.lightGray
         countLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         countLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         
@@ -140,6 +135,12 @@ class ComposeArticleController: NTViewController, UITextFieldDelegate, UIImagePi
     
     func updateColor() {
         view.backgroundColor = AppTheme.shared.backgroundColor
+        titleHintLabel.textColor = AppTheme.shared.backgroundColor
+        titleHintLabel.backgroundColor = AppTheme.shared.lightTextColor
+        countLabel.textColor = AppTheme.shared.lightTextColor
+        titleTextField.textColor = AppTheme.shared.lightTextColor
+        titleTextField.attributedPlaceholder = NSAttributedString(string: "添加标题",
+                                                                  attributes: [NSForegroundColorAttributeName: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
         titleTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         contentTextView.textColor = AppTheme.shared.textColor
         contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default

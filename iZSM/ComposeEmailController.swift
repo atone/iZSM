@@ -62,8 +62,6 @@ class ComposeEmailController: NTViewController, UITextFieldDelegate {
         title = "写邮件"
         sendToLabel.text = "寄给"
         sendToLabel.font = UIFont.systemFont(ofSize: 14)
-        sendToLabel.textColor = UIColor.white
-        sendToLabel.backgroundColor = UIColor.lightGray
         sendToLabel.textAlignment = .center
         sendToLabel.layer.cornerRadius = cornerRadius
         sendToLabel.layer.masksToBounds = true
@@ -71,8 +69,6 @@ class ComposeEmailController: NTViewController, UITextFieldDelegate {
         sendToLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         titleHintLabel.text = "标题"
         titleHintLabel.font = UIFont.systemFont(ofSize: 14)
-        titleHintLabel.textColor = UIColor.white
-        titleHintLabel.backgroundColor = UIColor.lightGray
         titleHintLabel.textAlignment = .center
         titleHintLabel.layer.cornerRadius = cornerRadius
         titleHintLabel.layer.masksToBounds = true
@@ -82,18 +78,14 @@ class ComposeEmailController: NTViewController, UITextFieldDelegate {
         titleTextField.addTarget(self, action: #selector(change(textField:)), for: .editingChanged)
         titleTextField.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .horizontal)
         titleTextField.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
-        titleTextField.textColor = UIColor.lightGray
         titleTextField.font = UIFont.systemFont(ofSize: 16)
-        titleTextField.placeholder = "添加标题"
         titleTextField.autocapitalizationType = .none
         titleTextField.returnKeyType = .next
         receiverTextField.delegate = self
         receiverTextField.addTarget(self, action: #selector(change(textField:)), for: .editingChanged)
         receiverTextField.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .horizontal)
         receiverTextField.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
-        receiverTextField.textColor = UIColor.lightGray
         receiverTextField.font = UIFont.systemFont(ofSize: 16)
-        receiverTextField.placeholder = "收信人"
         receiverTextField.autocapitalizationType = .none
         receiverTextField.returnKeyType = .next
         contentTextView.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .vertical)
@@ -105,7 +97,6 @@ class ComposeEmailController: NTViewController, UITextFieldDelegate {
         contentTextView.layer.masksToBounds = true
         countLabel.text = "0"
         countLabel.font = UIFont.systemFont(ofSize: 16)
-        countLabel.textColor = UIColor.lightGray
         countLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         countLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         
@@ -189,7 +180,18 @@ class ComposeEmailController: NTViewController, UITextFieldDelegate {
     
     func updateColor() {
         view.backgroundColor = AppTheme.shared.backgroundColor
+        sendToLabel.textColor = AppTheme.shared.backgroundColor
+        sendToLabel.backgroundColor = AppTheme.shared.lightTextColor
+        titleHintLabel.textColor = AppTheme.shared.backgroundColor
+        titleHintLabel.backgroundColor = AppTheme.shared.lightTextColor
+        countLabel.textColor = AppTheme.shared.lightTextColor
+        receiverTextField.textColor = AppTheme.shared.lightTextColor
+        receiverTextField.attributedPlaceholder = NSAttributedString(string: "收信人",
+                                                                     attributes: [NSForegroundColorAttributeName: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
         receiverTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
+        titleTextField.textColor = AppTheme.shared.lightTextColor
+        titleTextField.attributedPlaceholder = NSAttributedString(string: "添加标题",
+                                                                  attributes: [NSForegroundColorAttributeName: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
         titleTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         contentTextView.textColor = AppTheme.shared.textColor
         contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default

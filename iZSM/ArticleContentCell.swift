@@ -132,6 +132,9 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         moreLabel.layer.borderColor = AppTheme.shared.tintColor.cgColor
         contentLabel.linkAttributes = [NSForegroundColorAttributeName:AppTheme.shared.urlColor]
         contentLabel.activeLinkAttributes = [NSForegroundColorAttributeName:AppTheme.shared.activeUrlColor]
+        if let article = article {
+            contentLabel.setText(AppSetting.shared.nightMode ? article.attributedDarkBody : article.attributedBody)
+        }
     }
     
     func setData(displayFloor floor: Int, smarticle: SMArticle, delegate: ArticleContentCellDelegate) {
@@ -139,12 +142,11 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         self.delegate = delegate
         self.article = smarticle
         
-        updateColor()
         authorLabel.text = smarticle.authorID
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
         floorAndTimeLabel.text = "\(floorText)  \(smarticle.timeString)"
         
-        contentLabel.setText(smarticle.attributedBody)
+        updateColor()
     }
     
     //MARK: - Layout Subviews

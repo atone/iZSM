@@ -15,6 +15,26 @@ class AppTheme {
     private let setting = AppSetting.shared
     private init() {}
     
+    var dayTextColor: UIColor {
+        return UIColor.black
+    }
+    
+    var nightTextColor: UIColor {
+        return UIColor.lightGray
+    }
+    
+    var dayLightTextColor: UIColor {
+        return UIColor.gray
+    }
+    
+    var nightLightTextColor: UIColor {
+        return UIColor.gray
+    }
+    
+    var absoluteTintColor: UIColor {
+        return UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
+    }
+    
     var backgroundColor: UIColor {
         if setting.nightMode {
             return UIColor(red: 80/255.0, green: 80/255.0, blue: 80/255.0, alpha: 1)
@@ -25,29 +45,25 @@ class AppTheme {
     
     var textColor: UIColor {
         if setting.nightMode {
-            return UIColor.lightGray
+            return nightTextColor
         } else {
-            return UIColor.black
+            return dayTextColor
         }
     }
     
     var lightTextColor: UIColor {
         if setting.nightMode {
-            return UIColor.gray
+            return nightLightTextColor
         } else {
-            return UIColor.gray
+            return dayLightTextColor
         }
-    }
-    
-    var absoluteTintColor: UIColor {
-        return UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
     }
     
     var tintColor: UIColor {
         if setting.nightMode {
             return UIColor(red: 220/255.0, green: 220/255.0, blue: 220/255.0, alpha: 1)
         } else {
-            return UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
+            return absoluteTintColor
         }
     }
     
@@ -63,7 +79,7 @@ class AppTheme {
         if setting.nightMode {
             return UIColor.darkGray
         } else {
-            return UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
+            return absoluteTintColor
         }
     }
     
@@ -92,10 +108,10 @@ class AppTheme {
     }
     
     var urlColor: UIColor {
-        return UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
+        return absoluteTintColor
     }
     
     var activeUrlColor: UIColor {
-        return UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 0.6)
+        return absoluteTintColor.withAlphaComponent(0.6)
     }
 }

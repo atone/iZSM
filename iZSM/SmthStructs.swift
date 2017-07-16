@@ -41,6 +41,9 @@ struct SMArticle {
     var boardID: String
 
     var imageAtt: [ImageInfo]
+    var timeString: String
+    var attributedBody: NSAttributedString
+    var attributedDarkBody: NSAttributedString
 
     init(id: Int, time: Date, subject: String, authorID: String, body: String, effsize: Int, flags: String, attachments: [SMAttachment]) {
         self.id = id
@@ -55,6 +58,9 @@ struct SMArticle {
         self.floor = 0
         self.boardID = ""
         self.imageAtt = [ImageInfo]()
+        self.timeString = time.shortDateString
+        self.attributedBody = NSAttributedString()
+        self.attributedDarkBody = NSAttributedString()
     }
 
     mutating func extraConfigure() {
@@ -66,13 +72,12 @@ struct SMArticle {
             imageAtt += extraInfos
             removeImageURLsFromBody()
         }
-    }
-    
-    var timeString: String {
-        return time.shortDateString
+        self.attributedBody = attributedBody(forDarkTheme: false)
+        self.attributedDarkBody = attributedBody(forDarkTheme: true)
     }
 
-    var attributedBody: NSAttributedString {
+    private func attributedBody(forDarkTheme dark: Bool) -> NSAttributedString {
+        let theme = AppTheme.shared
         let attributeText = NSMutableAttributedString()
         
         let textFont = UIFont.preferredFont(forTextStyle: .body)
@@ -85,10 +90,10 @@ struct SMArticle {
         
         let normal : [String : Any] = [NSFontAttributeName: textFont,
                                        NSParagraphStyleAttributeName: paragraphStyle,
-                                       NSForegroundColorAttributeName: AppTheme.shared.textColor]
+                                       NSForegroundColorAttributeName: dark ? theme.nightTextColor : theme.dayTextColor]
         let quoted : [String : Any] = [NSFontAttributeName: textFont,
                                        NSParagraphStyleAttributeName: paragraphStyle,
-                                       NSForegroundColorAttributeName: AppTheme.shared.lightTextColor]
+                                       NSForegroundColorAttributeName: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
         
         self.body.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(": ") {

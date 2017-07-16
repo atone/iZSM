@@ -29,14 +29,22 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     var originalThread: [[SMThread]]?
     var searchMode = false
     
-    var searchString: String {
-        return searchController?.searchBar.text ?? ""
+    var searchString: String? {
+        return searchController.searchBar.text
     }
     var selectedIndex: Int {
-        return searchController?.searchBar.selectedScopeButtonIndex ?? 0
+        return searchController.searchBar.selectedScopeButtonIndex
     }
     
-    private var searchController: UISearchController?
+    private lazy var searchController: UISearchController = {
+        let tmpController = UISearchController(searchResultsController: nil)
+        tmpController.searchBar.scopeButtonTitles = ["标题", "用户"]
+        tmpController.dimsBackgroundDuringPresentation = false
+        tmpController.delegate = self
+        tmpController.searchBar.delegate = self
+        tmpController.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
+        return tmpController
+    }()
     
     func didDismissSearchController(_ searchController: UISearchController) {
         tableView.tableHeaderView = nil
@@ -67,9 +75,8 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         search(forText: searchString, scope: selectedScope)
     }
     
-    func search(forText searchString: String, scope: Int) {
-        if searchString.isEmpty { return }
-        if let boardID = self.boardID {
+    func search(forText searchString: String?, scope: Int) {
+        if let boardID = self.boardID, let searchString = searchString {
             self.threadLoaded = 0
             let currentMode = searchMode
             networkActivityIndicatorStart(withHUD: true)
@@ -108,12 +115,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         
         // search related
         definesPresentationContext = true
-        searchController = UISearchController(searchResultsController: nil)
-        searchController?.searchBar.scopeButtonTitles = ["标题", "用户"]
-        searchController?.dimsBackgroundDuringPresentation = false
-        searchController?.delegate = self
-        searchController?.searchBar.delegate = self
-        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
+        
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search,
                                            target: self,
                                            action: #selector(pressSearchButton(sender:)))
@@ -128,7 +130,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
     
     deinit {
-        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
+        searchController.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
     }
     
     override func clearContent() {
@@ -137,11 +139,9 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     func pressSearchButton(sender: UIBarButtonItem) {
         if tableView.tableHeaderView == nil {
-            if let searchController = searchController {
-                tableView.tableHeaderView = searchController.searchBar
-                tableView.scrollRectToVisible(searchController.searchBar.frame, animated: false)
-                searchController.isActive = true
-            }
+            tableView.tableHeaderView = searchController.searchBar
+            tableView.scrollRectToVisible(searchController.searchBar.frame, animated: false)
+            searchController.isActive = true
         }
     }
     

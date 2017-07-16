@@ -23,11 +23,15 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     
     var originalBoards: [SMBoard]?
     var searchMode = false
-    var searchString: String {
-        return searchController?.searchBar.text ?? ""
-    }
     
-    private var searchController: UISearchController?
+    private lazy var searchController: UISearchController = {
+        let tmpController = UISearchController(searchResultsController: nil)
+        tmpController.dimsBackgroundDuringPresentation = false
+        tmpController.delegate = self
+        tmpController.searchBar.delegate = self
+        tmpController.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
+        return tmpController
+    }()
     
     func didDismissSearchController(_ searchController: UISearchController) {
         tableView.tableHeaderView = nil
@@ -48,14 +52,14 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if searchString.isEmpty { return }
+        guard let searchString = searchBar.text else { return }
         let currentMode = searchMode
         SVProgressHUD.show()
         networkActivityIndicatorStart()
         var result: [SMBoard]?
         
         DispatchQueue.global().async {
-            result = self.api.queryBoard(query: self.searchString)
+            result = self.api.queryBoard(query: searchString)
             DispatchQueue.main.async {
                 SVProgressHUD.dismiss()
                 networkActivityIndicatorStop()
@@ -71,11 +75,9 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     
     func pressSearchButton(sender: UIBarButtonItem) {
         if tableView.tableHeaderView == nil {
-            if let searchController = searchController {
-                tableView.tableHeaderView = searchController.searchBar
-                tableView.scrollRectToVisible(searchController.searchBar.frame, animated: false)
-                searchController.isActive = true
-            }
+            tableView.tableHeaderView = searchController.searchBar
+            tableView.scrollRectToVisible(searchController.searchBar.frame, animated: false)
+            searchController.isActive = true
         }
     }
     
@@ -84,12 +86,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         
         // search related
         definesPresentationContext = true
-        searchController = UISearchController(searchResultsController: nil)
-        searchController?.dimsBackgroundDuringPresentation = false
-        searchController?.delegate = self
-        searchController?.searchBar.delegate = self
-        //searchController?.hidesNavigationBarDuringPresentation = false
-        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
+        
         if boardID == 0 { //只在根目录下显示搜索
             let searchButton = UIBarButtonItem(barButtonSystemItem: .search,
                                                target: self,
@@ -106,7 +103,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     }
     
     deinit {
-        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
+        searchController.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
     }
     
     override func clearContent() {

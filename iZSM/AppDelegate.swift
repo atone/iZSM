@@ -261,7 +261,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func changeColor() {
         window?.backgroundColor = AppTheme.shared.backgroundColor
-        window?.tintColor = AppTheme.shared.tintColor
+        window?.tintColor = AppTheme.shared.absoluteTintColor
     }
 }
 

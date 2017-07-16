@@ -17,7 +17,7 @@ class AppTheme {
     
     var backgroundColor: UIColor {
         if setting.nightMode {
-            return UIColor.darkGray
+            return UIColor(red: 80/255.0, green: 80/255.0, blue: 80/255.0, alpha: 1)
         } else {
             return UIColor.white
         }
@@ -77,7 +77,7 @@ class AppTheme {
     
     var lightBackgroundColor: UIColor {
         if setting.nightMode {
-            return UIColor(red: 80/255.0, green: 80/255.0, blue: 80/255.0, alpha: 1)
+            return UIColor.darkGray
         } else {
             return UIColor.groupTableViewBackground
         }

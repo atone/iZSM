@@ -30,21 +30,13 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     var searchMode = false
     
     var searchString: String? {
-        return searchController.searchBar.text
+        return searchController?.searchBar.text
     }
     var selectedIndex: Int {
-        return searchController.searchBar.selectedScopeButtonIndex
+        return searchController?.searchBar.selectedScopeButtonIndex ?? 0
     }
     
-    private lazy var searchController: UISearchController = {
-        let tmpController = UISearchController(searchResultsController: nil)
-        tmpController.searchBar.scopeButtonTitles = ["标题", "用户"]
-        tmpController.dimsBackgroundDuringPresentation = false
-        tmpController.delegate = self
-        tmpController.searchBar.delegate = self
-        tmpController.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
-        return tmpController
-    }()
+    private var searchController: UISearchController?
     
     func didDismissSearchController(_ searchController: UISearchController) {
         tableView.tableHeaderView = nil
@@ -115,6 +107,12 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         
         // search related
         definesPresentationContext = true
+        searchController = UISearchController(searchResultsController: nil)
+        searchController?.searchBar.scopeButtonTitles = ["标题", "用户"]
+        searchController?.dimsBackgroundDuringPresentation = false
+        searchController?.delegate = self
+        searchController?.searchBar.delegate = self
+        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
         
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search,
                                            target: self,
@@ -130,7 +128,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
     
     deinit {
-        searchController.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
+        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
     }
     
     override func clearContent() {
@@ -139,13 +137,13 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     func pressSearchButton(sender: UIBarButtonItem) {
         if tableView.tableHeaderView == nil {
-            tableView.tableHeaderView = searchController.searchBar
-            tableView.scrollRectToVisible(searchController.searchBar.frame, animated: false)
-            searchController.isActive = true
+            if let searchController = searchController {
+                tableView.tableHeaderView = searchController.searchBar
+                tableView.scrollRectToVisible(searchController.searchBar.frame, animated: false)
+                searchController.isActive = true
+            }
         }
     }
-    
-
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         threadLoaded = 0

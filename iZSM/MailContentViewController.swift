@@ -141,6 +141,7 @@ class MailContentViewController: NTViewController, UITextViewDelegate {
                 textField.autocorrectionType = .no
                 textField.keyboardType = .asciiCapable
                 textField.returnKeyType = .send
+                textField.keyboardAppearance = AppSetting.shared.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
             }
             let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert] action in
                 if let textField = alert.textFields?.first {

@@ -684,6 +684,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 alert.addTextField { textField in
                     textField.placeholder = "如垃圾广告、色情内容、人身攻击等"
                     textField.returnKeyType = .done
+                    textField.keyboardAppearance = self.setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
                 }
                 let okAction = UIAlertAction(title: "举报", style: .default) { [unowned alert, unowned self] action in
                     if let textField = alert.textFields?.first {
@@ -726,6 +727,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 textField.keyboardType = ToBoard ? UIKeyboardType.asciiCapable : UIKeyboardType.emailAddress
                 textField.autocorrectionType = .no
                 textField.returnKeyType = .send
+                textField.keyboardAppearance = self.setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
             }
             let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert, unowned self] action in
                 if let textField = alert.textFields?.first {

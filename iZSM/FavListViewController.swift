@@ -113,6 +113,7 @@ class FavListViewController: BaseTableViewController {
             textField.keyboardType = .asciiCapable
             textField.autocorrectionType = .no
             textField.returnKeyType = .done
+            textField.keyboardAppearance = self.setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         }
         present(alert, animated: true, completion: nil)
     }

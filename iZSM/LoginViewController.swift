@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import OnePasswordExtension
 
-class LoginViewController: NTViewController, UITextFieldDelegate {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
     private let logoView = UIImageView(image: #imageLiteral(resourceName: "Logo"))
     private let usernameField = UITextField()

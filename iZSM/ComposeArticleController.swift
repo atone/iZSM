@@ -140,7 +140,9 @@ class ComposeArticleController: NTViewController, UITextFieldDelegate, UIImagePi
     
     func updateColor() {
         view.backgroundColor = AppTheme.shared.backgroundColor
+        titleTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         contentTextView.textColor = AppTheme.shared.textColor
+        contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
     }
     
     @objc private func nightModeChanged(_ notification: Notification) {

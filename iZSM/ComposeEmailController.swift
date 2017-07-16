@@ -189,7 +189,10 @@ class ComposeEmailController: NTViewController, UITextFieldDelegate {
     
     func updateColor() {
         view.backgroundColor = AppTheme.shared.backgroundColor
+        receiverTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
+        titleTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         contentTextView.textColor = AppTheme.shared.textColor
+        contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
     }
     
     @objc private func nightModeChanged(_ notification: Notification) {

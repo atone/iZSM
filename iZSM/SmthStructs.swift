@@ -82,7 +82,7 @@ struct SMArticle {
         
         let textFont = UIFont.preferredFont(forTextStyle: .body)
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 4
+        paragraphStyle.lineSpacing = textFont.pointSize / 4
         paragraphStyle.alignment = .natural
         paragraphStyle.minimumLineHeight = textFont.pointSize
         paragraphStyle.maximumLineHeight = textFont.pointSize

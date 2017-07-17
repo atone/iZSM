@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import YYKit
 import SnapKit
 
 class FullscreenContentViewController: NTViewController {
@@ -15,7 +14,7 @@ class FullscreenContentViewController: NTViewController {
     var article: SMArticle?
     
     private let titleLabel = UILabel()
-    private let contentTextView = YYTextView()
+    private let contentTextView = UITextView()
     
     private func setupUI() {
         view.addSubview(titleLabel)
@@ -35,7 +34,7 @@ class FullscreenContentViewController: NTViewController {
         }
         contentTextView.backgroundColor = UIColor.clear
         contentTextView.isEditable = false
-        contentTextView.dataDetectorTypes = .all
+        contentTextView.dataDetectorTypes = [.link, .phoneNumber]
         contentTextView.snp.makeConstraints { (make) in
             make.leading.equalTo(view.snp.leadingMargin)
             make.trailing.equalTo(view.snp.trailingMargin)

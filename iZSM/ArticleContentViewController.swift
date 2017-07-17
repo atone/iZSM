@@ -83,11 +83,10 @@ class ArticleContentViewController: NTTableViewController {
         fetchData(restorePosition: true, showHUD: true)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    deinit {
         if self.soloUser == nil { // 只看某人模式下，不保存位置
             savePosition()
         }
-        super.viewWillDisappear(animated)
     }
     
     fileprivate func restorePosition() {

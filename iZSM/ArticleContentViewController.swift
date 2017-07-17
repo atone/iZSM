@@ -74,6 +74,10 @@ class ArticleContentViewController: NTTableViewController {
         tableView.mj_header = header
         footer = MJRefreshAutoNormalFooter(refreshingTarget: self, refreshingAction: #selector(fetchMoreData))
         tableView.mj_footer = footer
+        // add double tap gesture recognizer
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTap(gestureRecgnizer:)))
+        doubleTapGesture.numberOfTapsRequired = 2
+        tableView.addGestureRecognizer(doubleTapGesture)
         super.viewDidLoad()
         restorePosition()
         fetchData(restorePosition: true, showHUD: true)
@@ -436,6 +440,18 @@ class ArticleContentViewController: NTTableViewController {
         presentationCtr.delegate = self
         present(pageListViewController, animated: true, completion: nil)
     }
+    
+    func doubleTap(gestureRecgnizer: UITapGestureRecognizer) {
+        let point = gestureRecgnizer.location(in: tableView)
+        if let indexPath = tableView.indexPathForRow(at: point) {
+            print("double tap on article content cell at \(indexPath)")
+            let fullscreen = FullscreenContentViewController()
+            fullscreen.article = smarticles[indexPath.section][indexPath.row]
+            fullscreen.modalPresentationStyle = .custom
+            fullscreen.modalTransitionStyle = .crossDissolve
+            present(fullscreen, animated: true, completion: nil)
+        }
+    }
 }
 
 // MARK: - Extensions for ArticleContentViewController
@@ -628,11 +644,6 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             actionSheet.addAction(soloAction)
         }
         
-        let copyArticleAction = UIAlertAction(title: "复制文章", style: .default) { action in
-            UIPasteboard.general.string = cell.article!.body
-            SVProgressHUD.showSuccess(withStatus: "复制成功")
-        }
-        actionSheet.addAction(copyArticleAction)
         let forwardAction = UIAlertAction(title: "转寄给用户", style: .default) { action in
             self.forward(ToBoard: false, in: cell)
         }

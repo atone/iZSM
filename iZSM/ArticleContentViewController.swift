@@ -447,7 +447,7 @@ class ArticleContentViewController: NTTableViewController {
             print("double tap on article content cell at \(indexPath)")
             let fullscreen = FullscreenContentViewController()
             fullscreen.article = smarticles[indexPath.section][indexPath.row]
-            fullscreen.modalPresentationStyle = .custom
+            fullscreen.modalPresentationStyle = .fullScreen
             fullscreen.modalTransitionStyle = .crossDissolve
             present(fullscreen, animated: true, completion: nil)
         }

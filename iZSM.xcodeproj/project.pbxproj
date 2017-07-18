@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C086E011F1E3BE300023788 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C086E001F1E3BE300023788 /* StoreKit.framework */; };
 		9C1A3BC01DE2C0ED00CF4A43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BBF1DE2C0ED00CF4A43 /* AppDelegate.swift */; };
 		9C1A3BC71DE2C0ED00CF4A43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C1A3BC61DE2C0ED00CF4A43 /* Assets.xcassets */; };
 		9C1A3BCA1DE2C0ED00CF4A43 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C1A3BC81DE2C0ED00CF4A43 /* LaunchScreen.storyboard */; };
@@ -90,6 +91,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9C086E001F1E3BE300023788 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9C1A3BBC1DE2C0ED00CF4A43 /* iZSM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iZSM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C1A3BBF1DE2C0ED00CF4A43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9C1A3BC61DE2C0ED00CF4A43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 				9C4728F11F0FC64D00C289FC /* RealmSwift.framework in Frameworks */,
 				9C1A3BD61DE2C5EF00CF4A43 /* SnapKit.framework in Frameworks */,
 				9C1A3BF61DE2EEAA00CF4A43 /* SVProgressHUD.framework in Frameworks */,
+				9C086E011F1E3BE300023788 /* StoreKit.framework in Frameworks */,
 				9C889FBB1DE4215100C33A8D /* TTTAttributedLabel.framework in Frameworks */,
 				9C889FB91DE409B100C33A8D /* YYKit.framework in Frameworks */,
 			);
@@ -276,6 +279,7 @@
 		9C1A3BD21DE2C5E100CF4A43 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9C086E001F1E3BE300023788 /* StoreKit.framework */,
 				9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */,
 				9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */,
 				9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */,
@@ -524,6 +528,9 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
 								enabled = 1;
 							};
 						};

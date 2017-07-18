@@ -199,7 +199,7 @@ class SettingsViewController: NTTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath == IndexPath(row: 0, section: 2) {
+        if indexPath == IndexPath(row: 0, section: 3) {
             tableView.deselectRow(at: indexPath, animated: true)
             SVProgressHUD.show()
             DispatchQueue.global().async {

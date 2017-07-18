@@ -11,6 +11,10 @@ import SafariServices
 
 class AboutViewController: NTTableViewController {
 
+    @IBOutlet weak var silverSupportLabel: UILabel!
+    @IBOutlet weak var silverSupportCell: UITableViewCell!
+    @IBOutlet weak var goldSupportLabel: UILabel!
+    @IBOutlet weak var goldSupportCell: UITableViewCell!
     @IBOutlet weak var rateLabel: UILabel!
     @IBOutlet weak var rateCell: UITableViewCell!
     @IBOutlet weak var mailLabel: UILabel!
@@ -49,10 +53,10 @@ class AboutViewController: NTTableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath {
-        case IndexPath(row: 0, section: 0):
+        case IndexPath(row: 0, section: 1):
             let urlAddress = "https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=979484184&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"
             UIApplication.shared.openURL(URL(string: urlAddress)!)
-        case IndexPath(row: 1, section: 0):
+        case IndexPath(row: 1, section: 1):
             let cevc = ComposeEmailController()
             var versionText: String = ""
             if
@@ -69,7 +73,7 @@ class AboutViewController: NTTableViewController {
             let navigationController = NTNavigationController(rootViewController: cevc)
             navigationController.modalPresentationStyle = .formSheet
             present(navigationController, animated: true, completion: nil)
-        case IndexPath(row: 2, section: 0):
+        case IndexPath(row: 2, section: 1):
             let urlAddress = "https://www.yunaitong.cn/zsmth-released.html"
             let webViewController = SFSafariViewController(url: URL(string: urlAddress)!)
             present(webViewController, animated: true, completion: nil)
@@ -80,6 +84,10 @@ class AboutViewController: NTTableViewController {
     }
 
     func updateUI() {
+        silverSupportLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        silverSupportLabel.textColor = AppTheme.shared.textColor
+        goldSupportLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        goldSupportLabel.textColor = AppTheme.shared.textColor
         rateLabel.font = UIFont.preferredFont(forTextStyle: .body)
         rateLabel.textColor = AppTheme.shared.textColor
         mailLabel.font = UIFont.preferredFont(forTextStyle: .body)
@@ -87,6 +95,8 @@ class AboutViewController: NTTableViewController {
         websiteLabel.font = UIFont.preferredFont(forTextStyle: .body)
         websiteLabel.textColor = AppTheme.shared.textColor
         
+        silverSupportCell.backgroundColor = AppTheme.shared.backgroundColor
+        goldSupportCell.backgroundColor = AppTheme.shared.backgroundColor
         rateCell.backgroundColor = AppTheme.shared.backgroundColor
         mailCell.backgroundColor = AppTheme.shared.backgroundColor
         websiteCell.backgroundColor = AppTheme.shared.backgroundColor

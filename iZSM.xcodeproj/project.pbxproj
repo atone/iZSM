@@ -43,7 +43,6 @@
 		9C767B5A1F1C4F3000EC7A06 /* FullscreenContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C767B591F1C4F3000EC7A06 /* FullscreenContentViewController.swift */; };
 		9C7C6B131F1364E800940300 /* SMBoardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7C6B121F1364E800940300 /* SMBoardInfo.swift */; };
 		9C7C6B151F13BD9D00940300 /* ArticleListSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */; };
-		9C7C6B171F14BA0300940300 /* SupportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7C6B161F14BA0300940300 /* SupportViewController.swift */; };
 		9C889FB41DE3E24B00C33A8D /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */; };
 		9C889FB71DE3EEEF00C33A8D /* ArticleListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FB61DE3EEEF00C33A8D /* ArticleListViewCell.swift */; };
 		9C889FB91DE409B100C33A8D /* YYKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C889FB81DE409B100C33A8D /* YYKit.framework */; };
@@ -86,7 +85,6 @@
 		9CB573C11DE5B46D00CD6F3E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */; };
 		9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */; };
 		9CB573C41DE5B61800CD6F3E /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C31DE5B61800CD6F3E /* LogoView.swift */; };
-		9CDC486F1DEDB50A00482408 /* HYXinRenWenSongW.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9CDC486E1DEDB40A00482408 /* HYXinRenWenSongW.otf */; };
 		9CFEC1D41F19E330008E5976 /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */; };
 /* End PBXBuildFile section */
 
@@ -138,7 +136,6 @@
 		9C767B591F1C4F3000EC7A06 /* FullscreenContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenContentViewController.swift; sourceTree = "<group>"; };
 		9C7C6B121F1364E800940300 /* SMBoardInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBoardInfo.swift; sourceTree = "<group>"; };
 		9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListSearchResultViewController.swift; sourceTree = "<group>"; };
-		9C7C6B161F14BA0300940300 /* SupportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportViewController.swift; sourceTree = "<group>"; };
 		9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListViewController.swift; sourceTree = "<group>"; };
 		9C889FB61DE3EEEF00C33A8D /* ArticleListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListViewCell.swift; sourceTree = "<group>"; };
 		9C889FB81DE409B100C33A8D /* YYKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYKit.framework; path = Carthage/Build/iOS/YYKit.framework; sourceTree = "<group>"; };
@@ -202,7 +199,6 @@
 		9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		9CB573C31DE5B61800CD6F3E /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
-		9CDC486E1DEDB40A00482408 /* HYXinRenWenSongW.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = HYXinRenWenSongW.otf; path = Resources/HYXinRenWenSongW.otf; sourceTree = "<group>"; };
 		9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KeychainSwift.framework; path = Carthage/Build/iOS/KeychainSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -258,7 +254,6 @@
 		9C1A3BD11DE2C3EA00CF4A43 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				9CDC486D1DEDB3FB00482408 /* Fonts */,
 				9C889FCA1DE4832E00C33A8D /* YYPhotoGroupView */,
 				9CA3B15F1DE3359200E9B121 /* MJRefresh */,
 				9C1A3BE41DE2E6EB00CF4A43 /* libSmth */,
@@ -367,7 +362,6 @@
 				9CB573BA1DE59A2E00CD6F3E /* ReferContentViewController.swift */,
 				9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */,
 				9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */,
-				9C7C6B161F14BA0300940300 /* SupportViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -489,14 +483,6 @@
 			name = Persistence;
 			sourceTree = "<group>";
 		};
-		9CDC486D1DEDB3FB00482408 /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				9CDC486E1DEDB40A00482408 /* HYXinRenWenSongW.otf */,
-			);
-			name = Fonts;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -564,7 +550,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9CDC486F1DEDB50A00482408 /* HYXinRenWenSongW.otf in Resources */,
 				9C1A3BCA1DE2C0ED00CF4A43 /* LaunchScreen.storyboard in Resources */,
 				9C1A3BC71DE2C0ED00CF4A43 /* Assets.xcassets in Resources */,
 				9CA3B19C1DE3359200E9B121 /* MJRefresh.bundle in Resources */,
@@ -655,7 +640,6 @@
 				9CA3B1901DE3359200E9B121 /* MJRefreshComponent.m in Sources */,
 				9C889FBD1DE4222000C33A8D /* ArticleContentViewController.swift in Sources */,
 				9C5E17121F0F77F100AA5368 /* PageListViewController.swift in Sources */,
-				9C7C6B171F14BA0300940300 /* SupportViewController.swift in Sources */,
 				9CB573B91DE58E8800CD6F3E /* MailContentViewController.swift in Sources */,
 				9CA3B1921DE3359200E9B121 /* MJRefreshHeader.m in Sources */,
 				9C1A3BC01DE2C0ED00CF4A43 /* AppDelegate.swift in Sources */,

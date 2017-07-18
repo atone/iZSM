@@ -33,8 +33,6 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var clearCacheLabel: UILabel!
     @IBOutlet weak var clearCacheCell: UITableViewCell!
     @IBOutlet weak var cacheSizeLabel: UILabel!
-    @IBOutlet weak var aboutZSMLabel: UILabel!
-    @IBOutlet weak var aboutZSMCell: UITableViewCell!
     @IBOutlet weak var logoutLabel: UILabel!
     @IBOutlet weak var logoutCell: UITableViewCell!
 
@@ -157,8 +155,6 @@ class SettingsViewController: NTTableViewController {
             cacheSize = cache.diskCache.totalCost() / 1024 / 1024
         }
         cacheSizeLabel.text = "\(cacheSize) MB"
-        aboutZSMLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        aboutZSMLabel.textColor = theme.textColor
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
         logoutLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
         logoutLabel.textColor = theme.redColor
@@ -185,7 +181,6 @@ class SettingsViewController: NTTableViewController {
         shakeToSwitchCell.backgroundColor = theme.backgroundColor
         backgroundTaskCell.backgroundColor = theme.backgroundColor
         clearCacheCell.backgroundColor = theme.backgroundColor
-        aboutZSMCell.backgroundColor = theme.backgroundColor
         logoutCell.backgroundColor = theme.backgroundColor
     }
     

@@ -124,7 +124,7 @@ class UserViewController: NTTableViewController {
             show(settingsVC, sender: self)
         case IndexPath(row: 1, section: 1):
             let storyBoard = UIStoryboard(name: "Settings", bundle: nil)
-            let supportVC = storyBoard.instantiateViewController(withIdentifier: "SupportViewController")
+            let supportVC = storyBoard.instantiateViewController(withIdentifier: "AboutViewController")
             show(supportVC, sender: self)
         default:
             break
@@ -149,7 +149,7 @@ class UserViewController: NTTableViewController {
         case IndexPath(row: 0, section: 1):
             cell.textLabel?.attributedText = attrTextFromString(string: "设置", withNewFlag: false)
         case IndexPath(row: 1, section: 1):
-            cell.textLabel?.attributedText = attrTextFromString(string: "我要赞助", withNewFlag: false)
+            cell.textLabel?.attributedText = attrTextFromString(string: "反馈与支持", withNewFlag: false)
         default:
             cell.textLabel?.text = nil
         }

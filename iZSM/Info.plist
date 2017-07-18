@@ -49,10 +49,6 @@
 	<string>使用相机拍照作为附件发送。</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>访问照片图库以保存照片或添加图片附件。</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>HYXinRenWenSongW.otf</string>
-	</array>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>

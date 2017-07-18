@@ -99,7 +99,7 @@ class AppSetting {
             if
                 let accessToken = defaults.string(forKey: Static.AccessTokenKey),
                 let expireDate = defaults.object(forKey: Static.ExpireDateKey) as? Date,
-                expireDate.compare(Date()) == .orderedDescending
+                expireDate > Date()  // access token is not expired
             {
                 return accessToken
             }

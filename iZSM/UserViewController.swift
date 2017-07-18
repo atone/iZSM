@@ -149,7 +149,7 @@ class UserViewController: NTTableViewController {
         case IndexPath(row: 0, section: 1):
             cell.textLabel?.attributedText = attrTextFromString(string: "设置", withNewFlag: false)
         case IndexPath(row: 1, section: 1):
-            cell.textLabel?.attributedText = attrTextFromString(string: "反馈与支持", withNewFlag: false)
+            cell.textLabel?.attributedText = attrTextFromString(string: "支持与反馈", withNewFlag: false)
         default:
             cell.textLabel?.text = nil
         }

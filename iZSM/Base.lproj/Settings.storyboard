@@ -432,7 +432,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <sections>
-                            <tableViewSection headerTitle="赞助最水木" id="gOh-iE-rBe">
+                            <tableViewSection id="gOh-iE-rBe">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" selectionStyle="default" indentationWidth="10" id="zkI-it-zOe">
                                         <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
@@ -478,7 +478,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="反馈与支持" id="mrl-9d-xgB">
+                            <tableViewSection headerTitle="支持与反馈" id="mrl-9d-xgB">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="r25-2v-Ny9">
                                         <rect key="frame" x="0.0" y="191.5" width="375" height="44"/>

@@ -238,6 +238,7 @@ extension UserViewController: UIImagePickerControllerDelegate, UINavigationContr
                 networkActivityIndicatorStart()
                 DispatchQueue.global().async {
                     self.api.modifyFaceImage(image: selectedImage)
+                    sleep(2) // 等待2s
                     SMUserInfoUtil.querySMUser(for: self.setting.username!, forceUpdate: true) { (user) in
                         networkActivityIndicatorStop()
                         self.updateUserInfoView()

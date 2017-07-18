@@ -7,7 +7,9 @@
 //
 
 import UIKit
+import StoreKit
 import SafariServices
+import SVProgressHUD
 
 class AboutViewController: NTTableViewController {
 
@@ -23,7 +25,21 @@ class AboutViewController: NTTableViewController {
     @IBOutlet weak var websiteCell: UITableViewCell!
     
     let logoView = LogoView(frame: CGRect.zero)
-
+    
+    let iapHelper = IAPHelper()
+    
+    lazy var priceFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        
+        formatter.formatterBehavior = .behavior10_4
+        formatter.numberStyle = .currency
+        
+        return formatter
+    }()
+    
+    private var silverSupport: SKProduct?
+    private var goldSupport: SKProduct?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -38,6 +54,33 @@ class AboutViewController: NTTableViewController {
         let width = size.width < size.height ? size.width : size.height
         logoView.frame = CGRect(x: 0, y: 0, width: width, height: width * 3 / 4)
         tableView.tableHeaderView = logoView
+        
+        if IAPHelper.canMakePayments() {
+            silverSupportLabel.text = "我要赞助 (loading...)"
+            goldSupportLabel.text = "我要赞助 (loading...)"
+            iapHelper.requestProducts { [weak self] (success, products) in
+                if let `self` = self, success, let products = products {
+                    for prod in products {
+                        if prod.productIdentifier == IAPHelper.SilverSupport {
+                            self.silverSupport = prod
+                            self.priceFormatter.locale = prod.priceLocale
+                            if let priceString = self.priceFormatter.string(from: prod.price) {
+                                self.silverSupportLabel.text = "我要赞助 (\(priceString))"
+                            }
+                        } else if prod.productIdentifier == IAPHelper.GoldSupport {
+                            self.goldSupport = prod
+                            self.priceFormatter.locale = prod.priceLocale
+                            if let priceString = self.priceFormatter.string(from: prod.price) {
+                                self.goldSupportLabel.text = "我要赞助 (\(priceString))"
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            silverSupportLabel.text = "我要赞助 (不可用)"
+            goldSupportLabel.text = "我要赞助 (不可用)"
+        }
     }
     
 
@@ -50,9 +93,31 @@ class AboutViewController: NTTableViewController {
     func preferredFontSizeChanged(notification: Notification) {
         updateUI()
     }
+    
+    func buySupport(support: SKProduct) {
+        SVProgressHUD.show()
+        iapHelper.buyProduct(support) { [weak self] (success, productId) in
+            SVProgressHUD.dismiss()
+            if let `self` = self {
+                if !success {
+                    let alert = UIAlertController(title: "赞助失败", message: "很抱歉，未能完成购买，\n请您重新尝试。", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "好的", style: .default))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+        }
+    }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath {
+        case IndexPath(row: 0, section: 0):
+            if let silverSupport = silverSupport {
+                buySupport(support: silverSupport)
+            }
+        case IndexPath(row: 1, section: 0):
+            if let goldSupport = goldSupport {
+                buySupport(support: goldSupport)
+            }
         case IndexPath(row: 0, section: 1):
             let urlAddress = "https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=979484184&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"
             UIApplication.shared.openURL(URL(string: urlAddress)!)
@@ -85,9 +150,9 @@ class AboutViewController: NTTableViewController {
 
     func updateUI() {
         silverSupportLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        silverSupportLabel.textColor = AppTheme.shared.textColor
+        silverSupportLabel.textColor = IAPHelper.canMakePayments() ? AppTheme.shared.textColor : AppTheme.shared.lightTextColor
         goldSupportLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        goldSupportLabel.textColor = AppTheme.shared.textColor
+        goldSupportLabel.textColor = IAPHelper.canMakePayments() ? AppTheme.shared.textColor : AppTheme.shared.lightTextColor
         rateLabel.font = UIFont.preferredFont(forTextStyle: .body)
         rateLabel.textColor = AppTheme.shared.textColor
         mailLabel.font = UIFont.preferredFont(forTextStyle: .body)

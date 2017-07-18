@@ -85,6 +85,7 @@
 		9CB573C11DE5B46D00CD6F3E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */; };
 		9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */; };
 		9CB573C41DE5B61800CD6F3E /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C31DE5B61800CD6F3E /* LogoView.swift */; };
+		9CD9E6451F1DB10E00713853 /* IAPHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD9E6441F1DB10E00713853 /* IAPHelper.swift */; };
 		9CFEC1D41F19E330008E5976 /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */; };
 /* End PBXBuildFile section */
 
@@ -199,6 +200,7 @@
 		9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		9CB573C31DE5B61800CD6F3E /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
+		9CD9E6441F1DB10E00713853 /* IAPHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAPHelper.swift; sourceTree = "<group>"; };
 		9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KeychainSwift.framework; path = Carthage/Build/iOS/KeychainSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -262,6 +264,7 @@
 				9C1A3BDA1DE2CDB100CF4A43 /* EULA.rtf */,
 				9C1A3BBF1DE2C0ED00CF4A43 /* AppDelegate.swift */,
 				9CB573C31DE5B61800CD6F3E /* LogoView.swift */,
+				9CD9E6441F1DB10E00713853 /* IAPHelper.swift */,
 				9C1A3BCB1DE2C0ED00CF4A43 /* Info.plist */,
 				9C1A3BC81DE2C0ED00CF4A43 /* LaunchScreen.storyboard */,
 				9CB573BC1DE5B32100CD6F3E /* Settings.storyboard */,
@@ -620,6 +623,7 @@
 				9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */,
 				9CA3B19A1DE3359200E9B121 /* MJRefreshNormalHeader.m in Sources */,
 				9C4D0B071F1A5AAD007B4D83 /* AppTheme.swift in Sources */,
+				9CD9E6451F1DB10E00713853 /* IAPHelper.swift in Sources */,
 				9CA3B1941DE3359200E9B121 /* MJRefreshAutoNormalFooter.m in Sources */,
 				9CA3B18F1DE3359200E9B121 /* MJRefreshBackFooter.m in Sources */,
 				9CA3B1A31DE33C0800E9B121 /* HotTableViewController.swift in Sources */,

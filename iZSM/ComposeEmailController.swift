@@ -171,6 +171,7 @@ class ComposeEmailController: NTViewController, UITextFieldDelegate {
             } else if emailTitle == nil || emailTitle!.characters.count == 0 {
                 titleTextField.becomeFirstResponder()
             } else {
+                doneButton?.isEnabled = true
                 contentTextView.becomeFirstResponder()
                 contentTextView.selectedRange = NSMakeRange(0, 0)
             }

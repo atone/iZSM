@@ -56,24 +56,29 @@ class AboutViewController: NTTableViewController {
         tableView.tableHeaderView = logoView
         
         if IAPHelper.canMakePayments() {
-            silverSupportLabel.text = "我要赞助 (loading...)"
-            goldSupportLabel.text = "我要赞助 (loading...)"
+            silverSupportLabel.text = "我要赞助 (加载中...)"
+            goldSupportLabel.text = "我要赞助 (加载中...)"
             iapHelper.requestProducts { [weak self] (success, products) in
-                if let `self` = self, success, let products = products {
-                    for prod in products {
-                        if prod.productIdentifier == IAPHelper.SilverSupport {
-                            self.silverSupport = prod
-                            self.priceFormatter.locale = prod.priceLocale
-                            if let priceString = self.priceFormatter.string(from: prod.price) {
-                                self.silverSupportLabel.text = "我要赞助 (\(priceString))"
-                            }
-                        } else if prod.productIdentifier == IAPHelper.GoldSupport {
-                            self.goldSupport = prod
-                            self.priceFormatter.locale = prod.priceLocale
-                            if let priceString = self.priceFormatter.string(from: prod.price) {
-                                self.goldSupportLabel.text = "我要赞助 (\(priceString))"
+                if let `self` = self {
+                    if success, let products = products {
+                        for prod in products {
+                            if prod.productIdentifier == IAPHelper.SilverSupport {
+                                self.silverSupport = prod
+                                self.priceFormatter.locale = prod.priceLocale
+                                if let priceString = self.priceFormatter.string(from: prod.price) {
+                                    self.silverSupportLabel.text = "我要赞助 (\(priceString))"
+                                }
+                            } else if prod.productIdentifier == IAPHelper.GoldSupport {
+                                self.goldSupport = prod
+                                self.priceFormatter.locale = prod.priceLocale
+                                if let priceString = self.priceFormatter.string(from: prod.price) {
+                                    self.goldSupportLabel.text = "我要赞助 (\(priceString))"
+                                }
                             }
                         }
+                    } else {
+                        self.silverSupportLabel.text = "我要赞助 (请重试)"
+                        self.goldSupportLabel.text = "我要赞助 (请重试)"
                     }
                 }
             }

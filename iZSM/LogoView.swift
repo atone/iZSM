@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import SnapKit
 
 class LogoView: UIView {
 
     let imageView = UIImageView()
     let versionLabel = UILabel()
+    let tipsLabel = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,12 +27,16 @@ class LogoView: UIView {
     
     func updateUI() {
         backgroundColor = AppTheme.shared.lightBackgroundColor
-        versionLabel.textColor = AppTheme.shared.lightTextColor
+        versionLabel.textColor = AppTheme.shared.absoluteTintColor
+        versionLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+        tipsLabel.textColor = AppTheme.shared.lightTextColor
+        tipsLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
     }
 
     func setup() {
         contentMode = .redraw
-        imageView.image = UIImage(named: "Logo")
+        imageView.image = #imageLiteral(resourceName: "Logo")
+        imageView.clipsToBounds = true
         addSubview(imageView)
         if
             let infoDictionary = Bundle.main.infoDictionary,
@@ -38,21 +44,31 @@ class LogoView: UIView {
             let appBuild = infoDictionary["CFBundleVersion"] as? String
         {
             versionLabel.text = "最水木(iZSM) \(appVersion)(\(appBuild))"
-            versionLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
+            
         }
         addSubview(versionLabel)
+        tipsLabel.numberOfLines = 0
+        tipsLabel.text = "最水木追求简约、实用的设计理念，致力于给您浏览水木社区带来最好的体验。如果您用着觉得还不错，不妨赞赏一把～您的赞赏是我前进的最大动力！"
+        addSubview(tipsLabel)
+        imageView.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview()
+            make.centerY.lessThanOrEqualToSuperview()
+        }
+        versionLabel.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(imageView.snp.bottom).offset(8)
+        }
+        tipsLabel.translatesAutoresizingMaskIntoConstraints = false
+        tipsLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
+        tipsLabel.topAnchor.constraint(greaterThanOrEqualTo: versionLabel.bottomAnchor, constant: 20).isActive = true
+        let guide = self.readableContentGuide
+        guide.leadingAnchor.constraint(equalTo: tipsLabel.leadingAnchor).isActive = true
+        guide.trailingAnchor.constraint(equalTo: tipsLabel.trailingAnchor).isActive = true
         updateUI()
     }
-
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        imageView.sizeToFit()
-        versionLabel.sizeToFit()
-        imageView.layer.cornerRadius = imageView.frame.width/4
-        imageView.clipsToBounds = true
-
-        imageView.center = CGPoint(x: bounds.width/2, y: bounds.height/2)
-        versionLabel.center = CGPoint(x: bounds.width/2, y: bounds.height/2+(imageView.frame.height+versionLabel.frame.height)/2+8)
+        imageView.layer.cornerRadius = imageView.frame.width / 4
     }
-
 }

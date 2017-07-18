@@ -56,8 +56,8 @@ class AboutViewController: NTTableViewController {
         tableView.tableHeaderView = logoView
         
         if IAPHelper.canMakePayments() {
-            silverSupportLabel.text = "我要赞助 (加载中...)"
-            goldSupportLabel.text = "我要赞助 (加载中...)"
+            silverSupportLabel.text = "我要赞赏 (加载中...)"
+            goldSupportLabel.text = "我要赞赏 (加载中...)"
             iapHelper.requestProducts { [weak self] (success, products) in
                 if let `self` = self {
                     if success, let products = products {
@@ -66,25 +66,25 @@ class AboutViewController: NTTableViewController {
                                 self.silverSupport = prod
                                 self.priceFormatter.locale = prod.priceLocale
                                 if let priceString = self.priceFormatter.string(from: prod.price) {
-                                    self.silverSupportLabel.text = "我要赞助 (\(priceString))"
+                                    self.silverSupportLabel.text = "我要赞赏 (\(priceString))"
                                 }
                             } else if prod.productIdentifier == IAPHelper.GoldSupport {
                                 self.goldSupport = prod
                                 self.priceFormatter.locale = prod.priceLocale
                                 if let priceString = self.priceFormatter.string(from: prod.price) {
-                                    self.goldSupportLabel.text = "我要赞助 (\(priceString))"
+                                    self.goldSupportLabel.text = "我要赞赏 (\(priceString))"
                                 }
                             }
                         }
                     } else {
-                        self.silverSupportLabel.text = "我要赞助 (请重试)"
-                        self.goldSupportLabel.text = "我要赞助 (请重试)"
+                        self.silverSupportLabel.text = "我要赞赏 (请重试)"
+                        self.goldSupportLabel.text = "我要赞赏 (请重试)"
                     }
                 }
             }
         } else {
-            silverSupportLabel.text = "我要赞助 (不可用)"
-            goldSupportLabel.text = "我要赞助 (不可用)"
+            silverSupportLabel.text = "我要赞赏 (不可用)"
+            goldSupportLabel.text = "我要赞赏 (不可用)"
         }
     }
     
@@ -105,7 +105,7 @@ class AboutViewController: NTTableViewController {
             SVProgressHUD.dismiss()
             if let `self` = self {
                 if !success {
-                    let alert = UIAlertController(title: "赞助失败", message: "很抱歉，未能完成购买，\n请您重新尝试。", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "赞赏失败", message: "很抱歉，未能完成购买，\n请您重新尝试。", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "好的", style: .default))
                     self.present(alert, animated: true, completion: nil)
                 }

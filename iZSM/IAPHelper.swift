@@ -28,6 +28,10 @@ final class IAPHelper: NSObject {
         super.init()
         SKPaymentQueue.default().add(self)
     }
+    
+    deinit {
+        SKPaymentQueue.default().remove(self)
+    }
 }
 
 extension IAPHelper {

@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class FullscreenContentViewController: NTViewController {
+class FullscreenContentViewController: UIViewController {
     
     var article: SMArticle?
     

@@ -40,22 +40,4 @@ class NTTableViewController: UITableViewController {
         
         tableView.reloadData()
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        view.becomeFirstResponder()
-        super.viewDidAppear(animated)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        view.resignFirstResponder()
-        super.viewDidDisappear(animated)
-    }
-    
-    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
-        if setting.shakeToSwitch && motion == .motionShake {
-            print("shaking phone... switch color theme")
-            setting.nightMode = !setting.nightMode
-            NotificationCenter.default.post(name: AppTheme.kAppThemeChangedNotification, object: nil)
-        }
-    }
 }

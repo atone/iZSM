@@ -11,7 +11,7 @@ import SnapKit
 import SVProgressHUD
 import SafariServices
 
-class ReferContentViewController: NTViewController, UITextViewDelegate {
+class ReferContentViewController: UIViewController, UITextViewDelegate {
     
     let titleLabel = UILabel()
     let userButton = UIButton(type: .system)

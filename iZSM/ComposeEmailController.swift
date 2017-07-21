@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import SVProgressHUD
 
-class ComposeEmailController: NTViewController, UITextFieldDelegate {
+class ComposeEmailController: UIViewController, UITextFieldDelegate {
 
     let sendToLabel = UILabel()
     let receiverTextField = UITextField()

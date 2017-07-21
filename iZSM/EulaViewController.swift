@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EulaViewController: NTViewController {
+class EulaViewController: UIViewController {
     
     private let webView = UIWebView()
     private let setting = AppSetting.shared

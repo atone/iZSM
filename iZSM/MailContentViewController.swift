@@ -11,7 +11,7 @@ import SnapKit
 import SVProgressHUD
 import SafariServices
 
-class MailContentViewController: NTViewController, UITextViewDelegate {
+class MailContentViewController: UIViewController, UITextViewDelegate {
     
     let titleLabel = UILabel()
     let userButton = UIButton(type: .system)

@@ -11,7 +11,7 @@ import MobileCoreServices
 import SnapKit
 import SVProgressHUD
 
-class ComposeArticleController: NTViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let titleHintLabel = UILabel()
     let titleTextField = UITextField()

@@ -12,8 +12,8 @@ import SnapKit
 class LogoView: UIView {
 
     let imageView = UIImageView()
+    let titleLabel = UILabel()
     let versionLabel = UILabel()
-    let tipsLabel = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,10 +27,10 @@ class LogoView: UIView {
     
     func updateUI() {
         backgroundColor = AppTheme.shared.lightBackgroundColor
-        versionLabel.textColor = AppTheme.shared.absoluteTintColor
-        versionLabel.font = UIFont.preferredFont(forTextStyle: .headline)
-        tipsLabel.textColor = AppTheme.shared.lightTextColor
-        tipsLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+        titleLabel.textColor = AppTheme.shared.absoluteTintColor
+        titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+        versionLabel.textColor = AppTheme.shared.lightTextColor
+        versionLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
     }
 
     func setup() {
@@ -38,32 +38,31 @@ class LogoView: UIView {
         imageView.image = #imageLiteral(resourceName: "Logo")
         imageView.clipsToBounds = true
         addSubview(imageView)
+        titleLabel.text = "最水木 (iZSM)"
+        addSubview(titleLabel)
         if
             let infoDictionary = Bundle.main.infoDictionary,
             let appVersion = infoDictionary["CFBundleShortVersionString"] as? String,
             let appBuild = infoDictionary["CFBundleVersion"] as? String
         {
-            versionLabel.text = "最水木(iZSM) \(appVersion)(\(appBuild))"
+            versionLabel.text = "版本 \(appVersion) (\(appBuild))"
             
         }
         addSubview(versionLabel)
-        tipsLabel.numberOfLines = 0
-        tipsLabel.text = "最水木追求简约、实用的设计理念，致力于给您浏览水木社区带来最好的体验。如果您用着觉得还不错，不妨赞赏一把～您的赞赏是我前进的最大动力！"
-        addSubview(tipsLabel)
         imageView.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
-            make.centerY.lessThanOrEqualToSuperview()
+            make.centerY.equalToSuperview()
         }
-        versionLabel.snp.makeConstraints { (make) in
+        titleLabel.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
             make.top.equalTo(imageView.snp.bottom).offset(8)
         }
-        tipsLabel.translatesAutoresizingMaskIntoConstraints = false
-        tipsLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
-        tipsLabel.topAnchor.constraint(greaterThanOrEqualTo: versionLabel.bottomAnchor, constant: 20).isActive = true
-        let guide = self.readableContentGuide
-        guide.leadingAnchor.constraint(equalTo: tipsLabel.leadingAnchor).isActive = true
-        guide.trailingAnchor.constraint(equalTo: tipsLabel.trailingAnchor).isActive = true
+        versionLabel.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(titleLabel.snp.bottom)
+        }
+        
+        
         updateUI()
     }
     

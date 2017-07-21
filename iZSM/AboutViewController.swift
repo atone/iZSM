@@ -51,8 +51,8 @@ class AboutViewController: NTTableViewController {
             object: nil)
         
         let size = self.view.bounds.size
-        let width = size.width < size.height ? size.width : size.height
-        logoView.frame = CGRect(x: 0, y: 0, width: width, height: width * 3 / 4)
+        let smallWidth = size.width < size.height ? size.width : size.height
+        logoView.frame = CGRect(x: 0, y: 0, width: size.width, height: smallWidth * 2 / 3)
         tableView.tableHeaderView = logoView
         
         if IAPHelper.canMakePayments() {

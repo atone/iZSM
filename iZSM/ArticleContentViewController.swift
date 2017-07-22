@@ -10,7 +10,6 @@ import UIKit
 import SafariServices
 import SVProgressHUD
 import SnapKit
-import YYKit
 
 class ArticleContentViewController: NTTableViewController {
     
@@ -388,10 +387,9 @@ class ArticleContentViewController: NTTableViewController {
             }
             actionSheet.addAction(openAction)
             let shareAction = UIAlertAction(title: "分享本帖", style: .default) { [unowned self] (action) in
-                let title = "水木\(self.boardName ?? boardID)版：\(self.title ?? "无标题")"
+                let title = "水木\(self.boardName ?? boardID)版：【\(self.title ?? "无标题")】"
                 let url = URL(string: urlString)!
-                let logo = self.getThumbnailImage() ?? #imageLiteral(resourceName: "Logo")
-                let activityViewController = UIActivityViewController(activityItems: [title, url, logo],
+                let activityViewController = UIActivityViewController(activityItems: [title, url],
                                                                       applicationActivities: nil)
                 activityViewController.popoverPresentationController?.barButtonItem = sender
                 self.present(activityViewController, animated: true, completion: nil)
@@ -401,28 +399,6 @@ class ArticleContentViewController: NTTableViewController {
         actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         actionSheet.popoverPresentationController?.barButtonItem = sender
         present(actionSheet, animated: true, completion: nil)
-    }
-    
-    func getThumbnailImage() -> UIImage? {
-        for articles in self.smarticles {
-            for article in articles {
-                for imageInfo in article.imageAtt {
-                    let thumbURL = imageInfo.thumbnailURL
-                    let manager = YYWebImageManager.shared()
-                    if let cache = manager.cache {
-                        let imageFromMemory = cache.getImageForKey(manager.cacheKey(for: thumbURL))
-                        if imageFromMemory != nil {
-                            print("hit! successfully get image from cache!")
-                        } else {
-                            print("miss! image is not in cache!")
-                        }
-                        return imageFromMemory
-                    }
-                }
-            }
-        }
-        print("miss! threads contains no image!")
-        return nil
     }
     
     func tapPageButton(sender: UIBarButtonItem) {

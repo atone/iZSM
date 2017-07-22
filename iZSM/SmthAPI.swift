@@ -802,7 +802,7 @@ class SmthAPI {
         // 去除图片标志[upload=1][/upload]之类
         pattern = "\\[upload=(\\d){1,2}\\]\\[/upload\\]"
         regularExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-        content = regularExpression.stringByReplacingMatches(in: content, range: NSMakeRange(0, content.characters.count), withTemplate: "")
+        content = regularExpression.stringByReplacingMatches(in: content, range: NSMakeRange(0, content.characters.count), withTemplate: "").trimmingCharacters(in: .whitespacesAndNewlines)
         return content as String
     }
     

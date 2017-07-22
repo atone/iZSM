@@ -30,6 +30,8 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     private weak var delegate: ArticleContentCellDelegate?
     
+    private let setting = AppSetting.shared
+    
     var article: SMArticle?
     private var displayFloor: Int = 0
     
@@ -47,12 +49,8 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     var isVisible: Bool = false {
         didSet {
-            if isVisible {
-                if let imageAtt = self.article?.imageAtt {
-                    drawImagesWithInfo(imageAtt: imageAtt)
-                }
-            } else {
-                drawImagesWithInfo(imageAtt: [ImageInfo]())
+            if isVisible && (!setting.noPicMode) {
+                drawImagesWithInfo(imageAtt: self.article?.imageAtt)
             }
         }
     }
@@ -159,14 +157,25 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         let floorTimeFontSize: CGFloat = size.width < 350 ? 11 : 13
         let replyMoreFontSize: CGFloat = 15
         
-        avatarImageView.frame = CGRect(x: leftMargin, y: margin1 - avatarWidth / 2, width: avatarWidth, height: avatarWidth)
+        if (!setting.noPicMode) && setting.showAvatar {
+            avatarImageView.isHidden = false
+            avatarImageView.frame = CGRect(x: leftMargin, y: margin1 - avatarWidth / 2, width: avatarWidth, height: avatarWidth)
+        } else {
+            avatarImageView.isHidden = true
+        }
+        
         
         authorLabel.font = UIFont.boldSystemFont(ofSize: authorFontSize)
         authorLabel.sizeToFit()
-        authorLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 - margin2 / 2 - authorLabel.bounds.height), size: authorLabel.bounds.size)
         floorAndTimeLabel.font = UIFont.systemFont(ofSize: floorTimeFontSize)
         floorAndTimeLabel.sizeToFit()
-        floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 + margin2 / 2), size: floorAndTimeLabel.bounds.size)
+        if (!setting.noPicMode) && setting.showAvatar {
+            authorLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 - margin2 / 2 - authorLabel.bounds.height), size: authorLabel.bounds.size)
+            floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 + margin2 / 2), size: floorAndTimeLabel.bounds.size)
+        } else {
+            authorLabel.frame = CGRect(origin: CGPoint(x: leftMargin, y: margin1 - margin2 / 2 - authorLabel.bounds.height), size: authorLabel.bounds.size)
+            floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin, y: margin1 + margin2 / 2), size: floorAndTimeLabel.bounds.size)
+        }
         replyLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
         replyLabel.frame = CGRect(x: size.width - rightMargin - margin3 - replyButtonWidth - moreButtonWidth, y: margin1 - buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
         moreLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
@@ -200,18 +209,20 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: size.height)
         let rect = TTTAttributedLabel.sizeThatFitsAttributedString(article!.attributedBody, withConstraints: boundingSize, limitedToNumberOfLines: 0)
         var imageLength: CGFloat = 0
-        let imageCount = article?.imageAtt.count ?? 0
-        if imageCount == 1 {
-            imageLength = size.width
-        } else if imageCount > 1 {
-            let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-            imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageCount) / picNumPerLine) - blankWidth
+        if !setting.noPicMode {
+            let imageCount = article?.imageAtt.count ?? 0
+            if imageCount == 1 {
+                imageLength = size.width
+            } else if imageCount > 1 {
+                let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
+                imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageCount) / picNumPerLine) - blankWidth
+            }
         }
         return CGSize(width: size.width, height: margin1 * 2 + ceil(rect.height) + margin3 + imageLength)
     }
     
-    private func drawImagesWithInfo(imageAtt: [ImageInfo]) {
-        if let article = self.article {
+    private func drawImagesWithInfo(imageAtt: [ImageInfo]?) {
+        if setting.showAvatar, let article = self.article {
             avatarImageView.setImageWith(SMUser.faceURL(for: article.authorID, withFaceURL: nil),
                                          placeholder: #imageLiteral(resourceName: "face_default"),
                                          options: [.progressiveBlur, .setImageWithFadeAnimation])
@@ -224,19 +235,21 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         imageViews.removeAll()
 
         // add new image views
-        for imageInfo in imageAtt {
-            let imageView = YYAnimatedImageView()
-            imageView.contentMode = .scaleAspectFill
-            imageView.clipsToBounds = true
-            imageView.setImageWith(imageInfo.thumbnailURL,
-                                   placeholder: #imageLiteral(resourceName: "loading"),
-                                   options: [.progressiveBlur, .showNetworkActivity, .setImageWithFadeAnimation])
-            imageView.isUserInteractionEnabled = true
-            let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapOnImage(recognizer:)))
-            singleTap.numberOfTapsRequired = 1
-            imageView.addGestureRecognizer(singleTap)
-            contentView.addSubview(imageView)
-            imageViews.append(imageView)
+        if let imageAtt = imageAtt {
+            for imageInfo in imageAtt {
+                let imageView = YYAnimatedImageView()
+                imageView.contentMode = .scaleAspectFill
+                imageView.clipsToBounds = true
+                imageView.setImageWith(imageInfo.thumbnailURL,
+                                       placeholder: #imageLiteral(resourceName: "loading"),
+                                       options: [.progressiveBlur, .showNetworkActivity, .setImageWithFadeAnimation])
+                imageView.isUserInteractionEnabled = true
+                let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapOnImage(recognizer:)))
+                singleTap.numberOfTapsRequired = 1
+                imageView.addGestureRecognizer(singleTap)
+                contentView.addSubview(imageView)
+                imageViews.append(imageView)
+            }
         }
     }
     

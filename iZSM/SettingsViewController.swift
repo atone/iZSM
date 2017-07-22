@@ -24,6 +24,10 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var portraitLockCell: UITableViewCell!
     @IBOutlet weak var displayModeLabel: UILabel!
     @IBOutlet weak var displayModeCell: UITableViewCell!
+    @IBOutlet weak var showAvatarLabel: UILabel!
+    @IBOutlet weak var showAvatarCell: UITableViewCell!
+    @IBOutlet weak var noPicModeLabel: UILabel!
+    @IBOutlet weak var noPicModeCell: UITableViewCell!
     @IBOutlet weak var nightModelLabel: UILabel!
     @IBOutlet weak var nightModelCell: UITableViewCell!
     @IBOutlet weak var shakeToSwitchLabel: UILabel!
@@ -41,6 +45,8 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var newReplyFirstSwitch: UISwitch!
     @IBOutlet weak var rememberLastSwitch: UISwitch!
     @IBOutlet weak var portraitLockSwitch: UISwitch!
+    @IBOutlet weak var showAvatarSwitch: UISwitch!
+    @IBOutlet weak var noPicModeSwitch: UISwitch!
     @IBOutlet weak var nightModeSwitch: UISwitch!
     @IBOutlet weak var shakeToSwitchSwitch: UISwitch!
     @IBOutlet weak var backgroundTaskSwitch: UISwitch!
@@ -108,6 +114,21 @@ class SettingsViewController: NTTableViewController {
         setting.displayMode = AppSetting.DisplayMode(rawValue: sender.selectedSegmentIndex)!
     }
     
+    @IBAction func showAvatarChanged(sender: UISwitch) {
+        setting.showAvatar = sender.isOn
+    }
+    
+    @IBAction func noPicModeChanged(sender: UISwitch) {
+        setting.noPicMode = sender.isOn
+        if sender.isOn {
+            showAvatarSwitch.setOn(false, animated: true)
+            showAvatarSwitch.isEnabled = false
+        } else {
+            showAvatarSwitch.setOn(setting.showAvatar, animated: true)
+            showAvatarSwitch.isEnabled = true
+        }
+    }
+    
     @IBAction func nightModeChanged(sender: UISwitch) {
         setting.nightMode = sender.isOn
         NotificationCenter.default.post(name: AppTheme.kAppThemeChangedNotification, object: nil)
@@ -140,6 +161,10 @@ class SettingsViewController: NTTableViewController {
         portraitLockLabel.textColor = theme.textColor
         displayModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
         displayModeLabel.textColor = theme.textColor
+        showAvatarLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        showAvatarLabel.textColor = theme.textColor
+        noPicModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        noPicModeLabel.textColor = theme.textColor
         nightModelLabel.font = UIFont.preferredFont(forTextStyle: .body)
         nightModelLabel.textColor = theme.textColor
         shakeToSwitchLabel.font = UIFont.preferredFont(forTextStyle: .body)
@@ -167,6 +192,14 @@ class SettingsViewController: NTTableViewController {
         rememberLastSwitch.isOn = setting.rememberLast
         portraitLockSwitch.isOn = setting.portraitLock
         displayModeSegmentedControl.selectedSegmentIndex = setting.displayMode.rawValue
+        noPicModeSwitch.isOn = setting.noPicMode
+        if setting.noPicMode {
+            showAvatarSwitch.isOn = false
+            showAvatarSwitch.isEnabled = false
+        } else {
+            showAvatarSwitch.isOn = setting.showAvatar
+            showAvatarSwitch.isEnabled = true
+        }
         nightModeSwitch.isOn = setting.nightMode
         shakeToSwitchSwitch.isOn = setting.shakeToSwitch
         backgroundTaskSwitch.isOn = setting.backgroundTaskEnabled
@@ -177,6 +210,8 @@ class SettingsViewController: NTTableViewController {
         rememberLastCell.backgroundColor = theme.backgroundColor
         portraitLockCell.backgroundColor = theme.backgroundColor
         displayModeCell.backgroundColor = theme.backgroundColor
+        showAvatarCell.backgroundColor = theme.backgroundColor
+        noPicModeCell.backgroundColor = theme.backgroundColor
         nightModelCell.backgroundColor = theme.backgroundColor
         shakeToSwitchCell.backgroundColor = theme.backgroundColor
         backgroundTaskCell.backgroundColor = theme.backgroundColor
@@ -199,7 +234,7 @@ class SettingsViewController: NTTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath == IndexPath(row: 0, section: 3) {
+        if indexPath == IndexPath(row: 0, section: 4) {
             tableView.deselectRow(at: indexPath, animated: true)
             SVProgressHUD.show()
             DispatchQueue.global().async {

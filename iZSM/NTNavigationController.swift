@@ -107,7 +107,9 @@ extension NTNavigationController: UIGestureRecognizerDelegate {
         if let panRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = panRecognizer.velocity(in: gestureRecognizer.view)
             let movement = panRecognizer.translation(in: gestureRecognizer.view)
-            return (fabs(velocity.x) > fabs(velocity.y)) || (fabs(movement.x) > fabs(movement.y))
+            if velocity.x > 0 || movement.x > 0 {
+                return (fabs(velocity.x) > fabs(velocity.y)) || (fabs(movement.x) > fabs(movement.y))
+            }
         }
         return false
     }

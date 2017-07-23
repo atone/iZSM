@@ -54,6 +54,8 @@ extension NTNavigationController: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         if operation == .pop {
             return SmthPopTransition()
+        } else if operation == .push {
+            return SmthPushTransition()
         } else {
             return nil
         }

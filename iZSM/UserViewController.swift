@@ -155,6 +155,10 @@ class UserViewController: NTTableViewController {
         }
         cell.accessoryType = .disclosureIndicator
         cell.backgroundColor = AppTheme.shared.backgroundColor
+        let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
+        selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        cell.selectedBackgroundView = selectedBackgroundView
+        cell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
         return cell
     }
     

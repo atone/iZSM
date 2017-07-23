@@ -217,6 +217,10 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         cell.textLabel?.textColor = AppTheme.shared.textColor
         cell.detailTextLabel?.textColor = AppTheme.shared.lightTextColor
         cell.backgroundColor = AppTheme.shared.backgroundColor
+        let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
+        selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        cell.selectedBackgroundView = selectedBackgroundView
+        cell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
         return cell
     }
     

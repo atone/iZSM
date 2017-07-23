@@ -14,15 +14,55 @@ import SVProgressHUD
 class AboutViewController: NTTableViewController {
 
     @IBOutlet weak var silverSupportLabel: UILabel!
-    @IBOutlet weak var silverSupportCell: UITableViewCell!
+    @IBOutlet weak var silverSupportCell: UITableViewCell! {
+        didSet {
+            if let cell = silverSupportCell {
+                let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
+                selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                cell.selectedBackgroundView = selectedBackgroundView
+            }
+        }
+    }
     @IBOutlet weak var goldSupportLabel: UILabel!
-    @IBOutlet weak var goldSupportCell: UITableViewCell!
+    @IBOutlet weak var goldSupportCell: UITableViewCell! {
+        didSet {
+            if let cell = goldSupportCell {
+                let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
+                selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                cell.selectedBackgroundView = selectedBackgroundView
+            }
+        }
+    }
     @IBOutlet weak var rateLabel: UILabel!
-    @IBOutlet weak var rateCell: UITableViewCell!
+    @IBOutlet weak var rateCell: UITableViewCell! {
+        didSet {
+            if let cell = rateCell {
+                let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
+                selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                cell.selectedBackgroundView = selectedBackgroundView
+            }
+        }
+    }
     @IBOutlet weak var mailLabel: UILabel!
-    @IBOutlet weak var mailCell: UITableViewCell!
+    @IBOutlet weak var mailCell: UITableViewCell! {
+        didSet {
+            if let cell = mailCell {
+                let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
+                selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                cell.selectedBackgroundView = selectedBackgroundView
+            }
+        }
+    }
     @IBOutlet weak var websiteLabel: UILabel!
-    @IBOutlet weak var websiteCell: UITableViewCell!
+    @IBOutlet weak var websiteCell: UITableViewCell! {
+        didSet {
+            if let cell = websiteCell {
+                let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
+                selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                cell.selectedBackgroundView = selectedBackgroundView
+            }
+        }
+    }
     
     let logoView = LogoView(frame: CGRect.zero)
     
@@ -166,10 +206,15 @@ class AboutViewController: NTTableViewController {
         websiteLabel.textColor = AppTheme.shared.textColor
         
         silverSupportCell.backgroundColor = AppTheme.shared.backgroundColor
+        silverSupportCell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
         goldSupportCell.backgroundColor = AppTheme.shared.backgroundColor
+        goldSupportCell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
         rateCell.backgroundColor = AppTheme.shared.backgroundColor
+        rateCell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
         mailCell.backgroundColor = AppTheme.shared.backgroundColor
+        mailCell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
         websiteCell.backgroundColor = AppTheme.shared.backgroundColor
+        websiteCell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
         logoView.updateUI()
     }
 

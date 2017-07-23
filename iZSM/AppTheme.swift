@@ -37,9 +37,17 @@ class AppTheme {
     
     var backgroundColor: UIColor {
         if setting.nightMode {
-            return UIColor(red: 80/255.0, green: 80/255.0, blue: 80/255.0, alpha: 1)
+            return UIColor(red: 40/255.0, green: 40/255.0, blue: 41/255.0, alpha: 1)
         } else {
             return UIColor.white
+        }
+    }
+    
+    var selectedBackgroundColor: UIColor {
+        if setting.nightMode {
+            return UIColor.darkGray
+        } else {
+            return UIColor(red: 217/255.0, green: 217/255.0, blue: 217/255.0, alpha: 1)
         }
     }
     
@@ -61,7 +69,7 @@ class AppTheme {
     
     var tintColor: UIColor {
         if setting.nightMode {
-            return UIColor(red: 220/255.0, green: 220/255.0, blue: 220/255.0, alpha: 1)
+            return UIColor(red: 215/255.0, green: 215/255.0, blue: 214/255.0, alpha: 1)
         } else {
             return absoluteTintColor
         }
@@ -69,7 +77,7 @@ class AppTheme {
     
     var naviContentColor: UIColor {
         if setting.nightMode {
-            return UIColor(red: 220/255.0, green: 220/255.0, blue: 220/255.0, alpha: 1)
+            return UIColor(red: 215/255.0, green: 215/255.0, blue: 214/255.0, alpha: 1)
         } else {
             return UIColor.white
         }
@@ -77,7 +85,7 @@ class AppTheme {
     
     var naviBackgroundColor: UIColor {
         if setting.nightMode {
-            return UIColor.darkGray
+            return UIColor(red: 40/255.0, green: 40/255.0, blue: 41/255.0, alpha: 1)
         } else {
             return absoluteTintColor
         }
@@ -85,7 +93,7 @@ class AppTheme {
     
     var tabBackgroundColor: UIColor {
         if setting.nightMode {
-            return UIColor.darkGray
+            return UIColor(red: 40/255.0, green: 40/255.0, blue: 41/255.0, alpha: 1)
         } else {
             return UIColor.groupTableViewBackground
         }
@@ -93,7 +101,7 @@ class AppTheme {
     
     var lightBackgroundColor: UIColor {
         if setting.nightMode {
-            return UIColor.darkGray
+            return UIColor(red: 20/255.0, green: 20/255.0, blue: 20/255.0, alpha: 1)
         } else {
             return UIColor.groupTableViewBackground
         }

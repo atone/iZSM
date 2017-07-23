@@ -27,6 +27,10 @@ class HotTableViewCell: UITableViewCell {
     
     /// Setup constraints
     func setupUI() {
+        let selectedBackgroundView = UIView(frame: contentView.bounds)
+        selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.selectedBackgroundView = selectedBackgroundView
+        
         titleLabel.numberOfLines = 0
         
         contentView.addSubview(titleLabel)
@@ -56,6 +60,7 @@ class HotTableViewCell: UITableViewCell {
         boardLabel.textColor = AppTheme.shared.lightTextColor
         authorLabel.textColor = AppTheme.shared.tintColor
         self.backgroundColor = AppTheme.shared.backgroundColor
+        self.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
         titleLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
         boardLabel.font = UIFont.preferredFont(forTextStyle: .footnote)

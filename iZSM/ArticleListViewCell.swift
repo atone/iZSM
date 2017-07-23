@@ -49,6 +49,10 @@ class ArticleListViewCell: UITableViewCell {
     }
     
     func setupUI() {
+        let selectedBackgroundView = UIView(frame: contentView.bounds)
+        selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.selectedBackgroundView = selectedBackgroundView
+        
         titleLabel.numberOfLines = 0
         unreadLabel.text = "⦁"
         unreadLabel.font = UIFont.systemFont(ofSize: 12)
@@ -87,6 +91,7 @@ class ArticleListViewCell: UITableViewCell {
         authorLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         
         self.backgroundColor = AppTheme.shared.backgroundColor
+        self.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
         authorLabel.textColor = AppTheme.shared.tintColor
         unreadLabel.textColor = AppTheme.shared.tintColor
         timeLabel.textColor = AppTheme.shared.lightTextColor

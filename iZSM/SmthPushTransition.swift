@@ -11,7 +11,7 @@ import UIKit
 class SmthPushTransition: NSObject, UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.35
+        return 0.3
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -35,7 +35,7 @@ class SmthPushTransition: NSObject, UIViewControllerAnimatedTransitioning {
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext),
                        delay: 0,
-                       options: .curveLinear,
+                       options: .curveEaseInOut,
                        animations: {
                         dimmingView.alpha = 0.5
                         toVC.view.frame = finalFrame

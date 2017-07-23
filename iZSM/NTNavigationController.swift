@@ -60,7 +60,7 @@ extension NTNavigationController: UINavigationControllerDelegate {
     }
     
     func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        if animationController.isKind(of: SmthPopTransition.self) {
+        if animationController.isKind(of: SmthPopTransition.self), interactivePopTransition != nil {
             return interactivePopTransition
         } else {
             return nil
@@ -103,7 +103,8 @@ extension NTNavigationController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let panRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = panRecognizer.velocity(in: gestureRecognizer.view)
-            return fabs(velocity.x) > fabs(velocity.y)
+            let movement = panRecognizer.translation(in: gestureRecognizer.view)
+            return (fabs(velocity.x) > fabs(velocity.y)) || (fabs(movement.x) > fabs(movement.y))
         }
         return false
     }

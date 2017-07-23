@@ -21,10 +21,10 @@ class FullscreenContentViewController: UIViewController {
         contentTextView.isEditable = false
         contentTextView.dataDetectorTypes = [.link, .phoneNumber]
         contentTextView.snp.makeConstraints { (make) in
-            make.leading.equalTo(view.snp.leadingMargin)
-            make.trailing.equalTo(view.snp.trailingMargin)
-            make.top.equalTo(view.snp.top).offset(20)
-            make.bottom.equalTo(view.snp.bottomMargin)
+            make.leading.equalTo(view)
+            make.trailing.equalTo(view)
+            make.top.equalTo(view).offset(20)
+            make.bottom.equalTo(view)
         }
         updateContent()
     }
@@ -58,8 +58,8 @@ class FullscreenContentViewController: UIViewController {
             subtitleParagraphStyle.lineBreakMode = .byWordWrapping
             subtitleParagraphStyle.maximumLineHeight = subtitleFont.pointSize
             subtitleParagraphStyle.minimumLineHeight = subtitleFont.pointSize
-            subtitleParagraphStyle.paragraphSpacing = 10
-            subtitleParagraphStyle.paragraphSpacingBefore = 5
+            subtitleParagraphStyle.paragraphSpacing = titleFont.pointSize
+            subtitleParagraphStyle.paragraphSpacingBefore = titleFont.pointSize / 4
             let subtitle = NSAttributedString(string: subtitleText,
                                               attributes: [NSParagraphStyleAttributeName: subtitleParagraphStyle,
                                                            NSFontAttributeName: subtitleFont,
@@ -103,6 +103,11 @@ class FullscreenContentViewController: UIViewController {
             self.dismiss(animated: true, completion: nil)
         }
         view.addGestureRecognizer(tapGesture)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        contentTextView.textContainerInset = UIEdgeInsets(top: 8.0, left: view.layoutMargins.left, bottom: 8.0, right: view.layoutMargins.right)
     }
     
     override var prefersStatusBarHidden: Bool {

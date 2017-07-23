@@ -116,10 +116,10 @@ class AppTheme {
     }
     
     var urlColor: UIColor {
-        return absoluteTintColor
+        return tintColor
     }
     
     var activeUrlColor: UIColor {
-        return absoluteTintColor.withAlphaComponent(0.6)
+        return urlColor.withAlphaComponent(0.6)
     }
 }

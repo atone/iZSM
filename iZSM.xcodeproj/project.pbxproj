@@ -253,7 +253,11 @@
 				9CA3B15C1DE331F800E9B121 /* ViewControllers */,
 				9C1A3BEE1DE2EA8B00CF4A43 /* SmthAPI */,
 				9CAD5A301F10A2AA0008E62C /* Persistence */,
+				9CEBD0741F24F8D400E4E29E /* Transition */,
+				9CEBD0751F24F91C00E4E29E /* Storyboards */,
+				9CEBD0761F24F98900E4E29E /* Third Parties */,
 				9C1A3BD11DE2C3EA00CF4A43 /* Support Files */,
+				9CEBD0771F24F9B200E4E29E /* Misc */,
 			);
 			path = iZSM;
 			sourceTree = "<group>";
@@ -261,20 +265,10 @@
 		9C1A3BD11DE2C3EA00CF4A43 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				9C889FCA1DE4832E00C33A8D /* YYPhotoGroupView */,
-				9CA3B15F1DE3359200E9B121 /* MJRefresh */,
-				9C1A3BE41DE2E6EB00CF4A43 /* libSmth */,
-				9C56E1CB1F0E0DF00093E504 /* FDTemplateLayoutCell */,
 				9C1A3BC61DE2C0ED00CF4A43 /* Assets.xcassets */,
 				9C1A3BDA1DE2CDB100CF4A43 /* EULA.rtf */,
 				9C1A3BBF1DE2C0ED00CF4A43 /* AppDelegate.swift */,
-				9CB573C31DE5B61800CD6F3E /* LogoView.swift */,
-				9CD9E6441F1DB10E00713853 /* IAPHelper.swift */,
-				9C2E2C651F223DC100DF34F6 /* ShakeMotion.swift */,
-				9CA9DD8C1F23246B0023984F /* SmthPopTransition.swift */,
 				9C1A3BCB1DE2C0ED00CF4A43 /* Info.plist */,
-				9C1A3BC81DE2C0ED00CF4A43 /* LaunchScreen.storyboard */,
-				9CB573BC1DE5B32100CD6F3E /* Settings.storyboard */,
 				9C1A3BDC1DE2E28500CF4A43 /* iZSM-Bridging-Header.h */,
 			);
 			name = "Support Files";
@@ -491,6 +485,44 @@
 				9C7C6B121F1364E800940300 /* SMBoardInfo.swift */,
 			);
 			name = Persistence;
+			sourceTree = "<group>";
+		};
+		9CEBD0741F24F8D400E4E29E /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				9CA9DD8C1F23246B0023984F /* SmthPopTransition.swift */,
+			);
+			name = Transition;
+			sourceTree = "<group>";
+		};
+		9CEBD0751F24F91C00E4E29E /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				9CB573BC1DE5B32100CD6F3E /* Settings.storyboard */,
+				9C1A3BC81DE2C0ED00CF4A43 /* LaunchScreen.storyboard */,
+			);
+			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		9CEBD0761F24F98900E4E29E /* Third Parties */ = {
+			isa = PBXGroup;
+			children = (
+				9C889FCA1DE4832E00C33A8D /* YYPhotoGroupView */,
+				9CA3B15F1DE3359200E9B121 /* MJRefresh */,
+				9C1A3BE41DE2E6EB00CF4A43 /* libSmth */,
+				9C56E1CB1F0E0DF00093E504 /* FDTemplateLayoutCell */,
+			);
+			name = "Third Parties";
+			sourceTree = "<group>";
+		};
+		9CEBD0771F24F9B200E4E29E /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				9CB573C31DE5B61800CD6F3E /* LogoView.swift */,
+				9CD9E6441F1DB10E00713853 /* IAPHelper.swift */,
+				9C2E2C651F223DC100DF34F6 /* ShakeMotion.swift */,
+			);
+			name = Misc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -277,13 +277,13 @@
 		9C1A3BD21DE2C5E100CF4A43 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9C086E001F1E3BE300023788 /* StoreKit.framework */,
 				9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */,
 				9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */,
 				9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */,
 				9C4728EE1F0FC64D00C289FC /* Realm.framework */,
 				9C4728EF1F0FC64D00C289FC /* RealmSwift.framework */,
 				9C1A3BD51DE2C5EF00CF4A43 /* SnapKit.framework */,
+				9C086E001F1E3BE300023788 /* StoreKit.framework */,
 				9C1A3BF51DE2EEAA00CF4A43 /* SVProgressHUD.framework */,
 				9C889FBA1DE4215100C33A8D /* TTTAttributedLabel.framework */,
 				9C889FB81DE409B100C33A8D /* YYKit.framework */,

@@ -39,7 +39,7 @@ class FavListViewController: BaseTableViewController {
     }
     
     func setUpdateFavList(notification: Notification) {
-        clearContent()
+        fetchData(showHUD: false)
     }
     
     override func viewDidLoad() {

@@ -137,9 +137,8 @@ class FavListViewController: BaseTableViewController {
                     } else {
                         SVProgressHUD.showSuccess(withStatus: "关注成功，尚需管理员审核成为正式驻版用户")
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        self.fetchData(showHUD: false)
-                    }
+                    NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
+                                                    object: nil)
                 } else if self.api.errorCode == 10319 && self.index == 0 {
                     SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")
                 } else if self.api.errorDescription != nil && self.api.errorDescription != "" {

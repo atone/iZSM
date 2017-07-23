@@ -75,8 +75,11 @@ extension NTNavigationController: UINavigationControllerDelegate {
     
     func handlePanRecognizer(_ recognizer: UIPanGestureRecognizer) {
         // Calculate how far the user has dragged across the view
-        var progress = recognizer.translation(in: self.view).x / self.view.bounds.width
+        let translation = recognizer.translation(in: self.view).x
+        let velocity = recognizer.velocity(in: self.view).x
+        var progress = translation / self.view.bounds.width
         progress = min(1, max(0, progress))
+        
         if recognizer.state == .began {
             // Create a interactive transition and pop the view controller
             self.interactivePopTransition = UIPercentDrivenInteractiveTransition()
@@ -87,7 +90,7 @@ extension NTNavigationController: UINavigationControllerDelegate {
             interactivePopTransition.update(progress)
         } else if recognizer.state == .ended || recognizer.state == .cancelled {
             // Finish or cancel the interactive transition
-            if (progress > 0.5) {
+            if progress > 0.5 || (translation > 80 && velocity > 800) {
                 interactivePopTransition.finish()
             }
             else {

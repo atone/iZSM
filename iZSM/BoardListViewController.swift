@@ -294,7 +294,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     }
 }
 
-extension BoardListViewController : UIViewControllerPreviewingDelegate {
+extension BoardListViewController : UIViewControllerPreviewingDelegate, SmthViewControllerPreviewingDelegate {
     /// Create a previewing view controller to be shown at "Peek".
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         // Obtain the index path and the cell that was pressed.
@@ -318,6 +318,7 @@ extension BoardListViewController : UIViewControllerPreviewingDelegate {
             let alvc = ArticleListViewController()
             alvc.boardID = board.boardID
             alvc.boardName = board.name
+            alvc.previewDelegate = self
             alvc.hidesBottomBarWhenPushed = true
             return alvc
         }
@@ -331,5 +332,20 @@ extension BoardListViewController : UIViewControllerPreviewingDelegate {
         }
         // Reuse the "Peek" view controller for presentation.
         show(viewControllerToCommit, sender: self)
+    }
+    
+    func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
+        var actions = [UIPreviewActionItem]()
+        if let alvc = viewController as? ArticleListViewController, let boardID = alvc.boardID, let boardName = alvc.boardName {
+            let addFavAction = UIPreviewAction(title: "收藏 \(boardName) 版", style: .default) { [unowned self] (action, controller) in
+                self.addFavoriteWithBoardID(boardID: boardID)
+            }
+            actions.append(addFavAction)
+            let addMemAction = UIPreviewAction(title: "关注 \(boardName) 版 (驻版)", style: .default) { [unowned self] (action, controller) in
+                self.addMemberWithBoardID(boardID: boardID)
+            }
+            actions.append(addMemAction)
+        }
+        return actions
     }
 }

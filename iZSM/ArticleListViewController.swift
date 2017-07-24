@@ -18,6 +18,16 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         didSet { title = boardName }
     }
     
+    weak var previewDelegate: SmthViewControllerPreviewingDelegate?
+    
+    override var previewActionItems: [UIPreviewActionItem] {
+        if let previewDelegate = self.previewDelegate {
+            return previewDelegate.previewActionItems(for: self)
+        } else {
+            return [UIPreviewActionItem]()
+        }
+    }
+    
     var threadLoaded = 0
     private var threadRange: NSRange {
         return NSMakeRange(threadLoaded, setting.threadCountPerSection)

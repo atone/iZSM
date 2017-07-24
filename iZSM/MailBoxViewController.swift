@@ -146,6 +146,29 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
             var readMail = mail
             readMail.flags = "  "
             mails[indexPath.section][indexPath.row] = readMail
+            
+            var allRead = true
+            for section in 0..<mails.count {
+                for row in 0..<mails[section].count {
+                    if mails[section][row].flags.hasPrefix("N") {
+                        allRead = false
+                        break
+                    }
+                }
+                if !allRead {
+                    break
+                }
+            }
+            if allRead {
+                var unreadCount = UIApplication.shared.applicationIconBadgeNumber
+                unreadCount = max(0, unreadCount - 1)
+                if unreadCount > 0 {
+                    self.tabBarItem?.badgeValue = "\(unreadCount)"
+                } else {
+                    self.tabBarItem?.badgeValue = nil
+                }
+                UIApplication.shared.applicationIconBadgeNumber = unreadCount
+            }
         }
         show(mcvc, sender: self)
     }

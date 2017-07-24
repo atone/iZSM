@@ -167,6 +167,10 @@ extension ArticleListSearchResultViewController: UIViewControllerPreviewingDeleg
             readThread.flags = " " + flags.substring(from: flags.index(after: flags.startIndex))
             threads[indexPath.section][indexPath.row] = readThread
         }
+        // Add swipe right to back support for "popping" view controllers
+        if let navigationController = self.navigationController as? NTNavigationController {
+            navigationController.addPanGesture(viewControllerToCommit)
+        }
         // Reuse the "Peek" view controller for presentation.
         show(viewControllerToCommit, sender: self)
     }

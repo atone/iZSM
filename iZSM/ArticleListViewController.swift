@@ -113,7 +113,11 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         // search related
         definesPresentationContext = true
         searchController = UISearchController(searchResultsController: nil)
-        searchController?.dimsBackgroundDuringPresentation = false
+        if #available(iOS 9.1, *) {
+            searchController?.obscuresBackgroundDuringPresentation = false
+        } else {
+            searchController?.dimsBackgroundDuringPresentation = false
+        }
         searchController?.delegate = self
         searchController?.searchBar.delegate = self
         searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>

@@ -105,18 +105,22 @@ class UserViewController: NTTableViewController {
         case IndexPath(row: 0, section: 0):
             let mbvc = MailBoxViewController()
             mbvc.inbox = true
+            mbvc.userVC = self
             show(mbvc, sender: self)
         case IndexPath(row: 1, section: 0):
             let mbvc = MailBoxViewController()
             mbvc.inbox = false
+            mbvc.userVC = self
             show(mbvc, sender: self)
         case IndexPath(row: 2, section: 0):
             let rvc = ReminderViewController()
             rvc.replyMe = true
+            rvc.userVC = self
             show(rvc, sender: self)
         case IndexPath(row: 3, section: 0):
             let rvc = ReminderViewController()
             rvc.replyMe = false
+            rvc.userVC = self
             show(rvc, sender: self)
         case IndexPath(row: 0, section: 1):
             let storyBoard = UIStoryboard(name: "Settings", bundle: nil)
@@ -182,17 +186,22 @@ class UserViewController: NTTableViewController {
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
                 let allCount = newMailCount + newReplyCount + newReferCount
-                UIApplication.shared.applicationIconBadgeNumber = allCount
-                if allCount > 0 {
-                    self.tabBarItem?.badgeValue = "\(allCount)"
-                } else {
-                    self.tabBarItem?.badgeValue = nil
-                }
+                self.updateBadge(unreadCount: allCount)
                 self.setting.mailCount = newMailCount
                 self.setting.replyCount = newReplyCount
                 self.setting.referCount = newReferCount
                 self.tableView.reloadData()
             }
+        }
+    }
+    
+    func updateBadge(unreadCount: Int) {
+        let count = max(unreadCount, 0)
+        UIApplication.shared.applicationIconBadgeNumber = count
+        if count > 0 {
+            self.tabBarItem.badgeValue = "\(count)"
+        } else {
+            self.tabBarItem.badgeValue = nil
         }
     }
     

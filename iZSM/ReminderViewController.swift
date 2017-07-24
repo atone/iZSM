@@ -18,6 +18,8 @@ class ReminderViewController: BaseTableViewController {
         }
     }
     
+    weak var userVC: UserViewController?
+    
     private var referCountLoaded: Int = 0
     private var referCountPerSection = 20
     private var referRange: NSRange {
@@ -130,14 +132,8 @@ class ReminderViewController: BaseTableViewController {
             readReference.flag = 1
             references[indexPath.section][indexPath.row] = readReference
             
-            var unreadCount = UIApplication.shared.applicationIconBadgeNumber
-            unreadCount = max(0, unreadCount - 1)
-            if unreadCount > 0 {
-                self.tabBarItem?.badgeValue = "\(unreadCount)"
-            } else {
-                self.tabBarItem?.badgeValue = nil
-            }
-            UIApplication.shared.applicationIconBadgeNumber = unreadCount
+            let unreadCount = UIApplication.shared.applicationIconBadgeNumber
+            userVC?.updateBadge(unreadCount: unreadCount - 1)
         }
         show(rcvc, sender: self)
     }

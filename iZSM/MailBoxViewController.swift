@@ -18,6 +18,8 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
         }
     }
     
+    weak var userVC: UserViewController?
+    
     private var mailCountLoaded = 0
     private let mailCountPerSection = 20
     
@@ -160,14 +162,8 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
                 }
             }
             if allRead {
-                var unreadCount = UIApplication.shared.applicationIconBadgeNumber
-                unreadCount = max(0, unreadCount - 1)
-                if unreadCount > 0 {
-                    self.tabBarItem?.badgeValue = "\(unreadCount)"
-                } else {
-                    self.tabBarItem?.badgeValue = nil
-                }
-                UIApplication.shared.applicationIconBadgeNumber = unreadCount
+                let unreadCount = UIApplication.shared.applicationIconBadgeNumber
+                userVC?.updateBadge(unreadCount: unreadCount - 1)
             }
         }
         show(mcvc, sender: self)

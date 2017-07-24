@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 import SVProgressHUD
 
 class ArticleListViewController: BaseTableViewController, UISearchControllerDelegate, UISearchBarDelegate {
@@ -271,7 +272,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
 }
 
-extension ArticleListViewController: UIViewControllerPreviewingDelegate {
+extension ArticleListViewController: UIViewControllerPreviewingDelegate, SmthViewControllerPreviewingDelegate {
     // MARK: UIViewControllerPreviewingDelegate
     
     /// Create a previewing view controller to be shown at "Peek".
@@ -286,6 +287,7 @@ extension ArticleListViewController: UIViewControllerPreviewingDelegate {
         acvc.boardID = thread.boardID
         acvc.boardName = thread.boardName
         acvc.title = thread.subject
+        acvc.previewDelegate = self
         acvc.hidesBottomBarWhenPushed = true
         
         // Set the source rect to the cell frame, so surrounding elements are blurred.
@@ -313,6 +315,37 @@ extension ArticleListViewController: UIViewControllerPreviewingDelegate {
         }
         // Reuse the "Peek" view controller for presentation.
         show(viewControllerToCommit, sender: self)
+    }
+    
+    func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
+        var actions = [UIPreviewActionItem]()
+        if let acvc = viewController as? ArticleContentViewController {
+            if let boardID = acvc.boardID, let articleID = acvc.articleID {
+                let urlString: String
+                switch self.setting.displayMode {
+                case .nForum:
+                    urlString = "https://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
+                case .www2:
+                    urlString = "https://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
+                case .mobile:
+                    urlString = "https://m.newsmth.net/article/\(boardID)/\(articleID)"
+                }
+                let openAction = UIPreviewAction(title: "浏览网页版", style: .default) {[unowned self] (action, controller) in
+                    let webViewController = SFSafariViewController(url: URL(string: urlString)!)
+                    self.present(webViewController, animated: true, completion: nil)
+                }
+                actions.append(openAction)
+                let shareAction = UIPreviewAction(title: "分享本帖", style: .default) { [unowned self] (action, controller) in
+                    let title = "水木\(acvc.boardName ?? boardID)版：【\(acvc.title ?? "无标题")】"
+                    let url = URL(string: urlString)!
+                    let activityViewController = UIActivityViewController(activityItems: [title, url],
+                                                                          applicationActivities: nil)
+                    self.present(activityViewController, animated: true, completion: nil)
+                }
+                actions.append(shareAction)
+            }
+        }
+        return actions
     }
 }
 

@@ -23,7 +23,9 @@ class PageListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.scrollToRow(at: IndexPath(row: currentPage, section: 0), at: .middle, animated: true)
+        if currentPage < totalPage {
+            tableView.scrollToRow(at: IndexPath(row: currentPage, section: 0), at: .middle, animated: true)
+        }
     }
 
     // MARK: - Table view data source

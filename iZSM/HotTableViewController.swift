@@ -178,16 +178,32 @@ extension HotTableViewController : UIViewControllerPreviewingDelegate, SmthViewC
                     self.present(webViewController, animated: true, completion: nil)
                 }
                 actions.append(openAction)
-                let shareAction = UIPreviewAction(title: "分享本帖", style: .default) { [unowned self] (action, controller) in
-                    let title = "水木\(acvc.boardName ?? boardID)版：【\(acvc.title ?? "无标题")】"
-                    let url = URL(string: urlString)!
-                    let activityViewController = UIActivityViewController(activityItems: [title, url],
-                                                                          applicationActivities: nil)
-                    self.present(activityViewController, animated: true, completion: nil)
+                if let cell = cell(for: articleID, and: boardID) {
+                    let shareAction = UIPreviewAction(title: "分享本帖", style: .default) { [unowned self] (action, controller) in
+                        let title = "水木\(acvc.boardName ?? boardID)版：【\(acvc.title ?? "无标题")】"
+                        let url = URL(string: urlString)!
+                        let activityViewController = UIActivityViewController(activityItems: [title, url],
+                                                                              applicationActivities: nil)
+                        activityViewController.popoverPresentationController?.sourceView = cell
+                        activityViewController.popoverPresentationController?.sourceRect = cell.bounds
+                        self.present(activityViewController, animated: true, completion: nil)
+                    }
+                    actions.append(shareAction)
                 }
-                actions.append(shareAction)
             }
         }
         return actions
+    }
+    
+    private func cell(for articleID: Int, and boardID: String) -> UITableViewCell? {
+        for section in 0..<content.count {
+            for row in 0..<content[section].hotThreads.count {
+                let hotThread = content[section].hotThreads[row]
+                if hotThread.id == articleID && hotThread.boardID == boardID {
+                    return tableView.cellForRow(at: IndexPath(row: row, section: section))
+                }
+            }
+        }
+        return nil
     }
 }

@@ -69,6 +69,10 @@ class AppSetting {
         ]
         defaults.register(defaults: initialSettings)
     }
+    
+    var signature: String {
+        return "\n- 来自「最水木 for \(UIDevice.current.model)」"
+    }
 
     var username: String? {
         get {

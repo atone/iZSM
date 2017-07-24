@@ -57,6 +57,16 @@ class ArticleContentViewController: NTTableViewController {
     var articleID: Int?
     var fromTopTen: Bool = false
     
+    weak var previewDelegate: SmthViewControllerPreviewingDelegate?
+    
+    override var previewActionItems: [UIPreviewActionItem] {
+        if let previewDelegate = self.previewDelegate {
+            return previewDelegate.previewActionItems(for: self)
+        } else {
+            return [UIPreviewActionItem]()
+        }
+    }
+    
     // MARK: - ViewController Related
     override func viewDidLoad() {
         tableView.register(ArticleContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)

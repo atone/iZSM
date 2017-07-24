@@ -238,7 +238,7 @@ class FavListViewController: BaseTableViewController {
     }
 }
 
-extension FavListViewController : UIViewControllerPreviewingDelegate {
+extension FavListViewController : UIViewControllerPreviewingDelegate, SmthViewControllerPreviewingDelegate {
     /// Create a previewing view controller to be shown at "Peek".
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         // Obtain the index path and the cell that was pressed.
@@ -256,6 +256,7 @@ extension FavListViewController : UIViewControllerPreviewingDelegate {
             let alvc = ArticleListViewController()
             alvc.boardID = board.boardID
             alvc.boardName = board.name
+            alvc.previewDelegate = self
             alvc.hidesBottomBarWhenPushed = true
             return alvc
         }
@@ -269,5 +270,34 @@ extension FavListViewController : UIViewControllerPreviewingDelegate {
         }
         // Reuse the "Peek" view controller for presentation.
         show(viewControllerToCommit, sender: self)
+    }
+    
+    func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
+        var actions = [UIPreviewActionItem]()
+        if let alvc = viewController as? ArticleListViewController, let boardID = alvc.boardID, let boardName = alvc.boardName {
+            let title = "取消\(self.index == 0 ? "收藏" : "关注") \(boardName) 版"
+            let delFavAction = UIPreviewAction(title: title, style: .default) { [unowned self] (action, controller) in
+                networkActivityIndicatorStart()
+                DispatchQueue.global().async {
+                    if self.index == 0 {
+                        self.api.deleteFavorite(boardID: boardID)
+                    } else {
+                        let _ = self.api.quitMemberOfBoard(boardID: boardID)
+                    }
+                    DispatchQueue.main.async {
+                        networkActivityIndicatorStop()
+                        if self.api.errorCode == 0 {
+                            SVProgressHUD.showSuccess(withStatus: "操作完成")
+                            NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
+                                                            object: nil)
+                        } else {
+                            SVProgressHUD.showInfo(withStatus: self.api.errorDescription)
+                        }
+                    }
+                }
+            }
+            actions.append(delFavAction)
+        }
+        return actions
     }
 }

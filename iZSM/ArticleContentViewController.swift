@@ -87,6 +87,9 @@ class ArticleContentViewController: NTTableViewController {
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTap(gestureRecgnizer:)))
         doubleTapGesture.numberOfTapsRequired = 2
         tableView.addGestureRecognizer(doubleTapGesture)
+        if traitCollection.forceTouchCapability == .available {
+            registerForPreviewing(with: self, sourceView: view)
+        }
         super.viewDidLoad()
         restorePosition()
         fetchData(restorePosition: true, showHUD: true)
@@ -662,7 +665,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
     }
     
-    private func reportJunk(_ article: SMArticle) {
+    fileprivate func reportJunk(_ article: SMArticle) {
         var adminID = "SYSOP"
         SVProgressHUD.show()
         DispatchQueue.global().async {
@@ -717,7 +720,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
     }
     
-    private func forward(_ article: SMArticle, toBoard: Bool) {
+    fileprivate func forward(_ article: SMArticle, toBoard: Bool) {
         let alert = UIAlertController(title: (toBoard ? "转寄到版面":"转寄给用户"), message: nil, preferredStyle: .alert)
         alert.addTextField{ textField in
             textField.placeholder = toBoard ? "版面ID" : "收件人，不填默认寄给自己"
@@ -758,6 +761,92 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         alert.addAction(okAction)
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
+    }
+}
+
+extension ArticleContentViewController: UIViewControllerPreviewingDelegate, SmthViewControllerPreviewingDelegate {
+    
+    /// Create a previewing view controller to be shown at "Peek".
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRow(at: location),
+            let cell = tableView.cellForRow(at: indexPath) else { return nil }
+        let fullscreen = FullscreenContentViewController()
+        fullscreen.article = smarticles[indexPath.section][indexPath.row]
+        fullscreen.previewDelegate = self
+        fullscreen.modalPresentationStyle = .fullScreen
+        fullscreen.modalTransitionStyle = .crossDissolve
+        
+        // Set the source rect to the cell frame, so surrounding elements are blurred.
+        previewingContext.sourceRect = cell.frame
+        
+        return fullscreen
+    }
+    
+    /// Present the view controller for the "Pop" action.
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        present(viewControllerToCommit, animated: true, completion: nil)
+    }
+    
+    func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
+        var actions = [UIPreviewActionItem]()
+        if let fullscreen = viewController as? FullscreenContentViewController, let article = fullscreen.article {
+            let replyAction = UIPreviewAction(title: "回复本帖", style: .default) { [unowned self] (action, controller) in
+                let cavc = ComposeArticleController()
+                cavc.boardID = article.boardID
+                cavc.delegate = self
+                cavc.replyMode = true
+                cavc.originalArticle = article
+                cavc.replyByMail = false
+                let navigationController = NTNavigationController(rootViewController: cavc)
+                navigationController.modalPresentationStyle = .formSheet
+                self.present(navigationController, animated: true, completion: nil)
+            }
+            actions.append(replyAction)
+            
+            let currentUser = article.authorID
+            let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
+            let soloAction = UIPreviewAction(title: soloTitle, style: .default) { [unowned self] (action, controller) in
+                guard let currentIndexPath = self.indexPath(for: article) else { return }
+                if self.soloUser == nil {
+                    self.soloUser = currentUser
+                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = false
+                    self.savePosition(currentRow: currentIndexPath.row)
+                    self.section = 0
+                    self.fetchData(restorePosition: false, showHUD: true)
+                } else {
+                    self.soloUser = nil
+                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = true
+                    self.restorePosition()
+                    self.fetchData(restorePosition: true, showHUD: true)
+                }
+            }
+            actions.append(soloAction)
+            
+            let forwardToUserAction = UIPreviewAction(title: "转寄给用户", style: .default) { [unowned self] (action, controller) in
+                self.forward(article, toBoard: false)
+            }
+            let forwardToBoardAction = UIPreviewAction(title: "转寄到版面", style: .default) { [unowned self] (action, controller) in
+                self.forward(article, toBoard: true)
+            }
+            let reportJunkAction = UIPreviewAction(title: "举报不良内容", style: .destructive) { [unowned self] (action, controller) in
+                self.reportJunk(article)
+            }
+            let actionGroup = UIPreviewActionGroup(title: "更多…", style: .default, actions: [forwardToUserAction, forwardToBoardAction, reportJunkAction])
+            actions.append(actionGroup)
+        }
+        return actions
+    }
+    
+    private func indexPath(for article: SMArticle) -> IndexPath? {
+        for section in 0..<smarticles.count {
+            for row in 0..<smarticles[section].count {
+                if smarticles[section][row].id == article.id
+                    && smarticles[section][row].boardID == article.boardID {
+                    return IndexPath(row: row, section: section)
+                }
+            }
+        }
+        return nil
     }
 }
 

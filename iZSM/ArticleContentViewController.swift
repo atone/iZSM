@@ -608,9 +608,12 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     
     func cell(_ cell: ArticleContentCell, didClickMore sender: UIView?) {
         
+        guard let article = cell.article else { return }
+        
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        if let currentUser = cell.article?.authorID, let currentIndexPath = tableView.indexPath(for: cell) {
+        if let currentIndexPath = tableView.indexPath(for: cell) {
+            let currentUser = article.authorID
             let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
             let soloAction = UIAlertAction(title: soloTitle, style: .default) { (action) in
                 if self.soloUser == nil {
@@ -630,15 +633,15 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
         
         let forwardAction = UIAlertAction(title: "转寄给用户", style: .default) { action in
-            self.forward(ToBoard: false, in: cell)
+            self.forward(article, toBoard: false)
         }
         actionSheet.addAction(forwardAction)
         let forwardToBoardAction = UIAlertAction(title: "转寄到版面", style: .default) { action in
-            self.forward(ToBoard: true, in: cell)
+            self.forward(article, toBoard: true)
         }
         actionSheet.addAction(forwardToBoardAction)
         let reportJunkAction = UIAlertAction(title: "举报不良内容", style: .destructive) { action in
-            self.reportJunk(in: cell)
+            self.reportJunk(article)
         }
         actionSheet.addAction(reportJunkAction)
         let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
@@ -659,13 +662,13 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
     }
     
-    private func reportJunk(in cell: ArticleContentCell) {
+    private func reportJunk(_ article: SMArticle) {
         var adminID = "SYSOP"
         SVProgressHUD.show()
         DispatchQueue.global().async {
-            if let boardID = cell.article?.boardID, let boards = self.api.queryBoard(query: boardID) {
+            if let boards = self.api.queryBoard(query: article.boardID) {
                 for board in boards {
-                    if board.boardID == boardID {
+                    if board.boardID == article.boardID {
                         let managers = board.manager.characters.split { $0 == " " }.map { String($0) }
                         if managers.count > 0 && !managers[0].isEmpty {
                             adminID = managers[0]
@@ -676,7 +679,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             }
             DispatchQueue.main.async {
                 SVProgressHUD.dismiss()
-                let alert = UIAlertController(title: "举报不良内容", message: "您将要向 \(cell.article!.boardID) 版版主 \(adminID) 举报用户 \(cell.article!.authorID) 在帖子【\(cell.article!.subject)】中发表的不良内容。请您输入举报原因：", preferredStyle: .alert)
+                let alert = UIAlertController(title: "举报不良内容", message: "您将要向 \(article.boardID) 版版主 \(adminID) 举报用户 \(article.authorID) 在帖子【\(article.subject)】中发表的不良内容。请您输入举报原因：", preferredStyle: .alert)
                 alert.addTextField { textField in
                     textField.placeholder = "如垃圾广告、色情内容、人身攻击等"
                     textField.returnKeyType = .done
@@ -688,8 +691,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                             SVProgressHUD.showInfo(withStatus: "举报原因不能为空")
                             return
                         }
-                        let title = "举报用户 \(cell.article!.authorID) 在 \(cell.article!.boardID) 版中发表的不良内容"
-                        let body = "举报原因：\(textField.text!)\n\n【以下为被举报的帖子内容】\n作者：\(cell.article!.authorID)\n信区：\(cell.article!.boardID)\n标题：\(cell.article!.subject)\n时间：\(cell.article!.timeString)\n\n\(cell.article!.body)\n"
+                        let title = "举报用户 \(article.authorID) 在 \(article.boardID) 版中发表的不良内容"
+                        let body = "举报原因：\(textField.text!)\n\n【以下为被举报的帖子内容】\n作者：\(article.authorID)\n信区：\(article.boardID)\n标题：\(article.subject)\n时间：\(article.timeString)\n\n\(article.body)\n"
                         networkActivityIndicatorStart()
                         DispatchQueue.global().async {
                             let result = self.api.sendMailTo(user: adminID, withTitle: title, content: body)
@@ -714,50 +717,47 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
     }
     
-    private func forward(ToBoard: Bool, in cell: ArticleContentCell) {
-        if let originalArticle = cell.article {
-            let api = SmthAPI()
-            let alert = UIAlertController(title: (ToBoard ? "转寄到版面":"转寄给用户"), message: nil, preferredStyle: .alert)
-            alert.addTextField{ textField in
-                textField.placeholder = ToBoard ? "版面ID" : "收件人，不填默认寄给自己"
-                textField.keyboardType = ToBoard ? UIKeyboardType.asciiCapable : UIKeyboardType.emailAddress
-                textField.autocorrectionType = .no
-                textField.returnKeyType = .send
-                textField.keyboardAppearance = self.setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
-            }
-            let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert, unowned self] action in
-                if let textField = alert.textFields?.first {
-                    networkActivityIndicatorStart()
-                    DispatchQueue.global().async {
-                        if ToBoard {
-                            let result = api.crossArticle(articleID: originalArticle.id,
-                                                          fromBoard: cell.article!.boardID,
-                                                          toBoard: textField.text!)
-                            print("cross article status: \(result)")
+    private func forward(_ article: SMArticle, toBoard: Bool) {
+        let alert = UIAlertController(title: (toBoard ? "转寄到版面":"转寄给用户"), message: nil, preferredStyle: .alert)
+        alert.addTextField{ textField in
+            textField.placeholder = toBoard ? "版面ID" : "收件人，不填默认寄给自己"
+            textField.keyboardType = toBoard ? UIKeyboardType.asciiCapable : UIKeyboardType.emailAddress
+            textField.autocorrectionType = .no
+            textField.returnKeyType = .send
+            textField.keyboardAppearance = self.setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
+        }
+        let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert, unowned self] action in
+            if let textField = alert.textFields?.first {
+                networkActivityIndicatorStart()
+                DispatchQueue.global().async {
+                    if toBoard {
+                        let result = self.api.crossArticle(articleID: article.id,
+                                                           fromBoard: article.boardID,
+                                                           toBoard: textField.text!)
+                        print("cross article status: \(result)")
+                    } else {
+                        let user = textField.text!.isEmpty ? AppSetting.shared.username! : textField.text!
+                        let result = self.api.forwardArticle(articleID: article.id,
+                                                             inBoard: article.boardID,
+                                                             toUser: user)
+                        print("forwared article status: \(result)")
+                    }
+                    DispatchQueue.main.async {
+                        networkActivityIndicatorStop()
+                        if self.api.errorCode == 0 {
+                            SVProgressHUD.showSuccess(withStatus: "转寄成功")
+                        } else if let errorDescription = self.api.errorDescription , errorDescription != "" {
+                            SVProgressHUD.showInfo(withStatus: errorDescription)
                         } else {
-                            let user = textField.text!.isEmpty ? AppSetting.shared.username! : textField.text!
-                            let result = api.forwardArticle(articleID: originalArticle.id,
-                                                            inBoard: cell.article!.boardID,
-                                                            toUser: user)
-                            print("forwared article status: \(result)")
-                        }
-                        DispatchQueue.main.async {
-                            networkActivityIndicatorStop()
-                            if self.api.errorCode == 0 {
-                                SVProgressHUD.showSuccess(withStatus: "转寄成功")
-                            } else if let errorDescription = self.api.errorDescription , errorDescription != "" {
-                                SVProgressHUD.showInfo(withStatus: errorDescription)
-                            } else {
-                                SVProgressHUD.showError(withStatus: "出错了")
-                            }
+                            SVProgressHUD.showError(withStatus: "出错了")
                         }
                     }
                 }
             }
-            alert.addAction(okAction)
-            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
         }
+        alert.addAction(okAction)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 

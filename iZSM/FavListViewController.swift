@@ -276,7 +276,7 @@ extension FavListViewController : UIViewControllerPreviewingDelegate, SmthViewCo
         var actions = [UIPreviewActionItem]()
         if let alvc = viewController as? ArticleListViewController, let boardID = alvc.boardID, let boardName = alvc.boardName {
             let title = "取消\(self.index == 0 ? "收藏" : "关注") \(boardName) 版"
-            let delFavAction = UIPreviewAction(title: title, style: .default) { [unowned self] (action, controller) in
+            let delFavAction = UIPreviewAction(title: title, style: .destructive) { [unowned self] (action, controller) in
                 networkActivityIndicatorStart()
                 DispatchQueue.global().async {
                     if self.index == 0 {

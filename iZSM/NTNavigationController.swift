@@ -51,7 +51,7 @@ extension NTNavigationController: UINavigationControllerDelegate {
         if operation == .pop {
             return SmthPopTransition()
         } else if operation == .push {
-            addPanGesture(toVC)
+            addPanGesture(toVC)  // 只在Push时添加右滑返回手势，3D Touch的时候“Pop”由分别UIViewControllerPreviewingDelegate中的方法负责添加该手势
             return SmthPushTransition()
         } else {
             return nil

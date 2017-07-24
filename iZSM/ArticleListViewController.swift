@@ -43,9 +43,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     var searchString: String? {
         return searchController?.searchBar.text
     }
-    var selectedIndex: Int {
-        return searchController?.searchBar.selectedScopeButtonIndex ?? 0
-    }
+    var selectedIndex: Int = 0
     
     private var searchController: UISearchController?
     
@@ -72,10 +70,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         search(forText: searchString, scope: selectedIndex)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        search(forText: searchString, scope: selectedScope)
     }
     
     func search(forText searchString: String?, scope: Int) {
@@ -119,7 +113,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         // search related
         definesPresentationContext = true
         searchController = UISearchController(searchResultsController: nil)
-        searchController?.searchBar.scopeButtonTitles = ["标题", "用户"]
         searchController?.dimsBackgroundDuringPresentation = false
         searchController?.delegate = self
         searchController?.searchBar.delegate = self
@@ -147,6 +140,23 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
     
     func pressSearchButton(sender: UIBarButtonItem) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let titleAction = UIAlertAction(title: "标题关键字", style: .default) { [unowned self] (action) in
+            self.selectedIndex = 0
+            self.prepareForSearch()
+        }
+        actionSheet.addAction(titleAction)
+        let userAction = UIAlertAction(title: "同作者", style: .default) { [unowned self] (action) in
+            self.selectedIndex = 1
+            self.prepareForSearch()
+        }
+        actionSheet.addAction(userAction)
+        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        actionSheet.popoverPresentationController?.barButtonItem = sender
+        present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func prepareForSearch() {
         if tableView.tableHeaderView == nil {
             if let searchController = searchController {
                 tableView.tableHeaderView = searchController.searchBar

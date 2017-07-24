@@ -20,6 +20,8 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     weak var previewDelegate: SmthViewControllerPreviewingDelegate?
     
+    var swipePopGesture: UIPanGestureRecognizer?
+    
     override var previewActionItems: [UIPreviewActionItem] {
         if let previewDelegate = self.previewDelegate {
             return previewDelegate.previewActionItems(for: self)
@@ -38,7 +40,11 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     var originalThreadLoaded: Int? = nil
     var originalThread: [[SMThread]]?
-    var searchMode = false
+    var searchMode = false {
+        didSet {
+            swipePopGesture?.isEnabled = !searchMode // not allow swipe to pop when in search mode
+        }
+    }
     
     var searchString: String? {
         return searchController?.searchBar.text

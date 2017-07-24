@@ -70,6 +70,9 @@ extension NTNavigationController: UINavigationControllerDelegate {
         let popRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanRecognizer(_:)))
         popRecognizer.delegate = self
         viewController.view.addGestureRecognizer(popRecognizer)
+        if let alvc = viewController as? ArticleListViewController {
+            alvc.swipePopGesture = popRecognizer // do not allow swipe to pop when in search mode
+        }
     }
     
     func handlePanRecognizer(_ recognizer: UIPanGestureRecognizer) {

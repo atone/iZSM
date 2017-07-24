@@ -31,7 +31,7 @@ class SmthPushTransition: NSObject, UIViewControllerAnimatedTransitioning {
         let dimmingView = UIView(frame: finalFrame)
         dimmingView.backgroundColor = UIColor.black
         dimmingView.alpha = 0.0
-        containerView.insertSubview(dimmingView, aboveSubview: fromVC.view)
+        containerView.insertSubview(dimmingView, belowSubview: toVC.view)
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext),
                        delay: 0,

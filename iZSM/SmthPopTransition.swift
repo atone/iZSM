@@ -35,7 +35,7 @@ class SmthPopTransition: NSObject, UIViewControllerAnimatedTransitioning {
         let dimmingView = UIView(frame: finalFrame)
         dimmingView.backgroundColor = UIColor.black
         dimmingView.alpha = 0.5
-        containerView.insertSubview(dimmingView, aboveSubview: toVC.view)
+        containerView.insertSubview(dimmingView, belowSubview: fromVC.view)
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext),
                        delay: 0,

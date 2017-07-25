@@ -372,6 +372,31 @@ class ArticleContentViewController: NTTableViewController {
     
     func action(sender: UIBarButtonItem) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if let boardID = self.boardID, let articleID = self.articleID {
+            let urlString: String
+            switch self.setting.displayMode {
+            case .nForum:
+                urlString = "https://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
+            case .www2:
+                urlString = "https://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
+            case .mobile:
+                urlString = "https://m.newsmth.net/article/\(boardID)/\(articleID)"
+            }
+            let shareAction = UIAlertAction(title: "分享本帖", style: .default) { [unowned self] (action) in
+                let title = "水木\(self.boardName ?? boardID)版：【\(self.title ?? "无标题")】"
+                let url = URL(string: urlString)!
+                let activityViewController = UIActivityViewController(activityItems: [title, url],
+                                                                      applicationActivities: nil)
+                activityViewController.popoverPresentationController?.barButtonItem = sender
+                self.present(activityViewController, animated: true, completion: nil)
+            }
+            actionSheet.addAction(shareAction)
+            let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] action in
+                let webViewController = SFSafariViewController(url: URL(string: urlString)!)
+                self.present(webViewController, animated: true, completion: nil)
+            }
+            actionSheet.addAction(openAction)
+        }
         if fromTopTen {
             if let boardID = self.boardID, let boardName = self.boardName {
                 let gotoBoardAction = UIAlertAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] action in
@@ -383,31 +408,6 @@ class ArticleContentViewController: NTTableViewController {
                 }
                 actionSheet.addAction(gotoBoardAction)
             }
-        }
-        if let boardID = self.boardID, let articleID = self.articleID {
-            let urlString: String
-            switch self.setting.displayMode {
-            case .nForum:
-                urlString = "https://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
-            case .www2:
-                urlString = "https://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
-            case .mobile:
-                urlString = "https://m.newsmth.net/article/\(boardID)/\(articleID)"
-            }
-            let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] action in
-                let webViewController = SFSafariViewController(url: URL(string: urlString)!)
-                self.present(webViewController, animated: true, completion: nil)
-            }
-            actionSheet.addAction(openAction)
-            let shareAction = UIAlertAction(title: "分享本帖", style: .default) { [unowned self] (action) in
-                let title = "水木\(self.boardName ?? boardID)版：【\(self.title ?? "无标题")】"
-                let url = URL(string: urlString)!
-                let activityViewController = UIActivityViewController(activityItems: [title, url],
-                                                                      applicationActivities: nil)
-                activityViewController.popoverPresentationController?.barButtonItem = sender
-                self.present(activityViewController, animated: true, completion: nil)
-            }
-            actionSheet.addAction(shareAction)
         }
         actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         actionSheet.popoverPresentationController?.barButtonItem = sender

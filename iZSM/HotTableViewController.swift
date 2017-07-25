@@ -153,16 +153,6 @@ extension HotTableViewController : UIViewControllerPreviewingDelegate, SmthViewC
     func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
         var actions = [UIPreviewActionItem]()
         if let acvc = viewController as? ArticleContentViewController {
-            if let boardID = acvc.boardID, let boardName = acvc.boardName {
-                let gotoBoardAction = UIPreviewAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] (action, controller) in
-                    let alvc = ArticleListViewController()
-                    alvc.boardID = boardID
-                    alvc.boardName = boardName
-                    alvc.hidesBottomBarWhenPushed = true
-                    self.show(alvc, sender: self)
-                }
-                actions.append(gotoBoardAction)
-            }
             if let boardID = acvc.boardID, let articleID = acvc.articleID {
                 let urlString: String
                 switch self.setting.displayMode {
@@ -173,11 +163,6 @@ extension HotTableViewController : UIViewControllerPreviewingDelegate, SmthViewC
                 case .mobile:
                     urlString = "https://m.newsmth.net/article/\(boardID)/\(articleID)"
                 }
-                let openAction = UIPreviewAction(title: "浏览网页版", style: .default) {[unowned self] (action, controller) in
-                    let webViewController = SFSafariViewController(url: URL(string: urlString)!)
-                    self.present(webViewController, animated: true, completion: nil)
-                }
-                actions.append(openAction)
                 if let cell = cell(for: articleID, and: boardID) {
                     let shareAction = UIPreviewAction(title: "分享本帖", style: .default) { [unowned self] (action, controller) in
                         let title = "水木\(acvc.boardName ?? boardID)版：【\(acvc.title ?? "无标题")】"
@@ -190,6 +175,22 @@ extension HotTableViewController : UIViewControllerPreviewingDelegate, SmthViewC
                     }
                     actions.append(shareAction)
                 }
+                let openAction = UIPreviewAction(title: "浏览网页版", style: .default) {[unowned self] (action, controller) in
+                    let webViewController = SFSafariViewController(url: URL(string: urlString)!)
+                    self.present(webViewController, animated: true, completion: nil)
+                }
+                actions.append(openAction)
+                
+            }
+            if let boardID = acvc.boardID, let boardName = acvc.boardName {
+                let gotoBoardAction = UIPreviewAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] (action, controller) in
+                    let alvc = ArticleListViewController()
+                    alvc.boardID = boardID
+                    alvc.boardName = boardName
+                    alvc.hidesBottomBarWhenPushed = true
+                    self.show(alvc, sender: self)
+                }
+                actions.append(gotoBoardAction)
             }
         }
         return actions

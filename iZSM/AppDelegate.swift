@@ -235,20 +235,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func navigateToNewMessagePage(notification: UILocalNotification) {
         mainController.selectedIndex = 3
-        if let nvc = mainController.selectedViewController as? NTNavigationController {
+        if let nvc = mainController.selectedViewController as? NTNavigationController,
+            let userVC = nvc.viewControllers.first as? UserViewController,
+            let showVC = nvc.viewControllers.last {
+            userVC.tabBarItem.badgeValue = "\(UIApplication.shared.applicationIconBadgeNumber)"
             switch notification.alertTitle! {
             case "新邮件":
                 let mbvc = MailBoxViewController()
                 mbvc.inbox = true
-                nvc.show(mbvc, sender: nvc)
+                mbvc.userVC = userVC
+                showVC.show(mbvc, sender: showVC)
             case "新回复":
                 let rvc = ReminderViewController()
                 rvc.replyMe = true
-                nvc.show(rvc, sender: nvc)
+                rvc.userVC = userVC
+                showVC.show(rvc, sender: showVC)
             case "新提醒":
                 let rvc = ReminderViewController()
                 rvc.replyMe = false
-                nvc.show(rvc, sender: nvc)
+                rvc.userVC = userVC
+                showVC.show(rvc, sender: showVC)
             default:
                 break
             }

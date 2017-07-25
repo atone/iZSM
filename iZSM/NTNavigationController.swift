@@ -47,11 +47,14 @@ class NTNavigationController: UINavigationController {
 
 extension NTNavigationController: UINavigationControllerDelegate {
     
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        addPanGesture(viewController)
+    }
+    
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         if operation == .pop {
             return SmthPopTransition()
         } else if operation == .push {
-            addPanGesture(toVC)  // 只在Push时添加右滑返回手势，3D Touch的时候“Pop”由分别UIViewControllerPreviewingDelegate中的方法负责添加该手势
             return SmthPushTransition()
         } else {
             return nil
@@ -67,11 +70,12 @@ extension NTNavigationController: UINavigationControllerDelegate {
     }
     
     func addPanGesture(_ viewController: UIViewController) {
-        let popRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanRecognizer(_:)))
-        popRecognizer.delegate = self
-        viewController.view.addGestureRecognizer(popRecognizer)
-        if let alvc = viewController as? ArticleListViewController {
-            alvc.swipePopGesture = popRecognizer // do not allow swipe to pop when in search mode
+        if let swipePopVC = viewController as? SwipePopable, swipePopVC.swipePopGesture == nil {
+            let popRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanRecognizer(_:)))
+            popRecognizer.delegate = self
+            viewController.view.addGestureRecognizer(popRecognizer)
+            swipePopVC.swipePopGesture = popRecognizer
+            print("adding swipe gesture for \(viewController)")
         }
     }
     

@@ -8,7 +8,9 @@
 
 import UIKit
 
-class NTTableViewController: UITableViewController {
+class NTTableViewController: UITableViewController, SwipePopable {
+    
+    var swipePopGesture: UIPanGestureRecognizer?
     
     private let setting = AppSetting.shared
 
@@ -40,4 +42,8 @@ class NTTableViewController: UITableViewController {
         
         tableView.reloadData()
     }
+}
+
+protocol SwipePopable: class {
+    var swipePopGesture: UIPanGestureRecognizer? { get set }
 }

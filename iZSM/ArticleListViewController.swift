@@ -20,8 +20,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     weak var previewDelegate: SmthViewControllerPreviewingDelegate?
     
-    var swipePopGesture: UIPanGestureRecognizer?
-    
     override var previewActionItems: [UIPreviewActionItem] {
         if let previewDelegate = self.previewDelegate {
             return previewDelegate.previewActionItems(for: self)
@@ -338,10 +336,6 @@ extension ArticleListViewController: UIViewControllerPreviewingDelegate, SmthVie
             let flags = thread.flags
             readThread.flags = " " + flags.substring(from: flags.index(after: flags.startIndex))
             threads[indexPath.section][indexPath.row] = readThread
-        }
-        // Add swipe right to back support for "popping" view controllers
-        if let navigationController = self.navigationController as? NTNavigationController {
-            navigationController.addPanGesture(viewControllerToCommit)
         }
         // Reuse the "Peek" view controller for presentation.
         show(viewControllerToCommit, sender: self)

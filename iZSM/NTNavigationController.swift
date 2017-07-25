@@ -75,7 +75,6 @@ extension NTNavigationController: UINavigationControllerDelegate {
             popRecognizer.delegate = self
             viewController.view.addGestureRecognizer(popRecognizer)
             swipePopVC.swipePopGesture = popRecognizer
-            print("adding swipe gesture for \(viewController)")
         }
     }
     

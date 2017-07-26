@@ -216,13 +216,7 @@ class UserViewController: NTTableViewController {
             }
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
-                if self.api.errorCode == 0 {
-                    SVProgressHUD.showSuccess(withStatus: "注销成功")
-                } else if self.api.errorDescription != nil && self.api.errorDescription! != "" {
-                    SVProgressHUD.showInfo(withStatus: self.api.errorDescription)
-                } else {
-                    SVProgressHUD.showError(withStatus: "出错了")
-                }
+                SVProgressHUD.showSuccess(withStatus: "注销成功")
                 self.setting.username = nil
                 self.setting.password = nil
                 self.setting.accessToken = nil

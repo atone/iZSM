@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDelegate {
+class MailBoxViewController: BaseTableViewController {
     
     private let kMailListCellIdentifier = "MailListCell"
     
@@ -95,11 +95,6 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
         }
     }
     
-    // ComposeEmailControllerDelegate
-    func emailDidPosted() {
-        fetchDataDirectly(showHUD: false)
-    }
-    
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -132,7 +127,9 @@ class MailBoxViewController: BaseTableViewController, ComposeEmailControllerDele
     func composeEmail(sender: UIBarButtonItem) {
         let cec = ComposeEmailController()
         if !inbox {
-            cec.delegate = self
+            cec.completionHandler = { [unowned self] in
+                self.fetchDataDirectly(showHUD: false)
+            }
         }
         let navigationController = NTNavigationController(rootViewController: cec)
         navigationController.modalPresentationStyle = .formSheet

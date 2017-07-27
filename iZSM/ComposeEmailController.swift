@@ -28,7 +28,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(sender:)))
     }()
     
-    weak var delegate: ComposeEmailControllerDelegate?
+    var completionHandler: (() -> Void)?
     
     var email: SMMail?
     var mode: Mode = .post
@@ -256,7 +256,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                             SVProgressHUD.showSuccess(withStatus: "感谢反馈")
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            self.delegate?.emailDidPosted()
+                            self.completionHandler?()
                             self.presentingViewController?.dismiss(animated: true, completion: nil)
                         }
                     } else if let errorDescription = self.api.errorDescription {
@@ -334,8 +334,4 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         }
     }
 
-}
-
-protocol ComposeEmailControllerDelegate: class {
-    func emailDidPosted()
 }

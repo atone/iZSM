@@ -27,12 +27,31 @@ class SmthAPI {
         set { apiSetAccessToken(newValue) }
     }
     
-    //MARK: - Up Load Attachments
+    //MARK: - Attachments
     //if upload succeed, return attachment array, otherwise, nil
     func uploadAttImage(image: UIImage, index: Int) -> [SMAttachment]? {
         let data = convertedAttData(from: image)
         api.reset_status()
         if let rawAttachments = api.net_AddAttachment(data, "\(index).jpg") as? [[String:Any]] {
+            var attachments = [SMAttachment]()
+            for rawAttachment in rawAttachments {
+                if
+                    let name = rawAttachment["name"] as? String,
+                    let size = rawAttachment["size"] as? Int
+                {
+                    attachments.append(SMAttachment(name: name, pos: -1, size: size))
+                }
+            }
+            if !attachments.isEmpty {
+                return attachments
+            }
+        }
+        return nil
+    }
+    
+    func getAttList() -> [SMAttachment]? {
+        api.reset_status()
+        if let rawAttachments = api.net_GetAttachmentList() as? [[String:Any]] {
             var attachments = [SMAttachment]()
             for rawAttachment in rawAttachments {
                 if

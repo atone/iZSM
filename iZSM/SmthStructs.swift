@@ -44,6 +44,26 @@ struct SMArticle {
     var timeString: String
     var attributedBody: NSAttributedString
     var attributedDarkBody: NSAttributedString
+    
+    var replySubject: String {
+        if subject.lowercased().hasPrefix("re:") {
+            return subject
+        } else {
+            return "Re: " + subject
+        }
+    }
+    
+    var quotBody: String {
+        let lines = body.components(separatedBy: "\n")
+        var tmpBody = "\n【 在 \(authorID) 的大作中提到: 】\n"
+        for idx in 0..<min(lines.count, 3) {
+            tmpBody.append(": \(lines[idx])\n")
+        }
+        if lines.count > 3 {
+            tmpBody.append(": ....................\n")
+        }
+        return tmpBody
+    }
 
     init(id: Int, time: Date, subject: String, authorID: String, body: String, effsize: Int, flags: String, attachments: [SMAttachment]) {
         self.id = id
@@ -182,6 +202,26 @@ struct SMMail {
     var time: Date
     var flags: String
     var attachments: [SMAttachment]
+    
+    var replySubject: String {
+        if subject.lowercased().hasPrefix("re:") {
+            return subject
+        } else {
+            return "Re: " + subject
+        }
+    }
+    
+    var quotBody: String {
+        let lines = body.components(separatedBy: "\n")
+        var tmpBody = "\n【 在 \(authorID) 的来信中提到: 】\n"
+        for idx in 0..<min(lines.count, 3) {
+            tmpBody.append(": \(lines[idx])\n")
+        }
+        if lines.count > 3 {
+            tmpBody.append(": ....................\n")
+        }
+        return tmpBody
+    }
 }
 
 struct SMReferenceStatus {

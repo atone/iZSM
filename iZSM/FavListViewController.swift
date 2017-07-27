@@ -228,7 +228,9 @@ class FavListViewController: BaseTableViewController {
                     networkActivityIndicatorStop()
                     if self.api.errorCode == 0 {
                         self.favorites.remove(at: indexPath.row)
+                        self.tableView.beginUpdates()
                         self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                        self.tableView.endUpdates()
                     } else {
                         SVProgressHUD.showInfo(withStatus: self.api.errorDescription)
                     }

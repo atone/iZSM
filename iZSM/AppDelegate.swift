@@ -77,6 +77,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // set the SVProgressHUD setting
         SVProgressHUD.setMinimumDismissTimeInterval(2)
+        if setting.nightMode {
+            SVProgressHUD.setDefaultStyle(.dark)
+        } else {
+            SVProgressHUD.setDefaultStyle(.light)
+        }
         
         // register color change notification
         NotificationCenter.default.addObserver(self, selector: #selector(nightModeChanged(_:)), name: AppTheme.kAppThemeChangedNotification, object: nil)
@@ -268,6 +273,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func changeColor() {
         window?.backgroundColor = AppTheme.shared.backgroundColor
         window?.tintColor = AppTheme.shared.absoluteTintColor
+        if setting.nightMode {
+            SVProgressHUD.setDefaultStyle(.dark)
+        } else {
+            SVProgressHUD.setDefaultStyle(.light)
+        }
     }
 }
 

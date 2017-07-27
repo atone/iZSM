@@ -208,7 +208,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                 cell = UITableViewCell(style: .value1, reuseIdentifier: kDirectoryIdentifier)
             }
             let name = board.name
-            let splits = name.components(separatedBy: CharacterSet.whitespaces).filter { $0.characters.count > 0 }
+            let splits = name.components(separatedBy: .whitespaces).filter { $0.characters.count > 0 }
             cell.textLabel?.text = splits.first
             if splits.count <= 1 {
                 cell.detailTextLabel?.text = nil

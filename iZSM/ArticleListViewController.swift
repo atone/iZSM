@@ -293,7 +293,9 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     func composeArticle(sender: UIBarButtonItem) {
         let cavc = ComposeArticleController()
         cavc.boardID = boardID
-        cavc.delegate = self
+        cavc.completionHandler = { [unowned self] in
+            self.fetchDataDirectly(showHUD: false)
+        }
         let nvc = NTNavigationController(rootViewController: cavc)
         nvc.modalPresentationStyle = .formSheet
         present(nvc, animated: true, completion: nil)
@@ -386,12 +388,5 @@ extension ArticleListViewController: UIViewControllerPreviewingDelegate, SmthVie
             }
         }
         return nil
-    }
-}
-
-extension ArticleListViewController: ComposeArticleControllerDelegate {
-    // ComposeArticleControllerDelegate
-    func articleDidPosted() {
-        fetchDataDirectly(showHUD: false)
     }
 }

@@ -29,7 +29,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     }()
     
     var boardID: String?
-    weak var delegate: ComposeArticleControllerDelegate?
+    var completionHandler: (() -> Void)?
     
     var mode: Mode = .post
     var article: SMArticle?
@@ -193,11 +193,10 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                     attachmentUploadSuccessFul = (self.api.uploadAttImage(image: image, index: 1) != nil)
                 }
                 
-                if content.hasSuffix("\n") {
-                    content = content + self.signature
-                } else {
-                    content = content + "\n" + self.signature
-                }
+                var lines = content.components(separatedBy: .newlines)
+                lines = lines.filter { !$0.contains(self.signature) }
+                content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+                content.append("\n" + self.signature)
                 
                 switch self.mode {
                 case .post:
@@ -220,7 +219,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                 case .modify:
                     if let article = self.article {
                         let result = self.api.modifyArticle(articleID: article.id, title: title, content: content, inBoard: boardID)
-                        print("modify article done. article_id = \(result)")
+                        print("modify article done. ret = \(result)")
                     } else {
                         print("error: no article to modify")
                     }
@@ -242,7 +241,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                             SVProgressHUD.showError(withStatus: "附件上传失败")
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            self.delegate?.articleDidPosted()
+                            self.completionHandler?()
                             self.presentingViewController?.dismiss(animated: true, completion: nil)
                         }
                     } else if let errorDescription = self.api.errorDescription {
@@ -361,8 +360,4 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
             }
         }
     }
-}
-
-protocol ComposeArticleControllerDelegate: class {
-    func articleDidPosted()
 }

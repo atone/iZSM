@@ -522,7 +522,6 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
             if let article = controller.article { //若有文章上下文，则按照回文章格式，否则按照写信格式
                 let cavc = ComposeArticleController()
                 cavc.boardID = article.boardID
-                cavc.delegate = self
                 cavc.article = article
                 cavc.mode = .replyByMail
                 let navigationController = NTNavigationController(rootViewController: cavc)
@@ -600,7 +599,9 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     func cell(_ cell: ArticleContentCell, didClickReply sender: UIView?) {
         let cavc = ComposeArticleController()
         cavc.boardID = cell.article?.boardID
-        cavc.delegate = self
+        cavc.completionHandler = { [unowned self] in
+            self.fetchMoreData()
+        }
         cavc.mode = .reply
         cavc.article = cell.article
         let navigationController = NTNavigationController(rootViewController: cavc)
@@ -616,23 +617,30 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         
         if let currentIndexPath = tableView.indexPath(for: cell) {
             let currentUser = article.authorID
-            let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
-            let soloAction = UIAlertAction(title: soloTitle, style: .default) { (action) in
-                if self.soloUser == nil {
-                    self.soloUser = currentUser
-                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = false
-                    self.savePosition(currentRow: currentIndexPath.row)
-                    self.section = 0
-                    self.fetchData(restorePosition: false, showHUD: true)
-                } else {
-                    self.soloUser = nil
-                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = true
-                    self.restorePosition()
-                    self.fetchData(restorePosition: true, showHUD: true)
-                }
-            }
-            actionSheet.addAction(soloAction)
+            
             if let myself = setting.username, myself.lowercased() == currentUser.lowercased() {
+                let modifyAction = UIAlertAction(title: "修改文章", style: .default) { [unowned self] (action) in
+                    let cavc = ComposeArticleController()
+                    cavc.boardID = article.boardID
+                    cavc.completionHandler = { [unowned self] in
+                        DispatchQueue.global().async {
+                            if let newArticle = self.api.getArticleInBoard(boardID: article.boardID, articleID: article.id) {
+                                DispatchQueue.main.async {
+                                    self.smarticles[currentIndexPath.section][currentIndexPath.row] = newArticle
+                                    self.tableView.beginUpdates()
+                                    self.tableView.reloadRow(at: currentIndexPath, with: .automatic)
+                                    self.tableView.endUpdates()
+                                }
+                            }
+                        }
+                    }
+                    cavc.mode = .modify
+                    cavc.article = article
+                    let navigationController = NTNavigationController(rootViewController: cavc)
+                    navigationController.modalPresentationStyle = .formSheet
+                    self.present(navigationController, animated: true, completion: nil)
+                }
+                actionSheet.addAction(modifyAction)
                 let deleteAction = UIAlertAction(title: "删除文章", style: .destructive) { [unowned self] (action) in
                     networkActivityIndicatorStart(withHUD: true)
                     DispatchQueue.global().async {
@@ -655,6 +663,23 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 }
                 actionSheet.addAction(deleteAction)
             }
+            
+            let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
+            let soloAction = UIAlertAction(title: soloTitle, style: .default) { (action) in
+                if self.soloUser == nil {
+                    self.soloUser = currentUser
+                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = false
+                    self.savePosition(currentRow: currentIndexPath.row)
+                    self.section = 0
+                    self.fetchData(restorePosition: false, showHUD: true)
+                } else {
+                    self.soloUser = nil
+                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = true
+                    self.restorePosition()
+                    self.fetchData(restorePosition: true, showHUD: true)
+                }
+            }
+            actionSheet.addAction(soloAction)
         }
         
         let forwardAction = UIAlertAction(title: "转寄给用户", style: .default) { action in
@@ -815,7 +840,9 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
             let replyAction = UIPreviewAction(title: "回复本帖", style: .default) { [unowned self] (action, controller) in
                 let cavc = ComposeArticleController()
                 cavc.boardID = article.boardID
-                cavc.delegate = self
+                cavc.completionHandler = { [unowned self] in
+                    self.fetchMoreData()
+                }
                 cavc.mode = .reply
                 cavc.article = article
                 let navigationController = NTNavigationController(rootViewController: cavc)
@@ -870,11 +897,3 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
         return nil
     }
 }
-
-extension ArticleContentViewController: ComposeArticleControllerDelegate {
-    // ComposeArticleControllerDelegate
-    func articleDidPosted() {
-        fetchMoreData()
-    }
-}
-

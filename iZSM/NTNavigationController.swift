@@ -48,7 +48,10 @@ class NTNavigationController: UINavigationController {
 extension NTNavigationController: UINavigationControllerDelegate {
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        addPanGesture(viewController)
+        if navigationController.viewControllers.count > 1 { // do not add gesture for the root view controller
+            addPanGesture(viewController)
+        }
+        
     }
     
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {

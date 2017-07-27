@@ -34,6 +34,10 @@
 -(long)net_CrossArticle:(NSString *)board_id :(long)article_id :(NSString *)dest_board;
 -(long)net_ModifyArticle:(NSString *)board_id :(long)article_id :(NSString *)title :(NSString *)content;
 -(long)net_DeleteArticle:(NSString *)board_id :(long)article_id;
+//attachment
+-(NSArray *)net_GetAttachmentList;
+-(NSArray *)net_AddAttachment:(NSData *)attachment :(NSString *)name;
+-(NSArray *)net_DelAttachment:(NSString *)name;
 //mail
 -(int)net_GetMailCountSent;
 -(NSDictionary *)net_GetMailCount;
@@ -67,6 +71,7 @@
 -(int)net_AddUserFriend:(NSString *)userid;
 -(int)net_DelUserFriend:(NSString *)userid;
 
+-(NSDictionary *)net_ModifyUserFace:(NSData *)imageData;
 -(NSDictionary *)net_modifyFace:(NSString *)face_fname;
 //member
 -(NSArray *)net_LoadMember:(NSString *)userid :(long)from :(long)size;

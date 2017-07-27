@@ -16,7 +16,6 @@
 		9C1A3BDB1DE2CDB100CF4A43 /* EULA.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 9C1A3BDA1DE2CDB100CF4A43 /* EULA.rtf */; };
 		9C1A3BE01DE2E5AD00CF4A43 /* libSMTH_0.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */; };
 		9C1A3BEB1DE2E6EB00CF4A43 /* client_signature.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BE61DE2E6EB00CF4A43 /* client_signature.m */; };
-		9C1A3BEC1DE2E6EB00CF4A43 /* SMTHURLConnection+Addon.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BE91DE2E6EB00CF4A43 /* SMTHURLConnection+Addon.m */; };
 		9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BEF1DE2EA9900CF4A43 /* AppSetting.swift */; };
 		9C1A3BF31DE2EA9900CF4A43 /* SmthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BF01DE2EA9900CF4A43 /* SmthAPI.swift */; };
 		9C1A3BF41DE2EA9900CF4A43 /* SmthStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BF11DE2EA9900CF4A43 /* SmthStructs.swift */; };
@@ -107,8 +106,6 @@
 		9C1A3BE51DE2E6EB00CF4A43 /* client_signature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client_signature.h; sourceTree = "<group>"; };
 		9C1A3BE61DE2E6EB00CF4A43 /* client_signature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = client_signature.m; sourceTree = "<group>"; };
 		9C1A3BE71DE2E6EB00CF4A43 /* smth_netop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smth_netop.h; sourceTree = "<group>"; };
-		9C1A3BE81DE2E6EB00CF4A43 /* SMTHURLConnection+Addon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SMTHURLConnection+Addon.h"; sourceTree = "<group>"; };
-		9C1A3BE91DE2E6EB00CF4A43 /* SMTHURLConnection+Addon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SMTHURLConnection+Addon.m"; sourceTree = "<group>"; };
 		9C1A3BEA1DE2E6EB00CF4A43 /* SMTHURLConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMTHURLConnection.h; sourceTree = "<group>"; };
 		9C1A3BEF1DE2EA9900CF4A43 /* AppSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSetting.swift; sourceTree = "<group>"; };
 		9C1A3BF01DE2EA9900CF4A43 /* SmthAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmthAPI.swift; sourceTree = "<group>"; };
@@ -299,8 +296,6 @@
 				9C1A3BE51DE2E6EB00CF4A43 /* client_signature.h */,
 				9C1A3BE61DE2E6EB00CF4A43 /* client_signature.m */,
 				9C1A3BE71DE2E6EB00CF4A43 /* smth_netop.h */,
-				9C1A3BE81DE2E6EB00CF4A43 /* SMTHURLConnection+Addon.h */,
-				9C1A3BE91DE2E6EB00CF4A43 /* SMTHURLConnection+Addon.m */,
 				9C1A3BEA1DE2E6EB00CF4A43 /* SMTHURLConnection.h */,
 			);
 			path = libSmth;
@@ -684,7 +679,6 @@
 				9C2E2C661F223DC100DF34F6 /* ShakeMotion.swift in Sources */,
 				9CA3B1931DE3359200E9B121 /* MJRefreshAutoGifFooter.m in Sources */,
 				9C56E1D61F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m in Sources */,
-				9C1A3BEC1DE2E6EB00CF4A43 /* SMTHURLConnection+Addon.m in Sources */,
 				9CA3B19E1DE3359200E9B121 /* NSBundle+MJRefresh.m in Sources */,
 				9CA3B1A61DE33E8D00E9B121 /* HotTableViewCell.swift in Sources */,
 				9CA3B1961DE3359200E9B121 /* MJRefreshBackGifFooter.m in Sources */,

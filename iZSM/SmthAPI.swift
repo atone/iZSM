@@ -508,19 +508,13 @@ class SmthAPI {
     }
 
     // modify user face image
-    func modifyFaceImage(image: UIImage) {
-        let faceImageName = "face.jpg"
-        let localPath = api.apiGetUserdata_attpost_path(faceImageName)!
-        let localURL = URL(fileURLWithPath: localPath)
+    func modifyFaceImage(image: UIImage) -> SMUser? {
         let data = convertedFaceData(from: image)
-        try! data.write(to: localURL, options: .atomic)
         api.reset_status()
-        api.net_modifyFace(localPath)
-        print("modifiy face complete!")
-        if FileManager.default.fileExists(atPath: localPath) {
-            try! FileManager.default.removeItem(atPath: localPath)
-            print("local cached face image removed!")
+        if let rawData = api.net_ModifyUserFace(data) as? [String: Any] {
+            return userFromDictionary(dict: rawData)
         }
+        return nil
     }
 
     // login to the bbs

@@ -13,20 +13,28 @@ import SVProgressHUD
 
 class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    let titleHintLabel = UILabel()
-    let titleTextField = UITextField()
-    let contentTextView = UITextView()
-    let countLabel = UILabel()
-    var doneButton: UIBarButtonItem?
+    enum Mode {
+        case post
+        case reply
+        case replyByMail
+        case modify
+    }
+    
+    private let titleHintLabel = UILabel()
+    private let titleTextField = UITextField()
+    private let contentTextView = UITextView()
+    private let countLabel = UILabel()
+    private lazy var doneButton: UIBarButtonItem = {
+        UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(sender:)))
+    }()
     
     var boardID: String?
     weak var delegate: ComposeArticleControllerDelegate?
     
-    var replyMode: Bool = false
-    var replyByMail: Bool = false
-    var originalArticle: SMArticle?
+    var mode: Mode = .post
+    var article: SMArticle?
     
-    let signature = AppSetting.shared.signature
+    private let signature = AppSetting.shared.signature
     
     var articleTitle: String? {
         get { return titleTextField.text }
@@ -52,7 +60,6 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     
     private func setupUI() {
         let cornerRadius: CGFloat = 4
-        title = "发表文章"
         titleHintLabel.text = "标题"
         titleHintLabel.font = UIFont.systemFont(ofSize: 14)
         titleHintLabel.textAlignment = .center
@@ -79,14 +86,14 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         countLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         countLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         
-        doneButton = UIBarButtonItem(barButtonSystemItem: .done,
-                                     target: self,
-                                     action: #selector(done(sender:)))
-        doneButton?.isEnabled = false
-        navigationItem.rightBarButtonItem = doneButton
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
-                                                           target: self,
-                                                           action: #selector(cancel(sender:)))
+        if mode == .replyByMail {
+            navigationItem.rightBarButtonItems = [doneButton]
+        } else {
+            let addPhoto = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(addPhoto(sender:)))
+            navigationItem.rightBarButtonItems = [doneButton, addPhoto]
+        }
+        let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel(sender:)))
+        navigationItem.leftBarButtonItem = cancel
         
         view.addSubview(titleHintLabel)
         view.addSubview(titleTextField)
@@ -116,20 +123,6 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
             self.keyboardHeight = make.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-5).constraint
             make.top.equalTo(countLabel.snp.bottom).offset(5)
         }
-        
-        if !replyByMail { //发送邮件时，不支持添加附件
-            let addPhoto = UIBarButtonItem(barButtonSystemItem: .camera,
-                                           target: self,
-                                           action: #selector(addPhoto(sender:)))
-            navigationItem.rightBarButtonItems?.append(addPhoto)
-        }
-        if replyMode {
-            handleReplyMode()
-            contentTextView.becomeFirstResponder()
-            contentTextView.selectedRange = NSMakeRange(0, 0)
-        } else {
-            titleTextField.becomeFirstResponder()
-        }
         updateColor()
     }
     
@@ -146,6 +139,42 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
     }
     
+    func setupMode() {
+        switch mode {
+        case .post:
+            title = "发表文章"
+            doneButton.isEnabled = false
+            titleTextField.becomeFirstResponder()
+        case .reply:
+            title = "回复文章"
+            doneButton.isEnabled = true
+            if let article = article {
+                articleTitle = article.replySubject
+                articleContent = article.quotBody
+            }
+            contentTextView.becomeFirstResponder()
+            contentTextView.selectedRange = NSMakeRange(0, 0)
+        case .replyByMail:
+            title = "私信回复"
+            doneButton.isEnabled = true
+            if let article = article {
+                articleTitle = article.replySubject
+                articleContent = article.quotBody
+            }
+            contentTextView.becomeFirstResponder()
+            contentTextView.selectedRange = NSMakeRange(0, 0)
+        case .modify:
+            title = "修改文章"
+            doneButton.isEnabled = true
+            if let article = article {
+                articleTitle = article.subject
+                articleContent = article.body
+            }
+            contentTextView.becomeFirstResponder()
+            contentTextView.selectedRange = NSMakeRange(0, 0)
+        }
+    }
+    
     @objc private func nightModeChanged(_ notification: Notification) {
         updateColor()
     }
@@ -155,38 +184,60 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     }
     
     func done(sender: UIBarButtonItem) {
-        if let boardID = self.boardID {
+        if let boardID = self.boardID, let title = self.articleTitle, var content = self.articleContent {
             networkActivityIndicatorStart(withHUD: true)
             setEditable(false)
             DispatchQueue.global().async {
                 var attachmentUploadSuccessFul = true
                 if let image = self.attachedImage {
-                    attachmentUploadSuccessFul = self.api.uploadAttImage(image: image)
+                    attachmentUploadSuccessFul = (self.api.uploadAttImage(image: image, index: 1) != nil)
                 }
                 
-                var content = self.articleContent!
                 if content.hasSuffix("\n") {
                     content = content + self.signature
                 } else {
                     content = content + "\n" + self.signature
                 }
-                if self.replyMode {
-                    if self.replyByMail {
-                        let result = self.api.sendMailTo(user: self.originalArticle!.authorID, withTitle: self.articleTitle!, content: content)
-                        print("send mail done. ret = \(result)")
+                
+                switch self.mode {
+                case .post:
+                    let result = self.api.postArticle(title: title, content: content, inBoard: boardID)
+                    print("post article done. article_id = \(result)")
+                case .reply:
+                    if let article = self.article {
+                        let result = self.api.replyArticle(articleID: article.id, title: title, content: content, inBoard: boardID)
+                        print("reply article done. article_id = \(result)")
                     } else {
-                        let result = self.api.replyArticle(articleID: self.originalArticle!.id, title: self.articleTitle!, content: content, inBoard: boardID)
-                        print("reply article done. ret = \(result)")
+                        print("error: no article to reply")
                     }
-                } else {
-                    let result = self.api.postArticle(title: self.articleTitle!, content: content, inBoard: boardID)
-                    print("post article done. ret = \(result)")
+                case .replyByMail:
+                    if let article = self.article {
+                        let result = self.api.sendMailTo(user: article.authorID, withTitle: title, content: content)
+                        print("reply by mail done. ret = \(result)")
+                    } else {
+                        print("error: no article to reply")
+                    }
+                case .modify:
+                    if let article = self.article {
+                        let result = self.api.modifyArticle(articleID: article.id, title: title, content: content, inBoard: boardID)
+                        print("modify article done. article_id = \(result)")
+                    } else {
+                        print("error: no article to modify")
+                    }
                 }
+                
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop(withHUD: true)
                     if self.api.errorCode == 0 {
                         if attachmentUploadSuccessFul {
-                            SVProgressHUD.showSuccess(withStatus: self.replyMode ? "回复成功":"发表成功")
+                            switch self.mode {
+                            case .post:
+                                SVProgressHUD.showSuccess(withStatus: "发表成功")
+                            case .reply, .replyByMail:
+                                SVProgressHUD.showSuccess(withStatus: "回复成功")
+                            case .modify:
+                                SVProgressHUD.showSuccess(withStatus: "修改成功")
+                            }
                         } else {
                             SVProgressHUD.showError(withStatus: "附件上传失败")
                         }
@@ -220,8 +271,8 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                                                selector: #selector(nightModeChanged(_:)),
                                                name: AppTheme.kAppThemeChangedNotification,
                                                object: nil)
-        api.resetStatus() //发文/回复文章时，必须手动resetStatus，因为中间可能会有添加附件等操作
         setupUI()
+        setupMode()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -277,41 +328,6 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         dismiss(animated: true, completion: nil)
     }
     
-    func handleReplyMode() {
-        title = replyByMail ? "邮件回复" : "回复文章"
-        doneButton?.isEnabled = true
-        if let article = originalArticle {
-            // 处理标题
-            if article.subject.lowercased().hasPrefix("re:") {
-                articleTitle = article.subject
-            } else {
-                articleTitle = "Re: " + article.subject
-            }
-            countLabel.text = "\((articleTitle!).characters.count)"
-            // 处理内容
-            var tempContent = "\n【 在 \(article.authorID) 的大作中提到: 】\n"
-            var origContent = article.body + "\n"
-            
-            if let range = origContent.range(of: signature) {
-                origContent.replaceSubrange(range, with: "")
-            }
-            
-            for _ in 1...3 {
-                if let linebreak = origContent.range(of: "\n") {
-                    tempContent += (": " + origContent.substring(to: linebreak.upperBound))
-                    origContent = origContent.substring(from: linebreak.upperBound)
-                } else {
-                    break
-                }
-            }
-            if origContent.range(of: "\n") != nil {
-                tempContent += ": ....................\n"
-            }
-            
-            articleContent = tempContent
-        }
-    }
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -339,9 +355,9 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         if let length = textField.text?.characters.count {
             countLabel.text = "\(length)"
             if length > 0 {
-                doneButton?.isEnabled = true
+                doneButton.isEnabled = true
             } else {
-                doneButton?.isEnabled = false
+                doneButton.isEnabled = false
             }
         }
     }

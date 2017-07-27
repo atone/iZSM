@@ -523,15 +523,15 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
                 let cavc = ComposeArticleController()
                 cavc.boardID = article.boardID
                 cavc.delegate = self
-                cavc.replyMode = true
-                cavc.originalArticle = article
-                cavc.replyByMail = true
+                cavc.article = article
+                cavc.mode = .replyByMail
                 let navigationController = NTNavigationController(rootViewController: cavc)
                 navigationController.modalPresentationStyle = .formSheet
                 present(navigationController, animated: true, completion: nil)
             } else {
                 let cevc = ComposeEmailController()
-                cevc.preReceiver = userID
+                cevc.email = SMMail(subject: "", body: "", authorID: userID, position: 0, time: Date(), flags: "", attachments: [])
+                cevc.mode = .post
                 let navigationController = NTNavigationController(rootViewController: cevc)
                 navigationController.modalPresentationStyle = .formSheet
                 present(navigationController, animated: true, completion: nil)
@@ -601,9 +601,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         let cavc = ComposeArticleController()
         cavc.boardID = cell.article?.boardID
         cavc.delegate = self
-        cavc.replyMode = true
-        cavc.originalArticle = cell.article
-        cavc.replyByMail = false
+        cavc.mode = .reply
+        cavc.article = cell.article
         let navigationController = NTNavigationController(rootViewController: cavc)
         navigationController.modalPresentationStyle = .formSheet
         present(navigationController, animated: true, completion: nil)
@@ -817,9 +816,8 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
                 let cavc = ComposeArticleController()
                 cavc.boardID = article.boardID
                 cavc.delegate = self
-                cavc.replyMode = true
-                cavc.originalArticle = article
-                cavc.replyByMail = false
+                cavc.mode = .reply
+                cavc.article = article
                 let navigationController = NTNavigationController(rootViewController: cavc)
                 navigationController.modalPresentationStyle = .formSheet
                 self.present(navigationController, animated: true, completion: nil)

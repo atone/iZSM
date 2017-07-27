@@ -122,8 +122,8 @@ class ReferContentViewController: UIViewController, UITextViewDelegate, SwipePop
             let reference = self.reference {
             let cavc = ComposeArticleController()
             cavc.boardID = reference.boardID
-            cavc.replyMode = true
-            cavc.originalArticle = article
+            cavc.mode = .reply
+            cavc.article = article
             let navigationController = NTNavigationController(rootViewController: cavc)
             navigationController.modalPresentationStyle = .formSheet
             present(navigationController, animated: true, completion: nil)
@@ -250,15 +250,15 @@ extension ReferContentViewController: UserInfoViewControllerDelegate {
             if let article = self.article { //若有文章上下文，则按照回文章格式，否则按照写信格式
                 let cavc = ComposeArticleController()
                 cavc.boardID = article.boardID
-                cavc.replyMode = true
-                cavc.originalArticle = article
-                cavc.replyByMail = true
+                cavc.article = article
+                cavc.mode = .replyByMail
                 let navigationController = NTNavigationController(rootViewController: cavc)
                 navigationController.modalPresentationStyle = .formSheet
                 present(navigationController, animated: true, completion: nil)
             } else {
                 let cevc = ComposeEmailController()
-                cevc.preReceiver = userID
+                cevc.email = SMMail(subject: "", body: "", authorID: userID, position: 0, time: Date(), flags: "", attachments: [])
+                cevc.mode = .post
                 let navigationController = NTNavigationController(rootViewController: cevc)
                 navigationController.modalPresentationStyle = .formSheet
                 present(navigationController, animated: true, completion: nil)

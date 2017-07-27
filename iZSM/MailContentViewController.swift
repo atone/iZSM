@@ -126,8 +126,8 @@ class MailContentViewController: UIViewController, UITextViewDelegate, SwipePopa
     func reply(sender: UIBarButtonItem) {
         if let mail = self.detailMail {
             let cevc = ComposeEmailController()
-            cevc.originalEmail = mail
-            cevc.replyMode = true
+            cevc.email = mail
+            cevc.mode = .reply
             let navigationController = NTNavigationController(rootViewController: cevc)
             navigationController.modalPresentationStyle = .formSheet
             present(navigationController, animated: true, completion: nil)

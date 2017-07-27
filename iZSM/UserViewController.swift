@@ -307,14 +307,7 @@ extension UserViewController: UserInfoViewControllerDelegate {
     }
     
     func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem) {
-        if let userID = controller.user?.id {
-            dismiss(animated: true, completion: nil)
-            let cevc = ComposeEmailController()
-            cevc.preReceiver = userID
-            let navigationController = NTNavigationController(rootViewController: cevc)
-            navigationController.modalPresentationStyle = .formSheet
-            present(navigationController, animated: true, completion: nil)
-        }
+        
     }
     
     func shouldEnableSearch() -> Bool {

@@ -11,25 +11,29 @@ import SnapKit
 import SVProgressHUD
 
 class ComposeEmailController: UIViewController, UITextFieldDelegate {
-
-    let sendToLabel = UILabel()
-    let receiverTextField = UITextField()
-    let titleHintLabel = UILabel()
-    let titleTextField = UITextField()
-    let contentTextView = UITextView()
-    let countLabel = UILabel()
-    var doneButton: UIBarButtonItem?
     
-    var preTitle: String?
-    var preContent: String?
-    var preReceiver: String?
+    enum Mode {
+        case post
+        case reply
+        case feedback
+    }
+
+    private let sendToLabel = UILabel()
+    private let receiverTextField = UITextField()
+    private let titleHintLabel = UILabel()
+    private let titleTextField = UITextField()
+    private let contentTextView = UITextView()
+    private let countLabel = UILabel()
+    private lazy var doneButton: UIBarButtonItem = {
+        UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(sender:)))
+    }()
     
     weak var delegate: ComposeEmailControllerDelegate?
     
-    var replyMode = false
-    var originalEmail: SMMail?
+    var email: SMMail?
+    var mode: Mode = .post
     
-    let signature = AppSetting.shared.signature
+    private let signature = AppSetting.shared.signature
     
     var emailTitle: String? {
         get { return titleTextField.text }
@@ -59,7 +63,6 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     
     private func setupUI() {
         let cornerRadius: CGFloat = 4
-        title = "写邮件"
         sendToLabel.text = "寄给"
         sendToLabel.font = UIFont.systemFont(ofSize: 14)
         sendToLabel.textAlignment = .center
@@ -100,10 +103,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         countLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         countLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         
-        doneButton = UIBarButtonItem(barButtonSystemItem: .done,
-                                     target: self,
-                                     action: #selector(done(sender:)))
-        doneButton?.isEnabled = false
+        doneButton.isEnabled = false
         navigationItem.rightBarButtonItem = doneButton
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
                                                            target: self,
@@ -153,30 +153,56 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             self.keyboardHeight = make.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-5).constraint
             make.top.equalTo(countLabel.snp.bottom).offset(5)
         }
-        
-        if replyMode {
-            handleReplyMode()
-            contentTextView.becomeFirstResponder()
-            contentTextView.selectedRange = NSMakeRange(0, 0)
-        } else {
-            emailTitle = preTitle
-            emailContent = preContent
-            emailReceiver = preReceiver
-            if let emailTitle = emailTitle {
-                countLabel.text = "\((emailTitle).characters.count)"
+        updateColor()
+    }
+    
+    func setupMode() {
+        switch mode {
+        case .post:
+            title = "撰写邮件"
+            doneButton.isEnabled = false
+            if let email = email {
+                emailTitle = email.subject
+                emailContent = email.body
+                emailReceiver = email.authorID
             }
-            
             if emailReceiver == nil || emailReceiver!.characters.count == 0 {
                 receiverTextField.becomeFirstResponder()
             } else if emailTitle == nil || emailTitle!.characters.count == 0 {
                 titleTextField.becomeFirstResponder()
             } else {
-                doneButton?.isEnabled = true
+                doneButton.isEnabled = true
+                contentTextView.becomeFirstResponder()
+                contentTextView.selectedRange = NSMakeRange(0, 0)
+            }
+        case .reply:
+            title = "回复邮件"
+            if let email = email {
+                emailTitle = email.replySubject
+                emailContent = email.quotBody
+                emailReceiver = email.authorID
+            }
+            doneButton.isEnabled = true
+            contentTextView.becomeFirstResponder()
+            contentTextView.selectedRange = NSMakeRange(0, 0)
+        case .feedback:
+            title = "邮件反馈"
+            doneButton.isEnabled = false
+            if let email = email {
+                emailTitle = email.subject
+                emailContent = email.body
+                emailReceiver = email.authorID
+            }
+            if emailReceiver == nil || emailReceiver!.characters.count == 0 {
+                receiverTextField.becomeFirstResponder()
+            } else if emailTitle == nil || emailTitle!.characters.count == 0 {
+                titleTextField.becomeFirstResponder()
+            } else {
+                doneButton.isEnabled = true
                 contentTextView.becomeFirstResponder()
                 contentTextView.selectedRange = NSMakeRange(0, 0)
             }
         }
-        updateColor()
     }
     
     func updateColor() {
@@ -207,39 +233,43 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     }
     
     func done(sender: UIBarButtonItem) {
-        networkActivityIndicatorStart(withHUD: true)
-        setEditable(false)
-        DispatchQueue.global().async {
-            var content = self.emailContent!
-            if content.hasSuffix("\n") {
-                content = content + self.signature
-            } else {
-                content = content + "\n" + self.signature
-            }
-            let result = self.api.sendMailTo(user: self.emailReceiver!, withTitle: self.emailTitle!, content: content)
-            print("send mail status: \(result)")
-            DispatchQueue.main.async {
-                networkActivityIndicatorStop(withHUD: true)
-                if self.api.errorCode == 0 {
-                    if self.replyMode {
-                        SVProgressHUD.showSuccess(withStatus: "回信成功")
-                    } else {
-                        SVProgressHUD.showSuccess(withStatus: "寄信成功")
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        self.delegate?.emailDidPosted()
-                        self.presentingViewController?.dismiss(animated: true, completion: nil)
-                    }
-                } else if let errorDescription = self.api.errorDescription {
-                    if errorDescription != "" {
-                        SVProgressHUD.showInfo(withStatus: errorDescription)
+        if let receiver = self.emailReceiver, let title = self.emailTitle, var content = self.emailContent {
+            networkActivityIndicatorStart(withHUD: true)
+            setEditable(false)
+            DispatchQueue.global().async {
+                if content.hasSuffix("\n") {
+                    content = content + self.signature
+                } else {
+                    content = content + "\n" + self.signature
+                }
+                let result = self.api.sendMailTo(user: receiver, withTitle: title, content: content)
+                print("send mail done. ret = \(result)")
+                DispatchQueue.main.async {
+                    networkActivityIndicatorStop(withHUD: true)
+                    if self.api.errorCode == 0 {
+                        switch self.mode {
+                        case .post:
+                            SVProgressHUD.showSuccess(withStatus: "寄信成功")
+                        case .reply:
+                            SVProgressHUD.showSuccess(withStatus: "回信成功")
+                        case .feedback:
+                            SVProgressHUD.showSuccess(withStatus: "感谢反馈")
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            self.delegate?.emailDidPosted()
+                            self.presentingViewController?.dismiss(animated: true, completion: nil)
+                        }
+                    } else if let errorDescription = self.api.errorDescription {
+                        if errorDescription != "" {
+                            SVProgressHUD.showInfo(withStatus: errorDescription)
+                        } else {
+                            SVProgressHUD.showError(withStatus: "出错了")
+                        }
+                        self.setEditable(true)
                     } else {
                         SVProgressHUD.showError(withStatus: "出错了")
+                        self.setEditable(true)
                     }
-                    self.setEditable(true)
-                } else {
-                    SVProgressHUD.showError(withStatus: "出错了")
-                    self.setEditable(true)
                 }
             }
         }
@@ -256,41 +286,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                                                name: AppTheme.kAppThemeChangedNotification,
                                                object: nil)
         setupUI()
-    }
-    
-    func handleReplyMode() {
-        title = "回复邮件"
-        doneButton?.isEnabled = true
-        if let email = originalEmail {
-            // 处理标题
-            if email.subject.lowercased().hasPrefix("re: ") {
-                emailTitle = email.subject
-            } else {
-                emailTitle = "Re: " + email.subject
-            }
-            emailReceiver = email.authorID
-            countLabel.text = "\((emailTitle!).characters.count)"
-            // 处理内容
-            var tempContent = "\n【 在 \(email.authorID) 的来信中提到: 】\n"
-            var origContent = email.body + "\n"
-            
-            if let range = origContent.range(of: signature) {
-                origContent.replaceSubrange(range, with: "")
-            }
-            
-            for _ in 1...3 {
-                if let linebreak = origContent.range(of: "\n") {
-                    tempContent += (": " + origContent.substring(to: linebreak.upperBound))
-                    origContent = origContent.substring(from: linebreak.upperBound)
-                } else {
-                    break
-                }
-            }
-            if origContent.range(of: "\n") != nil {
-                tempContent += ": ....................\n"
-            }
-            emailContent = tempContent
-        }
+        setupMode()
     }
     
     deinit {
@@ -332,9 +328,9 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         let userLength = receiverTextField.text!.characters.count
         let titleLength = titleTextField.text!.characters.count
         if userLength > 0 && titleLength > 0 {
-            doneButton?.isEnabled = true
+            doneButton.isEnabled = true
         } else {
-            doneButton?.isEnabled = false
+            doneButton.isEnabled = false
         }
     }
 

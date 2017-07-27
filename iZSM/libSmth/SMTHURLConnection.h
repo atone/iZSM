@@ -8,30 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol SMTHURLConnectionDelegate;
+@interface SMTHURLConnection : NSObject
 
-@interface SMTHURLConnection : NSObject<NSURLConnectionDelegate, NSURLConnectionDataDelegate>
-{
-@public
-    int net_error;
-    NSString * net_error_desc;
-    int net_progress;
-
-@private
-    bool net_notoken_nosig;
-    int net_nocheckerror;
-    
-    bool net_usercancel;
-    
-    NSCondition * net_cond;
-    NSMutableData *net_responseData;
-    
-    NSURLConnection * net_connection;
-    
-    long last_thread_cnt;
-}
-
-@property (weak) id<SMTHURLConnectionDelegate> delegate;
+@property (nonatomic, readonly) int net_error;
+@property (nonatomic, readonly) NSString *net_error_desc;
 
 /* must call after [[alloc]init] */
 -(void)init_smth;
@@ -52,6 +32,8 @@
 -(long)net_ForwardArticle:(NSString *)board_id :(long)article_id :(NSString *)user;
 -(long)net_ReplyArticle:(NSString *)board_id :(long)reply_id :(NSString *)title :(NSString *)content;
 -(long)net_CrossArticle:(NSString *)board_id :(long)article_id :(NSString *)dest_board;
+-(long)net_ModifyArticle:(NSString *)board_id :(long)article_id :(NSString *)title :(NSString *)content;
+-(long)net_DeleteArticle:(NSString *)board_id :(long)article_id;
 //mail
 -(int)net_GetMailCountSent;
 -(NSDictionary *)net_GetMailCount;
@@ -105,13 +87,5 @@
 -(int)net_LoginBBS:(NSString*)usr :(NSString*)pwd;
 -(void)net_LogoutBBS;
 
-
-@end
-
-@protocol SMTHURLConnectionDelegate <NSObject>
-
-@optional
-/* called when progress updated */
--(void)smth_update_progress:(SMTHURLConnection *)con;
 
 @end

@@ -633,6 +633,29 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 }
             }
             actionSheet.addAction(soloAction)
+            if let myself = setting.username, myself.lowercased() == currentUser.lowercased() {
+                let deleteAction = UIAlertAction(title: "删除文章", style: .destructive) { [unowned self] (action) in
+                    networkActivityIndicatorStart(withHUD: true)
+                    DispatchQueue.global().async {
+                        let _ = self.api.deleteArticle(articleID: article.id, inBoard: article.boardID)
+                        DispatchQueue.main.async {
+                            networkActivityIndicatorStop(withHUD: true)
+                            if self.api.errorCode == 0 {
+                                SVProgressHUD.showSuccess(withStatus: "删除成功")
+                                self.smarticles[currentIndexPath.section].remove(at: currentIndexPath.row)
+                                self.tableView.beginUpdates()
+                                self.tableView.deleteRows(at: [currentIndexPath], with: .automatic)
+                                self.tableView.endUpdates()
+                            } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
+                                SVProgressHUD.showError(withStatus: self.api.errorDescription)
+                            } else {
+                                SVProgressHUD.showError(withStatus: "出错了")
+                            }
+                        }
+                    }
+                }
+                actionSheet.addAction(deleteAction)
+            }
         }
         
         let forwardAction = UIAlertAction(title: "转寄给用户", style: .default) { action in

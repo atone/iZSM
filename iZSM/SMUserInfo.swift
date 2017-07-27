@@ -37,6 +37,22 @@ class SMUserInfo: Object {
 class SMUserInfoUtil {
     private static var queryingSet = Set<String>()
     private static let lockQueue = DispatchQueue(label: "cn.yunaitong.iZSM.userLockQueue")
+    
+    class func updateSMUser(with user:SMUser, callback: @escaping () -> Void) {
+        DispatchQueue.global().async {
+            autoreleasepool {
+                let realm = try! Realm()
+                let userInfo = userInfoFrom(user: user, updateTime: Date())
+                try! realm.write {
+                    realm.add(userInfo, update: true)
+                }
+                print("update user info for \(user.id) success!")
+                DispatchQueue.main.async {
+                    callback()
+                }
+            }
+        }
+    }
 
     class func querySMUser(for userID: String, forceUpdate: Bool = false, callback: @escaping (SMUser?) -> Void) {
         DispatchQueue.global().async {

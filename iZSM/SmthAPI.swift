@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SVProgressHUD
 
 class SmthAPI {
     init() {
@@ -26,27 +25,6 @@ class SmthAPI {
     var accessToken: String? {
         get { return apiGetAccessToken() }
         set { apiSetAccessToken(newValue) }
-    }
-
-    func displayErrorIfNeeded() {
-        if errorCode != 0 {
-            var errorMsg: String = "未知错误"
-            if errorCode == -1 {
-                errorMsg = "网络错误"
-            } else if errorCode == 10014 {
-                errorMsg = "token失效，需要重新登录"
-            } else if errorCode == 10417 {
-                errorMsg = "您还没有驻版"
-            } else if let errorDesc = errorDescription, !errorDesc.isEmpty {
-                errorMsg = errorDesc
-            } else if errorCode < 0 {
-                errorMsg = "服务器错误"
-            } else if errorCode < 11000 {
-                errorMsg = "系统错误"
-            }
-            SVProgressHUD.showInfo(withStatus: errorMsg)
-            print("\(errorMsg), error code \(errorCode)")
-        }
     }
     
     //MARK: - Up Load Attachments

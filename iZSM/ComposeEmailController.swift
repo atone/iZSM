@@ -237,11 +237,11 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             networkActivityIndicatorStart(withHUD: true)
             setEditable(false)
             DispatchQueue.global().async {
-                if content.hasSuffix("\n") {
-                    content = content + self.signature
-                } else {
-                    content = content + "\n" + self.signature
-                }
+                var lines = content.components(separatedBy: .newlines)
+                lines = lines.filter { !$0.contains(self.signature) }
+                content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+                content.append("\n" + self.signature)
+                
                 let result = self.api.sendMailTo(user: receiver, withTitle: title, content: content)
                 print("send mail done. ret = \(result)")
                 DispatchQueue.main.async {

@@ -193,7 +193,18 @@ class SmthAPI {
         api.reset_status()
         return api.net_CrossArticle(fromBoard, articleID, toBoard)
     }
-
+    
+    // modify article
+    func modifyArticle(articleID: Int, title: String, content: String, inBoard boardID: String) -> Int {
+        api.reset_status()
+        return api.net_ModifyArticle(boardID, articleID, title, content)
+    }
+    
+    // delete article
+    func deleteArticle(articleID: Int, inBoard boardID: String) -> Int {
+        api.reset_status()
+        return api.net_DeleteArticle(boardID, articleID)
+    }
 
     // MARK: - Mail
     // get sent mail count

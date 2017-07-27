@@ -54,7 +54,7 @@ struct SMArticle {
     }
     
     var quotBody: String {
-        let lines = body.components(separatedBy: "\n")
+        let lines = body.components(separatedBy: .newlines)
         var tmpBody = "\n【 在 \(authorID) 的大作中提到: 】\n"
         for idx in 0..<min(lines.count, 3) {
             tmpBody.append(": \(lines[idx])\n")
@@ -212,7 +212,7 @@ struct SMMail {
     }
     
     var quotBody: String {
-        let lines = body.components(separatedBy: "\n")
+        let lines = body.components(separatedBy: .newlines)
         var tmpBody = "\n【 在 \(authorID) 的来信中提到: 】\n"
         for idx in 0..<min(lines.count, 3) {
             tmpBody.append(": \(lines[idx])\n")

@@ -50,21 +50,24 @@ class SmthAPI {
     }
     
     //MARK: - Up Load Attachments
-    //if upload succeed, return true, otherwise, false
-    func uploadAttImage(image: UIImage) -> Bool {
-        let attImageName = "image.jpg"
-        let localPath = api.apiGetUserdata_attpost_path(attImageName)!
-        let localURL = URL(fileURLWithPath: localPath)
+    //if upload succeed, return attachment array, otherwise, nil
+    func uploadAttImage(image: UIImage, index: Int) -> [SMAttachment]? {
         let data = convertedAttData(from: image)
-        try! data.write(to: localURL, options: .atomic)
-        var error:Int32 = 0
-        let ret = apiNetAddAttachment(localPath, &error)
-        print("upload attachment done! ret = \(ret)")
-        if FileManager.default.fileExists(atPath: localPath) {
-            try! FileManager.default.removeItem(atPath: localPath)
-            print("local cached attachment removed!")
+        if let rawAttachments = api.net_AddAttachment(data, "\(index).jpg") as? [[String:Any]] {
+            var attachments = [SMAttachment]()
+            for rawAttachment in rawAttachments {
+                if
+                    let name = rawAttachment["name"] as? String,
+                    let size = rawAttachment["size"] as? Int
+                {
+                    attachments.append(SMAttachment(name: name, pos: -1, size: size))
+                }
+            }
+            if !attachments.isEmpty {
+                return attachments
+            }
         }
-        return (ret == 0)
+        return nil
     }
 
     //MARK: - Reset API's Status

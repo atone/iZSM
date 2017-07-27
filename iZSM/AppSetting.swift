@@ -71,7 +71,7 @@ class AppSetting {
     }
     
     var signature: String {
-        return "\n- 来自「最水木 for \(UIDevice.current.model)」"
+        return "- 来自「最水木 for \(UIDevice.current.model)」"
     }
 
     var username: String? {

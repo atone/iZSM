@@ -31,6 +31,7 @@ class SmthAPI {
     //if upload succeed, return attachment array, otherwise, nil
     func uploadAttImage(image: UIImage, index: Int) -> [SMAttachment]? {
         let data = convertedAttData(from: image)
+        api.reset_status()
         if let rawAttachments = api.net_AddAttachment(data, "\(index).jpg") as? [[String:Any]] {
             var attachments = [SMAttachment]()
             for rawAttachment in rawAttachments {
@@ -46,12 +47,6 @@ class SmthAPI {
             }
         }
         return nil
-    }
-
-    //MARK: - Reset API's Status
-    // usually you don't wanna call this method directly unless when you have to deal with attachments
-    func resetStatus() {
-        api.reset_status()
     }
 
     //MARK: - Thread
@@ -152,8 +147,8 @@ class SmthAPI {
     }
 
     // post article in board
-    // should call reset status before
     func postArticle(title: String, content: String, inBoard boardID: String) -> Int {
+        api.reset_status()
         return api.net_PostArticle(boardID, title, content)
     }
 
@@ -164,8 +159,8 @@ class SmthAPI {
     }
 
     // reply article
-    // should call reset status before
     func replyArticle(articleID: Int, title: String, content: String, inBoard boardID: String) -> Int {
+        api.reset_status()
         return api.net_ReplyArticle(boardID, articleID, title, content)
     }
 

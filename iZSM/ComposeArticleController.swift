@@ -181,7 +181,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     }
     
     @objc private func cancel(_ sender: UIBarButtonItem) {
-        presentingViewController?.dismiss(animated: true)
+        dismiss(animated: true)
     }
     
     @objc private func done(_ sender: UIBarButtonItem) {
@@ -245,7 +245,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.completionHandler?()
-                            self.presentingViewController?.dismiss(animated: true)
+                            self.dismiss(animated: true)
                         }
                     } else if let errorDescription = self.api.errorDescription {
                         if errorDescription != "" {

@@ -73,6 +73,11 @@ class AppSetting {
     var signature: String {
         return "- 来自「最水木 for \(UIDevice.current.model)」"
     }
+    
+    var signatureRegularExpression : NSRegularExpression {
+        let regx = try! NSRegularExpression(pattern: "- 来自「最水木 for \\w*」")
+        return regx
+    }
 
     var username: String? {
         get {

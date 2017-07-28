@@ -240,7 +240,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                 var lines = content.components(separatedBy: .newlines)
                 lines = lines.filter { !$0.contains(self.signature) }
                 content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
-                content.append("\n" + self.signature)
+                content.append("\n\n" + self.signature)
                 
                 let result = self.api.sendMailTo(user: receiver, withTitle: title, content: content)
                 print("send mail done. ret = \(result)")

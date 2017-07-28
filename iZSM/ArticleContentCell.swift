@@ -190,9 +190,18 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         }
         contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: size.width - leftMargin - rightMargin, height: size.height - margin1 * 2 - margin3 - imageLength)
         
-        if imageViews.count == 1 {
+        switch imageViews.count {
+        case 1:
             imageViews.first!.frame = CGRect(x: 0, y: size.height - size.width, width: size.width, height: size.width)
-        } else {
+        case 2, 4:
+            for (index, imageView) in imageViews.enumerated() {
+                let length = (size.width - blankWidth) / 2
+                let startY = size.height - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / 2) - blankWidth)
+                let offsetY = (length + blankWidth) * CGFloat(index / 2)
+                let X = 0 + CGFloat(index % 2) * (length + blankWidth)
+                imageView.frame = CGRect(x: X, y: startY + offsetY, width: length, height: length)
+            }
+        case let count where count == 3 || count > 4:
             for (index, imageView) in imageViews.enumerated() {
                 let length = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
                 let startY = size.height - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth)
@@ -200,6 +209,8 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
                 let X = 0 + CGFloat(index % Int(picNumPerLine)) * (length + blankWidth)
                 imageView.frame = CGRect(x: X, y: startY + offsetY, width: length, height: length)
             }
+        default:
+            break
         }
     }
     
@@ -211,11 +222,16 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         var imageLength: CGFloat = 0
         if !setting.noPicMode {
             let imageCount = article?.imageAtt.count ?? 0
-            if imageCount == 1 {
+            switch imageCount {
+            case 1, 4:
                 imageLength = size.width
-            } else if imageCount > 1 {
+            case 2:
+                imageLength = (size.width - blankWidth) / 2
+            case let length where length == 3 || length > 4:
                 let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
                 imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageCount) / picNumPerLine) - blankWidth
+            default:
+                break
             }
         }
         return CGSize(width: size.width, height: margin1 * 2 + ceil(rect.height) + margin3 + imageLength)

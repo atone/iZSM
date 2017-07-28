@@ -133,7 +133,7 @@ class MailBoxViewController: BaseTableViewController {
         }
         let navigationController = NTNavigationController(rootViewController: cec)
         navigationController.modalPresentationStyle = .formSheet
-        present(navigationController, animated: true, completion: nil)
+        present(navigationController, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

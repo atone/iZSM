@@ -243,11 +243,11 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                         self.addMemberWithBoardID(boardID: board.boardID)
                     }
                     actionSheet.addAction(addMemAction)
-                    actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+                    actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
                     let cell = tableView.cellForRow(at: indexPath)!
                     actionSheet.popoverPresentationController?.sourceView = cell
                     actionSheet.popoverPresentationController?.sourceRect = cell.bounds
-                    present(actionSheet, animated: true, completion: nil)
+                    present(actionSheet, animated: true)
                 }
             }
         }

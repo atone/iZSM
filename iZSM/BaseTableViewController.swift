@@ -75,7 +75,7 @@ class BaseTableViewController: NTTableViewController {
             eulaViewController.delegate = self
             let navigationController = NTNavigationController(rootViewController: eulaViewController)
             navigationController.modalPresentationStyle = .formSheet
-            present(navigationController, animated: true, completion: nil)
+            present(navigationController, animated: true)
         } else if let accessToken = setting.accessToken { // fetch data directly
             api.accessToken = accessToken
             fetchDataDirectly(showHUD: showHUD) {
@@ -108,7 +108,7 @@ class BaseTableViewController: NTTableViewController {
             let loginViewController = LoginViewController()
             loginViewController.delegate = self
             let navigationController = NTNavigationController(rootViewController: loginViewController)
-            present(navigationController, animated: false, completion: nil)
+            present(navigationController, animated: false)
         }
     }
     
@@ -149,7 +149,7 @@ class BaseTableViewController: NTTableViewController {
 extension BaseTableViewController: LoginViewControllerDelegate {
     func loginDidSuccessful() {
         print("login successful")
-        dismiss(animated: false, completion: nil)
+        dismiss(animated: false)
         fetchDataDirectly(showHUD: true)
     }
 }
@@ -159,14 +159,14 @@ extension BaseTableViewController: EulaViewControllerDelegate {
         // set agree to true
         setting.eulaAgreed = true
         print("agree tapped")
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
         fetchData(showHUD: true)
     }
     
     func userDeclinedEula(_ controller: EulaViewController) {
         let alert = UIAlertController(title: nil, message: "您必须同意《水木社区管理规则》才能使用本软件。", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "确定", style: .default, handler: nil))
-        controller.present(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "确定", style: .default))
+        controller.present(alert, animated: true)
         print("decline tapped")
     }
 }

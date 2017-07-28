@@ -147,7 +147,7 @@ class AboutViewController: NTTableViewController {
                 if !success {
                     let alert = UIAlertController(title: "赞赏失败", message: "很抱歉，未能完成购买，\n请您重新尝试。", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "好的", style: .default))
-                    self.present(alert, animated: true, completion: nil)
+                    self.present(alert, animated: true)
                 }
             }
         }
@@ -184,11 +184,11 @@ class AboutViewController: NTTableViewController {
             cevc.mode = .feedback
             let navigationController = NTNavigationController(rootViewController: cevc)
             navigationController.modalPresentationStyle = .formSheet
-            present(navigationController, animated: true, completion: nil)
+            present(navigationController, animated: true)
         case IndexPath(row: 2, section: 1):
             let urlAddress = "https://www.yunaitong.cn/zsmth-released.html"
             let webViewController = SFSafariViewController(url: URL(string: urlAddress)!)
-            present(webViewController, animated: true, completion: nil)
+            present(webViewController, animated: true)
         default:
             break
         }

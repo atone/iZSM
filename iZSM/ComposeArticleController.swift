@@ -181,7 +181,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     }
     
     @objc private func cancel(_ sender: UIBarButtonItem) {
-        presentingViewController?.dismiss(animated: true, completion: nil)
+        presentingViewController?.dismiss(animated: true)
     }
     
     @objc private func done(_ sender: UIBarButtonItem) {
@@ -245,7 +245,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.completionHandler?()
-                            self.presentingViewController?.dismiss(animated: true, completion: nil)
+                            self.presentingViewController?.dismiss(animated: true)
                         }
                     } else if let errorDescription = self.api.errorDescription {
                         if errorDescription != "" {
@@ -291,7 +291,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                     picker.delegate = self
                     picker.sourceType = .photoLibrary
                     picker.modalPresentationStyle = .formSheet
-                    self.present(picker, animated: true, completion: nil)
+                    self.present(picker, animated: true)
                 }
                 actionSheet.addAction(camera)
             }
@@ -300,26 +300,26 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                     let picker = UIImagePickerController()
                     picker.delegate = self
                     picker.sourceType = .camera
-                    self.present(picker, animated: true, completion: nil)
+                    self.present(picker, animated: true)
                 }
                 actionSheet.addAction(camera)
             }
-            actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+            actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
             actionSheet.popoverPresentationController?.barButtonItem = sender
-            present(actionSheet, animated: true, completion: nil)
+            present(actionSheet, animated: true)
         } else {
             let alert = UIAlertController(title: "是否删除图片附件？", message: nil, preferredStyle: .alert)
             let deleteAction = UIAlertAction(title: "删除", style: .destructive)  { [unowned self] action in
                 self.attachedImage = nil
             }
             alert.addAction(deleteAction)
-            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-            present(alert, animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title: "取消", style: .cancel))
+            present(alert, animated: true)
         }
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
         let type = info[UIImagePickerControllerMediaType] as! String
         if type == kUTTypeImage as String {
             attachedImage = info[UIImagePickerControllerOriginalImage] as? UIImage
@@ -327,7 +327,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
     
     deinit {

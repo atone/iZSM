@@ -230,7 +230,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     }
     
     func cancel(sender: UIBarButtonItem) {
-        presentingViewController?.dismiss(animated: true, completion: nil)
+        presentingViewController?.dismiss(animated: true)
     }
     
     func done(sender: UIBarButtonItem) {
@@ -260,7 +260,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.completionHandler?()
-                            self.presentingViewController?.dismiss(animated: true, completion: nil)
+                            self.presentingViewController?.dismiss(animated: true)
                         }
                     } else if let errorDescription = self.api.errorDescription {
                         if errorDescription != "" {

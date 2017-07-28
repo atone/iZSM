@@ -159,9 +159,9 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             self.prepareForSearch()
         }
         actionSheet.addAction(userAction)
-        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
         actionSheet.popoverPresentationController?.barButtonItem = sender
-        present(actionSheet, animated: true, completion: nil)
+        present(actionSheet, animated: true)
     }
     
     func prepareForSearch() {
@@ -298,7 +298,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         }
         let nvc = NTNavigationController(rootViewController: cavc)
         nvc.modalPresentationStyle = .formSheet
-        present(nvc, animated: true, completion: nil)
+        present(nvc, animated: true)
     }
 }
 
@@ -358,7 +358,7 @@ extension ArticleListViewController: UIViewControllerPreviewingDelegate, SmthVie
                 }
                 let openAction = UIPreviewAction(title: "浏览网页版", style: .default) {[unowned self] (action, controller) in
                     let webViewController = SFSafariViewController(url: URL(string: urlString)!)
-                    self.present(webViewController, animated: true, completion: nil)
+                    self.present(webViewController, animated: true)
                 }
                 actions.append(openAction)
                 if let cell = cell(for: articleID, and: boardID) {
@@ -369,7 +369,7 @@ extension ArticleListViewController: UIViewControllerPreviewingDelegate, SmthVie
                                                                               applicationActivities: nil)
                         activityViewController.popoverPresentationController?.sourceView = cell
                         activityViewController.popoverPresentationController?.sourceRect = cell.bounds
-                        self.present(activityViewController, animated: true, completion: nil)
+                        self.present(activityViewController, animated: true)
                     }
                     actions.append(shareAction)
                 }

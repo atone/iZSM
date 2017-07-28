@@ -108,14 +108,14 @@ class FavListViewController: BaseTableViewController {
             }
         }
         alert.addAction(okAction)
-        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel))
         alert.addTextField { textField in
             textField.keyboardType = .asciiCapable
             textField.autocorrectionType = .no
             textField.returnKeyType = .done
             textField.keyboardAppearance = self.setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         }
-        present(alert, animated: true, completion: nil)
+        present(alert, animated: true)
     }
     
     func addFavoriteWithBoardID(boardID: String) {

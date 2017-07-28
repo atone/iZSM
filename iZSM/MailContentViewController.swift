@@ -130,7 +130,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate, SwipePopa
             cevc.mode = .reply
             let navigationController = NTNavigationController(rootViewController: cevc)
             navigationController.modalPresentationStyle = .formSheet
-            present(navigationController, animated: true, completion: nil)
+            present(navigationController, animated: true)
             
         }
     }
@@ -169,8 +169,8 @@ class MailContentViewController: UIViewController, UITextViewDelegate, SwipePopa
                 }
             }
             alert.addAction(okAction)
-            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-            present(alert, animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title: "取消", style: .cancel))
+            present(alert, animated: true)
         }
     }
     
@@ -186,7 +186,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate, SwipePopa
         print("Clicked: \(urlString)")
         if urlString.hasPrefix("http") {
             let webViewController = SFSafariViewController(url: URL)
-            present(webViewController, animated: true, completion: nil)
+            present(webViewController, animated: true)
         } else {
             UIApplication.shared.openURL(URL)
         }

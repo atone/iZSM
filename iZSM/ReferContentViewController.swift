@@ -126,7 +126,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate, SwipePop
             cavc.article = article
             let navigationController = NTNavigationController(rootViewController: cavc)
             navigationController.modalPresentationStyle = .formSheet
-            present(navigationController, animated: true, completion: nil)
+            present(navigationController, animated: true)
         }
     }
     
@@ -160,7 +160,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate, SwipePop
         print("Clicked: \(urlString)")
         if urlString.hasPrefix("http") {
             let webViewController = SFSafariViewController(url: URL)
-            present(webViewController, animated: true, completion: nil)
+            present(webViewController, animated: true)
         } else {
             UIApplication.shared.openURL(URL)
         }
@@ -232,7 +232,7 @@ extension ReferContentViewController: UserInfoViewControllerDelegate {
 
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
         if let userID = reference?.userID, let boardID = reference?.boardID {
-            dismiss(animated: true, completion: nil)
+            dismiss(animated: true)
             SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (boardInfo) in
                 let searchResultController = ArticleListSearchResultViewController()
                 searchResultController.boardID = boardID
@@ -245,7 +245,7 @@ extension ReferContentViewController: UserInfoViewControllerDelegate {
     
     func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem) {
         if let userID = reference?.userID {
-            dismiss(animated: true, completion: nil)
+            dismiss(animated: true)
             
             if let article = self.article { //若有文章上下文，则按照回文章格式，否则按照写信格式
                 let cavc = ComposeArticleController()
@@ -254,14 +254,14 @@ extension ReferContentViewController: UserInfoViewControllerDelegate {
                 cavc.mode = .replyByMail
                 let navigationController = NTNavigationController(rootViewController: cavc)
                 navigationController.modalPresentationStyle = .formSheet
-                present(navigationController, animated: true, completion: nil)
+                present(navigationController, animated: true)
             } else {
                 let cevc = ComposeEmailController()
                 cevc.email = SMMail(subject: "", body: "", authorID: userID, position: 0, time: Date(), flags: "", attachments: [])
                 cevc.mode = .post
                 let navigationController = NTNavigationController(rootViewController: cevc)
                 navigationController.modalPresentationStyle = .formSheet
-                present(navigationController, animated: true, completion: nil)
+                present(navigationController, animated: true)
             }
             
         }

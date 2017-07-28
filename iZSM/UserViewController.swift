@@ -238,7 +238,7 @@ class UserViewController: NTTableViewController {
 extension UserViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
         let type = info[UIImagePickerControllerMediaType] as! String
         if type == kUTTypeImage as String {
             if let selectedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
@@ -265,7 +265,7 @@ extension UserViewController: UIImagePickerControllerDelegate, UINavigationContr
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
 }
 
@@ -283,7 +283,7 @@ extension UserViewController: UserInfoViewControllerDelegate {
                 picker.allowsEditing = true
                 picker.sourceType = .photoLibrary
                 picker.modalPresentationStyle = .formSheet
-                self.present(picker, animated: true, completion: nil)
+                self.present(picker, animated: true)
             }
             actionSheet.addAction(camera)
         }
@@ -293,13 +293,13 @@ extension UserViewController: UserInfoViewControllerDelegate {
                 picker.delegate = self
                 picker.allowsEditing = true
                 picker.sourceType = .camera
-                self.present(picker, animated: true, completion: nil)
+                self.present(picker, animated: true)
             }
             actionSheet.addAction(camera)
         }
-        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
         actionSheet.popoverPresentationController?.sourceView = imageView
-        present(actionSheet, animated: true, completion: nil)
+        present(actionSheet, animated: true)
     }
 
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {

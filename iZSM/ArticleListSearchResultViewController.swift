@@ -188,7 +188,7 @@ extension ArticleListSearchResultViewController: UIViewControllerPreviewingDeleg
                 }
                 let openAction = UIPreviewAction(title: "浏览网页版", style: .default) {[unowned self] (action, controller) in
                     let webViewController = SFSafariViewController(url: URL(string: urlString)!)
-                    self.present(webViewController, animated: true, completion: nil)
+                    self.present(webViewController, animated: true)
                 }
                 actions.append(openAction)
                 if let cell = cell(for: articleID, and: boardID) {
@@ -199,7 +199,7 @@ extension ArticleListSearchResultViewController: UIViewControllerPreviewingDeleg
                                                                               applicationActivities: nil)
                         activityViewController.popoverPresentationController?.sourceView = cell
                         activityViewController.popoverPresentationController?.sourceRect = cell.bounds
-                        self.present(activityViewController, animated: true, completion: nil)
+                        self.present(activityViewController, animated: true)
                     }
                     actions.append(shareAction)
                 }

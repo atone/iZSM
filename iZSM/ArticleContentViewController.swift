@@ -720,6 +720,14 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                         self.tableView.beginUpdates()
                         self.tableView.deleteRows(at: [indexPath], with: .automatic)
                         self.tableView.endUpdates()
+                        let totalLeftNumber = self.smarticles.reduce(0) { $0 + $1.count }
+                        if totalLeftNumber == 0 {
+                            if self.soloUser == nil {
+                                self.navigationController?.popViewController(animated: true)
+                            } else {
+                                self.toggleSoloMode(with: self.soloUser!, at: indexPath)
+                            }
+                        }
                     } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
                         SVProgressHUD.showError(withStatus: self.api.errorDescription)
                     } else {

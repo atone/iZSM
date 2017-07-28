@@ -240,7 +240,9 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                                 !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
                             }
                         }
-                        self.threads.append(threadSection)
+                        if threadSection.count > 0 {
+                           self.threads.append(threadSection)
+                        }
                     }
                     self.api.displayErrorIfNeeded()
                 }

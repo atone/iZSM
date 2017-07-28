@@ -25,7 +25,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     private let contentTextView = UITextView()
     private let countLabel = UILabel()
     private lazy var doneButton: UIBarButtonItem = {
-        UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(sender:)))
+        UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
     }()
     
     var boardID: String?
@@ -36,24 +36,24 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     
     private let signature = AppSetting.shared.signature
     
-    var articleTitle: String? {
+    private var articleTitle: String? {
         get { return titleTextField.text }
         set { titleTextField.text = newValue }
     }
     
-    var articleContent: String? {
+    private var articleContent: String? {
         get { return contentTextView.text }
         set { contentTextView.text = newValue }
     }
     
-    var keyboardHeight: Constraint?
+    private var keyboardHeight: Constraint?
     
     private let api = SmthAPI()
     private let setting = AppSetting.shared
     
     private var attachedImage: UIImage? //图片附件，如果为nil，则表示不含附件
     
-    func setEditable(_ editable: Bool) {
+    private func setEditable(_ editable: Bool) {
         titleTextField.isEnabled = editable
         contentTextView.isEditable = editable
     }
@@ -68,7 +68,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         titleHintLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         titleHintLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         titleTextField.delegate = self
-        titleTextField.addTarget(self, action: #selector(change(textField:)), for: .editingChanged)
+        titleTextField.addTarget(self, action: #selector(changeDoneButton(_:)), for: .editingChanged)
         titleTextField.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .horizontal)
         titleTextField.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
         titleTextField.font = UIFont.systemFont(ofSize: 16)
@@ -86,13 +86,13 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         countLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         countLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         
-        if mode == .replyByMail {
+        if mode == .replyByMail || mode == .modify {
             navigationItem.rightBarButtonItems = [doneButton]
         } else {
-            let addPhoto = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(addPhoto(sender:)))
+            let addPhoto = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(addPhoto(_:)))
             navigationItem.rightBarButtonItems = [doneButton, addPhoto]
         }
-        let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel(sender:)))
+        let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel(_:)))
         navigationItem.leftBarButtonItem = cancel
         
         view.addSubview(titleHintLabel)
@@ -126,7 +126,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         updateColor()
     }
     
-    func updateColor() {
+    private func updateColor() {
         view.backgroundColor = AppTheme.shared.backgroundColor
         titleHintLabel.textColor = AppTheme.shared.backgroundColor
         titleHintLabel.backgroundColor = AppTheme.shared.lightTextColor
@@ -139,7 +139,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
     }
     
-    func setupMode() {
+    private func setupMode() {
         switch mode {
         case .post:
             title = "发表文章"
@@ -179,11 +179,11 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         updateColor()
     }
     
-    func cancel(sender: UIBarButtonItem) {
+    @objc private func cancel(_ sender: UIBarButtonItem) {
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    func done(sender: UIBarButtonItem) {
+    @objc private func done(_ sender: UIBarButtonItem) {
         if let boardID = self.boardID, let title = self.articleTitle, var content = self.articleContent {
             networkActivityIndicatorStart(withHUD: true)
             setEditable(false)
@@ -196,7 +196,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                 var lines = content.components(separatedBy: .newlines)
                 lines = lines.filter { !$0.contains(self.signature) }
                 content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
-                content.append("\n" + self.signature)
+                content.append("\n\n" + self.signature)
                 
                 switch self.mode {
                 case .post:
@@ -263,7 +263,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillShow(notification:)),
+                                               selector: #selector(keyboardWillShow(_:)),
                                                name: .UIKeyboardWillChangeFrame,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
@@ -279,7 +279,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         view.endEditing(true)
     }
     
-    func addPhoto(sender: UIBarButtonItem) {
+    @objc private func addPhoto(_ sender: UIBarButtonItem) {
         if attachedImage == nil {
             let actionSheet = UIAlertController(title: "添加照片", message: nil, preferredStyle: .actionSheet)
             if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
@@ -331,7 +331,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         NotificationCenter.default.removeObserver(self)
     }
     
-    func keyboardWillShow(notification: Notification) {
+    @objc func keyboardWillShow(_ notification: Notification) {
         let info = notification.userInfo
         let animationDuration = info?[UIKeyboardAnimationDurationUserInfoKey] as! Double
         var keyboardFrame = info?[UIKeyboardFrameEndUserInfoKey] as! CGRect
@@ -350,7 +350,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         return false
     }
     
-    func change(textField: UITextField) {
+    @objc private func changeDoneButton(_ textField: UITextField) {
         if let length = textField.text?.characters.count {
             countLabel.text = "\(length)"
             if length > 0 {

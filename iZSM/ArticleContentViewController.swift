@@ -388,12 +388,12 @@ class ArticleContentViewController: NTTableViewController {
                 let activityViewController = UIActivityViewController(activityItems: [title, url],
                                                                       applicationActivities: nil)
                 activityViewController.popoverPresentationController?.barButtonItem = sender
-                self.present(activityViewController, animated: true, completion: nil)
+                self.present(activityViewController, animated: true)
             }
             actionSheet.addAction(shareAction)
             let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] action in
                 let webViewController = SFSafariViewController(url: URL(string: urlString)!)
-                self.present(webViewController, animated: true, completion: nil)
+                self.present(webViewController, animated: true)
             }
             actionSheet.addAction(openAction)
         }
@@ -409,9 +409,9 @@ class ArticleContentViewController: NTTableViewController {
                 actionSheet.addAction(gotoBoardAction)
             }
         }
-        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
         actionSheet.popoverPresentationController?.barButtonItem = sender
-        present(actionSheet, animated: true, completion: nil)
+        present(actionSheet, animated: true)
     }
     
     func tapPageButton(sender: UIBarButtonItem) {
@@ -426,7 +426,7 @@ class ArticleContentViewController: NTTableViewController {
         presentationCtr.barButtonItem = navigationItem.rightBarButtonItems?.last
         presentationCtr.backgroundColor = UIColor.white
         presentationCtr.delegate = self
-        present(pageListViewController, animated: true, completion: nil)
+        present(pageListViewController, animated: true)
     }
     
     func doubleTap(gestureRecgnizer: UITapGestureRecognizer) {
@@ -437,7 +437,7 @@ class ArticleContentViewController: NTTableViewController {
             fullscreen.article = smarticles[indexPath.section][indexPath.row]
             fullscreen.modalPresentationStyle = .fullScreen
             fullscreen.modalTransitionStyle = .crossDissolve
-            present(fullscreen, animated: true, completion: nil)
+            present(fullscreen, animated: true)
         }
     }
 }
@@ -447,7 +447,7 @@ extension ArticleContentViewController: PageListViewControllerDelegate {
     func pageListViewController(_ controller: PageListViewController, currentPageChangedTo currentPage: Int) {
         section = currentPage
         fetchData(restorePosition: false, showHUD: true)
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
 }
 
@@ -503,7 +503,7 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
     
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
         if let userID = controller.user?.id, let boardID = controller.article?.boardID {
-            dismiss(animated: true, completion: nil)
+            dismiss(animated: true)
             SVProgressHUD.show()
             SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (boardInfo) in
                 let searchResultController = ArticleListSearchResultViewController()
@@ -517,7 +517,7 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
     
     func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem) {
         if let userID = controller.user?.id {
-            dismiss(animated: true, completion: nil)
+            dismiss(animated: true)
             
             if let article = controller.article { //若有文章上下文，则按照回文章格式，否则按照写信格式
                 let cavc = ComposeArticleController()
@@ -526,14 +526,14 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
                 cavc.mode = .replyByMail
                 let navigationController = NTNavigationController(rootViewController: cavc)
                 navigationController.modalPresentationStyle = .formSheet
-                present(navigationController, animated: true, completion: nil)
+                present(navigationController, animated: true)
             } else {
                 let cevc = ComposeEmailController()
                 cevc.email = SMMail(subject: "", body: "", authorID: userID, position: 0, time: Date(), flags: "", attachments: [])
                 cevc.mode = .post
                 let navigationController = NTNavigationController(rootViewController: cevc)
                 navigationController.modalPresentationStyle = .formSheet
-                present(navigationController, animated: true, completion: nil)
+                present(navigationController, animated: true)
             }
             
         }
@@ -597,16 +597,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     }
     
     func cell(_ cell: ArticleContentCell, didClickReply sender: UIView?) {
-        let cavc = ComposeArticleController()
-        cavc.boardID = cell.article?.boardID
-        cavc.completionHandler = { [unowned self] in
-            self.fetchMoreData()
-        }
-        cavc.mode = .reply
-        cavc.article = cell.article
-        let navigationController = NTNavigationController(rootViewController: cavc)
-        navigationController.modalPresentationStyle = .formSheet
-        present(navigationController, animated: true, completion: nil)
+        guard let article = cell.article else { return }
+        reply(article)
     }
     
     func cell(_ cell: ArticleContentCell, didClickMore sender: UIView?) {
@@ -614,99 +606,58 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         guard let article = cell.article else { return }
         
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
+        var shouldCollapse = false
         if let currentIndexPath = tableView.indexPath(for: cell) {
             let currentUser = article.authorID
+            let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
+            let soloAction = UIAlertAction(title: soloTitle, style: .default) { [unowned self] _ in
+                self.toggleSoloMode(with: currentUser, at: currentIndexPath)
+            }
+            actionSheet.addAction(soloAction)
             
             if let myself = setting.username, myself.lowercased() == currentUser.lowercased() {
-                let modifyAction = UIAlertAction(title: "修改文章", style: .default) { [unowned self] (action) in
-                    let cavc = ComposeArticleController()
-                    cavc.boardID = article.boardID
-                    cavc.completionHandler = { [unowned self] in
-                        DispatchQueue.global().async {
-                            if let newArticle = self.api.getArticleInBoard(boardID: article.boardID, articleID: article.id) {
-                                DispatchQueue.main.async {
-                                    self.smarticles[currentIndexPath.section][currentIndexPath.row] = newArticle
-                                    self.tableView.beginUpdates()
-                                    self.tableView.reloadRow(at: currentIndexPath, with: .automatic)
-                                    self.tableView.endUpdates()
-                                }
-                            }
-                        }
-                    }
-                    cavc.mode = .modify
-                    cavc.article = article
-                    let navigationController = NTNavigationController(rootViewController: cavc)
-                    navigationController.modalPresentationStyle = .formSheet
-                    self.present(navigationController, animated: true, completion: nil)
+                shouldCollapse = true // collapse the other actions
+                let modifyAction = UIAlertAction(title: "修改文章", style: .default) { [unowned self] _ in
+                    self.modify(article, at: currentIndexPath)
                 }
                 actionSheet.addAction(modifyAction)
                 let deleteAction = UIAlertAction(title: "删除文章", style: .destructive) { [unowned self] _ in
-                    let confirmAlert = UIAlertController(title: "确定删除？", message: nil, preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: "确认", style: .default) { [unowned self] _ in
-                        networkActivityIndicatorStart(withHUD: true)
-                        DispatchQueue.global().async {
-                            let _ = self.api.deleteArticle(articleID: article.id, inBoard: article.boardID)
-                            DispatchQueue.main.async {
-                                networkActivityIndicatorStop(withHUD: true)
-                                if self.api.errorCode == 0 {
-                                    SVProgressHUD.showSuccess(withStatus: "删除成功")
-                                    self.smarticles[currentIndexPath.section].remove(at: currentIndexPath.row)
-                                    self.tableView.beginUpdates()
-                                    self.tableView.deleteRows(at: [currentIndexPath], with: .automatic)
-                                    self.tableView.endUpdates()
-                                } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
-                                    SVProgressHUD.showError(withStatus: self.api.errorDescription)
-                                } else {
-                                    SVProgressHUD.showError(withStatus: "出错了")
-                                }
-                            }
-                        }
-                    }
-                    confirmAlert.addAction(okAction)
-                    let cancelAction = UIAlertAction(title: "取消", style: .cancel)
-                    confirmAlert.addAction(cancelAction)
-                    self.present(confirmAlert, animated: true, completion: nil)
-                    
+                    self.delete(article, at: currentIndexPath)
                 }
                 actionSheet.addAction(deleteAction)
             }
-            
-            let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
-            let soloAction = UIAlertAction(title: soloTitle, style: .default) { (action) in
-                if self.soloUser == nil {
-                    self.soloUser = currentUser
-                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = false
-                    self.savePosition(currentRow: currentIndexPath.row)
-                    self.section = 0
-                    self.fetchData(restorePosition: false, showHUD: true)
-                } else {
-                    self.soloUser = nil
-                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = true
-                    self.restorePosition()
-                    self.fetchData(restorePosition: true, showHUD: true)
-                }
-            }
-            actionSheet.addAction(soloAction)
         }
         
-        let forwardAction = UIAlertAction(title: "转寄给用户", style: .default) { action in
+        let forwardAction = UIAlertAction(title: "转寄给用户", style: .default) { [unowned self] _ in
             self.forward(article, toBoard: false)
         }
-        actionSheet.addAction(forwardAction)
-        let forwardToBoardAction = UIAlertAction(title: "转寄到版面", style: .default) { action in
+        let forwardToBoardAction = UIAlertAction(title: "转寄到版面", style: .default) { [unowned self] _ in
             self.forward(article, toBoard: true)
         }
-        actionSheet.addAction(forwardToBoardAction)
-        let reportJunkAction = UIAlertAction(title: "举报不良内容", style: .destructive) { action in
+        let reportJunkAction = UIAlertAction(title: "举报不良内容", style: .destructive) { [unowned self] _ in
             self.reportJunk(article)
         }
-        actionSheet.addAction(reportJunkAction)
-        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
-        actionSheet.addAction(cancelAction)
+        
+        if shouldCollapse {
+            let moreAction = UIAlertAction(title: "更多…", style: .default) { [unowned self] _ in
+                let moreSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                moreSheet.addAction(forwardAction)
+                moreSheet.addAction(forwardToBoardAction)
+                moreSheet.addAction(reportJunkAction)
+                moreSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
+                self.present(moreSheet, animated: true)
+            }
+            actionSheet.addAction(moreAction)
+        } else {
+            actionSheet.addAction(forwardAction)
+            actionSheet.addAction(forwardToBoardAction)
+            actionSheet.addAction(reportJunkAction)
+        }
+        
+        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
         actionSheet.popoverPresentationController?.sourceView = sender
         actionSheet.popoverPresentationController?.sourceRect = sender!.bounds
-        present(actionSheet, animated: true, completion: nil)
+        present(actionSheet, animated: true)
     }
     
     func cell(_ cell: ArticleContentCell, didClick url: URL) {
@@ -714,9 +665,87 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         print("Clicked: \(urlString)")
         if urlString.hasPrefix("http") {
             let webViewController = SFSafariViewController(url: url)
-            present(webViewController, animated: true, completion: nil)
+            present(webViewController, animated: true)
         } else {
             UIApplication.shared.openURL(url)
+        }
+    }
+    
+    fileprivate func reply(_ article: SMArticle) {
+        let cavc = ComposeArticleController()
+        cavc.boardID = article.boardID
+        cavc.completionHandler = { [unowned self] in
+            self.fetchMoreData()
+        }
+        cavc.mode = .reply
+        cavc.article = article
+        let navigationController = NTNavigationController(rootViewController: cavc)
+        navigationController.modalPresentationStyle = .formSheet
+        present(navigationController, animated: true)
+    }
+    
+    fileprivate func modify(_ article: SMArticle, at indexPath: IndexPath) {
+        let cavc = ComposeArticleController()
+        cavc.boardID = article.boardID
+        cavc.mode = .modify
+        cavc.article = article
+        cavc.completionHandler = { [unowned self] in
+            DispatchQueue.global().async {
+                if let newArticle = self.api.getArticleInBoard(boardID: article.boardID, articleID: article.id) {
+                    DispatchQueue.main.async {
+                        self.smarticles[indexPath.section][indexPath.row] = newArticle
+                        self.tableView.beginUpdates()
+                        self.tableView.reloadRow(at: indexPath, with: .automatic)
+                        self.tableView.endUpdates()
+                    }
+                }
+            }
+        }
+        let navigationController = NTNavigationController(rootViewController: cavc)
+        navigationController.modalPresentationStyle = .formSheet
+        present(navigationController, animated: true)
+    }
+    
+    fileprivate func delete(_ article: SMArticle, at indexPath: IndexPath) {
+        let confirmAlert = UIAlertController(title: "确定删除？", message: nil, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "确认", style: .default) { [unowned self] _ in
+            networkActivityIndicatorStart(withHUD: true)
+            DispatchQueue.global().async {
+                let _ = self.api.deleteArticle(articleID: article.id, inBoard: article.boardID)
+                DispatchQueue.main.async {
+                    networkActivityIndicatorStop(withHUD: true)
+                    if self.api.errorCode == 0 {
+                        SVProgressHUD.showSuccess(withStatus: "删除成功")
+                        self.smarticles[indexPath.section].remove(at: indexPath.row)
+                        self.tableView.beginUpdates()
+                        self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                        self.tableView.endUpdates()
+                    } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
+                        SVProgressHUD.showError(withStatus: self.api.errorDescription)
+                    } else {
+                        SVProgressHUD.showError(withStatus: "出错了")
+                    }
+                }
+            }
+        }
+        confirmAlert.addAction(okAction)
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel)
+        confirmAlert.addAction(cancelAction)
+        present(confirmAlert, animated: true)
+    }
+    
+    fileprivate func toggleSoloMode(with userID: String, at indexPath: IndexPath) {
+        if soloUser == nil {
+            soloUser = userID
+            navigationItem.rightBarButtonItems?.last?.isEnabled = false
+            savePosition(currentRow: indexPath.row)
+            section = 0
+            fetchData(restorePosition: false, showHUD: true)
+        } else {
+            soloUser = nil
+            navigationItem.rightBarButtonItems?.last?.isEnabled = true
+            restorePosition()
+            fetchData(restorePosition: true, showHUD: true)
         }
     }
     
@@ -769,8 +798,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                     }
                 }
                 alert.addAction(okAction)
-                alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                alert.addAction(UIAlertAction(title: "取消", style: .cancel))
+                self.present(alert, animated: true)
             }
         }
     }
@@ -814,8 +843,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             }
         }
         alert.addAction(okAction)
-        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel))
+        self.present(alert, animated: true)
     }
 }
 
@@ -839,52 +868,44 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
     
     /// Present the view controller for the "Pop" action.
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        present(viewControllerToCommit, animated: true, completion: nil)
+        present(viewControllerToCommit, animated: true)
     }
     
     func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
         var actions = [UIPreviewActionItem]()
         if let fullscreen = viewController as? FullscreenContentViewController, let article = fullscreen.article {
-            let replyAction = UIPreviewAction(title: "回复本帖", style: .default) { [unowned self] (action, controller) in
-                let cavc = ComposeArticleController()
-                cavc.boardID = article.boardID
-                cavc.completionHandler = { [unowned self] in
-                    self.fetchMoreData()
-                }
-                cavc.mode = .reply
-                cavc.article = article
-                let navigationController = NTNavigationController(rootViewController: cavc)
-                navigationController.modalPresentationStyle = .formSheet
-                self.present(navigationController, animated: true, completion: nil)
+            let replyAction = UIPreviewAction(title: "回复本帖", style: .default) { [unowned self] _ in
+                self.reply(article)
             }
             actions.append(replyAction)
             
-            let currentUser = article.authorID
-            let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
-            let soloAction = UIPreviewAction(title: soloTitle, style: .default) { [unowned self] (action, controller) in
-                guard let currentIndexPath = self.indexPath(for: article) else { return }
-                if self.soloUser == nil {
-                    self.soloUser = currentUser
-                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = false
-                    self.savePosition(currentRow: currentIndexPath.row)
-                    self.section = 0
-                    self.fetchData(restorePosition: false, showHUD: true)
-                } else {
-                    self.soloUser = nil
-                    self.navigationItem.rightBarButtonItems?.last?.isEnabled = true
-                    self.restorePosition()
-                    self.fetchData(restorePosition: true, showHUD: true)
+            if let currentIndexPath = self.indexPath(for: article) {
+                let currentUser = article.authorID
+                let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
+                let soloAction = UIPreviewAction(title: soloTitle, style: .default) { [unowned self] _ in
+                    self.toggleSoloMode(with: currentUser, at: currentIndexPath)
+                }
+                actions.append(soloAction)
+                
+                if let myself = setting.username, myself.lowercased() == currentUser.lowercased() {
+                    let modifyAction = UIPreviewAction(title: "修改文章", style: .default) { [unowned self] _ in
+                        self.modify(article, at: currentIndexPath)
+                    }
+                    actions.append(modifyAction)
+                    let deleteAction = UIPreviewAction(title: "删除文章", style: .destructive) { [unowned self] _ in
+                        self.delete(article, at: currentIndexPath)
+                    }
+                    actions.append(deleteAction)
                 }
             }
-            actions.append(soloAction)
             
-            let forwardToUserAction = UIPreviewAction(title: "转寄给用户", style: .default) { [unowned self] (action, controller) in
+            let forwardToUserAction = UIPreviewAction(title: "转寄给用户", style: .default) { [unowned self] _ in
                 self.forward(article, toBoard: false)
             }
-            let forwardToBoardAction = UIPreviewAction(title: "转寄到版面", style: .default) { [unowned self] (action, controller) in
+            let forwardToBoardAction = UIPreviewAction(title: "转寄到版面", style: .default) { [unowned self] _ in
                 self.forward(article, toBoard: true)
             }
-            let reportJunkAction = UIPreviewAction(title: "举报不良内容", style: .destructive) { [unowned self] (action, controller) in
+            let reportJunkAction = UIPreviewAction(title: "举报不良内容", style: .destructive) { [unowned self] _ in
                 self.reportJunk(article)
             }
             let actionGroup = UIPreviewActionGroup(title: "更多…", style: .default, actions: [forwardToUserAction, forwardToBoardAction, reportJunkAction])

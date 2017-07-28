@@ -25,7 +25,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     private let contentTextView = UITextView()
     private let countLabel = UILabel()
     private lazy var doneButton: UIBarButtonItem = {
-        UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(sender:)))
+        UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
     }()
     
     var completionHandler: (() -> Void)?
@@ -36,27 +36,27 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     private let signature = AppSetting.shared.signature
     private let regx = AppSetting.shared.signatureRegularExpression
     
-    var emailTitle: String? {
+    private var emailTitle: String? {
         get { return titleTextField.text }
         set { titleTextField.text = newValue }
     }
     
-    var emailContent: String? {
+    private var emailContent: String? {
         get { return contentTextView.text }
         set { contentTextView.text = newValue }
     }
     
-    var emailReceiver: String? {
+    private var emailReceiver: String? {
         get { return receiverTextField.text }
         set { receiverTextField.text = newValue }
     }
     
-    var keyboardHeight: Constraint?
+    private var keyboardHeight: Constraint?
     
     private let api = SmthAPI()
     private let setting = AppSetting.shared
     
-    func setEditable(_ editable: Bool) {
+    private func setEditable(_ editable: Bool) {
         receiverTextField.isEnabled = editable
         titleTextField.isEnabled = editable
         contentTextView.isEditable = editable
@@ -79,14 +79,14 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         titleHintLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         titleHintLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
         titleTextField.delegate = self
-        titleTextField.addTarget(self, action: #selector(change(textField:)), for: .editingChanged)
+        titleTextField.addTarget(self, action: #selector(changeDoneButton(_:)), for: .editingChanged)
         titleTextField.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .horizontal)
         titleTextField.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
         titleTextField.font = UIFont.systemFont(ofSize: 16)
         titleTextField.autocapitalizationType = .none
         titleTextField.returnKeyType = .next
         receiverTextField.delegate = self
-        receiverTextField.addTarget(self, action: #selector(change(textField:)), for: .editingChanged)
+        receiverTextField.addTarget(self, action: #selector(changeDoneButton(_:)), for: .editingChanged)
         receiverTextField.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .horizontal)
         receiverTextField.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
         receiverTextField.font = UIFont.systemFont(ofSize: 16)
@@ -108,7 +108,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         navigationItem.rightBarButtonItem = doneButton
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
                                                            target: self,
-                                                           action: #selector(cancel(sender:)))
+                                                           action: #selector(cancel(_:)))
         
         view.addSubview(sendToLabel)
         view.addSubview(receiverTextField)
@@ -157,7 +157,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         updateColor()
     }
     
-    func setupMode() {
+    private func setupMode() {
         switch mode {
         case .post:
             title = "撰写邮件"
@@ -206,7 +206,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func updateColor() {
+    private func updateColor() {
         view.backgroundColor = AppTheme.shared.backgroundColor
         sendToLabel.textColor = AppTheme.shared.backgroundColor
         sendToLabel.backgroundColor = AppTheme.shared.lightTextColor
@@ -229,11 +229,11 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         updateColor()
     }
     
-    func cancel(sender: UIBarButtonItem) {
+    @objc private func cancel(_ sender: UIBarButtonItem) {
         dismiss(animated: true)
     }
     
-    func done(sender: UIBarButtonItem) {
+    @objc private func done(_ sender: UIBarButtonItem) {
         if let receiver = self.emailReceiver, let title = self.emailTitle, var content = self.emailContent {
             networkActivityIndicatorStart(withHUD: true)
             setEditable(false)
@@ -281,7 +281,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillShow(notification:)),
+                                               selector: #selector(keyboardWillShow(_:)),
                                                name: .UIKeyboardWillChangeFrame,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
@@ -301,7 +301,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
     
-    func keyboardWillShow(notification: Notification) {
+    @objc private func keyboardWillShow(_ notification: Notification) {
         let info = notification.userInfo
         let animationDuration = info?[UIKeyboardAnimationDurationUserInfoKey] as! Double
         var keyboardFrame = info?[UIKeyboardFrameEndUserInfoKey] as! CGRect
@@ -324,7 +324,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         return false
     }
     
-    func change(textField: UITextField) {
+    @objc private func changeDoneButton(_ textField: UITextField) {
         if textField === titleTextField {
             countLabel.text = "\(textField.text!.characters.count)"
         }

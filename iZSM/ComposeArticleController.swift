@@ -286,7 +286,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         if attachedImage == nil {
             let actionSheet = UIAlertController(title: "添加照片", message: nil, preferredStyle: .actionSheet)
             if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-                let camera = UIAlertAction(title: "从图库中选择", style: .default) { [unowned self] action in
+                let camera = UIAlertAction(title: "从图库中选择", style: .default) { [unowned self] _ in
                     let picker = UIImagePickerController()
                     picker.delegate = self
                     picker.sourceType = .photoLibrary
@@ -296,7 +296,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                 actionSheet.addAction(camera)
             }
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                let camera = UIAlertAction(title: "使用相机拍照", style: .default) { [unowned self] action in
+                let camera = UIAlertAction(title: "使用相机拍照", style: .default) { [unowned self] _ in
                     let picker = UIImagePickerController()
                     picker.delegate = self
                     picker.sourceType = .camera
@@ -309,7 +309,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
             present(actionSheet, animated: true)
         } else {
             let alert = UIAlertController(title: "是否删除图片附件？", message: nil, preferredStyle: .alert)
-            let deleteAction = UIAlertAction(title: "删除", style: .destructive)  { [unowned self] action in
+            let deleteAction = UIAlertAction(title: "删除", style: .destructive)  { [unowned self] _ in
                 self.attachedImage = nil
             }
             alert.addAction(deleteAction)

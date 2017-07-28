@@ -382,7 +382,7 @@ class ArticleContentViewController: NTTableViewController {
             case .mobile:
                 urlString = "https://m.newsmth.net/article/\(boardID)/\(articleID)"
             }
-            let shareAction = UIAlertAction(title: "分享本帖", style: .default) { [unowned self] (action) in
+            let shareAction = UIAlertAction(title: "分享本帖", style: .default) { [unowned self] _ in
                 let title = "水木\(self.boardName ?? boardID)版：【\(self.title ?? "无标题")】"
                 let url = URL(string: urlString)!
                 let activityViewController = UIActivityViewController(activityItems: [title, url],
@@ -391,7 +391,7 @@ class ArticleContentViewController: NTTableViewController {
                 self.present(activityViewController, animated: true)
             }
             actionSheet.addAction(shareAction)
-            let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] action in
+            let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] _ in
                 let webViewController = SFSafariViewController(url: URL(string: urlString)!)
                 self.present(webViewController, animated: true)
             }
@@ -399,7 +399,7 @@ class ArticleContentViewController: NTTableViewController {
         }
         if fromTopTen {
             if let boardID = self.boardID, let boardName = self.boardName {
-                let gotoBoardAction = UIAlertAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] action in
+                let gotoBoardAction = UIAlertAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] _ in
                     let alvc = ArticleListViewController()
                     alvc.boardID = boardID
                     alvc.boardName = boardName
@@ -780,7 +780,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                     textField.returnKeyType = .done
                     textField.keyboardAppearance = self.setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
                 }
-                let okAction = UIAlertAction(title: "举报", style: .default) { [unowned alert, unowned self] action in
+                let okAction = UIAlertAction(title: "举报", style: .default) { [unowned alert, unowned self] _ in
                     if let textField = alert.textFields?.first {
                         if textField.text == nil || textField.text!.isEmpty {
                             SVProgressHUD.showInfo(withStatus: "举报原因不能为空")
@@ -821,7 +821,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             textField.returnKeyType = .send
             textField.keyboardAppearance = self.setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         }
-        let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert, unowned self] action in
+        let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert, unowned self] _ in
             if let textField = alert.textFields?.first {
                 networkActivityIndicatorStart()
                 DispatchQueue.global().async {

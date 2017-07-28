@@ -149,12 +149,12 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     func pressSearchButton(sender: UIBarButtonItem) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let titleAction = UIAlertAction(title: "标题关键字", style: .default) { [unowned self] (action) in
+        let titleAction = UIAlertAction(title: "标题关键字", style: .default) { [unowned self] _ in
             self.selectedIndex = 0
             self.prepareForSearch()
         }
         actionSheet.addAction(titleAction)
-        let userAction = UIAlertAction(title: "同作者", style: .default) { [unowned self] (action) in
+        let userAction = UIAlertAction(title: "同作者", style: .default) { [unowned self] _ in
             self.selectedIndex = 1
             self.prepareForSearch()
         }

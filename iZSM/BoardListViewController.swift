@@ -235,11 +235,11 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                 let board = boards[indexPath.row]
                 if (board.flag != -1) && (board.flag & 0x400 == 0) { //是版面
                     let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                    let addFavAction = UIAlertAction(title: "添加到收藏夹", style: .default) { action in
+                    let addFavAction = UIAlertAction(title: "添加到收藏夹", style: .default) { [unowned self] _ in
                         self.addFavoriteWithBoardID(boardID: board.boardID)
                     }
                     actionSheet.addAction(addFavAction)
-                    let addMemAction = UIAlertAction(title: "关注版面 (驻版)", style: .default) { (action) in
+                    let addMemAction = UIAlertAction(title: "关注版面 (驻版)", style: .default) { [unowned self] _ in
                         self.addMemberWithBoardID(boardID: board.boardID)
                     }
                     actionSheet.addAction(addMemAction)

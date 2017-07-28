@@ -277,7 +277,7 @@ extension UserViewController: UserInfoViewControllerDelegate {
         }
         let actionSheet = UIAlertController(title: "修改头像", message: nil, preferredStyle: .actionSheet)
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            let camera = UIAlertAction(title: "从图库中选择", style: .default) { [unowned self] action in
+            let camera = UIAlertAction(title: "从图库中选择", style: .default) { [unowned self] _ in
                 let picker = UIImagePickerController()
                 picker.delegate = self
                 picker.allowsEditing = true
@@ -288,7 +288,7 @@ extension UserViewController: UserInfoViewControllerDelegate {
             actionSheet.addAction(camera)
         }
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            let camera = UIAlertAction(title: "使用相机拍照", style: .default) { [unowned self] action in
+            let camera = UIAlertAction(title: "使用相机拍照", style: .default) { [unowned self] _ in
                 let picker = UIImagePickerController()
                 picker.delegate = self
                 picker.allowsEditing = true

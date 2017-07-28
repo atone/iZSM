@@ -145,7 +145,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate, SwipePopa
                 textField.returnKeyType = .send
                 textField.keyboardAppearance = AppSetting.shared.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
             }
-            let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert] action in
+            let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert] _ in
                 if let textField = alert.textFields?.first {
                     networkActivityIndicatorStart()
                     DispatchQueue.global().async {

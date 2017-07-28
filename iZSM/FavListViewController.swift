@@ -101,7 +101,7 @@ class FavListViewController: BaseTableViewController {
     func addFavorite(sender: UIBarButtonItem) {
         let favMessage = "提示：记不住版面ID？没关系，在版面列表 (支持搜索) 下面长按待\(self.index == 0 ? "收藏" : "关注")的版面，也可以\(self.index == 0 ? "将版面添加到收藏夹" : "关注版面 (驻版)")。"
         let alert = UIAlertController(title: "请输入要\(self.index == 0 ? "收藏" : "关注")的版面ID", message: favMessage, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert] action in
+        let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert] _ in
             if let textField = alert.textFields?.first {
                 let board = textField.text!
                 self.addFavoriteWithBoardID(boardID: board)

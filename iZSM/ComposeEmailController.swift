@@ -308,9 +308,9 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         keyboardFrame = view.convert(keyboardFrame, from: view.window)
         let height = keyboardFrame.size.height
         keyboardHeight?.update(offset: -height - 5)
-        UIView.animate(withDuration: animationDuration, animations: { () -> Void in
+        UIView.animate(withDuration: animationDuration) {
             self.view.layoutIfNeeded()
-        })
+        }
         
     }
     

@@ -147,7 +147,7 @@ class ArticleContentViewController: NTTableViewController {
                                                                            threadRange: self.forwardThreadRange,
                                                                            replyMode: self.setting.sortMode)
                         {
-                            smArticles += articles.filter({ $0.authorID == soloUser })
+                            smArticles += articles.filter { $0.authorID == soloUser }
                             self.currentForwardNumber += articles.count
                             self.totalArticleNumber = self.api.getLastThreadCount()
                         }
@@ -266,7 +266,7 @@ class ArticleContentViewController: NTTableViewController {
                                                                            threadRange: self.forwardThreadRange,
                                                                            replyMode: self.setting.sortMode)
                         {
-                            smArticles += articles.filter({ $0.authorID == soloUser })
+                            smArticles += articles.filter { $0.authorID == soloUser }
                             self.currentForwardNumber += articles.count
                             self.totalArticleNumber = self.api.getLastThreadCount()
                         }

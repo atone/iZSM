@@ -35,6 +35,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     var article: SMArticle?
     
     private let signature = AppSetting.shared.signature
+    private let regx = AppSetting.shared.signatureRegularExpression
     
     private var articleTitle: String? {
         get { return titleTextField.text }
@@ -194,7 +195,9 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                 }
                 
                 var lines = content.components(separatedBy: .newlines)
-                lines = lines.filter { !$0.contains(self.signature) }
+                lines = lines.filter {
+                    self.regx.numberOfMatches(in: $0, range: NSMakeRange(0, $0.characters.count)) == 0
+                }
                 content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
                 content.append("\n\n" + self.signature)
                 

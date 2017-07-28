@@ -34,6 +34,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     var mode: Mode = .post
     
     private let signature = AppSetting.shared.signature
+    private let regx = AppSetting.shared.signatureRegularExpression
     
     var emailTitle: String? {
         get { return titleTextField.text }
@@ -238,7 +239,9 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             setEditable(false)
             DispatchQueue.global().async {
                 var lines = content.components(separatedBy: .newlines)
-                lines = lines.filter { !$0.contains(self.signature) }
+                lines = lines.filter {
+                    self.regx.numberOfMatches(in: $0, range: NSMakeRange(0, $0.characters.count)) == 0
+                }
                 content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
                 content.append("\n\n" + self.signature)
                 

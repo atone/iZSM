@@ -641,25 +641,33 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                     self.present(navigationController, animated: true, completion: nil)
                 }
                 actionSheet.addAction(modifyAction)
-                let deleteAction = UIAlertAction(title: "删除文章", style: .destructive) { [unowned self] (action) in
-                    networkActivityIndicatorStart(withHUD: true)
-                    DispatchQueue.global().async {
-                        let _ = self.api.deleteArticle(articleID: article.id, inBoard: article.boardID)
-                        DispatchQueue.main.async {
-                            networkActivityIndicatorStop(withHUD: true)
-                            if self.api.errorCode == 0 {
-                                SVProgressHUD.showSuccess(withStatus: "删除成功")
-                                self.smarticles[currentIndexPath.section].remove(at: currentIndexPath.row)
-                                self.tableView.beginUpdates()
-                                self.tableView.deleteRows(at: [currentIndexPath], with: .automatic)
-                                self.tableView.endUpdates()
-                            } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
-                                SVProgressHUD.showError(withStatus: self.api.errorDescription)
-                            } else {
-                                SVProgressHUD.showError(withStatus: "出错了")
+                let deleteAction = UIAlertAction(title: "删除文章", style: .destructive) { [unowned self] _ in
+                    let confirmAlert = UIAlertController(title: "确定删除？", message: nil, preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "确认", style: .default) { [unowned self] _ in
+                        networkActivityIndicatorStart(withHUD: true)
+                        DispatchQueue.global().async {
+                            let _ = self.api.deleteArticle(articleID: article.id, inBoard: article.boardID)
+                            DispatchQueue.main.async {
+                                networkActivityIndicatorStop(withHUD: true)
+                                if self.api.errorCode == 0 {
+                                    SVProgressHUD.showSuccess(withStatus: "删除成功")
+                                    self.smarticles[currentIndexPath.section].remove(at: currentIndexPath.row)
+                                    self.tableView.beginUpdates()
+                                    self.tableView.deleteRows(at: [currentIndexPath], with: .automatic)
+                                    self.tableView.endUpdates()
+                                } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
+                                    SVProgressHUD.showError(withStatus: self.api.errorDescription)
+                                } else {
+                                    SVProgressHUD.showError(withStatus: "出错了")
+                                }
                             }
                         }
                     }
+                    confirmAlert.addAction(okAction)
+                    let cancelAction = UIAlertAction(title: "取消", style: .cancel)
+                    confirmAlert.addAction(cancelAction)
+                    self.present(confirmAlert, animated: true, completion: nil)
+                    
                 }
                 actionSheet.addAction(deleteAction)
             }

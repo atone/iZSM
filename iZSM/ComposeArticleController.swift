@@ -11,7 +11,7 @@ import MobileCoreServices
 import SnapKit
 import SVProgressHUD
 
-class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ComposeArticleController: UIViewController, UITextFieldDelegate {
     
     enum Mode {
         case post
@@ -22,10 +22,25 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     
     private let titleHintLabel = UILabel()
     private let titleTextField = UITextField()
-    private let contentTextView = UITextView()
     private let countLabel = UILabel()
+    fileprivate let contentTextView = UITextView()
     private lazy var doneButton: UIBarButtonItem = {
         UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
+    }()
+    private lazy var photoButton: UIBarButtonItem = {
+        UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(addPhoto(_:)))
+    }()
+    fileprivate lazy var attachScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
+    fileprivate lazy var attachStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 5
+        return stack
     }()
     
     var boardID: String?
@@ -47,16 +62,34 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         set { contentTextView.text = newValue }
     }
     
-    private var keyboardHeight: Constraint?
+    private var contentViewOffset: Constraint?
+    private var keyboardHeight: CGFloat = 0
     
     private let api = SmthAPI()
     private let setting = AppSetting.shared
     
-    private var attachedImage: UIImage? //图片附件，如果为nil，则表示不含附件
+    fileprivate let maxAttachNumber = 8
+    fileprivate var attachedImages = [UIImage]() {
+        didSet {
+            if oldValue.count == 0 && attachedImages.count > 0 {
+                attachScrollView.isHidden = false
+                updateContentLayout()
+            } else if oldValue.count > 0 && attachedImages.count == 0 {
+                attachScrollView.isHidden = true
+                updateContentLayout()
+            }
+        }
+    }
     
     private func setEditable(_ editable: Bool) {
         titleTextField.isEnabled = editable
         contentTextView.isEditable = editable
+        if mode == .post || mode == .reply {
+            photoButton.isEnabled = editable
+        }
+        if attachedImages.count > 0 {
+            attachScrollView.isUserInteractionEnabled = editable
+        }
     }
     
     private func setupUI() {
@@ -90,8 +123,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         if mode == .replyByMail || mode == .modify {
             navigationItem.rightBarButtonItems = [doneButton]
         } else {
-            let addPhoto = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(addPhoto(_:)))
-            navigationItem.rightBarButtonItems = [doneButton, addPhoto]
+            navigationItem.rightBarButtonItems = [doneButton, photoButton]
         }
         let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel(_:)))
         navigationItem.leftBarButtonItem = cancel
@@ -100,6 +132,12 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         view.addSubview(titleTextField)
         view.addSubview(countLabel)
         view.addSubview(contentTextView)
+        
+        if mode == .post || mode == .reply {
+            attachScrollView.isHidden = true
+            view.addSubview(attachScrollView)
+            attachScrollView.addSubview(attachStack)
+        }
         
         titleHintLabel.snp.makeConstraints { (make) in
             make.leading.equalTo(view.snp.leadingMargin)
@@ -121,9 +159,23 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
         contentTextView.snp.makeConstraints { (make) in
             make.leading.equalTo(titleHintLabel)
             make.trailing.equalTo(countLabel)
-            self.keyboardHeight = make.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-5).constraint
+            self.contentViewOffset = make.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-5).constraint
             make.top.equalTo(countLabel.snp.bottom).offset(5)
         }
+        
+        if mode == .post || mode == .reply {
+            attachScrollView.snp.makeConstraints { (make) in
+                make.leading.equalToSuperview()
+                make.trailing.equalToSuperview()
+                make.top.equalTo(contentTextView.snp.bottom).offset(5)
+                make.height.equalTo(100)
+            }
+            attachStack.snp.makeConstraints { (make) in
+                make.edges.equalToSuperview()
+                make.height.equalTo(100)
+            }
+        }
+        
         updateColor()
     }
     
@@ -189,9 +241,11 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
             networkActivityIndicatorStart(withHUD: true)
             setEditable(false)
             DispatchQueue.global().async {
-                var attachmentUploadSuccessFul = true
-                if let image = self.attachedImage {
-                    attachmentUploadSuccessFul = (self.api.uploadAttImage(image: image, index: 1) != nil)
+                for index in 0..<self.attachedImages.count {
+                    DispatchQueue.main.async {
+                        SVProgressHUD.show(withStatus: "正在上传: \(index + 1) / \(self.attachedImages.count)")
+                    }
+                    let _ = self.api.uploadAttImage(image: self.attachedImages[index], index: index + 1)
                 }
                 
                 var lines = content.components(separatedBy: .newlines)
@@ -231,17 +285,13 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop(withHUD: true)
                     if self.api.errorCode == 0 {
-                        if attachmentUploadSuccessFul {
-                            switch self.mode {
-                            case .post:
-                                SVProgressHUD.showSuccess(withStatus: "发表成功")
-                            case .reply, .replyByMail:
-                                SVProgressHUD.showSuccess(withStatus: "回复成功")
-                            case .modify:
-                                SVProgressHUD.showSuccess(withStatus: "修改成功")
-                            }
-                        } else {
-                            SVProgressHUD.showError(withStatus: "附件上传失败")
+                        switch self.mode {
+                        case .post:
+                            SVProgressHUD.showSuccess(withStatus: "发表成功")
+                        case .reply, .replyByMail:
+                            SVProgressHUD.showSuccess(withStatus: "回复成功")
+                        case .modify:
+                            SVProgressHUD.showSuccess(withStatus: "修改成功")
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.completionHandler?()
@@ -283,7 +333,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     }
     
     @objc private func addPhoto(_ sender: UIBarButtonItem) {
-        if attachedImage == nil {
+        if attachedImages.count < maxAttachNumber {
             let actionSheet = UIAlertController(title: "添加照片", message: nil, preferredStyle: .actionSheet)
             if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
                 let camera = UIAlertAction(title: "从图库中选择", style: .default) { [unowned self] _ in
@@ -308,26 +358,10 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
             actionSheet.popoverPresentationController?.barButtonItem = sender
             present(actionSheet, animated: true)
         } else {
-            let alert = UIAlertController(title: "是否删除图片附件？", message: nil, preferredStyle: .alert)
-            let deleteAction = UIAlertAction(title: "删除", style: .destructive)  { [unowned self] _ in
-                self.attachedImage = nil
-            }
-            alert.addAction(deleteAction)
-            alert.addAction(UIAlertAction(title: "取消", style: .cancel))
+            let alert = UIAlertController(title: "提示", message: "附件数量已经达到最大值！", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "知道了", style: .default))
             present(alert, animated: true)
         }
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        dismiss(animated: true)
-        let type = info[UIImagePickerControllerMediaType] as! String
-        if type == kUTTypeImage as String {
-            attachedImage = info[UIImagePickerControllerOriginalImage] as? UIImage
-        }
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true)
     }
     
     deinit {
@@ -336,15 +370,19 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
     
     @objc func keyboardWillShow(_ notification: Notification) {
         let info = notification.userInfo
-        let animationDuration = info?[UIKeyboardAnimationDurationUserInfoKey] as! Double
         var keyboardFrame = info?[UIKeyboardFrameEndUserInfoKey] as! CGRect
         keyboardFrame = view.convert(keyboardFrame, from: view.window)
-        let height = keyboardFrame.size.height
-        keyboardHeight?.update(offset: -height - 5)
-        UIView.animate(withDuration: animationDuration) {
-            self.view.layoutIfNeeded()
+        keyboardHeight = max(view.bounds.height - keyboardFrame.origin.y, 0)
+        updateContentLayout()
+    }
+    
+    private func updateContentLayout() {
+        if attachedImages.count > 0 {
+            contentViewOffset?.update(offset: -keyboardHeight - 5 - 100)
+        } else {
+            contentViewOffset?.update(offset: -keyboardHeight - 5)
         }
-        
+        self.view.layoutIfNeeded()
     }
     
     //MARK: - UITextFieldDelegate
@@ -362,5 +400,36 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate, UIImagePi
                 doneButton.isEnabled = false
             }
         }
+    }
+}
+
+extension ComposeArticleController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true)
+        contentTextView.becomeFirstResponder()
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        dismiss(animated: true)
+        contentTextView.becomeFirstResponder()
+        
+        let type = info[UIImagePickerControllerMediaType] as! String
+        if type == kUTTypeImage as String, let attachedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            let view = AttachImageView()
+            view.image = attachedImage
+            view.delegate = self
+            attachStack.addArrangedSubview(view)
+            attachedImages.append(attachedImage)
+        }
+    }
+}
+
+extension ComposeArticleController: AttachImageViewDelegate {
+    func deleteButtonPressed(in attachImageView: AttachImageView) {
+        if let image = attachImageView.image, let idx = attachedImages.index(of: image) {
+            attachedImages.remove(at: idx)
+        }
+        attachStack.removeArrangedSubview(attachImageView)
     }
 }

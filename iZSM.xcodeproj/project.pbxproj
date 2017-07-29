@@ -77,8 +77,8 @@
 		9CA3B1A31DE33C0800E9B121 /* HotTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */; };
 		9CA3B1A61DE33E8D00E9B121 /* HotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA3B1A51DE33E8D00E9B121 /* HotTableViewCell.swift */; };
 		9CA3B1A81DE35A2300E9B121 /* BoardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */; };
-		9CA9DD8D1F23246B0023984F /* SmthPopTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA9DD8C1F23246B0023984F /* SmthPopTransition.swift */; };
 		9CAD5A2F1F10A2950008E62C /* SMUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CAD5A2E1F10A2950008E62C /* SMUserInfo.swift */; };
+		9CB5708F1F2B87E000974BC0 /* AttachImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */; };
 		9CB573B71DE588EC00CD6F3E /* ReminderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */; };
 		9CB573B91DE58E8800CD6F3E /* MailContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573B81DE58E8800CD6F3E /* MailContentViewController.swift */; };
 		9CB573BB1DE59A2E00CD6F3E /* ReferContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573BA1DE59A2E00CD6F3E /* ReferContentViewController.swift */; };
@@ -87,7 +87,7 @@
 		9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */; };
 		9CB573C41DE5B61800CD6F3E /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C31DE5B61800CD6F3E /* LogoView.swift */; };
 		9CD9E6451F1DB10E00713853 /* IAPHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD9E6441F1DB10E00713853 /* IAPHelper.swift */; };
-		9CEBD0791F24FA5C00E4E29E /* SmthPushTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CEBD0781F24FA5C00E4E29E /* SmthPushTransition.swift */; };
+		9CF349301F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF3492F1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m */; };
 		9CFEC1D41F19E330008E5976 /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */; };
 /* End PBXBuildFile section */
 
@@ -193,8 +193,8 @@
 		9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotTableViewController.swift; sourceTree = "<group>"; };
 		9CA3B1A51DE33E8D00E9B121 /* HotTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotTableViewCell.swift; sourceTree = "<group>"; };
 		9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardListViewController.swift; sourceTree = "<group>"; };
-		9CA9DD8C1F23246B0023984F /* SmthPopTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmthPopTransition.swift; sourceTree = "<group>"; };
 		9CAD5A2E1F10A2950008E62C /* SMUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMUserInfo.swift; sourceTree = "<group>"; };
+		9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachImageView.swift; sourceTree = "<group>"; };
 		9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderListCell.swift; sourceTree = "<group>"; };
 		9CB573B81DE58E8800CD6F3E /* MailContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailContentViewController.swift; sourceTree = "<group>"; };
 		9CB573BA1DE59A2E00CD6F3E /* ReferContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReferContentViewController.swift; sourceTree = "<group>"; };
@@ -203,7 +203,8 @@
 		9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		9CB573C31DE5B61800CD6F3E /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		9CD9E6441F1DB10E00713853 /* IAPHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAPHelper.swift; sourceTree = "<group>"; };
-		9CEBD0781F24FA5C00E4E29E /* SmthPushTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmthPushTransition.swift; sourceTree = "<group>"; };
+		9CF3492E1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FDFullscreenPopGesture.h"; sourceTree = "<group>"; };
+		9CF3492F1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FDFullscreenPopGesture.m"; sourceTree = "<group>"; };
 		9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KeychainSwift.framework; path = Carthage/Build/iOS/KeychainSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -252,7 +253,6 @@
 				9CA3B15C1DE331F800E9B121 /* ViewControllers */,
 				9C1A3BEE1DE2EA8B00CF4A43 /* SmthAPI */,
 				9CAD5A301F10A2AA0008E62C /* Persistence */,
-				9CEBD0741F24F8D400E4E29E /* Transition */,
 				9CEBD0751F24F91C00E4E29E /* Storyboards */,
 				9CEBD0761F24F98900E4E29E /* Third Parties */,
 				9C1A3BD11DE2C3EA00CF4A43 /* Support Files */,
@@ -484,15 +484,6 @@
 			name = Persistence;
 			sourceTree = "<group>";
 		};
-		9CEBD0741F24F8D400E4E29E /* Transition */ = {
-			isa = PBXGroup;
-			children = (
-				9CA9DD8C1F23246B0023984F /* SmthPopTransition.swift */,
-				9CEBD0781F24FA5C00E4E29E /* SmthPushTransition.swift */,
-			);
-			name = Transition;
-			sourceTree = "<group>";
-		};
 		9CEBD0751F24F91C00E4E29E /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
@@ -509,6 +500,7 @@
 				9CA3B15F1DE3359200E9B121 /* MJRefresh */,
 				9C1A3BE41DE2E6EB00CF4A43 /* libSmth */,
 				9C56E1CB1F0E0DF00093E504 /* FDTemplateLayoutCell */,
+				9CF3492D1F2C30CF00C0B236 /* FDFullscreenPopGesture */,
 			);
 			name = "Third Parties";
 			sourceTree = "<group>";
@@ -517,10 +509,20 @@
 			isa = PBXGroup;
 			children = (
 				9CB573C31DE5B61800CD6F3E /* LogoView.swift */,
+				9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */,
 				9CD9E6441F1DB10E00713853 /* IAPHelper.swift */,
 				9C2E2C651F223DC100DF34F6 /* ShakeMotion.swift */,
 			);
 			name = Misc;
+			sourceTree = "<group>";
+		};
+		9CF3492D1F2C30CF00C0B236 /* FDFullscreenPopGesture */ = {
+			isa = PBXGroup;
+			children = (
+				9CF3492E1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.h */,
+				9CF3492F1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m */,
+			);
+			path = FDFullscreenPopGesture;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -644,7 +646,6 @@
 				9CB573BB1DE59A2E00CD6F3E /* ReferContentViewController.swift in Sources */,
 				9CA3B19F1DE3359200E9B121 /* UIScrollView+MJExtension.m in Sources */,
 				9C1A3BF81DE3076C00CF4A43 /* LoginViewController.swift in Sources */,
-				9CA9DD8D1F23246B0023984F /* SmthPopTransition.swift in Sources */,
 				9C25D5A91DE5634B005CB55C /* UserViewController.swift in Sources */,
 				9C25D5AD1DE56BC8005CB55C /* ReminderViewController.swift in Sources */,
 				9CA3B19B1DE3359200E9B121 /* MJRefreshStateHeader.m in Sources */,
@@ -656,6 +657,7 @@
 				9C889FCF1DE4995300C33A8D /* FavListViewController.swift in Sources */,
 				9CA3B15E1DE3323B00E9B121 /* BaseTableViewController.swift in Sources */,
 				9C1A3BD91DE2CBAF00CF4A43 /* EulaViewController.swift in Sources */,
+				9CF349301F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m in Sources */,
 				9CB573B71DE588EC00CD6F3E /* ReminderListCell.swift in Sources */,
 				9C25D5A71DE55452005CB55C /* ComposeEmailController.swift in Sources */,
 				9C25D5AB1DE56BAE005CB55C /* MailBoxViewController.swift in Sources */,
@@ -663,7 +665,6 @@
 				9CA3B1971DE3359200E9B121 /* MJRefreshBackNormalFooter.m in Sources */,
 				9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */,
 				9CA3B19A1DE3359200E9B121 /* MJRefreshNormalHeader.m in Sources */,
-				9CEBD0791F24FA5C00E4E29E /* SmthPushTransition.swift in Sources */,
 				9C4D0B071F1A5AAD007B4D83 /* AppTheme.swift in Sources */,
 				9CD9E6451F1DB10E00713853 /* IAPHelper.swift in Sources */,
 				9CA3B1941DE3359200E9B121 /* MJRefreshAutoNormalFooter.m in Sources */,
@@ -684,6 +685,7 @@
 				9CA3B1961DE3359200E9B121 /* MJRefreshBackGifFooter.m in Sources */,
 				9CA3B1901DE3359200E9B121 /* MJRefreshComponent.m in Sources */,
 				9C889FBD1DE4222000C33A8D /* ArticleContentViewController.swift in Sources */,
+				9CB5708F1F2B87E000974BC0 /* AttachImageView.swift in Sources */,
 				9C5E17121F0F77F100AA5368 /* PageListViewController.swift in Sources */,
 				9CB573B91DE58E8800CD6F3E /* MailContentViewController.swift in Sources */,
 				9CA3B1921DE3359200E9B121 /* MJRefreshHeader.m in Sources */,

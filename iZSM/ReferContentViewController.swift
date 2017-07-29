@@ -11,10 +11,8 @@ import SnapKit
 import SVProgressHUD
 import SafariServices
 
-class ReferContentViewController: UIViewController, UITextViewDelegate, SwipePopable {
-    
-    var swipePopGesture: UIPanGestureRecognizer?
-    
+class ReferContentViewController: UIViewController, UITextViewDelegate {
+        
     let titleLabel = UILabel()
     let userButton = UIButton(type: .system)
     let timeLabel = UILabel()

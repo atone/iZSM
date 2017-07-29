@@ -6,3 +6,4 @@
 #import "MJRefresh.h"
 #import "YYPhotoGroupView.h"
 #import "UITableView+FDTemplateLayoutCell.h"
+#import "UINavigationController+FDFullscreenPopGesture.h"

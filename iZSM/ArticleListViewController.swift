@@ -40,14 +40,16 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     var originalThread: [[SMThread]]?
     var searchMode = false {
         didSet {
-            swipePopGesture?.isEnabled = !searchMode // not allow swipe to pop when in search mode
+            self.fd_interactivePopDisabled = searchMode // not allow swipe to pop when in search mode
         }
     }
     
     var searchString: String? {
         return searchController?.searchBar.text
     }
-    var selectedIndex: Int = 0
+    var selectedIndex: Int {
+        return searchController?.searchBar.selectedScopeButtonIndex ?? 0
+    }
     
     private var searchController: UISearchController?
     
@@ -76,8 +78,14 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         search(forText: searchString, scope: selectedIndex)
     }
     
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        threads = [[SMThread]]()
+        threadLoaded = 0
+        searchController?.searchBar.becomeFirstResponder()
+    }
+    
     func search(forText searchString: String?, scope: Int) {
-        if let boardID = self.boardID, let searchString = searchString {
+        if let boardID = self.boardID, let searchString = searchString, !searchString.isEmpty {
             self.threadLoaded = 0
             let currentMode = searchMode
             networkActivityIndicatorStart(withHUD: true)
@@ -117,6 +125,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         // search related
         definesPresentationContext = true
         searchController = UISearchController(searchResultsController: nil)
+        searchController?.searchBar.scopeButtonTitles = ["标题关键字", "同作者"]
         if #available(iOS 9.1, *) {
             searchController?.obscuresBackgroundDuringPresentation = false
         } else {
@@ -148,23 +157,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
     
     func pressSearchButton(sender: UIBarButtonItem) {
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let titleAction = UIAlertAction(title: "标题关键字", style: .default) { [unowned self] _ in
-            self.selectedIndex = 0
-            self.prepareForSearch()
-        }
-        actionSheet.addAction(titleAction)
-        let userAction = UIAlertAction(title: "同作者", style: .default) { [unowned self] _ in
-            self.selectedIndex = 1
-            self.prepareForSearch()
-        }
-        actionSheet.addAction(userAction)
-        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
-        actionSheet.popoverPresentationController?.barButtonItem = sender
-        present(actionSheet, animated: true)
-    }
-    
-    func prepareForSearch() {
         if tableView.tableHeaderView == nil {
             if let searchController = searchController {
                 tableView.tableHeaderView = searchController.searchBar

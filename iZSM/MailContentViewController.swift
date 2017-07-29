@@ -11,10 +11,8 @@ import SnapKit
 import SVProgressHUD
 import SafariServices
 
-class MailContentViewController: UIViewController, UITextViewDelegate, SwipePopable {
-    
-    var swipePopGesture: UIPanGestureRecognizer?
-    
+class MailContentViewController: UIViewController, UITextViewDelegate {
+        
     let titleLabel = UILabel()
     let userButton = UIButton(type: .system)
     let timeLabel = UILabel()

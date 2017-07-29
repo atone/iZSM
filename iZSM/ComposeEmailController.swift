@@ -27,6 +27,9 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     private lazy var doneButton: UIBarButtonItem = {
         UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
     }()
+    private lazy var cancelButton: UIBarButtonItem = {
+        UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel(_:)))
+    }()
     
     var completionHandler: (() -> Void)?
     
@@ -57,6 +60,8 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     private let setting = AppSetting.shared
     
     private func setEditable(_ editable: Bool) {
+        doneButton.isEnabled = editable
+        cancelButton.isEnabled = editable
         receiverTextField.isEnabled = editable
         titleTextField.isEnabled = editable
         contentTextView.isEditable = editable
@@ -106,9 +111,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         
         doneButton.isEnabled = false
         navigationItem.rightBarButtonItem = doneButton
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
-                                                           target: self,
-                                                           action: #selector(cancel(_:)))
+        navigationItem.leftBarButtonItem = cancelButton
         
         view.addSubview(sendToLabel)
         view.addSubview(receiverTextField)

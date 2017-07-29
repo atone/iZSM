@@ -27,6 +27,9 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     private lazy var doneButton: UIBarButtonItem = {
         UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
     }()
+    private lazy var cancelButton: UIBarButtonItem = {
+        UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel(_:)))
+    }()
     private lazy var photoButton: UIBarButtonItem = {
         UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(addPhoto(_:)))
     }()
@@ -82,6 +85,8 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     }
     
     private func setEditable(_ editable: Bool) {
+        doneButton.isEnabled = editable
+        cancelButton.isEnabled = editable
         titleTextField.isEnabled = editable
         contentTextView.isEditable = editable
         if mode == .post || mode == .reply {
@@ -125,8 +130,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         } else {
             navigationItem.rightBarButtonItems = [doneButton, photoButton]
         }
-        let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel(_:)))
-        navigationItem.leftBarButtonItem = cancel
+        navigationItem.leftBarButtonItem = cancelButton
         
         view.addSubview(titleHintLabel)
         view.addSubview(titleTextField)

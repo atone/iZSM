@@ -573,7 +573,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             }
         }
         let v = YYPhotoGroupView(groupItems: items)
-        v?.present(fromImageView: fromView, toContainer: self.navigationController?.view, in: self, animated: true, completion: nil)
+        v?.present(fromImageView: fromView, toContainer: self.navigationController?.view, animated: true, completion: nil)
     }
     
     func cell(_ cell: ArticleContentCell, didClickUser sender: UIView?) {

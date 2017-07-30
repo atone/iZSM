@@ -224,7 +224,6 @@
 @interface YYPhotoGroupView() <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, weak) UIView *fromView;
 @property (nonatomic, weak) UIView *toContainerView;
-@property (nonatomic, weak) UIViewController *containerController;
 
 @property (nonatomic, strong) UIImage *snapshotImage;
 @property (nonatomic, strong) UIImage *snapshorImageHideFromView;
@@ -361,18 +360,12 @@
 
 - (void)presentFromImageView:(UIView *)fromView
                  toContainer:(UIView *)toContainer
-            inViewController:(UIViewController *)controller
                     animated:(BOOL)animated
                   completion:(void (^)(void))completion {
     if (!toContainer) return;
     
     _fromView = fromView;
     _toContainerView = toContainer;
-    _containerController = controller;
-    
-    if (controller) {
-        [controller.navigationController.interactivePopGestureRecognizer setEnabled:NO];
-    }
     
     NSInteger page = -1;
     for (NSUInteger i = 0; i < self.groupItems.count; i++) {
@@ -410,6 +403,7 @@
     
     [UIView setAnimationsEnabled:YES];
     _fromNavigationBarHidden = [UIApplication sharedApplication].statusBarHidden;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:animated ? UIStatusBarAnimationFade : UIStatusBarAnimationNone];
     
     
     YYPhotoGroupCell *cell = [self cellForPage:self.currentPage];
@@ -489,6 +483,7 @@
 - (void)dismissAnimated:(BOOL)animated completion:(void (^)(void))completion {
     [UIView setAnimationsEnabled:YES];
     
+    [[UIApplication sharedApplication] setStatusBarHidden:_fromNavigationBarHidden withAnimation:animated ? UIStatusBarAnimationFade : UIStatusBarAnimationNone];
     NSInteger currentPage = self.currentPage;
     YYPhotoGroupCell *cell = [self cellForPage:currentPage];
     YYPhotoGroupItem *item = _groupItems[currentPage];
@@ -528,7 +523,6 @@
         }completion:^(BOOL finished) {
             self.scrollView.layer.transformScale = 1;
             [self removeFromSuperview];
-            [self enableBackGesture];
             [self cancelAllImageLoad];
             if (completion) completion();
         }];
@@ -573,7 +567,6 @@
         } completion:^(BOOL finished) {
             cell.imageContainerView.layer.anchorPoint = CGPointMake(0.5, 0.5);
             [self removeFromSuperview];
-            [self enableBackGesture];
             if (completion) completion();
         }];
     }];
@@ -808,6 +801,7 @@
             if (fabs(v.y) > 1000 || fabs(deltaY) > 120) {
                 [self cancelAllImageLoad];
                 _isPresented = NO;
+                [[UIApplication sharedApplication] setStatusBarHidden:_fromNavigationBarHidden withAnimation:UIStatusBarAnimationFade];
                 
                 BOOL moveToTop = (v.y < - 50 || (v.y < 50 && deltaY < 0));
                 CGFloat vy = fabs(v.y);
@@ -826,7 +820,6 @@
                     }
                 } completion:^(BOOL finished) {
                     [self removeFromSuperview];
-                    [self enableBackGesture];
                 }];
                 
                 _background.image = _snapshotImage;
@@ -848,12 +841,6 @@
             _blurBackground.alpha = 1;
         }
         default:break;
-    }
-}
-
-- (void)enableBackGesture {
-    if (_containerController) {
-        [_containerController.navigationController.interactivePopGestureRecognizer setEnabled:YES];
     }
 }
 

@@ -645,6 +645,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 moreSheet.addAction(forwardToBoardAction)
                 moreSheet.addAction(reportJunkAction)
                 moreSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
+                moreSheet.popoverPresentationController?.sourceView = sender
+                moreSheet.popoverPresentationController?.sourceRect = sender!.bounds
                 self.present(moreSheet, animated: true)
             }
             actionSheet.addAction(moreAction)

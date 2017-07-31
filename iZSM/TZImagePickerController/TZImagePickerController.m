@@ -196,6 +196,11 @@
                 }
             }];
         }];
+        [previewVc setBackButtonClickBlock:^(BOOL isSelectOriginalPhoto){
+            if (weakSelf.imagePickerControllerDidCancelHandle) {
+                weakSelf.imagePickerControllerDidCancelHandle();
+            }
+        }];
     }
     return self;
 }

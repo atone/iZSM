@@ -422,6 +422,12 @@ extension ComposeArticleController: AttachImageViewDelegate {
     func imageTapped(in attachImageView: AttachImageView) {
         if let image = attachImageView.image, let idx = attachedImages.index(of: image) {
             let imagePicker = TZImagePickerController(selectedAssets: attachedAssets as! NSMutableArray, selectedPhotos: attachedImages as! NSMutableArray, index: idx)!
+            imagePicker.didFinishPickingPhotosHandle = { [unowned self] _ in
+                self.contentTextView.becomeFirstResponder()
+            }
+            imagePicker.imagePickerControllerDidCancelHandle = { [unowned self] _ in
+                self.contentTextView.becomeFirstResponder()
+            }
             present(imagePicker, animated: true)
         }
     }

@@ -318,7 +318,11 @@
 
 - (void)backButtonClick {
     if (self.navigationController.childViewControllers.count < 2) {
-        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+        [self.navigationController dismissViewControllerAnimated:YES completion:^{
+            if (self.backButtonClickBlock) {
+                self.backButtonClickBlock(_isSelectOriginalPhoto);
+            }
+        }];
         return;
     }
     [self.navigationController popViewControllerAnimated:YES];

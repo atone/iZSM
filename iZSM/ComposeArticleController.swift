@@ -339,20 +339,15 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func addPhoto(_ sender: UIBarButtonItem) {
-        if attachedImages.count < maxAttachNumber {
-            let imagePicker = TZImagePickerController(maxImagesCount: maxAttachNumber, delegate: self)!
-            imagePicker.selectedAssets = attachedAssets as! NSMutableArray
-            imagePicker.navigationBar.barTintColor = AppTheme.shared.naviBackgroundColor
-            imagePicker.navigationBar.tintColor = AppTheme.shared.naviContentColor
-            imagePicker.allowPickingVideo = false
-            imagePicker.allowPickingOriginalPhoto = false
-            imagePicker.photoWidth = 1024
-            present(imagePicker, animated: true)
-        } else {
-            let alert = UIAlertController(title: "提示", message: "附件数量已经达到最大值！", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "知道了", style: .default))
-            present(alert, animated: true)
-        }
+        let imagePicker = TZImagePickerController(maxImagesCount: maxAttachNumber, delegate: self)!
+        imagePicker.modalPresentationStyle = .formSheet
+        imagePicker.navigationBar.barTintColor = AppTheme.shared.naviBackgroundColor
+        imagePicker.navigationBar.tintColor = AppTheme.shared.naviContentColor
+        imagePicker.selectedAssets = attachedAssets as! NSMutableArray
+        imagePicker.allowPickingVideo = false
+        imagePicker.allowPickingOriginalPhoto = false
+        imagePicker.photoWidth = 1024
+        present(imagePicker, animated: true)
     }
     
     deinit {

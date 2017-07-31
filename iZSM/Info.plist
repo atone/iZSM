@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>2.1</string>
 	<key>CFBundleVersion</key>
-	<string>410</string>
+	<string>411</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -47,10 +47,10 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>使用相机拍照作为附件发送。</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>访问照片图库以保存照片或添加图片附件。</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>拍照时将地理位置保存在照片中。</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>访问照片图库以保存照片或添加图片附件。</string>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>

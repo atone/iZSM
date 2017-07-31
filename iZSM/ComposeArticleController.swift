@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 import MobileCoreServices
 import SnapKit
 import SVProgressHUD
@@ -72,6 +73,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     private let setting = AppSetting.shared
     
     fileprivate let maxAttachNumber = 8
+    fileprivate var attachedAssets = [PHAsset]()
     fileprivate var attachedImages = [UIImage]() {
         didSet {
             if oldValue.count == 0 && attachedImages.count > 0 {
@@ -338,29 +340,14 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     
     @objc private func addPhoto(_ sender: UIBarButtonItem) {
         if attachedImages.count < maxAttachNumber {
-            let actionSheet = UIAlertController(title: "添加照片", message: nil, preferredStyle: .actionSheet)
-            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-                let camera = UIAlertAction(title: "从图库中选择", style: .default) { [unowned self] _ in
-                    let picker = UIImagePickerController()
-                    picker.delegate = self
-                    picker.sourceType = .photoLibrary
-                    picker.modalPresentationStyle = .formSheet
-                    self.present(picker, animated: true)
-                }
-                actionSheet.addAction(camera)
-            }
-            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                let camera = UIAlertAction(title: "使用相机拍照", style: .default) { [unowned self] _ in
-                    let picker = UIImagePickerController()
-                    picker.delegate = self
-                    picker.sourceType = .camera
-                    self.present(picker, animated: true)
-                }
-                actionSheet.addAction(camera)
-            }
-            actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
-            actionSheet.popoverPresentationController?.barButtonItem = sender
-            present(actionSheet, animated: true)
+            let imagePicker = TZImagePickerController(maxImagesCount: maxAttachNumber, delegate: self)!
+            imagePicker.selectedAssets = attachedAssets as! NSMutableArray
+            imagePicker.navigationBar.barTintColor = AppTheme.shared.naviBackgroundColor
+            imagePicker.navigationBar.tintColor = AppTheme.shared.naviContentColor
+            imagePicker.allowPickingVideo = false
+            imagePicker.allowPickingOriginalPhoto = false
+            imagePicker.photoWidth = 1024
+            present(imagePicker, animated: true)
         } else {
             let alert = UIAlertController(title: "提示", message: "附件数量已经达到最大值！", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "知道了", style: .default))
@@ -407,25 +394,24 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     }
 }
 
-extension ComposeArticleController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true)
+extension ComposeArticleController: TZImagePickerControllerDelegate {
+    func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingPhotos photos: [UIImage]!, sourceAssets assets: [Any]!, isSelectOriginalPhoto: Bool) {
         contentTextView.becomeFirstResponder()
+        if let photos = photos, let assets = assets as? [PHAsset] {
+            attachStack.removeAllSubviews()
+            for photo in photos {
+                let view = AttachImageView()
+                view.image = photo
+                view.delegate = self
+                attachStack.addArrangedSubview(view)
+            }
+            attachedImages = photos
+            attachedAssets = assets
+        }
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        dismiss(animated: true)
+    func tz_imagePickerControllerDidCancel(_ picker: TZImagePickerController!) {
         contentTextView.becomeFirstResponder()
-        
-        let type = info[UIImagePickerControllerMediaType] as! String
-        if type == kUTTypeImage as String, let attachedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            let view = AttachImageView()
-            view.image = attachedImage
-            view.delegate = self
-            attachStack.addArrangedSubview(view)
-            attachedImages.append(attachedImage)
-        }
     }
 }
 
@@ -433,7 +419,15 @@ extension ComposeArticleController: AttachImageViewDelegate {
     func deleteButtonPressed(in attachImageView: AttachImageView) {
         if let image = attachImageView.image, let idx = attachedImages.index(of: image) {
             attachedImages.remove(at: idx)
+            attachedAssets.remove(at: idx)
         }
         attachStack.removeArrangedSubview(attachImageView)
+    }
+    
+    func imageTapped(in attachImageView: AttachImageView) {
+        if let image = attachImageView.image, let idx = attachedImages.index(of: image) {
+            let imagePicker = TZImagePickerController(selectedAssets: attachedAssets as! NSMutableArray, selectedPhotos: attachedImages as! NSMutableArray, index: idx)!
+            present(imagePicker, animated: true)
+        }
     }
 }

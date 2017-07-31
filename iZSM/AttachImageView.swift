@@ -42,6 +42,9 @@ class AttachImageView: UIView {
         self.layer.cornerRadius = 4
         self.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
+        imageView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
+        imageView.addGestureRecognizer(tapGesture)
         deleteButton.setImage(#imageLiteral(resourceName: "delete"), for: .normal)
         deleteButton.backgroundColor = UIColor.white
         deleteButton.tintColor = UIColor.red
@@ -61,6 +64,10 @@ class AttachImageView: UIView {
         }
     }
     
+    @objc private func imageTapped(_ sender: UIImageView) {
+        delegate?.imageTapped(in: self)
+    }
+    
     @objc private func pressDelete(_ sender: UIButton) {
         delegate?.deleteButtonPressed(in: self)
     }
@@ -68,4 +75,5 @@ class AttachImageView: UIView {
 
 protocol AttachImageViewDelegate: class {
     func deleteButtonPressed(in attachImageView: AttachImageView)
+    func imageTapped(in attachImageView: AttachImageView)
 }

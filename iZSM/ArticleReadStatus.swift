@@ -34,14 +34,14 @@ class ArticleReadStatusUtil {
                     try! realm.write {
                         realm.add(status)
                     }
-                    print("add new status: \(status)")
+                    dPrint("add new status: \(status)")
                 } else {
                     let status = results.first!
                     try! realm.write {
                         status.section = section
                         status.row = row
                     }
-                    print("update \(results.count) status: \(status)")
+                    dPrint("update \(results.count) status: \(status)")
                 }
             }
         }

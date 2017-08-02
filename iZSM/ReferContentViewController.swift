@@ -155,7 +155,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
         let urlString = URL.absoluteString
-        print("Clicked: \(urlString)")
+        dPrint("Clicked: \(urlString)")
         if urlString.hasPrefix("http") {
             let webViewController = SFSafariViewController(url: URL)
             present(webViewController, animated: true)
@@ -178,7 +178,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
                 if self.api.errorCode == 0 || self.api.errorCode == 11011 { //11011:文章不存在，已经被删除
                     let referMode: SmthAPI.ReferMode = self.replyMe ? .ReplyToMe : .AtMe
                     let result = self.api.setReferRead(mode: referMode, atPosition: reference.position)
-                    print("set refer status: \(result)")
+                    dPrint("set refer status: \(result)")
                 }
             }
             DispatchQueue.main.async {

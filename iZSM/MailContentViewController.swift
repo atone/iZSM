@@ -148,7 +148,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
                     networkActivityIndicatorStart()
                     DispatchQueue.global().async {
                         let result = self.api.forwardMailAtPosition(position: originalMail.position, toUser: textField.text!)
-                        print("forward mail status: \(result)")
+                        dPrint("forward mail status: \(result)")
                         DispatchQueue.main.async {
                             networkActivityIndicatorStop()
                             if self.api.errorCode == 0 {
@@ -181,7 +181,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
         let urlString = URL.absoluteString
-        print("Clicked: \(urlString)")
+        dPrint("Clicked: \(urlString)")
         if urlString.hasPrefix("http") {
             let webViewController = SFSafariViewController(url: URL)
             present(webViewController, animated: true)

@@ -148,7 +148,7 @@ class BaseTableViewController: NTTableViewController {
 
 extension BaseTableViewController: LoginViewControllerDelegate {
     func loginDidSuccessful() {
-        print("login successful")
+        dPrint("login successful")
         dismiss(animated: false)
         fetchDataDirectly(showHUD: true)
     }
@@ -158,7 +158,7 @@ extension BaseTableViewController: EulaViewControllerDelegate {
     func userAcceptedEula(_ controller: EulaViewController) {
         // set agree to true
         setting.eulaAgreed = true
-        print("agree tapped")
+        dPrint("agree tapped")
         dismiss(animated: true)
         fetchData(showHUD: true)
     }
@@ -167,7 +167,7 @@ extension BaseTableViewController: EulaViewControllerDelegate {
         let alert = UIAlertController(title: nil, message: "您必须同意《水木社区管理规则》才能使用本软件。", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "确定", style: .default))
         controller.present(alert, animated: true)
-        print("decline tapped")
+        dPrint("decline tapped")
     }
 }
 

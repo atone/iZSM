@@ -46,7 +46,7 @@ class SMUserInfoUtil {
                 try! realm.write {
                     realm.add(userInfo, update: true)
                 }
-                print("update user info for \(user.id) success!")
+                dPrint("update user info for \(user.id) success!")
                 DispatchQueue.main.async {
                     callback()
                 }
@@ -73,7 +73,7 @@ class SMUserInfoUtil {
                     }
                     if shouldMakeQuery {
                         let api = SmthAPI()
-                        print("start querying info for \(userID)...")
+                        dPrint("start querying info for \(userID)...")
                         let user = api.getUserInfo(userID: userID)
                         queryingSet.remove(userID)
                         if let user = user {
@@ -84,13 +84,13 @@ class SMUserInfoUtil {
                             let userID = userInfo.id
                             if let username = AppSetting.shared.username {
                                 if username.lowercased() == userID.lowercased() && username != userID {
-                                    print("change saved user id from \(username) to \(userID)")
+                                    dPrint("change saved user id from \(username) to \(userID)")
                                     AppSetting.shared.username = userID
                                 }
                             }
-                            print("write user info for \(userID) success!")
+                            dPrint("write user info for \(userID) success!")
                         } else {
-                            print("write user info for \(userID) failure!")
+                            dPrint("write user info for \(userID) failure!")
                         }
                         DispatchQueue.main.async {
                             callback(user)

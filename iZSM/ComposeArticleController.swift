@@ -264,27 +264,27 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
                 switch self.mode {
                 case .post:
                     let result = self.api.postArticle(title: title, content: content, inBoard: boardID)
-                    print("post article done. article_id = \(result)")
+                    dPrint("post article done. article_id = \(result)")
                 case .reply:
                     if let article = self.article {
                         let result = self.api.replyArticle(articleID: article.id, title: title, content: content, inBoard: boardID)
-                        print("reply article done. article_id = \(result)")
+                        dPrint("reply article done. article_id = \(result)")
                     } else {
-                        print("error: no article to reply")
+                        dPrint("error: no article to reply")
                     }
                 case .replyByMail:
                     if let article = self.article {
                         let result = self.api.sendMailTo(user: article.authorID, withTitle: title, content: content)
-                        print("reply by mail done. ret = \(result)")
+                        dPrint("reply by mail done. ret = \(result)")
                     } else {
-                        print("error: no article to reply")
+                        dPrint("error: no article to reply")
                     }
                 case .modify:
                     if let article = self.article {
                         let result = self.api.modifyArticle(articleID: article.id, title: title, content: content, inBoard: boardID)
-                        print("modify article done. ret = \(result)")
+                        dPrint("modify article done. ret = \(result)")
                     } else {
-                        print("error: no article to modify")
+                        dPrint("error: no article to modify")
                     }
                 }
                 

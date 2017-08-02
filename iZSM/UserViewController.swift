@@ -246,12 +246,12 @@ extension UserViewController: UIImagePickerControllerDelegate, UINavigationContr
                 DispatchQueue.global().async {
                     if let user = self.api.modifyFaceImage(image: selectedImage) {
                         networkActivityIndicatorStop()
-                        print("server response with new user info")
+                        dPrint("server response with new user info")
                         SMUserInfoUtil.updateSMUser(with: user) {
                             self.updateUserInfoView()
                         }
                     } else {
-                        print("server did not response with new user info, try getting in 2 sec.")
+                        dPrint("server did not response with new user info, try getting in 2 sec.")
                         sleep(2) // 等待2s
                         SMUserInfoUtil.querySMUser(for: self.setting.username!, forceUpdate: true) { (user) in
                             networkActivityIndicatorStop()

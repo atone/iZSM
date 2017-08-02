@@ -46,7 +46,7 @@ class SMBoardInfoUtil {
                     }
                     if shouldMakeQuery {
                         let api = SmthAPI()
-                        print("start querying info for board \(boardID)...")
+                        dPrint("start querying info for board \(boardID)...")
                         if let boards = api.queryBoard(query: boardID) {
                             for board in boards {
                                 if board.boardID == boardID {
@@ -59,13 +59,13 @@ class SMBoardInfoUtil {
                                     try! realm.write {
                                         realm.add(boardInfo2, update: true)
                                     }
-                                    print("write board info for \(boardID) success!")
+                                    dPrint("write board info for \(boardID) success!")
                                     
                                     break
                                 }
                             }
                         } else {
-                            print("query board info for \(boardID) failure!")
+                            dPrint("query board info for \(boardID) failure!")
                         }
                     } else {  // 有人查，那就等结果
                         var counter = 0

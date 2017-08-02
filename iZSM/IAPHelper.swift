@@ -47,7 +47,7 @@ extension IAPHelper {
     func buyProduct(_ product: SKProduct, completionHandler: @escaping TransactionCompletionHandler) {
         if transactionCompletionHandler != nil { return }
         transactionCompletionHandler = completionHandler
-        print("buying \(product.productIdentifier)...")
+        dPrint("buying \(product.productIdentifier)...")
         let payment = SKPayment(product: product)
         SKPaymentQueue.default().add(payment)
     }
@@ -62,18 +62,18 @@ extension IAPHelper {
 extension IAPHelper: SKProductsRequestDelegate {
     
     func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-        print("Loaded list of products...")
+        dPrint("Loaded list of products...")
         let products = response.products
         productsRequestCompletionHandler?(true, products)
         clearRequestAndHandler()
         for p in products {
-            print("Found product: \(p.productIdentifier) \(p.localizedTitle) \(p.price.floatValue)")
+            dPrint("Found product: \(p.productIdentifier) \(p.localizedTitle) \(p.price.floatValue)")
         }
     }
     
     func request(_ request: SKRequest, didFailWithError error: Error) {
-        print("Failed to load list of products.")
-        print("Error: \(error.localizedDescription)")
+        dPrint("Failed to load list of products.")
+        dPrint("Error: \(error.localizedDescription)")
         productsRequestCompletionHandler?(false, nil)
         clearRequestAndHandler()
     }
@@ -92,12 +92,12 @@ extension IAPHelper: SKPaymentTransactionObserver {
         for transaction in transactions {
             switch transaction.transactionState {
             case .purchased:
-                print("successfully purchased \(transaction.payment.productIdentifier)")
+                dPrint("successfully purchased \(transaction.payment.productIdentifier)")
                 transactionCompletionHandler?(true, transaction.payment.productIdentifier)
                 transactionCompletionHandler = nil
                 SKPaymentQueue.default().finishTransaction(transaction)
             case .failed:
-                print("failed to purchase \(transaction.payment.productIdentifier)")
+                dPrint("failed to purchase \(transaction.payment.productIdentifier)")
                 transactionCompletionHandler?(false, transaction.payment.productIdentifier)
                 transactionCompletionHandler = nil
                 SKPaymentQueue.default().finishTransaction(transaction)

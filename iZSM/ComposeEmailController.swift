@@ -249,7 +249,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                 content.append("\n\n" + self.signature)
                 
                 let result = self.api.sendMailTo(user: receiver, withTitle: title, content: content)
-                print("send mail done. ret = \(result)")
+                dPrint("send mail done. ret = \(result)")
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop(withHUD: true)
                     if self.api.errorCode == 0 {

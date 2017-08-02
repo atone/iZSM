@@ -343,7 +343,7 @@ class ArticleContentViewController: NTTableViewController {
             if let cell = cell as? ArticleContentCell {
                 self.configureArticleCell(cell: cell, atIndexPath: indexPath)
             } else {
-                print("ERROR: cell is not ArticleContentCell!")
+                dPrint("ERROR: cell is not ArticleContentCell!")
             }
         }
     }
@@ -432,7 +432,7 @@ class ArticleContentViewController: NTTableViewController {
     func doubleTap(gestureRecgnizer: UITapGestureRecognizer) {
         let point = gestureRecgnizer.location(in: tableView)
         if let indexPath = tableView.indexPathForRow(at: point) {
-            print("double tap on article content cell at \(indexPath)")
+            dPrint("double tap on article content cell at \(indexPath)")
             let fullscreen = FullscreenContentViewController()
             fullscreen.article = smarticles[indexPath.section][indexPath.row]
             fullscreen.modalPresentationStyle = .fullScreen
@@ -664,7 +664,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     
     func cell(_ cell: ArticleContentCell, didClick url: URL) {
         let urlString = url.absoluteString
-        print("Clicked: \(urlString)")
+        dPrint("Clicked: \(urlString)")
         if urlString.hasPrefix("http") {
             let webViewController = SFSafariViewController(url: url)
             present(webViewController, animated: true)
@@ -793,7 +793,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                         networkActivityIndicatorStart()
                         DispatchQueue.global().async {
                             let result = self.api.sendMailTo(user: adminID, withTitle: title, content: body)
-                            print("send mail status: \(result)")
+                            dPrint("send mail status: \(result)")
                             DispatchQueue.main.async {
                                 networkActivityIndicatorStop()
                                 if self.api.errorCode == 0 {
@@ -831,13 +831,13 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                         let result = self.api.crossArticle(articleID: article.id,
                                                            fromBoard: article.boardID,
                                                            toBoard: textField.text!)
-                        print("cross article status: \(result)")
+                        dPrint("cross article status: \(result)")
                     } else {
                         let user = textField.text!.isEmpty ? AppSetting.shared.username! : textField.text!
                         let result = self.api.forwardArticle(articleID: article.id,
                                                              inBoard: article.boardID,
                                                              toUser: user)
-                        print("forwared article status: \(result)")
+                        dPrint("forwared article status: \(result)")
                     }
                     DispatchQueue.main.async {
                         networkActivityIndicatorStop()

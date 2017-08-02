@@ -100,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // if open from notification, then handle it
         if let localNotif = launchOptions?[UIApplicationLaunchOptionsKey.localNotification] as? UILocalNotification {
-            print("launch from didFinishLaunchingWithOptions:")
+            dPrint("launch from didFinishLaunchingWithOptions:")
             navigateToNewMessagePage(notification: localNotif)
         }
         
@@ -139,7 +139,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         let handledShortCutItem = handle(shortcutItem: shortcutItem)
-        print("handle shortcut item in performActionForShortcutItem: \(handledShortCutItem)")
+        dPrint("handle shortcut item in performActionForShortcutItem: \(handledShortCutItem)")
         completionHandler(handledShortCutItem)
     }
 
@@ -162,7 +162,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard let shortcut = launchedShortcutItem else { return }
         
         let handled = handle(shortcutItem: shortcut)
-        print("handle shortcut item in didBecomeActive: \(handled)")
+        dPrint("handle shortcut item in didBecomeActive: \(handled)")
         
         launchedShortcutItem = nil
     }
@@ -172,7 +172,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
-        print("launch from didReceive notification")
+        dPrint("launch from didReceive notification")
         navigateToNewMessagePage(notification: notification)
     }
 
@@ -182,12 +182,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let newMailCount = self.api.getMailStatus()?.newCount ?? 0
                 let newReplyCount = self.api.getReferCount(mode: .ReplyToMe)?.newCount ?? 0
                 let newReferCount = self.api.getReferCount(mode: .AtMe)?.newCount ?? 0
-                print("mail \(self.setting.mailCount) -> \(newMailCount), reply \(self.setting.replyCount) -> \(newReplyCount), refer \(self.setting.referCount) -> \(newReferCount)")
+                dPrint("mail \(self.setting.mailCount) -> \(newMailCount), reply \(self.setting.replyCount) -> \(newReplyCount), refer \(self.setting.referCount) -> \(newReferCount)")
                 let allCount = newMailCount + newReplyCount + newReferCount
                 application.applicationIconBadgeNumber = allCount
                 
                 if newMailCount > self.setting.mailCount {
-                    print("new mail")
+                    dPrint("new mail")
                     let mailNotif = UILocalNotification()
                     mailNotif.alertAction = nil
                     mailNotif.alertBody = "您收到 \(newMailCount) 封新邮件"
@@ -197,7 +197,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
                 
                 if newReplyCount > self.setting.replyCount {
-                    print("new reply")
+                    dPrint("new reply")
                     let replyNotif = UILocalNotification()
                     replyNotif.alertAction = nil
                     replyNotif.alertBody = "您收到 \(newReplyCount) 条新回复"
@@ -207,7 +207,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
                 
                 if newReferCount > self.setting.referCount {
-                    print("new refer")
+                    dPrint("new refer")
                     let atNotif = UILocalNotification()
                     atNotif.alertAction = nil
                     atNotif.alertBody = "有人 @ 了您"
@@ -226,15 +226,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 if hasNewData {
                     completionHandler(.newData)
-                    print("new data")
+                    dPrint("new data")
                 } else {
                     completionHandler(.noData)
-                    print("no new data")
+                    dPrint("no new data")
                 }
             }
         } else {
             completionHandler(.noData)
-            print("no data, user not login or token expired")
+            dPrint("no data, user not login or token expired")
         }
     }
 
@@ -293,6 +293,12 @@ func networkActivityIndicatorStop(withHUD: Bool = false) {
     if withHUD {
         SVProgressHUD.dismiss()
     }
+}
+
+func dPrint(_ item: @autoclosure () -> Any) {
+    #if DEBUG
+    print(item())
+    #endif
 }
 
 private let formatter = DateFormatter()
@@ -356,7 +362,7 @@ extension SmthAPI {
                 errorMsg = "系统错误"
             }
             SVProgressHUD.showInfo(withStatus: errorMsg)
-            print("\(errorMsg), error code \(errorCode)")
+            dPrint("\(errorMsg), error code \(errorCode)")
         }
     }
 }

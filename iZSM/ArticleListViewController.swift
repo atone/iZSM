@@ -172,21 +172,21 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             let currentMode = self.searchMode
             networkActivityIndicatorStart(withHUD: showHUD)
             DispatchQueue.global().async {
-                let threadSection = self.api.getThreadListForBoard(boardID: boardID,
+                var threadSection = self.api.getThreadListForBoard(boardID: boardID,
                                                                    inRange: self.threadRange,
                                                                    brcmode: .NotClear)
+                if self.setting.hideAlwaysOnTopThread {
+                    threadSection = threadSection?.filter {
+                        !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                    }
+                }
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop(withHUD: showHUD)
                     completion?()
                     if currentMode != self.searchMode { return } //如果模式已经被切换，则数据丢弃
-                    if var threadSection = threadSection {
+                    if let threadSection = threadSection {
                         self.threads.removeAll()
                         self.threadLoaded += threadSection.count
-                        if self.setting.hideAlwaysOnTopThread {
-                            threadSection = threadSection.filter {
-                                !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                            }
-                        }
                         self.threads.append(threadSection)
                     }
                     self.api.displayErrorIfNeeded()
@@ -220,21 +220,27 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                                                                    inRange: self.threadRange,
                                                                    brcmode: .NotClear)
                 }
+                // 过滤掉置顶帖
+                if self.setting.hideAlwaysOnTopThread && !self.searchMode {
+                    threadSection = threadSection?.filter {
+                        !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                    }
+                }
+                // 过滤掉重复的帖子
+                let loadedThreadIds = self.threads.reduce(Set<Int>()) {
+                    $0.union(Set($1.map { $0.id }))
+                }
+                threadSection = threadSection?.filter {
+                    !loadedThreadIds.contains($0.id)
+                }
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
                     if self.searchMode != currentMode {
                         return //如果模式已经改变，则此数据需要丢弃
                     }
-                    if var threadSection = threadSection {
+                    if let threadSection = threadSection, threadSection.count > 0 {
                         self.threadLoaded += threadSection.count
-                        if self.setting.hideAlwaysOnTopThread && !self.searchMode {
-                            threadSection = threadSection.filter {
-                                !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                            }
-                        }
-                        if threadSection.count > 0 {
-                           self.threads.append(threadSection)
-                        }
+                        self.threads.append(threadSection)
                     }
                     self.api.displayErrorIfNeeded()
                 }

@@ -125,6 +125,11 @@ struct SMArticle {
         
         return attributeText
     }
+    
+    func attachmentURL(at pos: Int) -> URL {
+        let string = "https://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(pos)"
+        return URL(string: string)!
+    }
 
     private func generateImageAtt() -> [ImageInfo] {
         var imageAtt = [ImageInfo]()

@@ -115,7 +115,14 @@ class ArticleContentCell: UITableViewCell {
         contentLabel.fadeOnAsynchronouslyDisplay = false
         contentLabel.ignoreCommonProperties = true
         contentLabel.highlightTapAction = { [unowned self] (containerView, text, range, rect) in
-            let urlString = text.attributedSubstring(from: range).string
+            var urlString = text.attributedSubstring(from: range).string
+            if !urlString.contains(":") {
+                if urlString.contains("@") {
+                    urlString = "mailto:\(urlString.lowercased())"
+                } else {
+                    urlString = "http://\(urlString.lowercased())"
+                }
+            }
             if let url = URL(string: urlString) {
                 self.delegate?.cell(self, didClick: url)
             } else {

@@ -72,6 +72,8 @@ class UserInfoViewController: UIViewController {
     
     private func updateColor() {
         toolbar.barStyle = AppSetting.shared.nightMode ? UIBarStyle.black : UIBarStyle.default
+        search.tintColor = AppTheme.shared.tintColor
+        compose.tintColor = AppTheme.shared.tintColor
     }
     
     private func setupUI() {

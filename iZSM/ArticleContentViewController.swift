@@ -10,6 +10,7 @@ import UIKit
 import SafariServices
 import SVProgressHUD
 import SnapKit
+import YYKit
 
 class ArticleContentViewController: NTTableViewController {
     
@@ -22,6 +23,8 @@ class ArticleContentViewController: NTTableViewController {
     fileprivate var isFetchingData = false // whether the app is fetching data
     
     fileprivate var smarticles = [[SMArticle]]()
+    
+    var articleContentLayout = [String: YYTextLayout]()
     
     fileprivate let api = SmthAPI()
     fileprivate let setting = AppSetting.shared
@@ -329,7 +332,7 @@ class ArticleContentViewController: NTTableViewController {
         if setting.sortMode == .LaterPostFirst && floor != 0 {
             floor = totalArticleNumber - floor
         }
-        cell.setData(displayFloor: floor, smarticle: smarticle, delegate: self)
+        cell.setData(displayFloor: floor, smarticle: smarticle, delegate: self, controller: self)
         cell.preservesSuperviewLayoutMargins = true
         cell.fd_enforceFrameLayout = true
     }

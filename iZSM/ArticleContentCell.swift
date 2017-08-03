@@ -8,9 +8,8 @@
 
 import UIKit
 import YYKit
-import TTTAttributedLabel
 
-class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
+class ArticleContentCell: UITableViewCell {
     
     private let avatarImageView = YYAnimatedImageView()
     
@@ -26,9 +25,10 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     var imageViews = [YYAnimatedImageView]()
     
-    private var contentLabel = TTTAttributedLabel(frame: CGRect.zero)
+    private var contentLabel = YYLabel()
     
     private weak var delegate: ArticleContentCellDelegate?
+    private weak var controller: ArticleContentViewController?
     
     private let setting = AppSetting.shared
     
@@ -113,10 +113,9 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         
         contentLabel.lineBreakMode = .byWordWrapping
         contentLabel.numberOfLines = 0
-        contentLabel.enabledTextCheckingTypes = NSTextCheckingResult.CheckingType.link.rawValue
-        contentLabel.delegate = self
-        contentLabel.verticalAlignment = .top
-        contentLabel.extendsLinkTouchArea = false
+        contentLabel.displaysAsynchronously = true
+        contentLabel.fadeOnAsynchronouslyDisplay = false
+        contentLabel.ignoreCommonProperties = true
         self.contentView.addSubview(contentLabel)
     }
     
@@ -128,17 +127,15 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         replyLabel.layer.borderColor = AppTheme.shared.tintColor.cgColor
         moreLabel.textColor = AppTheme.shared.tintColor
         moreLabel.layer.borderColor = AppTheme.shared.tintColor.cgColor
-        contentLabel.linkAttributes = [NSForegroundColorAttributeName:AppTheme.shared.urlColor]
-        contentLabel.activeLinkAttributes = [NSForegroundColorAttributeName:AppTheme.shared.activeUrlColor]
-        if let article = article {
-            contentLabel.setText(AppSetting.shared.nightMode ? article.attributedDarkBody : article.attributedBody)
-        }
+        //contentLabel.linkAttributes = [NSForegroundColorAttributeName:AppTheme.shared.urlColor]
+        //contentLabel.activeLinkAttributes = [NSForegroundColorAttributeName:AppTheme.shared.activeUrlColor]
     }
     
-    func setData(displayFloor floor: Int, smarticle: SMArticle, delegate: ArticleContentCellDelegate) {
+    func setData(displayFloor floor: Int, smarticle: SMArticle, delegate: ArticleContentCellDelegate, controller: ArticleContentViewController) {
         self.displayFloor = floor
         self.delegate = delegate
         self.article = smarticle
+        self.controller = controller
         
         authorLabel.text = smarticle.authorID
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
@@ -164,11 +161,11 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             avatarImageView.isHidden = true
         }
         
-        
         authorLabel.font = UIFont.boldSystemFont(ofSize: authorFontSize)
         authorLabel.sizeToFit()
         floorAndTimeLabel.font = UIFont.systemFont(ofSize: floorTimeFontSize)
         floorAndTimeLabel.sizeToFit()
+        
         if (!setting.noPicMode) && setting.showAvatar {
             authorLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 - margin2 / 2 - authorLabel.bounds.height), size: authorLabel.bounds.size)
             floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 + margin2 / 2), size: floorAndTimeLabel.bounds.size)
@@ -176,19 +173,23 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
             authorLabel.frame = CGRect(origin: CGPoint(x: leftMargin, y: margin1 - margin2 / 2 - authorLabel.bounds.height), size: authorLabel.bounds.size)
             floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin, y: margin1 + margin2 / 2), size: floorAndTimeLabel.bounds.size)
         }
+        
         replyLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
         replyLabel.frame = CGRect(x: size.width - rightMargin - margin3 - replyButtonWidth - moreButtonWidth, y: margin1 - buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
         moreLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
         moreLabel.frame = CGRect(x: size.width - rightMargin - moreButtonWidth, y: margin1 - buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
         
-        var imageLength: CGFloat = 0
-        if imageViews.count == 1 {
-            imageLength = size.width
-        } else if imageViews.count > 1 {
-            let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-            imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth
+        let imageHeight = heightForImages(count: imageViews.count, boundingWidth: size.width)
+        
+        contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: size.width - leftMargin - rightMargin, height: size.height - margin1 * 2 - margin3 - imageHeight)
+        
+        if let article = article, let controller = controller {
+            let width = size.width - leftMargin - rightMargin
+            let layout = controller.articleContentLayout["\(article.id)_\(width)\(AppSetting.shared.nightMode ? "_dark" : "")"]
+            if contentLabel.textLayout != layout {
+                contentLabel.textLayout = layout
+            }
         }
-        contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: size.width - leftMargin - rightMargin, height: size.height - margin1 * 2 - margin3 - imageLength)
         
         switch imageViews.count {
         case 1:
@@ -217,24 +218,47 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
     //MARK: - Calculate Fitting Size
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         guard let leftMargin = delegate?.leftMargin, let rightMargin = delegate?.rightMargin else { return CGSize.zero }
-        let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: size.height)
-        let rect = TTTAttributedLabel.sizeThatFitsAttributedString(article!.attributedBody, withConstraints: boundingSize, limitedToNumberOfLines: 0)
-        var imageLength: CGFloat = 0
+        guard let article = self.article, let controller = self.controller else { return CGSize.zero }
+        
+        let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: CGFloat.greatestFiniteMagnitude)
+        //dPrint("sizeThatFits: width: \(boundingSize.width)")
+        
+        let textBoundingSize: CGSize
+        if let layout = controller.articleContentLayout["\(article.id)_\(boundingSize.width)"] {
+            // Set size with stored text layout
+            textBoundingSize = layout.textBoundingSize
+        } else {
+            // Calculate text layout
+            let layout = YYTextLayout(containerSize: boundingSize, text: article.attributedBody)!
+            let darkLayout = YYTextLayout(containerSize: boundingSize, text: article.attributedDarkBody)!
+            // Store in dictionary
+            controller.articleContentLayout["\(article.id)_\(boundingSize.width)"] = layout
+            controller.articleContentLayout["\(article.id)_\(boundingSize.width)_dark"] = darkLayout
+            // Set size with calculated text layout
+            textBoundingSize = layout.textBoundingSize
+        }
+        
+        let imageHeight = heightForImages(count: article.imageAtt.count, boundingWidth: size.width)
+        
+        return CGSize(width: size.width, height: margin1 * 2 + ceil(textBoundingSize.height) + margin3 + imageHeight)
+    }
+    
+    private func heightForImages(count: Int, boundingWidth: CGFloat) -> CGFloat {
+        var totalHeight: CGFloat = 0
         if !setting.noPicMode {
-            let imageCount = article?.imageAtt.count ?? 0
-            switch imageCount {
+            switch count {
             case 1, 4:
-                imageLength = size.width
+                totalHeight = boundingWidth
             case 2:
-                imageLength = (size.width - blankWidth) / 2
+                totalHeight = (boundingWidth - blankWidth) / 2
             case let length where length == 3 || length > 4:
-                let oneImageLength = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-                imageLength = (oneImageLength + blankWidth) * ceil(CGFloat(imageCount) / picNumPerLine) - blankWidth
+                let oneImageLength = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
+                totalHeight = (oneImageLength + blankWidth) * ceil(CGFloat(count) / picNumPerLine) - blankWidth
             default:
                 break
             }
         }
-        return CGSize(width: size.width, height: margin1 * 2 + ceil(rect.height) + margin3 + imageLength)
+        return totalHeight
     }
     
     private func drawImagesWithInfo(imageAtt: [ImageInfo]?) {
@@ -269,9 +293,9 @@ class ArticleContentCell: UITableViewCell, TTTAttributedLabelDelegate {
         }
     }
     
-    func attributedLabel(_ label: TTTAttributedLabel!, didSelectLinkWith url: URL!) {
-        delegate?.cell(self, didClick: url)
-    }
+//    func attributedLabel(_ label: TTTAttributedLabel!, didSelectLinkWith url: URL!) {
+//        delegate?.cell(self, didClick: url)
+//    }
     
     //MARK: - Action
     @objc private func singleTapOnImage(recognizer: UIGestureRecognizer) {

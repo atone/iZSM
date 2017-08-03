@@ -35,6 +35,18 @@ class AppTheme {
         return UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
     }
     
+    var nightAbsoluteTintColor: UIColor {
+        return UIColor(red: 215/255.0, green: 215/255.0, blue: 214/255.0, alpha: 1)
+    }
+    
+    var dayLightBackgroundColor: UIColor {
+        return UIColor.groupTableViewBackground
+    }
+    
+    var nightLightBackgroundColor: UIColor {
+        return UIColor(red: 20/255.0, green: 20/255.0, blue: 20/255.0, alpha: 1)
+    }
+    
     var backgroundColor: UIColor {
         if setting.nightMode {
             return UIColor(red: 40/255.0, green: 40/255.0, blue: 41/255.0, alpha: 1)
@@ -69,7 +81,7 @@ class AppTheme {
     
     var tintColor: UIColor {
         if setting.nightMode {
-            return UIColor(red: 215/255.0, green: 215/255.0, blue: 214/255.0, alpha: 1)
+            return nightAbsoluteTintColor
         } else {
             return absoluteTintColor
         }
@@ -101,9 +113,9 @@ class AppTheme {
     
     var lightBackgroundColor: UIColor {
         if setting.nightMode {
-            return UIColor(red: 20/255.0, green: 20/255.0, blue: 20/255.0, alpha: 1)
+            return nightLightBackgroundColor
         } else {
-            return UIColor.groupTableViewBackground
+            return dayLightBackgroundColor
         }
     }
     
@@ -115,11 +127,19 @@ class AppTheme {
         }
     }
     
-    var urlColor: UIColor {
-        return tintColor
+    var dayUrlColor: UIColor {
+        return absoluteTintColor
     }
     
-    var activeUrlColor: UIColor {
-        return urlColor.withAlphaComponent(0.6)
+    var nightUrlColor: UIColor {
+        return nightAbsoluteTintColor
+    }
+    
+    var dayActiveUrlColor: UIColor {
+        return dayUrlColor.withAlphaComponent(0.6)
+    }
+    
+    var nightActiveUrlColor: UIColor {
+        return nightUrlColor.withAlphaComponent(0.6)
     }
 }

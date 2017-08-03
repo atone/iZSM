@@ -195,14 +195,14 @@ class ArticleContentCell: UITableViewCell {
         moreLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
         moreLabel.frame = CGRect(x: size.width - rightMargin - moreButtonWidth, y: margin1 - buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
         
-        let imageHeight = heightForImages(count: imageViews.count, boundingWidth: size.width)
+        let boundingWidth = size.width - leftMargin - rightMargin
+        let imageHeight = heightForImages(count: imageViews.count, boundingWidth: boundingWidth)
         
-        contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: size.width - leftMargin - rightMargin, height: size.height - margin1 * 2 - margin3 - imageHeight)
+        contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: boundingWidth, height: size.height - margin1 * 2 - margin3 - imageHeight)
         
         // contentLabel's layout also needs to be updated
         if let article = article {
-            let width = size.width - leftMargin - rightMargin
-            if let layout = controller.articleContentLayout["\(article.id)_\(width)\(setting.nightMode ? "_dark" : "")"] {
+            if let layout = controller.articleContentLayout["\(article.id)_\(boundingWidth)\(setting.nightMode ? "_dark" : "")"] {
                 if contentLabel.textLayout != layout {
                     contentLabel.textLayout = layout
                 }
@@ -210,30 +210,30 @@ class ArticleContentCell: UITableViewCell {
                 dPrint("This should not happen. Calculate layout and update")
                 // Calculate layout
                 let attributedText: NSAttributedString = setting.nightMode ? article.attributedDarkBody : article.attributedBody
-                let layout = YYTextLayout(containerSize: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude), text: attributedText)
+                let layout = YYTextLayout(containerSize: CGSize(width: boundingWidth, height: CGFloat.greatestFiniteMagnitude), text: attributedText)
                 // Store it in dictionary
-                controller.articleContentLayout["\(article.id)_\(width)\(setting.nightMode ? "_dark" : "")"] = layout
+                controller.articleContentLayout["\(article.id)_\(boundingWidth)\(setting.nightMode ? "_dark" : "")"] = layout
                 contentLabel.textLayout = layout
             }
         }
         
         switch imageViews.count {
         case 1:
-            imageViews.first!.frame = CGRect(x: 0, y: size.height - size.width, width: size.width, height: size.width)
+            imageViews.first!.frame = CGRect(x: leftMargin, y: size.height - boundingWidth, width: boundingWidth, height: boundingWidth)
         case 2, 4:
             for (index, imageView) in imageViews.enumerated() {
-                let length = (size.width - blankWidth) / 2
+                let length = (boundingWidth - blankWidth) / 2
                 let startY = size.height - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / 2) - blankWidth)
                 let offsetY = (length + blankWidth) * CGFloat(index / 2)
-                let X = 0 + CGFloat(index % 2) * (length + blankWidth)
+                let X = leftMargin + CGFloat(index % 2) * (length + blankWidth)
                 imageView.frame = CGRect(x: X, y: startY + offsetY, width: length, height: length)
             }
         case let count where count == 3 || count > 4:
             for (index, imageView) in imageViews.enumerated() {
-                let length = (size.width - (picNumPerLine - 1) * blankWidth) / picNumPerLine
+                let length = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
                 let startY = size.height - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth)
                 let offsetY = (length + blankWidth) * CGFloat(index / Int(picNumPerLine))
-                let X = 0 + CGFloat(index % Int(picNumPerLine)) * (length + blankWidth)
+                let X = leftMargin + CGFloat(index % Int(picNumPerLine)) * (length + blankWidth)
                 imageView.frame = CGRect(x: X, y: startY + offsetY, width: length, height: length)
             }
         default:
@@ -268,7 +268,7 @@ class ArticleContentCell: UITableViewCell {
             textBoundingSize = layout.textBoundingSize
         }
         
-        let imageHeight = heightForImages(count: article.imageAtt.count, boundingWidth: size.width)
+        let imageHeight = heightForImages(count: article.imageAtt.count, boundingWidth: boundingSize.width)
         
         return CGSize(width: size.width, height: margin1 * 2 + ceil(textBoundingSize.height) + margin3 + imageHeight)
     }

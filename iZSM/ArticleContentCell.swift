@@ -111,11 +111,17 @@ class ArticleContentCell: UITableViewCell {
         moreLabel.isUserInteractionEnabled = true
         self.contentView.addSubview(moreLabel)
         
-        contentLabel.lineBreakMode = .byWordWrapping
-        contentLabel.numberOfLines = 0
         contentLabel.displaysAsynchronously = true
         contentLabel.fadeOnAsynchronouslyDisplay = false
         contentLabel.ignoreCommonProperties = true
+        contentLabel.highlightTapAction = { [unowned self] (containerView, text, range, rect) in
+            let urlString = text.attributedSubstring(from: range).string
+            if let url = URL(string: urlString) {
+                self.delegate?.cell(self, didClick: url)
+            } else {
+                dPrint("ERROR: \(urlString) can't be recognized as URL")
+            }
+        }
         self.contentView.addSubview(contentLabel)
     }
     
@@ -127,8 +133,6 @@ class ArticleContentCell: UITableViewCell {
         replyLabel.layer.borderColor = AppTheme.shared.tintColor.cgColor
         moreLabel.textColor = AppTheme.shared.tintColor
         moreLabel.layer.borderColor = AppTheme.shared.tintColor.cgColor
-        //contentLabel.linkAttributes = [NSForegroundColorAttributeName:AppTheme.shared.urlColor]
-        //contentLabel.activeLinkAttributes = [NSForegroundColorAttributeName:AppTheme.shared.activeUrlColor]
     }
     
     func setData(displayFloor floor: Int, smarticle: SMArticle, delegate: ArticleContentCellDelegate, controller: ArticleContentViewController) {
@@ -311,10 +315,6 @@ class ArticleContentCell: UITableViewCell {
             }
         }
     }
-    
-//    func attributedLabel(_ label: TTTAttributedLabel!, didSelectLinkWith url: URL!) {
-//        delegate?.cell(self, didClick: url)
-//    }
     
     //MARK: - Action
     @objc private func singleTapOnImage(recognizer: UIGestureRecognizer) {

@@ -210,6 +210,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
             if let article = article {
                 articleTitle = article.replySubject
                 articleContent = article.quotBody
+                countLabel.text = "\(articleTitle!.characters.count)"
             }
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
@@ -219,6 +220,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
             if let article = article {
                 articleTitle = article.replySubject
                 articleContent = article.quotBody
+                countLabel.text = "\(articleTitle!.characters.count)"
             }
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
@@ -228,6 +230,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
             if let article = article {
                 articleTitle = article.subject
                 articleContent = article.body
+                countLabel.text = "\(articleTitle!.characters.count)"
             }
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)

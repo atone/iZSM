@@ -179,6 +179,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                 contentTextView.becomeFirstResponder()
                 contentTextView.selectedRange = NSMakeRange(0, 0)
             }
+            countLabel.text = "\(emailTitle?.characters.count ?? 0)"
         case .reply:
             title = "回复邮件"
             if let email = email {
@@ -189,6 +190,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             doneButton.isEnabled = true
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
+            countLabel.text = "\(emailTitle?.characters.count ?? 0)"
         case .feedback:
             title = "邮件反馈"
             doneButton.isEnabled = false
@@ -206,6 +208,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                 contentTextView.becomeFirstResponder()
                 contentTextView.selectedRange = NSMakeRange(0, 0)
             }
+            countLabel.text = "\(emailTitle?.characters.count ?? 0)"
         }
     }
     

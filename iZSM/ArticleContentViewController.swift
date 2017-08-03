@@ -10,6 +10,7 @@ import UIKit
 import SafariServices
 import SVProgressHUD
 import SnapKit
+import YYKit
 
 class ArticleContentViewController: NTTableViewController {
     
@@ -22,6 +23,8 @@ class ArticleContentViewController: NTTableViewController {
     fileprivate var isFetchingData = false // whether the app is fetching data
     
     fileprivate var smarticles = [[SMArticle]]()
+    
+    var articleContentLayout = [String: YYTextLayout]()
     
     fileprivate let api = SmthAPI()
     fileprivate let setting = AppSetting.shared
@@ -70,6 +73,7 @@ class ArticleContentViewController: NTTableViewController {
     // MARK: - ViewController Related
     override func viewDidLoad() {
         tableView.register(ArticleContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)
+        tableView.addObserver(self, forKeyPath: "layoutMargins", options: .new, context: nil)
         // set extra cells hidden
         let footerView = UIView()
         footerView.backgroundColor = UIColor.clear
@@ -95,10 +99,47 @@ class ArticleContentViewController: NTTableViewController {
         fetchData(restorePosition: true, showHUD: true)
     }
     
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard keyPath == "layoutMargins" else { return }
+        if let change = change, let newMargins = change[.newKey] as? UIEdgeInsets {
+            // some layout maybe outdated, so update them here
+            updateContentLayout(with: newMargins)
+        }
+    }
+    
+    private func updateContentLayout(with margins: UIEdgeInsets) {
+        let contentWidth = tableView.bounds.size.width - margins.left - margins.right
+        let boundingSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
+        for articles in smarticles {
+            for article in articles {
+                if articleContentLayout["\(article.id)_\(contentWidth)"] == nil {
+                    // Calculate text layout
+                    let layout = YYTextLayout(containerSize: boundingSize, text: article.attributedBody)!
+                    let darkLayout = YYTextLayout(containerSize: boundingSize, text: article.attributedDarkBody)!
+                    // Store in dictionary
+                    articleContentLayout["\(article.id)_\(contentWidth)"] = layout
+                    articleContentLayout["\(article.id)_\(contentWidth)_dark"] = darkLayout
+                }
+            }
+        }
+    }
+    
+    fileprivate func forceUpdateLayout(with article: SMArticle) {
+        let contentWidth = tableView.bounds.size.width - tableView.layoutMargins.left - tableView.layoutMargins.right
+        let boundingSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
+        // Calculate text layout
+        let layout = YYTextLayout(containerSize: boundingSize, text: article.attributedBody)!
+        let darkLayout = YYTextLayout(containerSize: boundingSize, text: article.attributedDarkBody)!
+        // Store in dictionary
+        articleContentLayout["\(article.id)_\(contentWidth)"] = layout
+        articleContentLayout["\(article.id)_\(contentWidth)_dark"] = darkLayout
+    }
+    
     deinit {
         if self.soloUser == nil { // 只看某人模式下，不保存位置
             savePosition()
         }
+        tableView.removeObserver(self, forKeyPath: "layoutMargins")
     }
     
     fileprivate func restorePosition() {
@@ -176,6 +217,7 @@ class ArticleContentViewController: NTTableViewController {
                     self.tableView.mj_header.endRefreshing()
                     self.tableView.mj_footer.endRefreshing()
                     self.smarticles.removeAll()
+                    self.articleContentLayout.removeAll()
                     if smArticles.count > 0 {
                         self.tableView.mj_footer.isHidden = false
                         self.smarticles.append(smArticles)
@@ -329,7 +371,7 @@ class ArticleContentViewController: NTTableViewController {
         if setting.sortMode == .LaterPostFirst && floor != 0 {
             floor = totalArticleNumber - floor
         }
-        cell.setData(displayFloor: floor, smarticle: smarticle, delegate: self)
+        cell.setData(displayFloor: floor, smarticle: smarticle, delegate: self, controller: self)
         cell.preservesSuperviewLayoutMargins = true
         cell.fd_enforceFrameLayout = true
     }
@@ -550,14 +592,6 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
 
 extension ArticleContentViewController: ArticleContentCellDelegate {
     
-    var leftMargin: CGFloat {
-        return view.layoutMargins.left
-    }
-    
-    var rightMargin: CGFloat {
-        return view.layoutMargins.right
-    }
-    
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int) {
         guard let imageInfos = cell.article?.imageAtt else { return }
         var items = [YYPhotoGroupItem]()
@@ -696,6 +730,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 if let newArticle = self.api.getArticleInBoard(boardID: article.boardID, articleID: article.id) {
                     DispatchQueue.main.async {
                         self.smarticles[indexPath.section][indexPath.row] = newArticle
+                        self.forceUpdateLayout(with: newArticle)
                         self.tableView.beginUpdates()
                         self.tableView.reloadRow(at: indexPath, with: .automatic)
                         self.tableView.endUpdates()

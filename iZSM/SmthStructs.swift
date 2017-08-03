@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import YYKit
 
 struct SMThread {
     var id: Int
@@ -121,6 +122,22 @@ struct SMArticle {
             } else {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: normal))
             }
+        }
+        
+        let types: NSTextCheckingResult.CheckingType = .link
+        let detector = try! NSDataDetector(types: types.rawValue)
+        let matches = detector.matches(in: attributeText.string, range: NSMakeRange(0, attributeText.length))
+        let backgroundColor: UIColor = dark ? theme.nightLightBackgroundColor : theme.dayLightBackgroundColor
+        let highlightColor: UIColor = dark ? theme.nightActiveUrlColor : theme.dayActiveUrlColor
+        let urlColor: UIColor = dark ? theme.nightUrlColor : theme.dayUrlColor
+        
+        for match in matches {
+            let border = YYTextBorder(fill: backgroundColor, cornerRadius: 3)
+            let highlight = YYTextHighlight()
+            highlight.setColor(highlightColor)
+            highlight.setBackgroundBorder(border)
+            attributeText.setTextHighlight(highlight, range: match.range)
+            attributeText.setColor(urlColor, range: match.range)
         }
         
         return attributeText

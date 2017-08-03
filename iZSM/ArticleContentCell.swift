@@ -146,8 +146,13 @@ class ArticleContentCell: UITableViewCell {
     
     //MARK: - Layout Subviews
     override func layoutSubviews() {
-        guard let leftMargin = delegate?.leftMargin, let rightMargin = delegate?.rightMargin else { return }
+        
+        guard let controller = controller else { return }
+        
         super.layoutSubviews()
+        
+        let leftMargin = controller.view.layoutMargins.left
+        let rightMargin = controller.view.layoutMargins.right
         let size = contentView.bounds.size
         
         let authorFontSize: CGFloat = size.width < 350 ? 16 : 18
@@ -183,10 +188,20 @@ class ArticleContentCell: UITableViewCell {
         
         contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: size.width - leftMargin - rightMargin, height: size.height - margin1 * 2 - margin3 - imageHeight)
         
-        if let article = article, let controller = controller {
+        // contentLabel's layout also needs to be updated
+        if let article = article {
             let width = size.width - leftMargin - rightMargin
-            let layout = controller.articleContentLayout["\(article.id)_\(width)\(AppSetting.shared.nightMode ? "_dark" : "")"]
-            if contentLabel.textLayout != layout {
+            if let layout = controller.articleContentLayout["\(article.id)_\(width)\(setting.nightMode ? "_dark" : "")"] {
+                if contentLabel.textLayout != layout {
+                    contentLabel.textLayout = layout
+                }
+            } else {
+                dPrint("This should not happen. Calculate layout and update")
+                // Calculate layout
+                let attributedText: NSAttributedString = setting.nightMode ? article.attributedDarkBody : article.attributedBody
+                let layout = YYTextLayout(containerSize: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude), text: attributedText)
+                // Store it in dictionary
+                controller.articleContentLayout["\(article.id)_\(width)\(setting.nightMode ? "_dark" : "")"] = layout
                 contentLabel.textLayout = layout
             }
         }
@@ -217,11 +232,15 @@ class ArticleContentCell: UITableViewCell {
     
     //MARK: - Calculate Fitting Size
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        guard let leftMargin = delegate?.leftMargin, let rightMargin = delegate?.rightMargin else { return CGSize.zero }
+        
         guard let article = self.article, let controller = self.controller else { return CGSize.zero }
         
+        let leftMargin = controller.view.layoutMargins.left
+        let rightMargin = controller.view.layoutMargins.right
+        
+        // the boundingSize here may not be accurate, since leftMargin and rightMargin maybe haven't updated here.
+        // (when the window size changes), layout will be updated in tableView.layoutMargins' observer.
         let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: CGFloat.greatestFiniteMagnitude)
-        //dPrint("sizeThatFits: width: \(boundingSize.width)")
         
         let textBoundingSize: CGSize
         if let layout = controller.articleContentLayout["\(article.id)_\(boundingSize.width)"] {
@@ -251,9 +270,9 @@ class ArticleContentCell: UITableViewCell {
                 totalHeight = boundingWidth
             case 2:
                 totalHeight = (boundingWidth - blankWidth) / 2
-            case let length where length == 3 || length > 4:
-                let oneImageLength = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-                totalHeight = (oneImageLength + blankWidth) * ceil(CGFloat(count) / picNumPerLine) - blankWidth
+            case let num where num == 3 || num > 4:
+                let oneImageHeight = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
+                totalHeight = (oneImageHeight + blankWidth) * ceil(CGFloat(count) / picNumPerLine) - blankWidth
             default:
                 break
             }
@@ -322,8 +341,6 @@ class ArticleContentCell: UITableViewCell {
 }
 
 protocol ArticleContentCellDelegate: class {
-    var leftMargin: CGFloat { get }
-    var rightMargin: CGFloat { get }
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int)
     func cell(_ cell: ArticleContentCell, didClick url: URL)
     func cell(_ cell: ArticleContentCell, didClickReply sender: UIView?)

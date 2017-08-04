@@ -718,8 +718,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         let layout = YYTextLayout(containerSize: boundingSize, text: article.attributedBody)!
         let darkLayout = YYTextLayout(containerSize: boundingSize, text: article.attributedDarkBody)!
         // Store in dictionary
-        articleContentLayout["\(article.id)_\(contentWidth)"] = layout
-        articleContentLayout["\(article.id)_\(contentWidth)_dark"] = darkLayout
+        articleContentLayout["\(article.id)_\(Int(contentWidth))"] = layout
+        articleContentLayout["\(article.id)_\(Int(contentWidth))_dark"] = darkLayout
     }
     
     fileprivate func delete(_ article: SMArticle, at indexPath: IndexPath) {

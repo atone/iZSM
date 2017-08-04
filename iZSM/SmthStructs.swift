@@ -140,6 +140,9 @@ struct SMArticle {
             attributeText.setColor(urlColor, range: match.range)
         }
         
+        let emoticonParser = SMEmoticon.shared.parser
+        emoticonParser.parseText(attributeText, selectedRange: nil)
+        
         return attributeText
     }
     
@@ -192,6 +195,42 @@ struct SMArticle {
         let pattern = "\\[img=.*\\]\\[/img\\]"
         let regularExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
         self.body = regularExpression.stringByReplacingMatches(in: self.body, range: NSMakeRange(0, self.body.characters.count), withTemplate: "").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}
+
+struct SMEmoticon {
+    
+    static let shared = SMEmoticon()
+    
+    public let parser: YYTextSimpleEmoticonParser
+    
+    private init() {
+        
+        parser = YYTextSimpleEmoticonParser()
+        
+        var mapper = [String: UIImage]()
+        
+        for i in 1...73 {
+            let name = "em\(i)"
+            mapper["[\(name)]"] = YYImage(named: "\(name).gif")
+        }
+        
+        for i in 0...41 {
+            let name = "ema\(i)"
+            mapper["[\(name)]"] = YYImage(named: "\(name).gif")
+        }
+        
+        for i in 0...24 {
+            let name = "emb\(i)"
+            mapper["[\(name)]"] = YYImage(named: "\(name).gif")
+        }
+        
+        for i in 0...58 {
+            let name = "emc\(i)"
+            mapper["[\(name)]"] = YYImage(named: "\(name).gif")
+        }
+        
+        parser.emoticonMapper = mapper
     }
 }
 

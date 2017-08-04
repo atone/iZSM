@@ -180,6 +180,7 @@ class ArticleContentViewController: NTTableViewController {
                     self.tableView.mj_footer.endRefreshing()
                     self.smarticles.removeAll()
                     self.articleContentLayout.removeAll()
+                    self.tableView.fd_keyedHeightCache.invalidateAllHeightCache()
                     if smArticles.count > 0 {
                         self.tableView.mj_footer.isHidden = false
                         self.smarticles.append(smArticles)
@@ -344,9 +345,8 @@ class ArticleContentViewController: NTTableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let articleId = smarticles[indexPath.section][indexPath.row].id
-        let revision = smarticles[indexPath.section][indexPath.row].revision
         let contentWidth = view.bounds.size.width - view.layoutMargins.left - view.layoutMargins.right
-        let heightIdentifier = "\(articleId)_\(revision)_\(Int(contentWidth))" as NSString
+        let heightIdentifier = "\(articleId)_\(Int(contentWidth))" as NSString
         
         return tableView.fd_heightForCell(withIdentifier: kArticleContentCellIdentifier, cacheByKey: heightIdentifier) { (cell) in
             if let cell = cell as? ArticleContentCell {
@@ -694,13 +694,12 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         cavc.article = article
         cavc.completionHandler = { [unowned self] in
             DispatchQueue.global().async {
-                if var newArticle = self.api.getArticleInBoard(boardID: article.boardID, articleID: article.id) {
+                if let newArticle = self.api.getArticleInBoard(boardID: article.boardID, articleID: article.id) {
                     DispatchQueue.main.async {
-                        newArticle.revision = article.revision + 1
                         self.smarticles[indexPath.section][indexPath.row] = newArticle
                         self.forceUpdateLayout(with: newArticle)
                         self.tableView.beginUpdates()
-                        self.tableView.reloadRow(at: indexPath, with: .automatic)
+                        self.tableView.reloadRows(at: [indexPath], with: .automatic)
                         self.tableView.endUpdates()
                     }
                 }
@@ -720,6 +719,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         // Store in dictionary
         articleContentLayout["\(article.id)_\(Int(contentWidth))"] = layout
         articleContentLayout["\(article.id)_\(Int(contentWidth))_dark"] = darkLayout
+        let cacheKey = "\(article.id)_\(Int(contentWidth))" as NSString
+        tableView.fd_keyedHeightCache.invalidateHeight(forKey: cacheKey)
     }
     
     fileprivate func delete(_ article: SMArticle, at indexPath: IndexPath) {

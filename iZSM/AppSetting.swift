@@ -75,7 +75,7 @@ class AppSetting {
     }
     
     var signatureRegularExpression : NSRegularExpression {
-        let regx = try! NSRegularExpression(pattern: "- 来自「最水木 for \\w*」")
+        let regx = try! NSRegularExpression(pattern: "- 来自「最水木 for[ \\w]*」")
         return regx
     }
 

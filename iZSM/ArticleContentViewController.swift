@@ -725,7 +725,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     
     fileprivate func delete(_ article: SMArticle, at indexPath: IndexPath) {
         let confirmAlert = UIAlertController(title: "确定删除？", message: nil, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "确认", style: .default) { [unowned self] _ in
+        let okAction = UIAlertAction(title: "确认", style: .destructive) { [unowned self] _ in
             networkActivityIndicatorStart(withHUD: true)
             DispatchQueue.global().async {
                 let _ = self.api.deleteArticle(articleID: article.id, inBoard: article.boardID)

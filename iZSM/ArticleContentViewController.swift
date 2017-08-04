@@ -346,7 +346,7 @@ class ArticleContentViewController: NTTableViewController {
         let articleId = smarticles[indexPath.section][indexPath.row].id
         let revision = smarticles[indexPath.section][indexPath.row].revision
         let contentWidth = view.bounds.size.width - view.layoutMargins.left - view.layoutMargins.right
-        let heightIdentifier = "\(articleId)_\(revision)_\(contentWidth)" as NSString
+        let heightIdentifier = "\(articleId)_\(revision)_\(Int(contentWidth))" as NSString
         
         return tableView.fd_heightForCell(withIdentifier: kArticleContentCellIdentifier, cacheByKey: heightIdentifier) { (cell) in
             if let cell = cell as? ArticleContentCell {

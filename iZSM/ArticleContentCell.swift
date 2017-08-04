@@ -202,7 +202,7 @@ class ArticleContentCell: UITableViewCell {
         
         // contentLabel's layout also needs to be updated
         if let article = article {
-            if let layout = controller.articleContentLayout["\(article.id)_\(boundingWidth)\(setting.nightMode ? "_dark" : "")"] {
+            if let layout = controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))\(setting.nightMode ? "_dark" : "")"] {
                 if contentLabel.textLayout != layout {
                     contentLabel.textLayout = layout
                 }
@@ -212,7 +212,7 @@ class ArticleContentCell: UITableViewCell {
                 let attributedText: NSAttributedString = setting.nightMode ? article.attributedDarkBody : article.attributedBody
                 let layout = YYTextLayout(containerSize: CGSize(width: boundingWidth, height: CGFloat.greatestFiniteMagnitude), text: attributedText)
                 // Store it in dictionary
-                controller.articleContentLayout["\(article.id)_\(boundingWidth)\(setting.nightMode ? "_dark" : "")"] = layout
+                controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))\(setting.nightMode ? "_dark" : "")"] = layout
                 contentLabel.textLayout = layout
             }
         }
@@ -252,7 +252,7 @@ class ArticleContentCell: UITableViewCell {
         let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: CGFloat.greatestFiniteMagnitude)
         
         let textBoundingSize: CGSize
-        if let layout = controller.articleContentLayout["\(article.id)_\(boundingSize.width)"] {
+        if let layout = controller.articleContentLayout["\(article.id)_\(Int(boundingSize.width))"] {
             // Set size with stored text layout
             textBoundingSize = layout.textBoundingSize
         } else {
@@ -260,8 +260,8 @@ class ArticleContentCell: UITableViewCell {
             let layout = YYTextLayout(containerSize: boundingSize, text: article.attributedBody)!
             let darkLayout = YYTextLayout(containerSize: boundingSize, text: article.attributedDarkBody)!
             // Store in dictionary
-            controller.articleContentLayout["\(article.id)_\(boundingSize.width)"] = layout
-            controller.articleContentLayout["\(article.id)_\(boundingSize.width)_dark"] = darkLayout
+            controller.articleContentLayout["\(article.id)_\(Int(boundingSize.width))"] = layout
+            controller.articleContentLayout["\(article.id)_\(Int(boundingSize.width))_dark"] = darkLayout
             // Set size with calculated text layout
             textBoundingSize = layout.textBoundingSize
         }

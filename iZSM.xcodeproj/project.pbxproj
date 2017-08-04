@@ -30,6 +30,7 @@
 		9C4728F01F0FC64D00C289FC /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4728EE1F0FC64D00C289FC /* Realm.framework */; };
 		9C4728F11F0FC64D00C289FC /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4728EF1F0FC64D00C289FC /* RealmSwift.framework */; };
 		9C4728F31F0FC80100C289FC /* ArticleReadStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */; };
+		9C48F6AF1F34553A003FA686 /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C48F6AE1F34553A003FA686 /* DeviceKit.framework */; };
 		9C4D0B071F1A5AAD007B4D83 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4D0B061F1A5AAD007B4D83 /* AppTheme.swift */; };
 		9C4D0B091F1A6F91007B4D83 /* NTTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */; };
 		9C4E6AB11F1158EB00ABAEFA /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */; };
@@ -334,6 +335,7 @@
 		9C4728EE1F0FC64D00C289FC /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		9C4728EF1F0FC64D00C289FC /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Carthage/Build/iOS/RealmSwift.framework; sourceTree = "<group>"; };
 		9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleReadStatus.swift; sourceTree = "<group>"; };
+		9C48F6AE1F34553A003FA686 /* DeviceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceKit.framework; path = Carthage/Build/iOS/DeviceKit.framework; sourceTree = "<group>"; };
 		9C4D0B061F1A5AAD007B4D83 /* AppTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTTableViewController.swift; sourceTree = "<group>"; };
 		9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
@@ -654,6 +656,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C1A3BE01DE2E5AD00CF4A43 /* libSMTH_0.2.3.a in Frameworks */,
+				9C48F6AF1F34553A003FA686 /* DeviceKit.framework in Frameworks */,
 				9CFEC1D41F19E330008E5976 /* KeychainSwift.framework in Frameworks */,
 				9C889FC71DE4733A00C33A8D /* OnePasswordExtension.framework in Frameworks */,
 				9C4728F01F0FC64D00C289FC /* Realm.framework in Frameworks */,
@@ -717,6 +720,7 @@
 			isa = PBXGroup;
 			children = (
 				9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */,
+				9C48F6AE1F34553A003FA686 /* DeviceKit.framework */,
 				9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */,
 				9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */,
 				9C4728EE1F0FC64D00C289FC /* Realm.framework */,
@@ -1534,6 +1538,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RealmSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/KeychainSwift.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/DeviceKit.framework",
 			);
 			name = "Run Script";
 			outputPaths = (
@@ -1544,6 +1549,7 @@
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Realm.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RealmSwift.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/KeychainSwift.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/DeviceKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

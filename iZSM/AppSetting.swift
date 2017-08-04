@@ -7,11 +7,14 @@
 //
 
 import Foundation
+import DeviceKit
 import KeychainSwift
 
 class AppSetting {
 
     static let shared = AppSetting()
+    
+    let device = Device()
     
     enum DisplayMode: Int {
         case nForum = 0, www2, mobile
@@ -71,11 +74,11 @@ class AppSetting {
     }
     
     var signature: String {
-        return "- 来自「最水木 for \(UIDevice.current.model)」"
+        return "- 来自「最水木 for \(device)」"
     }
     
     var signatureRegularExpression : NSRegularExpression {
-        let regx = try! NSRegularExpression(pattern: "- 来自「最水木 for[ \\w]*」")
+        let regx = try! NSRegularExpression(pattern: "- 来自「最水木 for .*」")
         return regx
     }
 

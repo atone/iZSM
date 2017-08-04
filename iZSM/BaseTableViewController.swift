@@ -113,8 +113,11 @@ class BaseTableViewController: NTTableViewController {
     }
     
     // remove observer of notification
+    // cancel unfinished tasks
     deinit {
         NotificationCenter.default.removeObserver(self)
+        api.cancel()
+        networkActivityIndicatorStop(withHUD: true)
     }
     
     override func viewWillAppear(_ animated: Bool) {

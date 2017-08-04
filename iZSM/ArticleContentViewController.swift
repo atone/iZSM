@@ -102,6 +102,8 @@ class ArticleContentViewController: NTTableViewController {
         if self.soloUser == nil { // 只看某人模式下，不保存位置
             savePosition()
         }
+        api.cancel()
+        networkActivityIndicatorStop(withHUD: true)
     }
     
     fileprivate func restorePosition() {

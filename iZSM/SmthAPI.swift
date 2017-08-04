@@ -27,6 +27,10 @@ class SmthAPI {
         set { apiSetAccessToken(newValue) }
     }
     
+    func cancel() {
+        api.cancel()
+    }
+    
     //MARK: - Attachments
     //if upload succeed, return attachment array, otherwise, nil
     func uploadAttImage(image: UIImage, index: Int) -> [SMAttachment]? {

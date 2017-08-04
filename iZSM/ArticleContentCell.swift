@@ -207,7 +207,7 @@ class ArticleContentCell: UITableViewCell {
                     contentLabel.textLayout = layout
                 }
             } else {
-                dPrint("This should not happen. Calculate layout and update")
+                dPrint("ERROR: This should not happen. Calculating layout and updating cache.")
                 // Calculate layout
                 let attributedText: NSAttributedString = setting.nightMode ? article.attributedDarkBody : article.attributedBody
                 let layout = YYTextLayout(containerSize: CGSize(width: boundingWidth, height: CGFloat.greatestFiniteMagnitude), text: attributedText)
@@ -249,8 +249,6 @@ class ArticleContentCell: UITableViewCell {
         let leftMargin = controller.view.layoutMargins.left
         let rightMargin = controller.view.layoutMargins.right
         
-        // the boundingSize here may not be accurate, since leftMargin and rightMargin maybe haven't updated here.
-        // (when the window size changes), layout will be updated in tableView.layoutMargins' observer.
         let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: CGFloat.greatestFiniteMagnitude)
         
         let textBoundingSize: CGSize

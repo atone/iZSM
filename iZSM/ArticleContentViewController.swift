@@ -73,7 +73,6 @@ class ArticleContentViewController: NTTableViewController {
     // MARK: - ViewController Related
     override func viewDidLoad() {
         tableView.register(ArticleContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)
-        tableView.addObserver(self, forKeyPath: "layoutMargins", options: .new, context: nil)
         // set extra cells hidden
         let footerView = UIView()
         footerView.backgroundColor = UIColor.clear
@@ -99,47 +98,10 @@ class ArticleContentViewController: NTTableViewController {
         fetchData(restorePosition: true, showHUD: true)
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard keyPath == "layoutMargins" else { return }
-        if let change = change, let newMargins = change[.newKey] as? UIEdgeInsets {
-            // some layout maybe outdated, so update them here
-            updateContentLayout(with: newMargins)
-        }
-    }
-    
-    private func updateContentLayout(with margins: UIEdgeInsets) {
-        let contentWidth = tableView.bounds.size.width - margins.left - margins.right
-        let boundingSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
-        for articles in smarticles {
-            for article in articles {
-                if articleContentLayout["\(article.id)_\(contentWidth)"] == nil {
-                    // Calculate text layout
-                    let layout = YYTextLayout(containerSize: boundingSize, text: article.attributedBody)!
-                    let darkLayout = YYTextLayout(containerSize: boundingSize, text: article.attributedDarkBody)!
-                    // Store in dictionary
-                    articleContentLayout["\(article.id)_\(contentWidth)"] = layout
-                    articleContentLayout["\(article.id)_\(contentWidth)_dark"] = darkLayout
-                }
-            }
-        }
-    }
-    
-    fileprivate func forceUpdateLayout(with article: SMArticle) {
-        let contentWidth = tableView.bounds.size.width - tableView.layoutMargins.left - tableView.layoutMargins.right
-        let boundingSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
-        // Calculate text layout
-        let layout = YYTextLayout(containerSize: boundingSize, text: article.attributedBody)!
-        let darkLayout = YYTextLayout(containerSize: boundingSize, text: article.attributedDarkBody)!
-        // Store in dictionary
-        articleContentLayout["\(article.id)_\(contentWidth)"] = layout
-        articleContentLayout["\(article.id)_\(contentWidth)_dark"] = darkLayout
-    }
-    
     deinit {
         if self.soloUser == nil { // 只看某人模式下，不保存位置
             savePosition()
         }
-        tableView.removeObserver(self, forKeyPath: "layoutMargins")
     }
     
     fileprivate func restorePosition() {
@@ -381,7 +343,11 @@ class ArticleContentViewController: NTTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return tableView.fd_heightForCell(withIdentifier: kArticleContentCellIdentifier, cacheBy: indexPath) { (cell) in
+        let articleId = smarticles[indexPath.section][indexPath.row].id
+        let contentWidth = view.bounds.size.width - view.layoutMargins.left - view.layoutMargins.right
+        let heightIdentifier = "\(articleId)_\(contentWidth)" as NSString
+        
+        return tableView.fd_heightForCell(withIdentifier: kArticleContentCellIdentifier, cacheByKey: heightIdentifier) { (cell) in
             if let cell = cell as? ArticleContentCell {
                 self.configureArticleCell(cell: cell, atIndexPath: indexPath)
             } else {
@@ -741,6 +707,17 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         let navigationController = NTNavigationController(rootViewController: cavc)
         navigationController.modalPresentationStyle = .formSheet
         present(navigationController, animated: true)
+    }
+    
+    fileprivate func forceUpdateLayout(with article: SMArticle) {
+        let contentWidth = view.bounds.size.width - view.layoutMargins.left - view.layoutMargins.right
+        let boundingSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
+        // Calculate text layout
+        let layout = YYTextLayout(containerSize: boundingSize, text: article.attributedBody)!
+        let darkLayout = YYTextLayout(containerSize: boundingSize, text: article.attributedDarkBody)!
+        // Store in dictionary
+        articleContentLayout["\(article.id)_\(contentWidth)"] = layout
+        articleContentLayout["\(article.id)_\(contentWidth)_dark"] = darkLayout
     }
     
     fileprivate func delete(_ article: SMArticle, at indexPath: IndexPath) {

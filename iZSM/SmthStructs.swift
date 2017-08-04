@@ -40,6 +40,8 @@ struct SMArticle {
 
     var floor: Int
     var boardID: String
+    
+    var revision: Int
 
     var imageAtt: [ImageInfo]
     var timeString: String
@@ -78,6 +80,7 @@ struct SMArticle {
 
         self.floor = 0
         self.boardID = ""
+        self.revision = 0
         self.imageAtt = [ImageInfo]()
         self.timeString = time.shortDateString
         self.attributedBody = NSAttributedString()

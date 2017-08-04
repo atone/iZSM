@@ -344,8 +344,9 @@ class ArticleContentViewController: NTTableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let articleId = smarticles[indexPath.section][indexPath.row].id
+        let revision = smarticles[indexPath.section][indexPath.row].revision
         let contentWidth = view.bounds.size.width - view.layoutMargins.left - view.layoutMargins.right
-        let heightIdentifier = "\(articleId)_\(contentWidth)" as NSString
+        let heightIdentifier = "\(articleId)_\(revision)_\(contentWidth)" as NSString
         
         return tableView.fd_heightForCell(withIdentifier: kArticleContentCellIdentifier, cacheByKey: heightIdentifier) { (cell) in
             if let cell = cell as? ArticleContentCell {
@@ -693,8 +694,9 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         cavc.article = article
         cavc.completionHandler = { [unowned self] in
             DispatchQueue.global().async {
-                if let newArticle = self.api.getArticleInBoard(boardID: article.boardID, articleID: article.id) {
+                if var newArticle = self.api.getArticleInBoard(boardID: article.boardID, articleID: article.id) {
                     DispatchQueue.main.async {
+                        newArticle.revision = article.revision + 1
                         self.smarticles[indexPath.section][indexPath.row] = newArticle
                         self.forceUpdateLayout(with: newArticle)
                         self.tableView.beginUpdates()

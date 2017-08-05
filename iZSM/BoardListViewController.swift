@@ -28,8 +28,8 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     private var searchController: UISearchController?
     
     func didDismissSearchController(_ searchController: UISearchController) {
-        tableView.tableHeaderView = nil
         searchMode = false
+        api.cancel()
         tableView.mj_header.isHidden = false
         boards = originalBoards ?? [SMBoard]()
         originalBoards = nil
@@ -37,12 +37,10 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     
     func didPresentSearchController(_ searchController: UISearchController) {
         searchMode = true
-        tableView.mj_header.endRefreshing()
-        SVProgressHUD.dismiss()
+        api.cancel()
         tableView.mj_header.isHidden = true
         originalBoards = boards
         boards = [SMBoard]()
-        searchController.searchBar.becomeFirstResponder()
     }
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -67,36 +65,22 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         }
     }
     
-    func pressSearchButton(sender: UIBarButtonItem) {
-        if tableView.tableHeaderView == nil {
-            if let searchController = searchController {
-                tableView.tableHeaderView = searchController.searchBar
-                tableView.scrollRectToVisible(searchController.searchBar.frame, animated: false)
-                searchController.isActive = true
-            }
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // search related
-        definesPresentationContext = true
-        searchController = UISearchController(searchResultsController: nil)
-        if #available(iOS 9.1, *) {
-            searchController?.obscuresBackgroundDuringPresentation = false
-        } else {
-            searchController?.dimsBackgroundDuringPresentation = false
-        }
-        searchController?.delegate = self
-        searchController?.searchResultsUpdater = self
-        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
-        
         if boardID == 0 { //只在根目录下显示搜索
-            let searchButton = UIBarButtonItem(barButtonSystemItem: .search,
-                                               target: self,
-                                               action: #selector(pressSearchButton(sender:)))
-            navigationItem.rightBarButtonItem = searchButton
+            // search related
+            definesPresentationContext = true
+            searchController = UISearchController(searchResultsController: nil)
+            if #available(iOS 9.1, *) {
+                searchController?.obscuresBackgroundDuringPresentation = false
+            } else {
+                searchController?.dimsBackgroundDuringPresentation = false
+            }
+            searchController?.delegate = self
+            searchController?.searchResultsUpdater = self
+            tableView.tableHeaderView = searchController?.searchBar
+            searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
         }
         
         // add long press gesture recognizer

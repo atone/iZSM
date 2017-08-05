@@ -79,7 +79,8 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             }
             searchController?.delegate = self
             searchController?.searchResultsUpdater = self
-            tableView.tableHeaderView = searchController?.searchBar
+            searchController?.hidesNavigationBarDuringPresentation = false
+            navigationItem.titleView = searchController?.searchBar
             searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
         }
         

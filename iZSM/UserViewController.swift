@@ -235,37 +235,27 @@ class UserViewController: NTTableViewController {
     }
 }
 
-extension UserViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        dismiss(animated: true)
-        let type = info[UIImagePickerControllerMediaType] as! String
-        if type == kUTTypeImage as String {
-            if let selectedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-                networkActivityIndicatorStart()
-                DispatchQueue.global().async {
-                    if let user = self.api.modifyFaceImage(image: selectedImage) {
-                        networkActivityIndicatorStop()
-                        dPrint("server response with new user info")
-                        SMUserInfoUtil.updateSMUser(with: user) {
-                            self.updateUserInfoView()
-                        }
-                    } else {
-                        dPrint("server did not response with new user info, try getting in 2 sec.")
-                        sleep(2) // 等待2s
-                        SMUserInfoUtil.querySMUser(for: self.setting.username!, forceUpdate: true) { (user) in
-                            networkActivityIndicatorStop()
-                            self.updateUserInfoView()
-                        }
+extension UserViewController: TZImagePickerControllerDelegate {
+    func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingPhotos photos: [UIImage]!, sourceAssets assets: [Any]!, isSelectOriginalPhoto: Bool) {
+        if let selectedImage = photos.first {
+            networkActivityIndicatorStart()
+            DispatchQueue.global().async {
+                if let user = self.api.modifyFaceImage(image: selectedImage) {
+                    networkActivityIndicatorStop()
+                    dPrint("server response with new user info")
+                    SMUserInfoUtil.updateSMUser(with: user) {
+                        self.updateUserInfoView()
                     }
-                    
+                } else {
+                    dPrint("server did not response with new user info, try getting in 2 sec.")
+                    sleep(2) // 等待2s
+                    SMUserInfoUtil.querySMUser(for: self.setting.username!, forceUpdate: true) { (user) in
+                        networkActivityIndicatorStop()
+                        self.updateUserInfoView()
+                    }
                 }
             }
         }
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true)
     }
 }
 
@@ -275,31 +265,14 @@ extension UserViewController: UserInfoViewControllerDelegate {
         if setting.username == nil {
             return
         }
-        let actionSheet = UIAlertController(title: "修改头像", message: nil, preferredStyle: .actionSheet)
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            let camera = UIAlertAction(title: "从图库中选择", style: .default) { [unowned self] _ in
-                let picker = UIImagePickerController()
-                picker.delegate = self
-                picker.allowsEditing = true
-                picker.sourceType = .photoLibrary
-                picker.modalPresentationStyle = .formSheet
-                self.present(picker, animated: true)
-            }
-            actionSheet.addAction(camera)
-        }
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            let camera = UIAlertAction(title: "使用相机拍照", style: .default) { [unowned self] _ in
-                let picker = UIImagePickerController()
-                picker.delegate = self
-                picker.allowsEditing = true
-                picker.sourceType = .camera
-                self.present(picker, animated: true)
-            }
-            actionSheet.addAction(camera)
-        }
-        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
-        actionSheet.popoverPresentationController?.sourceView = imageView
-        present(actionSheet, animated: true)
+        let imagePicker = TZImagePickerController(maxImagesCount: 1, delegate: self)!
+        imagePicker.modalPresentationStyle = .formSheet
+        imagePicker.naviBgColor = AppTheme.shared.naviBackgroundColor
+        imagePicker.naviTitleColor = AppTheme.shared.naviContentColor
+        imagePicker.allowPickingVideo = false
+        imagePicker.allowPickingOriginalPhoto = false
+        imagePicker.allowCrop = true
+        present(imagePicker, animated: true)
     }
 
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {

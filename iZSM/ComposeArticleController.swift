@@ -344,8 +344,8 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     @objc private func addPhoto(_ sender: UIBarButtonItem) {
         let imagePicker = TZImagePickerController(maxImagesCount: maxAttachNumber, delegate: self)!
         imagePicker.modalPresentationStyle = .formSheet
-        imagePicker.navigationBar.barTintColor = AppTheme.shared.naviBackgroundColor
-        imagePicker.navigationBar.tintColor = AppTheme.shared.naviContentColor
+        imagePicker.naviBgColor = AppTheme.shared.naviBackgroundColor
+        imagePicker.naviTitleColor = AppTheme.shared.naviContentColor
         imagePicker.selectedAssets = attachedAssets as! NSMutableArray
         imagePicker.allowPickingVideo = false
         imagePicker.allowPickingOriginalPhoto = false

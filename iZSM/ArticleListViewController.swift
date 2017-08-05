@@ -56,6 +56,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     func didDismissSearchController(_ searchController: UISearchController) {
         tableView.tableHeaderView = nil
         searchMode = false
+        api.cancel()
         tableView.mj_header.isHidden = false
         threads = originalThread!
         threadLoaded = originalThreadLoaded!
@@ -64,8 +65,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     func didPresentSearchController(_ searchController: UISearchController) {
         searchMode = true
-        tableView.mj_header.endRefreshing()
-        SVProgressHUD.dismiss()
+        api.cancel()
         tableView.mj_header.isHidden = true
         originalThread = threads
         originalThreadLoaded = threadLoaded

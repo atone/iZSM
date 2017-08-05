@@ -9,7 +9,7 @@
 import UIKit
 import SVProgressHUD
 
-class BoardListViewController: BaseTableViewController, UISearchControllerDelegate, UISearchBarDelegate {
+class BoardListViewController: BaseTableViewController, UISearchControllerDelegate, UISearchResultsUpdating {
     
     private let kBoardIdentifier = "Board"
     private let kDirectoryIdentifier = "Directory"
@@ -23,6 +23,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     
     var originalBoards: [SMBoard]?
     var searchMode = false
+    var searchString = ""
     
     private var searchController: UISearchController?
     
@@ -44,19 +45,19 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         searchController.searchBar.becomeFirstResponder()
     }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let searchString = searchBar.text else { return }
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let currentSearchString = searchController.searchBar.text else { return }
+        guard currentSearchString != searchString else { return }
+        searchString = currentSearchString
         let currentMode = searchMode
-        SVProgressHUD.show()
         networkActivityIndicatorStart()
         var result: [SMBoard]?
         
         DispatchQueue.global().async {
-            result = self.api.queryBoard(query: searchString)
+            result = self.api.queryBoard(query: currentSearchString)
             DispatchQueue.main.async {
-                SVProgressHUD.dismiss()
                 networkActivityIndicatorStop()
-                if currentMode != self.searchMode { return } //模式已经改变，则丢弃数据
+                if currentMode != self.searchMode || currentSearchString != self.searchString { return } //模式已经改变，则丢弃数据
                 self.boards.removeAll()
                 if let result = result {
                     self.boards += result
@@ -88,7 +89,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             searchController?.dimsBackgroundDuringPresentation = false
         }
         searchController?.delegate = self
-        searchController?.searchBar.delegate = self
+        searchController?.searchResultsUpdater = self
         searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
         
         if boardID == 0 { //只在根目录下显示搜索

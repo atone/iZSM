@@ -105,8 +105,6 @@ struct SMArticle {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = textFont.pointSize / 4
         paragraphStyle.alignment = .natural
-        paragraphStyle.minimumLineHeight = textFont.pointSize
-        paragraphStyle.maximumLineHeight = textFont.pointSize
         paragraphStyle.lineBreakMode = .byWordWrapping
         
         let normal : [String : Any] = [NSFontAttributeName: textFont,

@@ -170,8 +170,8 @@ class ArticleContentViewController: NTTableViewController {
                 }
                 
                 if self.fromTopTen && self.boardName == nil { // get boardName
-                    SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (boardInfo) in
-                        self.boardName = boardInfo?.name
+                    SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (board) in
+                        self.boardName = board?.name
                     }
                 }
                 
@@ -516,10 +516,10 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
         if let userID = controller.user?.id, let boardID = controller.article?.boardID {
             dismiss(animated: true)
             SVProgressHUD.show()
-            SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (boardInfo) in
+            SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (board) in
                 let searchResultController = ArticleListSearchResultViewController()
                 searchResultController.boardID = boardID
-                searchResultController.boardName = boardInfo?.name
+                searchResultController.boardName = board?.name
                 searchResultController.userID = userID
                 self.show(searchResultController, sender: button)
             }

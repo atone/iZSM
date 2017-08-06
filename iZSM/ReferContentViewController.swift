@@ -231,10 +231,10 @@ extension ReferContentViewController: UserInfoViewControllerDelegate {
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
         if let userID = reference?.userID, let boardID = reference?.boardID {
             dismiss(animated: true)
-            SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (boardInfo) in
+            SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (board) in
                 let searchResultController = ArticleListSearchResultViewController()
                 searchResultController.boardID = boardID
-                searchResultController.boardName = boardInfo?.name
+                searchResultController.boardName = board?.name
                 searchResultController.userID = userID
                 self.show(searchResultController, sender: button)
             }

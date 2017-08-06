@@ -23,6 +23,7 @@ class SMUserInfo: Object {
     dynamic var posts: Int = 0
     dynamic var faceURL: String = ""
     dynamic var nick: String = ""
+    
     dynamic var lastUpdateTime: Date = Date(timeIntervalSince1970: 0)
     
     override static func primaryKey() -> String? {

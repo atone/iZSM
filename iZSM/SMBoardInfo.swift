@@ -11,8 +11,25 @@ import RealmSwift
 class SMBoardInfo: Object {
     dynamic var bid: Int = 0
     dynamic var boardID: String = ""
+    dynamic var level: Int = 0
+    dynamic var unread: Bool = false
+    dynamic var currentUsers: Int = 0
+    dynamic var maxOnline: Int = 0
+    dynamic var scoreLevel: Int = 0
+    dynamic var section: Int = 0
+    dynamic var total: Int = 0
+    dynamic var position: Int = 0
+    dynamic var lastPost: Int = 0
+    dynamic var manager: String = ""
+    dynamic var type: String = ""
+    dynamic var flag: Int = 0
+    dynamic var maxTime: Date = Date(timeIntervalSince1970: 0)
     dynamic var name: String = ""
+    dynamic var score: Int = 0
+    dynamic var group: Int = 0
+    
     dynamic var lastUpdateTime: Date = Date(timeIntervalSince1970: 0)
+    dynamic var searchCount: Int = 0
     
     override static func primaryKey() -> String? {
         return "bid"
@@ -27,7 +44,7 @@ class SMBoardInfoUtil {
     private static var queryingSet = Set<String>()
     private static let lockQueue = DispatchQueue(label: "cn.yunaitong.iZSM.boardLockQueue")
     
-    class func querySMBoardInfo(for boardID: String, callback: @escaping (SMBoardInfo?) -> Void) {
+    class func querySMBoardInfo(for boardID: String, callback: @escaping (SMBoard?) -> Void) {
         DispatchQueue.global().async {
             autoreleasepool {
                 let realm = try! Realm()
@@ -51,16 +68,23 @@ class SMBoardInfoUtil {
                             for board in boards {
                                 if board.boardID == boardID {
                                     queryingSet.remove(boardID)
-                                    let boardInfo = boardInfoFrom(board: board, updateTime: Date())
                                     DispatchQueue.main.async {
-                                        callback(boardInfo)
+                                        callback(board)
                                     }
-                                    let boardInfo2 = boardInfoFrom(board: board, updateTime: Date())
-                                    try! realm.write {
-                                        realm.add(boardInfo2, update: true)
+                                    if results.count == 0 {
+                                        let boardInfo = SMBoardInfo()
+                                        updateBoardInfo(boardInfo: boardInfo, with: board, updateTime: Date())
+                                        try! realm.write {
+                                            realm.add(boardInfo)
+                                        }
+                                        dPrint("add board info for \(boardID) success!")
+                                    } else {
+                                        let boardInfo = results.first!
+                                        try! realm.write {
+                                            updateBoardInfo(boardInfo: boardInfo, with: board, updateTime: Date())
+                                        }
+                                        dPrint("update board info for \(boardID) success!")
                                     }
-                                    dPrint("write board info for \(boardID) success!")
-                                    
                                     break
                                 }
                             }
@@ -76,13 +100,9 @@ class SMBoardInfoUtil {
                         }
                         if results.count > 0 {
                             let boardInfo = results.first!
-                            let boardInfo2 = SMBoardInfo()
-                            boardInfo2.bid = boardInfo.bid
-                            boardInfo2.boardID = boardInfo.boardID
-                            boardInfo2.name = boardInfo.name
-                            boardInfo2.lastUpdateTime = boardInfo.lastUpdateTime
+                            let board = boardFrom(boardInfo: boardInfo)
                             DispatchQueue.main.async {
-                                callback(boardInfo2)
+                                callback(board)
                             }
                         } else {
                             DispatchQueue.main.async {
@@ -92,25 +112,61 @@ class SMBoardInfoUtil {
                     }
                 } else {
                     let boardInfo = results.first!
-                    let boardInfo2 = SMBoardInfo()
-                    boardInfo2.bid = boardInfo.bid
-                    boardInfo2.boardID = boardInfo.boardID
-                    boardInfo2.name = boardInfo.name
-                    boardInfo2.lastUpdateTime = boardInfo.lastUpdateTime
+                    let board = boardFrom(boardInfo: boardInfo)
                     DispatchQueue.main.async {
-                        callback(boardInfo2)
+                        callback(board)
                     }
                 }
             }
         }
     }
     
-    private class func boardInfoFrom(board: SMBoard, updateTime: Date) -> SMBoardInfo {
-        let boardInfo = SMBoardInfo()
+    private class func updateBoardInfo(boardInfo: SMBoardInfo, with board: SMBoard, updateTime: Date? = nil, searchCount: Int? = nil) {
         boardInfo.bid = board.bid
         boardInfo.boardID = board.boardID
+        boardInfo.level = board.level
+        boardInfo.unread = board.unread
+        boardInfo.currentUsers = board.currentUsers
+        boardInfo.maxOnline = board.maxOnline
+        boardInfo.scoreLevel = board.scoreLevel
+        boardInfo.section = board.section
+        boardInfo.total = board.total
+        boardInfo.position = board.position
+        boardInfo.lastPost = board.lastPost
+        boardInfo.manager = board.manager
+        boardInfo.type = board.type
+        boardInfo.flag = board.flag
+        boardInfo.maxTime = board.maxTime
         boardInfo.name = board.name
-        boardInfo.lastUpdateTime = updateTime
-        return boardInfo
+        boardInfo.score = board.score
+        boardInfo.group = board.group
+        
+        if let updateTime = updateTime {
+            boardInfo.lastUpdateTime = updateTime
+        }
+        if let searchCount = searchCount {
+            boardInfo.searchCount = searchCount
+        }
+    }
+    
+    private class func boardFrom(boardInfo: SMBoardInfo) -> SMBoard {
+        return SMBoard(bid: boardInfo.bid,
+                       boardID: boardInfo.boardID,
+                       level: boardInfo.level,
+                       unread: boardInfo.unread,
+                       currentUsers: boardInfo.currentUsers,
+                       maxOnline: boardInfo.maxOnline,
+                       scoreLevel: boardInfo.scoreLevel,
+                       section: boardInfo.section,
+                       total: boardInfo.total,
+                       position: boardInfo.position,
+                       lastPost: boardInfo.lastPost,
+                       manager: boardInfo.manager,
+                       type: boardInfo.type,
+                       flag: boardInfo.flag,
+                       maxTime: boardInfo.maxTime,
+                       name: boardInfo.name,
+                       score: boardInfo.score,
+                       group: boardInfo.group)
     }
 }

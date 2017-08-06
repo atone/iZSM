@@ -73,7 +73,7 @@ class SMBoardInfoUtil {
                                     }
                                     if results.count == 0 {
                                         let boardInfo = SMBoardInfo()
-                                        updateBoardInfo(boardInfo: boardInfo, with: board, updateTime: Date())
+                                        updateBoardInfo(boardInfo: boardInfo, with: board, newBoard: true, updateTime: Date())
                                         try! realm.write {
                                             realm.add(boardInfo)
                                         }
@@ -81,7 +81,7 @@ class SMBoardInfoUtil {
                                     } else {
                                         let boardInfo = results.first!
                                         try! realm.write {
-                                            updateBoardInfo(boardInfo: boardInfo, with: board, updateTime: Date())
+                                            updateBoardInfo(boardInfo: boardInfo, with: board, newBoard: false, updateTime: Date())
                                         }
                                         dPrint("update board info for \(boardID) success!")
                                     }
@@ -121,8 +121,10 @@ class SMBoardInfoUtil {
         }
     }
     
-    private class func updateBoardInfo(boardInfo: SMBoardInfo, with board: SMBoard, updateTime: Date? = nil, searchCount: Int? = nil) {
-        boardInfo.bid = board.bid
+    private class func updateBoardInfo(boardInfo: SMBoardInfo, with board: SMBoard, newBoard: Bool, updateTime: Date? = nil, searchCount: Int? = nil) {
+        if newBoard {
+            boardInfo.bid = board.bid  // Primary key can't be changed after an object is inserted
+        }
         boardInfo.boardID = board.boardID
         boardInfo.level = board.level
         boardInfo.unread = board.unread

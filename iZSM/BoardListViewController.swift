@@ -17,9 +17,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     var boardID = 0
     var sectionID = 0
     var flag: Int = 0
-    fileprivate var boards: [SMBoard] = [SMBoard]() {
-        didSet { tableView?.reloadData() }
-    }
+    fileprivate var boards: [SMBoard] = [SMBoard]()
     
     var originalBoards: [SMBoard]?
     var searchMode = false
@@ -33,18 +31,26 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         tableView.mj_header.isHidden = false
         boards = originalBoards ?? [SMBoard]()
         originalBoards = nil
+        tableView.reloadData()
     }
     
-    func didPresentSearchController(_ searchController: UISearchController) {
+    func willPresentSearchController(_ searchController: UISearchController) {
         searchMode = true
         api.cancel()
         tableView.mj_header.isHidden = true
         originalBoards = boards
         boards = [SMBoard]()
+        tableView.reloadData()
     }
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let currentSearchString = searchController.searchBar.text else { return }
+        if currentSearchString.isEmpty, let topSearchResult = SMBoardInfoUtil.topSearchResult() {
+            searchString = currentSearchString
+            boards = topSearchResult
+            tableView.reloadData()
+            return
+        }
         guard currentSearchString != searchString else { return }
         searchString = currentSearchString
         let currentMode = searchMode
@@ -59,7 +65,9 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                 self.boards.removeAll()
                 if let result = result {
                     self.boards += result
+                    SMBoardInfoUtil.save(boardList: result)
                 }
+                self.tableView.reloadData()
                 self.api.displayErrorIfNeeded()
             }
         }
@@ -98,6 +106,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     
     override func clearContent() {
         boards.removeAll()
+        tableView.reloadData()
     }
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
@@ -142,7 +151,9 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                 completion?()
                 self.boards.removeAll()
                 self.boards += boardList
+                self.tableView.reloadData()
                 self.api.displayErrorIfNeeded()
+                SMBoardInfoUtil.save(boardList: boardList)
             }
         }
     }
@@ -166,8 +177,28 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             alvc.boardName = board.name
             alvc.hidesBottomBarWhenPushed = true
             show(alvc, sender: self)
+            if searchMode {
+                SMBoardInfoUtil.hitSearch(for: board)
+            }
         }
         
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if searchMode && searchString.isEmpty {
+            return true
+        }
+        return false
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let board = boards.remove(at: indexPath.row)
+            SMBoardInfoUtil.clearSearchCount(for: board)
+            tableView.beginUpdates()
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.endUpdates()
+        }
     }
     
     // MARK: - Table view data source
@@ -212,6 +243,13 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         cell.selectedBackgroundView = selectedBackgroundView
         cell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 && searchMode && searchString.isEmpty && !boards.isEmpty {
+            return "搜索历史"
+        }
+        return nil
     }
     
     func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {

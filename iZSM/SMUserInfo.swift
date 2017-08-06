@@ -24,14 +24,10 @@ class SMUserInfo: Object {
     dynamic var faceURL: String = ""
     dynamic var nick: String = ""
     
-    dynamic var lastUpdateTime: Date = Date(timeIntervalSince1970: 0)
+    dynamic var lastUpdateTime: Date = Date()
     
     override static func primaryKey() -> String? {
-        return "uid"
-    }
-    
-    override static func indexedProperties() -> [String] {
-        return ["id"]
+        return "id"
     }
 }
 
@@ -59,10 +55,13 @@ class SMUserInfoUtil {
         DispatchQueue.global().async {
             autoreleasepool {
                 let realm = try! Realm()
-                let results = realm.objects(SMUserInfo.self).filter("id == '\(userID)'")
-                // 如果数据库中没有记录，或者需要强制更新，或者记录更新时间在1小时之前，那么就进行查询
-                if results.count == 0 || forceUpdate
-                    || results.first!.lastUpdateTime < Date(timeIntervalSinceNow: -60 * 60) {
+                if let userInfo = realm.object(ofType: SMUserInfo.self, forPrimaryKey: userID),
+                    !forceUpdate, userInfo.lastUpdateTime >= Date(timeIntervalSinceNow: -60 * 60) {
+                    let user = userFrom(userInfo: userInfo)
+                    DispatchQueue.main.async {
+                        callback(user)
+                    }
+                } else {  // 如果数据库中没有记录，或者需要强制更新，或者记录更新时间在1小时之前，那么就进行查询
                     var shouldMakeQuery: Bool = false
                     lockQueue.sync {
                         if queryingSet.contains(userID) {
@@ -98,28 +97,23 @@ class SMUserInfoUtil {
                         }
                     } else {  // 有人查，那就等结果
                         var counter = 0
-                        while results.count == 0 && counter < 10 { // 最多等待1s
+                        while realm.object(ofType: SMUserInfo.self, forPrimaryKey: userID) == nil && counter < 10 { // 最多等待1s
                             usleep(1000 * 100) // 100ms
                             counter += 1
                             realm.refresh()
                         }
-                        if results.count > 0 {
-                            let userInfo = results.first!
+                        if let userInfo = realm.object(ofType: SMUserInfo.self, forPrimaryKey: userID) {
+                            dPrint("get user info for \(userID) from other\'s query")
                             let user = userFrom(userInfo: userInfo)
                             DispatchQueue.main.async {
                                 callback(user)
                             }
                         } else {
+                            dPrint("other\'s query for \(userID) failed, return nil")
                             DispatchQueue.main.async {
                                 callback(nil)
                             }
                         }
-                    }
-                } else {
-                    let userInfo = results.first!
-                    let user = userFrom(userInfo: userInfo)
-                    DispatchQueue.main.async {
-                        callback(user)
                     }
                 }
             }

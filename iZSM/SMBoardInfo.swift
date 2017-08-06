@@ -28,30 +28,30 @@ class SMBoardInfo: Object {
     dynamic var score: Int = 0
     dynamic var group: Int = 0
     
-    dynamic var lastUpdateTime: Date = Date(timeIntervalSince1970: 0)
+    dynamic var lastUpdateTime: Date = Date()
     dynamic var searchCount: Int = 0
     
     override static func primaryKey() -> String? {
-        return "bid"
-    }
-    
-    override static func indexedProperties() -> [String] {
-        return ["boardID"]
+        return "boardID"
     }
 }
 
 class SMBoardInfoUtil {
     private static var queryingSet = Set<String>()
     private static let lockQueue = DispatchQueue(label: "cn.yunaitong.iZSM.boardLockQueue")
+    private static let semaphore = DispatchSemaphore(value: 1)
     
     class func querySMBoardInfo(for boardID: String, callback: @escaping (SMBoard?) -> Void) {
         DispatchQueue.global().async {
             autoreleasepool {
                 let realm = try! Realm()
-                let results = realm.objects(SMBoardInfo.self).filter("boardID == '\(boardID)'")
-                // 如果数据库中没有记录，或者记录更新时间在1个月之前，那么就进行查询
-                if results.count == 0
-                    || results.first!.lastUpdateTime < Date(timeIntervalSinceNow: -60 * 60 * 24 * 30) {
+                if let boardInfo = realm.object(ofType: SMBoardInfo.self, forPrimaryKey: boardID),
+                    boardInfo.lastUpdateTime >= Date(timeIntervalSinceNow: -60 * 60 * 24 * 30) {
+                    let board = boardFrom(boardInfo: boardInfo)
+                    DispatchQueue.main.async {
+                        callback(board)
+                    }
+                } else {  // 如果数据库中没有记录，或者记录更新时间在1个月之前，那么就进行查询
                     var shouldMakeQuery: Bool = false
                     lockQueue.sync {
                         if queryingSet.contains(boardID) {
@@ -71,19 +71,18 @@ class SMBoardInfoUtil {
                                     DispatchQueue.main.async {
                                         callback(board)
                                     }
-                                    if results.count == 0 {
+                                    if let boardInfo = realm.object(ofType: SMBoardInfo.self, forPrimaryKey: boardID) {
+                                        try! realm.write {
+                                            updateBoardInfo(boardInfo: boardInfo, with: board, newBoard: false, updateTime: Date())
+                                        }
+                                        dPrint("update board info for \(boardID) success!")
+                                    } else {
                                         let boardInfo = SMBoardInfo()
                                         updateBoardInfo(boardInfo: boardInfo, with: board, newBoard: true, updateTime: Date())
                                         try! realm.write {
                                             realm.add(boardInfo)
                                         }
                                         dPrint("add board info for \(boardID) success!")
-                                    } else {
-                                        let boardInfo = results.first!
-                                        try! realm.write {
-                                            updateBoardInfo(boardInfo: boardInfo, with: board, newBoard: false, updateTime: Date())
-                                        }
-                                        dPrint("update board info for \(boardID) success!")
                                     }
                                     break
                                 }
@@ -93,13 +92,12 @@ class SMBoardInfoUtil {
                         }
                     } else {  // 有人查，那就等结果
                         var counter = 0
-                        while results.count == 0 && counter < 10 { // 最多等待1s
+                        while realm.object(ofType: SMBoardInfo.self, forPrimaryKey: boardID) == nil && counter < 10 { // 最多等待1s
                             usleep(1000 * 100) // 100ms
                             counter += 1
                             realm.refresh()
                         }
-                        if results.count > 0 {
-                            let boardInfo = results.first!
+                        if let boardInfo = realm.object(ofType: SMBoardInfo.self, forPrimaryKey: boardID) {
                             let board = boardFrom(boardInfo: boardInfo)
                             DispatchQueue.main.async {
                                 callback(board)
@@ -110,22 +108,91 @@ class SMBoardInfoUtil {
                             }
                         }
                     }
-                } else {
-                    let boardInfo = results.first!
-                    let board = boardFrom(boardInfo: boardInfo)
-                    DispatchQueue.main.async {
-                        callback(board)
-                    }
                 }
             }
         }
     }
     
+    class func save(boardList: [SMBoard]) {
+        DispatchQueue.global().async {
+            autoreleasepool {
+                semaphore.wait()
+                let realm = try! Realm()
+                for board in boardList {
+                    if board.boardID.isEmpty {
+                        continue
+                    }
+                    if let boardInfo = realm.object(ofType: SMBoardInfo.self, forPrimaryKey: board.boardID) {
+                        try! realm.write {
+                            updateBoardInfo(boardInfo: boardInfo, with: board, newBoard: false, updateTime: Date())
+                        }
+                        //dPrint("update board info for \(board.boardID) success!")
+                    } else {
+                        let boardInfo = SMBoardInfo()
+                        updateBoardInfo(boardInfo: boardInfo, with: board, newBoard: true, updateTime: Date())
+                        try! realm.write {
+                            realm.add(boardInfo)
+                        }
+                        //dPrint("add board info for \(board.boardID) success!")
+                    }
+                }
+                semaphore.signal()
+            }
+        }
+    }
+    
+    class func hitSearch(for board: SMBoard) {
+        DispatchQueue.global().async {
+            autoreleasepool {
+                semaphore.wait()
+                let realm = try! Realm()
+                if let boardInfo = realm.object(ofType: SMBoardInfo.self, forPrimaryKey: board.boardID) {
+                    try! realm.write {
+                        boardInfo.searchCount += 1
+                    }
+                    dPrint("search count added for \(board.boardID)")
+                } else {
+                    dPrint("Error: \(board.boardID) not found!")
+                }
+                semaphore.signal()
+            }
+        }
+    }
+    
+    class func clearSearchCount(for board: SMBoard) {
+        DispatchQueue.global().async {
+            autoreleasepool {
+                semaphore.wait()
+                let realm = try! Realm()
+                if let boardInfo = realm.object(ofType: SMBoardInfo.self, forPrimaryKey: board.boardID) {
+                    try! realm.write {
+                        boardInfo.searchCount = 0
+                    }
+                    dPrint("search count set zero for \(board.boardID)")
+                } else {
+                    dPrint("Error: \(board.boardID) not found!")
+                }
+                semaphore.signal()
+            }
+        }
+    }
+    
+    class func topSearchResult() -> [SMBoard]? {
+        let realm = try! Realm()
+        let results = realm.objects(SMBoardInfo.self).filter("searchCount > 0").sorted(byKeyPath: "searchCount", ascending: false)
+        guard results.count > 0 else { return nil }
+        var boards = [SMBoard]()
+        for i in 0..<min(10, results.count) {
+            boards.append(boardFrom(boardInfo: results[i]))
+        }
+        return boards
+    }
+    
     private class func updateBoardInfo(boardInfo: SMBoardInfo, with board: SMBoard, newBoard: Bool, updateTime: Date? = nil, searchCount: Int? = nil) {
         if newBoard {
-            boardInfo.bid = board.bid  // Primary key can't be changed after an object is inserted
+            boardInfo.boardID = board.boardID  // Primary key can't be changed after an object is inserted
         }
-        boardInfo.boardID = board.boardID
+        boardInfo.bid = board.bid
         boardInfo.level = board.level
         boardInfo.unread = board.unread
         boardInfo.currentUsers = board.currentUsers

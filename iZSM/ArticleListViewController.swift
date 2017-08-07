@@ -197,8 +197,21 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         }
     }
     
+    private var _isFetchingMoreData = false
+    private var _semaphore = DispatchSemaphore(value: 1)
+    
     override func fetchMoreData() {
         if let boardID = self.boardID {
+            
+            _semaphore.wait()
+            if !_isFetchingMoreData {
+                _isFetchingMoreData = true
+                _semaphore.signal()
+            } else {
+                _semaphore.signal()
+                return
+            }
+            
             let currentMode = self.searchMode
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
@@ -234,6 +247,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                     !loadedThreadIds.contains($0.id)
                 }
                 DispatchQueue.main.async {
+                    self._isFetchingMoreData = false
                     networkActivityIndicatorStop()
                     if self.searchMode != currentMode {
                         return //如果模式已经改变，则此数据需要丢弃

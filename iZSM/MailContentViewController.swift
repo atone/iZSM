@@ -233,7 +233,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
                       NSForegroundColorAttributeName: AppTheme.shared.lightTextColor]
         
         string.enumerateLines { (line, stop) -> () in
-            if line.hasPrefix(": ") {
+            if line.hasPrefix(":") {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: quoted))
             } else {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: normal))

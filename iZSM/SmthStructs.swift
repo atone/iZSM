@@ -115,7 +115,7 @@ struct SMArticle {
                                        NSForegroundColorAttributeName: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
         
         self.body.enumerateLines { (line, stop) -> () in
-            if line.hasPrefix(": ") {
+            if line.hasPrefix(":") {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: quoted))
             } else {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: normal))

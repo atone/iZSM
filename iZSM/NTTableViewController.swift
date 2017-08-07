@@ -29,6 +29,7 @@ class NTTableViewController: UITableViewController {
     func changeColor() {
         tableView.backgroundColor = (tableView.style == .grouped) ? AppTheme.shared.lightBackgroundColor : AppTheme.shared.backgroundColor
         tableView.tintColor = AppTheme.shared.tintColor
+        tableView.separatorColor = AppTheme.shared.seperatorColor
         
         tableView.mj_header?.backgroundColor = AppTheme.shared.backgroundColor
         (tableView.mj_header as? MJRefreshNormalHeader)?.activityIndicatorViewStyle = setting.nightMode ? UIActivityIndicatorViewStyle.white : UIActivityIndicatorViewStyle.gray

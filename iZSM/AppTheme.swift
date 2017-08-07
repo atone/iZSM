@@ -119,6 +119,14 @@ class AppTheme {
         }
     }
     
+    var seperatorColor: UIColor {
+        if setting.nightMode {
+            return UIColor(red: 55/255.0, green: 56/255.0, blue: 51/255.0, alpha: 1)
+        } else {
+            return UIColor(red: 200/255.0, green: 199/255.0, blue: 204/255.0, alpha: 1)
+        }
+    }
+    
     var redColor: UIColor {
         if setting.nightMode {
             return UIColor.red.withAlphaComponent(0.6)

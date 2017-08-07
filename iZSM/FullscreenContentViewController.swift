@@ -87,8 +87,12 @@ class FullscreenContentViewController: UIViewController {
         }
     }
     
-    func refreshContent(notification: Notification) {
+    @objc private func refreshContent(_ notification: Notification) {
         updateContent()
+    }
+    
+    @objc private func tapToDismiss(_ sender: UITapGestureRecognizer) {
+        dismiss(animated: true)
     }
 
     override func viewDidLoad() {
@@ -96,16 +100,14 @@ class FullscreenContentViewController: UIViewController {
         setupUI()
         
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(refreshContent(notification:)),
+                                               selector: #selector(refreshContent(_:)),
                                                name: .UIContentSizeCategoryDidChange,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(refreshContent(notification:)),
+                                               selector: #selector(refreshContent(_:)),
                                                name: AppTheme.kAppThemeChangedNotification,
                                                object: nil)
-        let tapGesture = UITapGestureRecognizer { [unowned self] (_) in
-            self.dismiss(animated: true)
-        }
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapToDismiss(_:)))
         view.addGestureRecognizer(tapGesture)
     }
     

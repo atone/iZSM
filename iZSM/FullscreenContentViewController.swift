@@ -50,8 +50,6 @@ class FullscreenContentViewController: UIViewController {
             let titleParagraphStyle = NSMutableParagraphStyle()
             titleParagraphStyle.alignment = .center
             titleParagraphStyle.lineBreakMode = .byWordWrapping
-            titleParagraphStyle.maximumLineHeight = titleFont.pointSize
-            titleParagraphStyle.minimumLineHeight = titleFont.pointSize
             titleParagraphStyle.lineSpacing = titleFont.pointSize / 4
             let title = NSAttributedString(string: article.subject,
                                            attributes: [NSParagraphStyleAttributeName: titleParagraphStyle,
@@ -66,8 +64,6 @@ class FullscreenContentViewController: UIViewController {
             let subtitleParagraphStyle = NSMutableParagraphStyle()
             subtitleParagraphStyle.alignment = .center
             subtitleParagraphStyle.lineBreakMode = .byWordWrapping
-            subtitleParagraphStyle.maximumLineHeight = subtitleFont.pointSize
-            subtitleParagraphStyle.minimumLineHeight = subtitleFont.pointSize
             subtitleParagraphStyle.paragraphSpacing = titleFont.pointSize
             subtitleParagraphStyle.paragraphSpacingBefore = titleFont.pointSize / 4
             let subtitle = NSAttributedString(string: subtitleText,
@@ -82,8 +78,6 @@ class FullscreenContentViewController: UIViewController {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = font.pointSize / 4
             paragraphStyle.alignment = .natural
-            paragraphStyle.minimumLineHeight = font.pointSize
-            paragraphStyle.maximumLineHeight = font.pointSize
             paragraphStyle.lineBreakMode = .byWordWrapping
             let mutableAttributedBody = NSMutableAttributedString(attributedString: attributedBody)
             mutableAttributedBody.addAttributes([NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: font],

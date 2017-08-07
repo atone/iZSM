@@ -74,7 +74,6 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
         
         if boardID == 0 { //只在根目录下显示搜索
             // search related
@@ -98,10 +97,21 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         if traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: view)
         }
+        
+        super.viewDidLoad()
     }
     
     deinit {
         searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
+    }
+    
+    override func changeColor() {
+        super.changeColor()
+        if setting.nightMode {
+            searchController?.searchBar.barStyle = .black
+        } else {
+            searchController?.searchBar.barStyle = .default
+        }
     }
     
     override func clearContent() {
@@ -198,6 +208,13 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             tableView.beginUpdates()
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let headerFooterView = view as? UITableViewHeaderFooterView {
+            headerFooterView.contentView.backgroundColor = AppTheme.shared.lightBackgroundColor
+            headerFooterView.textLabel?.textColor = AppTheme.shared.textColor
         }
     }
     

@@ -53,8 +53,21 @@ class ArticleListSearchResultViewController: BaseTableViewController {
         }
     }
     
+    private var _isFetchingMoreData = false
+    private var _semaphore = DispatchSemaphore(value: 1)
+    
     override func fetchMoreData() {
         if let boardID = self.boardID, let userID = self.userID {
+            
+            _semaphore.wait()
+            if !_isFetchingMoreData {
+                _isFetchingMoreData = true
+                _semaphore.signal()
+            } else {
+                _semaphore.signal()
+                return
+            }
+            
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
                 let threadSection = self.api.searchArticleInBoard(boardID: boardID,
@@ -62,6 +75,7 @@ class ArticleListSearchResultViewController: BaseTableViewController {
                                                                   user: userID,
                                                                   inRange: self.threadRange)
                 DispatchQueue.main.async {
+                    self._isFetchingMoreData = false
                     networkActivityIndicatorStop()
                     if let threadSection = threadSection {
                         self.threadLoaded += threadSection.count

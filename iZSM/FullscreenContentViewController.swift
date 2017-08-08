@@ -108,7 +108,7 @@ class FullscreenContentViewController: UIViewController {
                                                name: AppTheme.kAppThemeChangedNotification,
                                                object: nil)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapToDismiss(_:)))
-        view.addGestureRecognizer(tapGesture)
+        contentTextView.addGestureRecognizer(tapGesture)
     }
     
     override func viewDidLayoutSubviews() {

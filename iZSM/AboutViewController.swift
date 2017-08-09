@@ -8,6 +8,7 @@
 
 import UIKit
 import StoreKit
+import SafariServices
 import SVProgressHUD
 import DeviceKit
 
@@ -187,7 +188,7 @@ class AboutViewController: NTTableViewController {
             present(navigationController, animated: true)
         case IndexPath(row: 2, section: 1):
             let urlAddress = "https://www.yunaitong.cn/zsmth-released.html"
-            let webViewController = NTSafariViewController(url: URL(string: urlAddress)!)
+            let webViewController = SFSafariViewController(url: URL(string: urlAddress)!)
             present(webViewController, animated: true)
         default:
             break

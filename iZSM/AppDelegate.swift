@@ -76,9 +76,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = mainController
         window?.makeKeyAndVisible()
         
-        // set the status bar style
-        application.statusBarStyle = .lightContent
-        
         // set the SVProgressHUD setting
         SVProgressHUD.setMinimumDismissTimeInterval(2)
         if setting.nightMode {

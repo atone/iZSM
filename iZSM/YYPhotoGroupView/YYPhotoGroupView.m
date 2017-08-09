@@ -224,6 +224,7 @@
 @interface YYPhotoGroupView() <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, weak) UIView *fromView;
 @property (nonatomic, weak) UIView *toContainerView;
+@property (nonatomic, weak) UIViewController *inViewController;
 
 @property (nonatomic, strong) UIImage *snapshotImage;
 
@@ -361,12 +362,14 @@
 
 - (void)presentFromImageView:(UIView *)fromView
                  toContainer:(UIView *)toContainer
+            inViewController:(UIViewController *)controller
                     animated:(BOOL)animated
                   completion:(completionBlock)completion {
     if (!toContainer) return;
     
     _fromView = fromView;
     _toContainerView = toContainer;
+    _inViewController = controller;
     
     NSInteger page = -1;
     for (NSUInteger i = 0; i < self.groupItems.count; i++) {
@@ -402,8 +405,8 @@
     
     [UIView setAnimationsEnabled:YES];
     _fromNavigationBarHidden = [UIApplication sharedApplication].statusBarHidden;
-    UIApplication.sharedApplication.statusBarHidden = YES;
-    
+    [_inViewController setValue:@YES forKey:@"shouldHidesStatusBar"];
+    [_inViewController setNeedsStatusBarAppearanceUpdate];
     
     YYPhotoGroupCell *cell = [self cellForPage:self.currentPage];
     YYPhotoGroupItem *item = _groupItems[self.currentPage];
@@ -480,7 +483,8 @@
 - (void)dismissAnimated:(BOOL)animated {
     [UIView setAnimationsEnabled:YES];
     
-    UIApplication.sharedApplication.statusBarHidden = _fromNavigationBarHidden;
+    [_inViewController setValue:[NSNumber numberWithBool:_fromNavigationBarHidden] forKey:@"shouldHidesStatusBar"];
+    [_inViewController setNeedsStatusBarAppearanceUpdate];
     NSInteger currentPage = self.currentPage;
     YYPhotoGroupCell *cell = [self cellForPage:currentPage];
     YYPhotoGroupItem *item = _groupItems[currentPage];
@@ -798,7 +802,8 @@
             if (fabs(v.y) > 1000 || fabs(deltaY) > 120) {
                 [self cancelAllImageLoad];
                 _isPresented = NO;
-                UIApplication.sharedApplication.statusBarHidden = _fromNavigationBarHidden;
+                [_inViewController setValue:[NSNumber numberWithBool:_fromNavigationBarHidden] forKey:@"shouldHidesStatusBar"];
+                [_inViewController setNeedsStatusBarAppearanceUpdate];
                 
                 BOOL moveToTop = (v.y < - 50 || (v.y < 50 && deltaY < 0));
                 CGFloat vy = fabs(v.y);

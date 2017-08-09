@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 struct SMHotSection {
     static let sections: [SMSection] = [
@@ -171,7 +172,7 @@ extension HotTableViewController : UIViewControllerPreviewingDelegate, SmthViewC
                     actions.append(shareAction)
                 }
                 let openAction = UIPreviewAction(title: "浏览网页版", style: .default) {[unowned self] (action, controller) in
-                    let webViewController = NTSafariViewController(url: URL(string: urlString)!)
+                    let webViewController = SFSafariViewController(url: URL(string: urlString)!)
                     self.present(webViewController, animated: true)
                 }
                 actions.append(openAction)

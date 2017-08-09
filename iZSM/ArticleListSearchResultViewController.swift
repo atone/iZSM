@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class ArticleListSearchResultViewController: BaseTableViewController {
     
@@ -200,7 +201,7 @@ extension ArticleListSearchResultViewController: UIViewControllerPreviewingDeleg
                     urlString = "https://m.newsmth.net/article/\(boardID)/\(articleID)"
                 }
                 let openAction = UIPreviewAction(title: "浏览网页版", style: .default) {[unowned self] (action, controller) in
-                    let webViewController = NTSafariViewController(url: URL(string: urlString)!)
+                    let webViewController = SFSafariViewController(url: URL(string: urlString)!)
                     self.present(webViewController, animated: true)
                 }
                 actions.append(openAction)

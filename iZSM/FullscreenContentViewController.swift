@@ -13,8 +13,6 @@ class FullscreenContentViewController: UIViewController {
     
     var article: SMArticle?
     
-    var shouldChangeStatusBar = false
-    
     weak var previewDelegate: SmthViewControllerPreviewingDelegate?
     
     override var previewActionItems: [UIPreviewActionItem] {
@@ -113,22 +111,12 @@ class FullscreenContentViewController: UIViewController {
         contentTextView.addGestureRecognizer(tapGesture)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if shouldChangeStatusBar {
-            UIApplication.shared.isStatusBarHidden = true
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if shouldChangeStatusBar {
-            UIApplication.shared.isStatusBarHidden = false
-        }
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         contentTextView.textContainerInset = UIEdgeInsets(top: 8.0, left: view.layoutMargins.left, bottom: 8.0, right: view.layoutMargins.right)
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
 }

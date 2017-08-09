@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 import SVProgressHUD
 
 class ArticleListViewController: BaseTableViewController, UISearchControllerDelegate, UISearchBarDelegate {
@@ -130,8 +131,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         } else {
             searchController?.dimsBackgroundDuringPresentation = false
         }
-        searchController?.searchBar.barTintColor = AppTheme.shared.absoluteTintColor
-        searchController?.searchBar.tintColor = UIColor.white
         searchController?.delegate = self
         searchController?.searchBar.delegate = self
         searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
@@ -372,7 +371,7 @@ extension ArticleListViewController: UIViewControllerPreviewingDelegate, SmthVie
                     urlString = "https://m.newsmth.net/article/\(boardID)/\(articleID)"
                 }
                 let openAction = UIPreviewAction(title: "浏览网页版", style: .default) {[unowned self] (action, controller) in
-                    let webViewController = NTSafariViewController(url: URL(string: urlString)!)
+                    let webViewController = SFSafariViewController(url: URL(string: urlString)!)
                     self.present(webViewController, animated: true)
                 }
                 actions.append(openAction)

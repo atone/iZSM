@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 import SVProgressHUD
 import SnapKit
 import YYKit
@@ -24,6 +25,8 @@ class ArticleContentViewController: NTTableViewController {
     fileprivate var smarticles = [[SMArticle]]()
     
     var articleContentLayout = [String: YYTextLayout]()
+    
+    var shouldHidesStatusBar: Bool = false
     
     fileprivate let api = SmthAPI()
     fileprivate let setting = AppSetting.shared
@@ -107,6 +110,10 @@ class ArticleContentViewController: NTTableViewController {
         }
         api.cancel()
         networkActivityIndicatorStop(withHUD: true)
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return shouldHidesStatusBar
     }
     
     fileprivate func restorePosition() {
@@ -406,7 +413,7 @@ class ArticleContentViewController: NTTableViewController {
             }
             actionSheet.addAction(shareAction)
             let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] _ in
-                let webViewController = NTSafariViewController(url: URL(string: urlString)!)
+                let webViewController = SFSafariViewController(url: URL(string: urlString)!)
                 self.present(webViewController, animated: true)
             }
             actionSheet.addAction(openAction)
@@ -449,7 +456,6 @@ class ArticleContentViewController: NTTableViewController {
             dPrint("double tap on article content cell at \(indexPath)")
             let fullscreen = FullscreenContentViewController()
             fullscreen.article = smarticles[indexPath.section][indexPath.row]
-            fullscreen.shouldChangeStatusBar = true
             fullscreen.modalPresentationStyle = .fullScreen
             fullscreen.modalTransitionStyle = .crossDissolve
             present(fullscreen, animated: true)
@@ -581,7 +587,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
         let v = YYPhotoGroupView(groupItems: items)
         globalShouldRotate = false
-        v?.present(fromImageView: fromView, toContainer: self.navigationController?.view, animated: true) {
+        v?.present(fromImageView: fromView, toContainer: self.navigationController?.view, in: self, animated: true) {
             globalShouldRotate = true
         }
     }
@@ -676,7 +682,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         let urlString = url.absoluteString
         dPrint("Clicked: \(urlString)")
         if urlString.hasPrefix("http") {
-            let webViewController = NTSafariViewController(url: url)
+            let webViewController = SFSafariViewController(url: url)
             present(webViewController, animated: true)
         } else {
             UIApplication.shared.openURL(url)
@@ -890,7 +896,6 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
             let cell = tableView.cellForRow(at: indexPath) else { return nil }
         let fullscreen = FullscreenContentViewController()
         fullscreen.article = smarticles[indexPath.section][indexPath.row]
-        fullscreen.shouldChangeStatusBar = false
         fullscreen.previewDelegate = self
         fullscreen.modalPresentationStyle = .fullScreen
         fullscreen.modalTransitionStyle = .crossDissolve
@@ -903,9 +908,6 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
     
     /// Present the view controller for the "Pop" action.
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        if let fullscreen = viewControllerToCommit as? FullscreenContentViewController {
-            fullscreen.shouldChangeStatusBar = true
-        }
         present(viewControllerToCommit, animated: true)
     }
     

@@ -57,6 +57,7 @@
 		9C6EB72A1F1776E200129EA3 /* NTNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6EB7291F1776E200129EA3 /* NTNavigationController.swift */; };
 		9C6EB72C1F177A3D00129EA3 /* NTTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6EB72B1F177A3D00129EA3 /* NTTabBarController.swift */; };
 		9C767B5A1F1C4F3000EC7A06 /* FullscreenContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C767B591F1C4F3000EC7A06 /* FullscreenContentViewController.swift */; };
+		9C7ACA121F3AF9A50091FFBF /* NTSafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7ACA111F3AF9A50091FFBF /* NTSafariViewController.swift */; };
 		9C7C6B131F1364E800940300 /* SMBoardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7C6B121F1364E800940300 /* SMBoardInfo.swift */; };
 		9C7C6B151F13BD9D00940300 /* ArticleListSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */; };
 		9C889FB41DE3E24B00C33A8D /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */; };
@@ -380,6 +381,7 @@
 		9C6EB7291F1776E200129EA3 /* NTNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTNavigationController.swift; sourceTree = "<group>"; };
 		9C6EB72B1F177A3D00129EA3 /* NTTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTTabBarController.swift; sourceTree = "<group>"; };
 		9C767B591F1C4F3000EC7A06 /* FullscreenContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenContentViewController.swift; sourceTree = "<group>"; };
+		9C7ACA111F3AF9A50091FFBF /* NTSafariViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTSafariViewController.swift; sourceTree = "<group>"; };
 		9C7C6B121F1364E800940300 /* SMBoardInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBoardInfo.swift; sourceTree = "<group>"; };
 		9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListSearchResultViewController.swift; sourceTree = "<group>"; };
 		9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListViewController.swift; sourceTree = "<group>"; };
@@ -821,6 +823,7 @@
 				9C6EB72B1F177A3D00129EA3 /* NTTabBarController.swift */,
 				9C6EB7291F1776E200129EA3 /* NTNavigationController.swift */,
 				9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */,
+				9C7ACA111F3AF9A50091FFBF /* NTSafariViewController.swift */,
 				9C1A3BD81DE2CBAF00CF4A43 /* EulaViewController.swift */,
 				9C1A3BF71DE3076C00CF4A43 /* LoginViewController.swift */,
 				9CA3B15D1DE3323B00E9B121 /* BaseTableViewController.swift */,
@@ -1614,6 +1617,7 @@
 				9C889FBD1DE4222000C33A8D /* ArticleContentViewController.swift in Sources */,
 				9CB5708F1F2B87E000974BC0 /* AttachImageView.swift in Sources */,
 				9C5E17121F0F77F100AA5368 /* PageListViewController.swift in Sources */,
+				9C7ACA121F3AF9A50091FFBF /* NTSafariViewController.swift in Sources */,
 				9CB573B91DE58E8800CD6F3E /* MailContentViewController.swift in Sources */,
 				9C69EFC71F2F15690018B336 /* TZProgressView.m in Sources */,
 				9CA3B1921DE3359200E9B121 /* MJRefreshHeader.m in Sources */,

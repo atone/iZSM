@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SafariServices
 import SVProgressHUD
 import SnapKit
 import YYKit
@@ -403,7 +402,7 @@ class ArticleContentViewController: NTTableViewController {
             }
             actionSheet.addAction(shareAction)
             let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] _ in
-                let webViewController = SFSafariViewController(url: URL(string: urlString)!)
+                let webViewController = NTSafariViewController(url: URL(string: urlString)!)
                 self.present(webViewController, animated: true)
             }
             actionSheet.addAction(openAction)
@@ -669,7 +668,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         let urlString = url.absoluteString
         dPrint("Clicked: \(urlString)")
         if urlString.hasPrefix("http") {
-            let webViewController = SFSafariViewController(url: url)
+            let webViewController = NTSafariViewController(url: url)
             present(webViewController, animated: true)
         } else {
             UIApplication.shared.openURL(url)

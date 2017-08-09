@@ -449,6 +449,7 @@ class ArticleContentViewController: NTTableViewController {
             dPrint("double tap on article content cell at \(indexPath)")
             let fullscreen = FullscreenContentViewController()
             fullscreen.article = smarticles[indexPath.section][indexPath.row]
+            fullscreen.shouldChangeStatusBar = true
             fullscreen.modalPresentationStyle = .fullScreen
             fullscreen.modalTransitionStyle = .crossDissolve
             present(fullscreen, animated: true)
@@ -889,6 +890,7 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
             let cell = tableView.cellForRow(at: indexPath) else { return nil }
         let fullscreen = FullscreenContentViewController()
         fullscreen.article = smarticles[indexPath.section][indexPath.row]
+        fullscreen.shouldChangeStatusBar = false
         fullscreen.previewDelegate = self
         fullscreen.modalPresentationStyle = .fullScreen
         fullscreen.modalTransitionStyle = .crossDissolve
@@ -901,6 +903,9 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
     
     /// Present the view controller for the "Pop" action.
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        if let fullscreen = viewControllerToCommit as? FullscreenContentViewController {
+            fullscreen.shouldChangeStatusBar = true
+        }
         present(viewControllerToCommit, animated: true)
     }
     

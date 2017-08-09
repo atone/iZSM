@@ -13,7 +13,7 @@ class NTNavigationController: UINavigationController {
     private let setting = AppSetting.shared
     
     override var shouldAutorotate: Bool {
-        return true
+        return globalShouldRotate
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {

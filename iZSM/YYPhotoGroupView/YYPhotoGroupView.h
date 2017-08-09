@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSURL *largeImageURL;
 @end
 
+typedef void(^completionBlock)(void);
 
 /// Used to show a group of images.
 /// One-shot.
@@ -32,8 +33,7 @@
 - (void)presentFromImageView:(UIView *)fromView
                  toContainer:(UIView *)container
                     animated:(BOOL)animated
-                  completion:(void (^)(void))completion;
+                  completion:(completionBlock)completion;
 
-- (void)dismissAnimated:(BOOL)animated completion:(void (^)(void))completion;
-- (void)dismiss;
+- (void)dismissAnimated:(BOOL)animated;
 @end

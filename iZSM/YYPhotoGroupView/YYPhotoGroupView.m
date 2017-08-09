@@ -242,6 +242,8 @@
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign) CGPoint panGestureBeginPoint;
+
+@property (nonatomic, copy) completionBlock completionHandler;
 @end
 
 @implementation YYPhotoGroupView
@@ -360,7 +362,7 @@
 - (void)presentFromImageView:(UIView *)fromView
                  toContainer:(UIView *)toContainer
                     animated:(BOOL)animated
-                  completion:(void (^)(void))completion {
+                  completion:(completionBlock)completion {
     if (!toContainer) return;
     
     _fromView = fromView;
@@ -384,6 +386,8 @@
     } else {
         _blurBackground.image = [UIImage imageWithColor:[UIColor blackColor]];
     }
+    
+    self.completionHandler = completion;
     
     self.size = _toContainerView.size;
     self.blurBackground.alpha = 0;
@@ -440,7 +444,6 @@
             [self scrollViewDidScroll:_scrollView];
             _scrollView.userInteractionEnabled = YES;
             [self hidePager];
-            if (completion) completion();
         }];
         
     } else {
@@ -469,13 +472,12 @@
                 [self scrollViewDidScroll:_scrollView];
                 _scrollView.userInteractionEnabled = YES;
                 [self hidePager];
-                if (completion) completion();
             }];
         }];
     }
 }
 
-- (void)dismissAnimated:(BOOL)animated completion:(void (^)(void))completion {
+- (void)dismissAnimated:(BOOL)animated {
     [UIView setAnimationsEnabled:YES];
     
     UIApplication.sharedApplication.statusBarHidden = _fromNavigationBarHidden;
@@ -519,7 +521,7 @@
             self.scrollView.layer.transformScale = 1;
             [self removeFromSuperview];
             [self cancelAllImageLoad];
-            if (completion) completion();
+            if (self.completionHandler) self.completionHandler();
         }];
         return;
     }
@@ -562,7 +564,7 @@
         } completion:^(BOOL finished) {
             cell.imageContainerView.layer.anchorPoint = CGPointMake(0.5, 0.5);
             [self removeFromSuperview];
-            if (completion) completion();
+            if (self.completionHandler) self.completionHandler();
         }];
     }];
     
@@ -570,7 +572,7 @@
 }
 
 - (void)dismiss {
-    [self dismissAnimated:YES completion:nil];
+    [self dismissAnimated:YES];
 }
 
 
@@ -814,6 +816,7 @@
                         _scrollView.top = self.height;
                     }
                 } completion:^(BOOL finished) {
+                    if (self.completionHandler) self.completionHandler();
                     [self removeFromSuperview];
                 }];
                 

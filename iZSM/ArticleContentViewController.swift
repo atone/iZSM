@@ -579,7 +579,10 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             }
         }
         let v = YYPhotoGroupView(groupItems: items)
-        v?.present(fromImageView: fromView, toContainer: self.navigationController?.view, animated: true, completion: nil)
+        globalShouldRotate = false
+        v?.present(fromImageView: fromView, toContainer: self.navigationController?.view, animated: true) {
+            globalShouldRotate = true
+        }
     }
     
     func cell(_ cell: ArticleContentCell, didClickUser sender: UIView?) {

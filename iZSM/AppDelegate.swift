@@ -316,6 +316,8 @@ func dPrint(_ item: @autoclosure () -> Any) {
     #endif
 }
 
+var globalShouldRotate = true
+
 private let formatter = DateFormatter()
 extension Date {
     

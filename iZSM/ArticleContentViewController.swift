@@ -72,6 +72,10 @@ class ArticleContentViewController: NTTableViewController {
     // MARK: - ViewController Related
     override func viewDidLoad() {
         tableView.register(ArticleContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)
+        // no use self-sizing cell
+        tableView.estimatedRowHeight = 0
+        tableView.estimatedSectionHeaderHeight = 0
+        tableView.estimatedSectionFooterHeight = 0
         // set extra cells hidden
         let footerView = UIView()
         footerView.backgroundColor = UIColor.clear

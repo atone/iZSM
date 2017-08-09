@@ -226,7 +226,6 @@
 @property (nonatomic, weak) UIView *toContainerView;
 
 @property (nonatomic, strong) UIImage *snapshotImage;
-@property (nonatomic, strong) UIImage *snapshorImageHideFromView;
 
 @property (nonatomic, strong) UIImageView *background;
 @property (nonatomic, strong) UIImageView *blurBackground;
@@ -378,14 +377,10 @@
     _fromItemIndex = page;
     
     _snapshotImage = [_toContainerView snapshotImageAfterScreenUpdates:NO];
-    BOOL fromViewHidden = fromView.hidden;
-    fromView.hidden = YES;
-    _snapshorImageHideFromView = [_toContainerView snapshotImage];
-    fromView.hidden = fromViewHidden;
     
-    _background.image = _snapshorImageHideFromView;
+    _background.image = _snapshotImage;
     if (_blurEffectBackground) {
-        _blurBackground.image = [_snapshorImageHideFromView imageByBlurDark]; //Same to UIBlurEffectStyleDark
+        _blurBackground.image = [_snapshotImage imageByBlurDark]; //Same to UIBlurEffectStyleDark
     } else {
         _blurBackground.image = [UIImage imageWithColor:[UIColor blackColor]];
     }
@@ -533,7 +528,7 @@
         _background.image = _snapshotImage;
         [_background.layer addFadeAnimationWithDuration:0.25 curve:UIViewAnimationCurveEaseOut];
     } else {
-        _background.image = _snapshorImageHideFromView;
+        _background.image = _snapshotImage;
     }
 
     

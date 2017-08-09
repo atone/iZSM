@@ -92,6 +92,7 @@ class FullscreenContentViewController: UIViewController {
     }
     
     @objc private func tapToDismiss(_ sender: UITapGestureRecognizer) {
+        UIApplication.shared.isStatusBarHidden = false
         dismiss(animated: true)
     }
 
@@ -109,6 +110,7 @@ class FullscreenContentViewController: UIViewController {
                                                object: nil)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapToDismiss(_:)))
         contentTextView.addGestureRecognizer(tapGesture)
+        UIApplication.shared.isStatusBarHidden = true
     }
     
     override func viewDidLayoutSubviews() {

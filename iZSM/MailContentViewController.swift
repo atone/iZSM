@@ -9,7 +9,6 @@
 import UIKit
 import SnapKit
 import SVProgressHUD
-import SafariServices
 
 class MailContentViewController: UIViewController, UITextViewDelegate {
         
@@ -183,7 +182,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         let urlString = URL.absoluteString
         dPrint("Clicked: \(urlString)")
         if urlString.hasPrefix("http") {
-            let webViewController = SFSafariViewController(url: URL)
+            let webViewController = NTSafariViewController(url: URL)
             present(webViewController, animated: true)
         } else {
             UIApplication.shared.openURL(URL)

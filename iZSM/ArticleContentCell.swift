@@ -75,13 +75,13 @@ class ArticleContentCell: UITableViewCell {
         avatarImageView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
         avatarImageView.layer.borderColor = UIColor.black.withAlphaComponent(0.2).cgColor
         avatarImageView.clipsToBounds = true
-        avatarTapRecognizer.addTarget(self, action: #selector(showUserInfo(recognizer:)))
+        avatarTapRecognizer.addTarget(self, action: #selector(showUserInfo(_:)))
         avatarTapRecognizer.numberOfTapsRequired = 1
         avatarImageView.addGestureRecognizer(avatarTapRecognizer)
         avatarImageView.isUserInteractionEnabled = true
         self.contentView.addSubview(avatarImageView)
         
-        authorTapRecognizer.addTarget(self, action: #selector(showUserInfo(recognizer:)))
+        authorTapRecognizer.addTarget(self, action: #selector(showUserInfo(_:)))
         authorTapRecognizer.numberOfTapsRequired = 1
         authorLabel.addGestureRecognizer(authorTapRecognizer)
         authorLabel.isUserInteractionEnabled = true
@@ -94,7 +94,7 @@ class ArticleContentCell: UITableViewCell {
         replyLabel.layer.cornerRadius = 4
         replyLabel.layer.borderWidth = 1
         replyLabel.clipsToBounds = true
-        replyTapRecognizer.addTarget(self, action: #selector(reply(recognizer:)))
+        replyTapRecognizer.addTarget(self, action: #selector(reply(_:)))
         replyTapRecognizer.numberOfTapsRequired = 1
         replyLabel.addGestureRecognizer(replyTapRecognizer)
         replyLabel.isUserInteractionEnabled = true
@@ -105,7 +105,7 @@ class ArticleContentCell: UITableViewCell {
         moreLabel.layer.cornerRadius = 4
         moreLabel.layer.borderWidth = 1
         moreLabel.clipsToBounds = true
-        moreTapRecognizer.addTarget(self, action: #selector(action(recognizer:)))
+        moreTapRecognizer.addTarget(self, action: #selector(action(_:)))
         moreTapRecognizer.numberOfTapsRequired = 1
         moreLabel.addGestureRecognizer(moreTapRecognizer)
         moreLabel.isUserInteractionEnabled = true
@@ -196,7 +196,7 @@ class ArticleContentCell: UITableViewCell {
         moreLabel.frame = CGRect(x: size.width - rightMargin - moreButtonWidth, y: margin1 - buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
         
         let boundingWidth = size.width - leftMargin - rightMargin
-        let imageHeight = heightForImages(count: imageViews.count, boundingWidth: boundingWidth)
+        let imageHeight = heightForImages(count: self.imageViews.count, boundingWidth: boundingWidth)
         
         contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: boundingWidth, height: size.height - margin1 * 2 - margin3 - imageHeight)
         
@@ -217,27 +217,30 @@ class ArticleContentCell: UITableViewCell {
             }
         }
         
-        switch imageViews.count {
+        var imageViews = self.imageViews
+        var startY = size.height - imageHeight
+        let headImageHeight = (boundingWidth - blankWidth) / 2
+        
+        switch imageViews.count % Int(picNumPerLine) {
         case 1:
-            imageViews.first!.frame = CGRect(x: leftMargin, y: size.height - boundingWidth, width: boundingWidth, height: boundingWidth)
-        case 2, 4:
-            for (index, imageView) in imageViews.enumerated() {
-                let length = (boundingWidth - blankWidth) / 2
-                let startY = size.height - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / 2) - blankWidth)
-                let offsetY = (length + blankWidth) * CGFloat(index / 2)
-                let X = leftMargin + CGFloat(index % 2) * (length + blankWidth)
-                imageView.frame = CGRect(x: X, y: startY + offsetY, width: length, height: length)
-            }
-        case let count where count == 3 || count > 4:
-            for (index, imageView) in imageViews.enumerated() {
-                let length = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-                let startY = size.height - ((length + blankWidth) * ceil(CGFloat(imageViews.count) / picNumPerLine) - blankWidth)
-                let offsetY = (length + blankWidth) * CGFloat(index / Int(picNumPerLine))
-                let X = leftMargin + CGFloat(index % Int(picNumPerLine)) * (length + blankWidth)
-                imageView.frame = CGRect(x: X, y: startY + offsetY, width: length, height: length)
-            }
+            let first = imageViews.remove(at: 0)
+            first.frame = CGRect(x: leftMargin, y: startY, width: boundingWidth, height: headImageHeight)
+            startY += (headImageHeight + blankWidth)
+        case 2:
+            let first = imageViews.remove(at: 0)
+            first.frame = CGRect(x: leftMargin, y: startY, width: headImageHeight, height: headImageHeight)
+            let second = imageViews.remove(at: 0)
+            second.frame = CGRect(x: leftMargin + headImageHeight + blankWidth, y: startY, width: headImageHeight, height: headImageHeight)
+            startY += (headImageHeight + blankWidth)
         default:
             break
+        }
+        
+        for (index, imageView) in imageViews.enumerated() {
+            let length = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
+            let offsetY = (length + blankWidth) * CGFloat(index / Int(picNumPerLine))
+            let X = leftMargin + CGFloat(index % Int(picNumPerLine)) * (length + blankWidth)
+            imageView.frame = CGRect(x: X, y: startY + offsetY, width: length, height: length)
         }
     }
     
@@ -274,14 +277,12 @@ class ArticleContentCell: UITableViewCell {
     private func heightForImages(count: Int, boundingWidth: CGFloat) -> CGFloat {
         var totalHeight: CGFloat = 0
         if !setting.noPicMode {
-            switch count {
-            case 1, 4:
-                totalHeight = boundingWidth
-            case 2:
-                totalHeight = (boundingWidth - blankWidth) / 2
-            case let num where num == 3 || num > 4:
-                let oneImageHeight = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-                totalHeight = (oneImageHeight + blankWidth) * ceil(CGFloat(count) / picNumPerLine) - blankWidth
+            let oneImageHeight = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
+            totalHeight = (oneImageHeight + blankWidth) * CGFloat(count / Int(picNumPerLine)) - blankWidth
+            switch count % Int(picNumPerLine) {
+            case 1, 2:
+                let headImageHeight = (boundingWidth - blankWidth) / 2
+                totalHeight += (headImageHeight + blankWidth)
             default:
                 break
             }
@@ -312,7 +313,7 @@ class ArticleContentCell: UITableViewCell {
                                        placeholder: #imageLiteral(resourceName: "loading"),
                                        options: [.progressiveBlur, .showNetworkActivity, .setImageWithFadeAnimation])
                 imageView.isUserInteractionEnabled = true
-                let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapOnImage(recognizer:)))
+                let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapOnImage(_:)))
                 singleTap.numberOfTapsRequired = 1
                 imageView.addGestureRecognizer(singleTap)
                 contentView.addSubview(imageView)
@@ -322,7 +323,7 @@ class ArticleContentCell: UITableViewCell {
     }
     
     //MARK: - Action
-    @objc private func singleTapOnImage(recognizer: UIGestureRecognizer) {
+    @objc private func singleTapOnImage(_ recognizer: UIGestureRecognizer) {
         if
             let imageView = recognizer.view as? YYAnimatedImageView,
             let index = imageViews.index(of: imageView)
@@ -331,15 +332,15 @@ class ArticleContentCell: UITableViewCell {
         }
     }
     
-    @objc private func reply(recognizer: UITapGestureRecognizer) {
+    @objc private func reply(_ recognizer: UITapGestureRecognizer) {
         delegate?.cell(self, didClickReply: recognizer.view)
     }
     
-    @objc private func action(recognizer: UITapGestureRecognizer) {
+    @objc private func action(_ recognizer: UITapGestureRecognizer) {
         delegate?.cell(self, didClickMore: recognizer.view)
     }
     
-    @objc private func showUserInfo(recognizer: UITapGestureRecognizer) {
+    @objc private func showUserInfo(_ recognizer: UITapGestureRecognizer) {
         delegate?.cell(self, didClickUser: recognizer.view)
     }
     

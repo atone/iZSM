@@ -27,6 +27,8 @@ class ArticleContentCell: UITableViewCell {
     
     private var contentLabel = YYLabel()
     
+    private var quotBars: [UIView] = []
+    
     private weak var delegate: ArticleContentCellDelegate?
     private weak var controller: ArticleContentViewController?
     
@@ -47,10 +49,15 @@ class ArticleContentCell: UITableViewCell {
     private let margin2: CGFloat = 2
     private let margin3: CGFloat = 8
     
+    var isDrawed: Bool = false
     var isVisible: Bool = false {
         didSet {
-            if isVisible && (!setting.noPicMode) {
-                drawImagesWithInfo(imageAtt: self.article?.imageAtt)
+            if isVisible && !isDrawed {
+                isDrawed = true
+                drawQuotBar(with: self.article?.quotedAttributedRange)
+                if !setting.noPicMode {
+                    drawImagesWithInfo(imageAtt: self.article?.imageAtt)
+                }
             }
         }
     }
@@ -140,6 +147,10 @@ class ArticleContentCell: UITableViewCell {
         replyLabel.layer.borderColor = AppTheme.shared.tintColor.cgColor
         moreLabel.textColor = AppTheme.shared.tintColor
         moreLabel.layer.borderColor = AppTheme.shared.tintColor.cgColor
+        
+        for quotBar in quotBars {
+            quotBar.backgroundColor = AppTheme.shared.lightTextColor.withAlphaComponent(0.5)
+        }
     }
     
     func setData(displayFloor floor: Int, smarticle: SMArticle, delegate: ArticleContentCellDelegate, controller: ArticleContentViewController) {
@@ -153,6 +164,12 @@ class ArticleContentCell: UITableViewCell {
         floorAndTimeLabel.text = "\(floorText)  \(smarticle.timeString)"
         
         updateColor()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        isVisible = false
+        isDrawed = false
     }
     
     //MARK: - Layout Subviews
@@ -214,6 +231,15 @@ class ArticleContentCell: UITableViewCell {
                 // Store it in dictionary
                 controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))\(setting.nightMode ? "_dark" : "")"] = layout
                 contentLabel.textLayout = layout
+            }
+            
+            if article.quotedAttributedRange.count == quotBars.count {
+                for i in 0..<quotBars.count {
+                    let quotedRange = article.quotedAttributedRange[i]
+                    let rawRect = contentLabel.textLayout!.rect(for: YYTextRange(range: quotedRange))
+                    let quotedRect = contentView.convert(rawRect, from: contentLabel)
+                    quotBars[i].frame = CGRect(x: leftMargin, y: quotedRect.origin.y, width: 5, height: quotedRect.height)
+                }
             }
         }
         
@@ -318,6 +344,25 @@ class ArticleContentCell: UITableViewCell {
                 imageView.addGestureRecognizer(singleTap)
                 contentView.addSubview(imageView)
                 imageViews.append(imageView)
+            }
+        }
+    }
+    
+    private func drawQuotBar(with ranges: [NSRange]?) {
+        
+        // remove old quot bars
+        for quotBar in quotBars {
+            quotBar.removeFromSuperview()
+        }
+        quotBars.removeAll()
+        
+        // add new quot bars
+        if let ranges = ranges {
+            for _ in ranges {
+                let quotBar = UIView()
+                quotBar.backgroundColor = AppTheme.shared.lightTextColor.withAlphaComponent(0.5)
+                contentView.addSubview(quotBar)
+                quotBars.append(quotBar)
             }
         }
     }

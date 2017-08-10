@@ -45,6 +45,7 @@ struct SMArticle {
     var timeString: String
     var attributedBody: NSAttributedString
     var attributedDarkBody: NSAttributedString
+    var quotedAttributedRange: [NSRange]
     
     var replySubject: String {
         if subject.lowercased().hasPrefix("re:") {
@@ -82,6 +83,7 @@ struct SMArticle {
         self.timeString = time.shortDateString
         self.attributedBody = NSAttributedString()
         self.attributedDarkBody = NSAttributedString()
+        self.quotedAttributedRange = []
     }
 
     mutating func extraConfigure() {
@@ -97,7 +99,7 @@ struct SMArticle {
         self.attributedDarkBody = attributedBody(forDarkTheme: true)
     }
 
-    private func attributedBody(forDarkTheme dark: Bool) -> NSAttributedString {
+    private mutating func attributedBody(forDarkTheme dark: Bool) -> NSAttributedString {
         let theme = AppTheme.shared
         let attributeText = NSMutableAttributedString()
         
@@ -107,15 +109,28 @@ struct SMArticle {
         paragraphStyle.alignment = .natural
         paragraphStyle.lineBreakMode = .byWordWrapping
         
+        let quotedParagraphStyle = NSMutableParagraphStyle()
+        quotedParagraphStyle.lineSpacing = textFont.pointSize / 4
+        quotedParagraphStyle.alignment = .natural
+        quotedParagraphStyle.lineBreakMode = .byWordWrapping
+        quotedParagraphStyle.firstLineHeadIndent = 10
+        quotedParagraphStyle.headIndent = 10
+        
         let normal : [String : Any] = [NSFontAttributeName: textFont,
                                        NSParagraphStyleAttributeName: paragraphStyle,
                                        NSForegroundColorAttributeName: dark ? theme.nightTextColor : theme.dayTextColor]
         let quoted : [String : Any] = [NSFontAttributeName: textFont,
-                                       NSParagraphStyleAttributeName: paragraphStyle,
+                                       NSParagraphStyleAttributeName: quotedParagraphStyle,
                                        NSForegroundColorAttributeName: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
+        
+        let regex = try! NSRegularExpression(pattern: "在.*的(?:大作|邮件)中提到")
         
         self.body.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(":") {
+                var stripLine = line.substring(from: line.index(after: line.startIndex))
+                stripLine = stripLine.trimmingCharacters(in: .whitespaces)
+                attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: quoted))
+            } else if regex.numberOfMatches(in: line, range: NSMakeRange(0, line.characters.count)) > 0 {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: quoted))
             } else {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: normal))
@@ -140,6 +155,18 @@ struct SMArticle {
         
         let emoticonParser = SMEmoticon.shared.parser
         emoticonParser.parseText(attributeText, selectedRange: nil)
+        
+        self.quotedAttributedRange.removeAll()
+        attributeText.enumerateAttribute(NSParagraphStyleAttributeName, in: NSMakeRange(0, attributeText.length)) { (value, range, stop) in
+            if let value = value as? NSMutableParagraphStyle, value == quotedParagraphStyle {
+                var trimRange = range
+                while trimRange.length > 0
+                    && attributeText.attributedSubstring(from: NSMakeRange(trimRange.location + trimRange.length - 1, 1)).string == "\n" {
+                    trimRange.length -= 1
+                }
+                self.quotedAttributedRange.append(trimRange)
+            }
+        }
         
         return attributeText
     }

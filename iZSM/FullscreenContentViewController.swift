@@ -73,18 +73,38 @@ class FullscreenContentViewController: UIViewController {
             fullArticle.append(subtitle)
             fullArticle.appendString("\n")
             
-            let attributedBody = AppSetting.shared.nightMode ? article.attributedDarkBody : article.attributedBody
             let font = UIFont.preferredFont(forTextStyle: .title3)
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = font.pointSize / 4
             paragraphStyle.alignment = .natural
             paragraphStyle.lineBreakMode = .byWordWrapping
+            let attributedBody = attributedStringFromContent(article.body)
             let mutableAttributedBody = NSMutableAttributedString(attributedString: attributedBody)
             mutableAttributedBody.addAttributes([NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: font],
                                                 range: NSMakeRange(0, mutableAttributedBody.string.characters.count))
             fullArticle.append(mutableAttributedBody)
             contentTextView.attributedText = fullArticle
         }
+    }
+    
+    private func attributedStringFromContent(_ string: String) -> NSAttributedString {
+        let attributeText = NSMutableAttributedString()
+        
+        let normal = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: .body),
+                      NSParagraphStyleAttributeName: NSParagraphStyle.default,
+                      NSForegroundColorAttributeName: AppTheme.shared.textColor]
+        let quoted = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: .body),
+                      NSParagraphStyleAttributeName: NSParagraphStyle.default,
+                      NSForegroundColorAttributeName: AppTheme.shared.lightTextColor]
+        
+        string.enumerateLines { (line, stop) -> () in
+            if line.hasPrefix(":") {
+                attributeText.append(NSAttributedString(string: "\(line)\n", attributes: quoted))
+            } else {
+                attributeText.append(NSAttributedString(string: "\(line)\n", attributes: normal))
+            }
+        }
+        return attributeText
     }
     
     @objc private func refreshContent(_ notification: Notification) {

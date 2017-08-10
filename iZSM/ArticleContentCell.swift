@@ -314,7 +314,7 @@ class ArticleContentCell: UITableViewCell {
     
     private func heightForImages(count: Int, boundingWidth: CGFloat) -> CGFloat {
         var totalHeight: CGFloat = 0
-        if !setting.noPicMode {
+        if !setting.noPicMode && count > 0 {
             let oneImageHeight = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
             totalHeight = (oneImageHeight + blankWidth) * CGFloat(count / Int(picNumPerLine)) - blankWidth
             switch count % Int(picNumPerLine) {

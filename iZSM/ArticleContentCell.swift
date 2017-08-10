@@ -273,7 +273,7 @@ class ArticleContentCell: UITableViewCell {
     
     private func fixedLineHeightContainer(boundingSize: CGSize) -> YYTextContainer {
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
-        let modifier = YYTextLinePositionSimpleModifier()
+        let modifier = YYTextLinePositionHorizontalFixedModifier()
         modifier.fixedLineHeight = descriptor.pointSize * 1.4
         let container = YYTextContainer()
         container.size = boundingSize
@@ -409,4 +409,21 @@ protocol ArticleContentCellDelegate: class {
     func cell(_ cell: ArticleContentCell, didClickReply sender: UIView?)
     func cell(_ cell: ArticleContentCell, didClickMore sender: UIView?)
     func cell(_ cell: ArticleContentCell, didClickUser sender: UIView?)
+}
+
+class YYTextLinePositionHorizontalFixedModifier: NSObject, YYTextLinePositionModifier {
+    
+    var fixedLineHeight: CGFloat = 0.0
+    
+    func modifyLines(_ lines: [YYTextLine], fromText text: NSAttributedString, in container: YYTextContainer) {
+        for line in lines {
+            line.position.y = CGFloat(line.row) * fixedLineHeight + fixedLineHeight * 0.7 + container.insets.top
+        }
+    }
+    
+    func copy(with zone: NSZone? = nil) -> Any {
+        let one = YYTextLinePositionHorizontalFixedModifier()
+        one.fixedLineHeight = self.fixedLineHeight
+        return one
+    }
 }

@@ -112,6 +112,9 @@ class ArticleContentViewController: NTTableViewController {
     }
     
     override var prefersStatusBarHidden: Bool {
+        if super.prefersStatusBarHidden {
+            return super.prefersStatusBarHidden
+        }
         return shouldHidesStatusBar
     }
     

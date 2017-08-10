@@ -236,7 +236,6 @@
 @property (nonatomic, strong) NSMutableArray *cells;
 @property (nonatomic, strong) UIPageControl *pager;
 @property (nonatomic, assign) CGFloat pagerCurrentPage;
-@property (nonatomic, assign) BOOL fromNavigationBarHidden;
 
 @property (nonatomic, assign) NSInteger fromItemIndex;
 @property (nonatomic, assign) BOOL isPresented;
@@ -404,7 +403,6 @@
     [self scrollViewDidScroll:_scrollView];
     
     [UIView setAnimationsEnabled:YES];
-    _fromNavigationBarHidden = [UIApplication sharedApplication].statusBarHidden;
     [_inViewController setValue:@YES forKey:@"shouldHidesStatusBar"];
     [_inViewController setNeedsStatusBarAppearanceUpdate];
     
@@ -483,7 +481,7 @@
 - (void)dismissAnimated:(BOOL)animated {
     [UIView setAnimationsEnabled:YES];
     
-    [_inViewController setValue:[NSNumber numberWithBool:_fromNavigationBarHidden] forKey:@"shouldHidesStatusBar"];
+    [_inViewController setValue:@NO forKey:@"shouldHidesStatusBar"];
     [_inViewController setNeedsStatusBarAppearanceUpdate];
     NSInteger currentPage = self.currentPage;
     YYPhotoGroupCell *cell = [self cellForPage:currentPage];
@@ -802,7 +800,7 @@
             if (fabs(v.y) > 1000 || fabs(deltaY) > 120) {
                 [self cancelAllImageLoad];
                 _isPresented = NO;
-                [_inViewController setValue:[NSNumber numberWithBool:_fromNavigationBarHidden] forKey:@"shouldHidesStatusBar"];
+                [_inViewController setValue:@NO forKey:@"shouldHidesStatusBar"];
                 [_inViewController setNeedsStatusBarAppearanceUpdate];
                 
                 BOOL moveToTop = (v.y < - 50 || (v.y < 50 && deltaY < 0));

@@ -104,13 +104,12 @@ struct SMArticle {
         let attributeText = NSMutableAttributedString()
         
         let textFont = UIFont.preferredFont(forTextStyle: .body)
+        let boldTextFont = UIFont.boldSystemFont(ofSize: textFont.pointSize)
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = textFont.pointSize / 4
         paragraphStyle.alignment = .natural
         paragraphStyle.lineBreakMode = .byWordWrapping
         
         let quotedParagraphStyle = NSMutableParagraphStyle()
-        quotedParagraphStyle.lineSpacing = textFont.pointSize / 4
         quotedParagraphStyle.alignment = .natural
         quotedParagraphStyle.lineBreakMode = .byWordWrapping
         quotedParagraphStyle.firstLineHeadIndent = 10
@@ -122,6 +121,9 @@ struct SMArticle {
         let quoted : [String : Any] = [NSFontAttributeName: textFont,
                                        NSParagraphStyleAttributeName: quotedParagraphStyle,
                                        NSForegroundColorAttributeName: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
+        let quotedTitle : [String : Any] = [NSFontAttributeName: boldTextFont,
+                                            NSParagraphStyleAttributeName: quotedParagraphStyle,
+                                            NSForegroundColorAttributeName: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
         
         let regex = try! NSRegularExpression(pattern: "在.*的(?:大作|邮件)中提到")
         
@@ -131,7 +133,12 @@ struct SMArticle {
                 stripLine = stripLine.trimmingCharacters(in: .whitespaces)
                 attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: quoted))
             } else if regex.numberOfMatches(in: line, range: NSMakeRange(0, line.characters.count)) > 0 {
-                attributeText.append(NSAttributedString(string: "\(line)\n", attributes: quoted))
+                var stripLine = line.trimmingCharacters(in: .whitespaces)
+                if stripLine[stripLine.startIndex] == "【" && stripLine[stripLine.index(before: stripLine.endIndex)] == "】" {
+                    stripLine = stripLine.substring(with: stripLine.index(after: stripLine.startIndex)..<stripLine.index(before: stripLine.endIndex))
+                    stripLine = stripLine.trimmingCharacters(in: .whitespaces)
+                }
+                attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: quotedTitle))
             } else {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: normal))
             }

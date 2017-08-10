@@ -227,12 +227,7 @@ class ArticleContentCell: UITableViewCell {
                 dPrint("ERROR: This should not happen. Calculating layout and updating cache.")
                 // Calculate layout
                 let attributedText: NSAttributedString = setting.nightMode ? article.attributedDarkBody : article.attributedBody
-                let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
-                let modifier = YYTextLinePositionSimpleModifier()
-                modifier.fixedLineHeight = descriptor.pointSize * 1.4
-                let container = YYTextContainer()
-                container.size = CGSize(width: boundingWidth, height: CGFloat.greatestFiniteMagnitude)
-                container.linePositionModifier = modifier
+                let container = fixedLineHeightContainer(boundingSize: CGSize(width: boundingWidth, height: CGFloat.greatestFiniteMagnitude))
                 let layout = YYTextLayout(container: container, text: attributedText)!
                 // Store it in dictionary
                 controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))\(setting.nightMode ? "_dark" : "")"] = layout
@@ -276,6 +271,16 @@ class ArticleContentCell: UITableViewCell {
         }
     }
     
+    private func fixedLineHeightContainer(boundingSize: CGSize) -> YYTextContainer {
+        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        let modifier = YYTextLinePositionSimpleModifier()
+        modifier.fixedLineHeight = descriptor.pointSize * 1.4
+        let container = YYTextContainer()
+        container.size = boundingSize
+        container.linePositionModifier = modifier
+        return container
+    }
+    
     //MARK: - Calculate Fitting Size
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         
@@ -292,12 +297,7 @@ class ArticleContentCell: UITableViewCell {
             textBoundingSize = layout.textBoundingSize
         } else {
             // Calculate text layout
-            let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
-            let modifier = YYTextLinePositionSimpleModifier()
-            modifier.fixedLineHeight = descriptor.pointSize * 1.4
-            let container = YYTextContainer()
-            container.size = boundingSize
-            container.linePositionModifier = modifier
+            let container = fixedLineHeightContainer(boundingSize: boundingSize)
             let layout = YYTextLayout(container: container, text: article.attributedBody)!
             let darkLayout = YYTextLayout(container: container, text: article.attributedDarkBody)!
             // Store in dictionary

@@ -1296,10 +1296,10 @@
 			};
 			buildConfigurationList = 9C1A3BB71DE2C0ED00CF4A43 /* Build configuration list for PBXProject "iZSM" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = Chinese;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
+				zh,
 				Base,
 			);
 			mainGroup = 9C1A3BB31DE2C0ED00CF4A43;

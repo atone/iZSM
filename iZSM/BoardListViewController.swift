@@ -104,7 +104,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         
         // add long press gesture recognizer
         tableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self,
-                                                                    action: #selector(handleLongPress(gestureRecognizer:))))
+                                                                    action: #selector(handleLongPress(_:))))
         if traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: view)
         }
@@ -280,7 +280,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         return nil
     }
     
-    func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
+    @objc private func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if gestureRecognizer.state == .began {
             let point = gestureRecognizer.location(in: tableView)
             if let indexPath = tableView.indexPathForRow(at: point) {

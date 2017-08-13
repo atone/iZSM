@@ -44,7 +44,7 @@ class MailBoxViewController: BaseTableViewController {
         tableView.register(MailListCell.self, forCellReuseIdentifier: kMailListCellIdentifier)
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self,
-                                                            action: #selector(composeEmail(sender:)))
+                                                            action: #selector(composeEmail(_:)))
     }
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
@@ -124,7 +124,7 @@ class MailBoxViewController: BaseTableViewController {
         }
     }
     
-    func composeEmail(sender: UIBarButtonItem) {
+    @objc private func composeEmail(_ sender: UIBarButtonItem) {
         let cec = ComposeEmailController()
         if !inbox {
             cec.completionHandler = { [unowned self] in

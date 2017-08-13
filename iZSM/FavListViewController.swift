@@ -18,7 +18,7 @@ class FavListViewController: BaseTableViewController {
         let switcher = UISegmentedControl(items: ["收藏夹", "驻版"])
         switcher.selectedSegmentIndex = 0
         switcher.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        switcher.addTarget(self, action: #selector(indexChanged(sender:)), for: .valueChanged)
+        switcher.addTarget(self, action: #selector(indexChanged(_:)), for: .valueChanged)
         return switcher
     }()
     
@@ -38,7 +38,7 @@ class FavListViewController: BaseTableViewController {
         tableView?.reloadData()
     }
     
-    func setUpdateFavList(_ notification: Notification) {
+    @objc private func setUpdateFavList(_ notification: Notification) {
         fetchData(showHUD: false)
     }
     
@@ -47,7 +47,7 @@ class FavListViewController: BaseTableViewController {
         if boardID == 0 { //不能在子目录下进行收藏删除和添加，驻版没有子版面
             navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                                 target: self,
-                                                                action: #selector(addFavorite(sender:)))
+                                                                action: #selector(addFavorite(_:)))
             navigationItem.leftBarButtonItem = editButtonItem
             navigationItem.titleView = switcher
         }
@@ -93,13 +93,13 @@ class FavListViewController: BaseTableViewController {
         }
     }
     
-    func indexChanged(sender: UISegmentedControl) {
+    @objc private func indexChanged(_ sender: UISegmentedControl) {
         index = sender.selectedSegmentIndex
         fetchDataDirectly(showHUD: true)
     }
     
     
-    func addFavorite(sender: UIBarButtonItem) {
+    @objc private func addFavorite(_ sender: UIBarButtonItem) {
         let favMessage = "提示：记不住版面ID？没关系，在版面列表 (支持搜索) 下面长按待\(self.index == 0 ? "收藏" : "关注")的版面，也可以\(self.index == 0 ? "将版面添加到收藏夹" : "关注版面 (驻版)")。"
         let alert = UIAlertController(title: "请输入要\(self.index == 0 ? "收藏" : "关注")的版面ID", message: favMessage, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert] _ in

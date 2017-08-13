@@ -48,8 +48,8 @@ class UserInfoViewController: UIViewController {
     private let toolbar = UIToolbar()
     private let lastLoginLabel = UILabel()
     private let padding = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-    private let search = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(clickSearch(sender:)))
-    private let compose = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(clickCompose(sender:)))
+    private let search = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(clickSearch(_:)))
+    private let compose = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(clickCompose(_:)))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,7 +129,7 @@ class UserInfoViewController: UIViewController {
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.isUserInteractionEnabled = true
         avatarImageView.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                                    action: #selector(tapUserImage(sender:))))
+                                                                    action: #selector(tapUserImage(_:))))
         avatarImageView.snp.makeConstraints { (make) in
             make.width.equalTo(avatarWidth)
             make.height.equalTo(avatarWidth)
@@ -269,15 +269,15 @@ class UserInfoViewController: UIViewController {
         loginContentLabel.isHidden = hidden
     }
     
-    @objc private func clickCompose(sender: UIBarButtonItem) {
+    @objc private func clickCompose(_ sender: UIBarButtonItem) {
         delegate?.userInfoViewController(self, didClickCompose: sender)
     }
     
-    @objc private func clickSearch(sender: UIBarButtonItem) {
+    @objc private func clickSearch(_ sender: UIBarButtonItem) {
         delegate?.userInfoViewController(self, didClickSearch: sender)
     }
     
-    @objc private func tapUserImage(sender: UIGestureRecognizer) {
+    @objc private func tapUserImage(_ sender: UIGestureRecognizer) {
         delegate?.userInfoViewController(self, didTapUserImageView: avatarImageView)
     }
     

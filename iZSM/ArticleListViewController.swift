@@ -136,10 +136,10 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search,
                                            target: self,
-                                           action: #selector(pressSearchButton(sender:)))
+                                           action: #selector(pressSearchButton(_:)))
         let composeButton = UIBarButtonItem(barButtonSystemItem: .add,
                                             target: self,
-                                            action: #selector(composeArticle(sender:)))
+                                            action: #selector(composeArticle(_:)))
         navigationItem.rightBarButtonItems = [composeButton, searchButton]
         
         if traitCollection.forceTouchCapability == .available {
@@ -155,7 +155,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         threads.removeAll()
     }
     
-    func pressSearchButton(sender: UIBarButtonItem) {
+    @objc private func pressSearchButton(_ sender: UIBarButtonItem) {
         if tableView.tableHeaderView == nil {
             if let searchController = searchController {
                 tableView.tableHeaderView = searchController.searchBar
@@ -303,7 +303,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         show(acvc, sender: self)
     }
     
-    func composeArticle(sender: UIBarButtonItem) {
+    @objc private func composeArticle(_ sender: UIBarButtonItem) {
         let cavc = ComposeArticleController()
         cavc.boardID = boardID
         cavc.completionHandler = { [unowned self] in

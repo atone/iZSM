@@ -32,17 +32,17 @@ class EulaViewController: UIViewController {
         webView.loadRequest(request)
         
         title = "水木社区管理规则"
-        let agreeButton = UIBarButtonItem(title: "同意", style: .plain, target: self, action: #selector(agreeTapped(sender:)))
-        let declineButton = UIBarButtonItem(title: "拒绝", style: .plain, target: self, action: #selector(declineTapped(sender:)))
+        let agreeButton = UIBarButtonItem(title: "同意", style: .plain, target: self, action: #selector(agreeTapped(_:)))
+        let declineButton = UIBarButtonItem(title: "拒绝", style: .plain, target: self, action: #selector(declineTapped(_:)))
         navigationItem.rightBarButtonItem = agreeButton
         navigationItem.leftBarButtonItem = declineButton
     }
     
-    func agreeTapped(sender: UIBarButtonItem) {
+    @objc private func agreeTapped(_ sender: UIBarButtonItem) {
         delegate?.userAcceptedEula(self)
     }
     
-    func declineTapped(sender: UIBarButtonItem) {
+    @objc private func declineTapped(_ sender: UIBarButtonItem) {
         delegate?.userDeclinedEula(self)
     }
 }

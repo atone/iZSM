@@ -25,7 +25,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     func setupUI() {
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         userButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        userButton.addTarget(self, action: #selector(clickUserButton(button:)), for: .touchUpInside)
+        userButton.addTarget(self, action: #selector(clickUserButton(_:)), for: .touchUpInside)
         timeLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
         contentTextView.isEditable = false
@@ -56,10 +56,10 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         
         let replyItem = UIBarButtonItem(barButtonSystemItem: .reply,
                                         target: self,
-                                        action: #selector(reply(sender:)))
+                                        action: #selector(reply(_:)))
         let actionItem = UIBarButtonItem(barButtonSystemItem: .action,
                                          target: self,
-                                         action: #selector(action(sender:)))
+                                         action: #selector(action(_:)))
         navigationItem.rightBarButtonItems = [actionItem, replyItem]
         updateColor()
     }
@@ -96,7 +96,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         fetchData()
     }
     
-    func clickUserButton(button: UIButton) {
+    @objc private func clickUserButton(_ button: UIButton) {
         if let userID = button.titleLabel?.text {
             networkActivityIndicatorStart()
             SMUserInfoUtil.querySMUser(for: userID) { (user) in
@@ -113,7 +113,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func reply(sender: UIBarButtonItem) {
+    @objc private func reply(_ sender: UIBarButtonItem) {
         if
             let article = self.article,
             let reference = self.reference {
@@ -127,7 +127,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func action(sender: UIBarButtonItem) {
+    @objc private func action(_ sender: UIBarButtonItem) {
         if article == nil { return }
         if let reference = self.reference {
             let acvc = ArticleContentViewController()
@@ -145,7 +145,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func preferredFontSizeChanged(_ notification: Notification) {
+    @objc private func preferredFontSizeChanged(_ notification: Notification) {
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         userButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
         timeLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)

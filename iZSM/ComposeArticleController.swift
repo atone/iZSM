@@ -357,7 +357,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.removeObserver(self)
     }
     
-    @objc func keyboardWillShow(_ notification: Notification) {
+    @objc private func keyboardWillShow(_ notification: Notification) {
         let info = notification.userInfo
         var keyboardFrame = info?[UIKeyboardFrameEndUserInfoKey] as! CGRect
         keyboardFrame = view.convert(keyboardFrame, from: view.window)

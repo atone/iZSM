@@ -25,7 +25,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     func setupUI() {
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         userButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        userButton.addTarget(self, action: #selector(clickUserButton(button:)), for: .touchUpInside)
+        userButton.addTarget(self, action: #selector(clickUserButton(_:)), for: .touchUpInside)
         timeLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
         contentTextView.isEditable = false
@@ -57,15 +57,15 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         if inbox {
             let replyItem = UIBarButtonItem(barButtonSystemItem: .reply,
                                             target: self,
-                                            action: #selector(reply(sender:)))
+                                            action: #selector(reply(_:)))
             let actionItem = UIBarButtonItem(barButtonSystemItem: .action,
                                              target: self,
-                                             action: #selector(forward(sender:)))
+                                             action: #selector(forward(_:)))
             navigationItem.rightBarButtonItems = [actionItem, replyItem]
         } else {
             let replyItem = UIBarButtonItem(barButtonSystemItem: .reply,
                                             target: self,
-                                            action: #selector(reply(sender:)))
+                                            action: #selector(reply(_:)))
             navigationItem.rightBarButtonItem = replyItem
         }
         updateColor()
@@ -103,7 +103,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         fetchData()
     }
     
-    func clickUserButton(button: UIButton) {
+    @objc private func clickUserButton(_ button: UIButton) {
         if let userID = button.titleLabel?.text {
             networkActivityIndicatorStart()
             SMUserInfoUtil.querySMUser(for: userID) { (user) in
@@ -120,7 +120,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func reply(sender: UIBarButtonItem) {
+    @objc private func reply(_ sender: UIBarButtonItem) {
         if let mail = self.detailMail {
             let cevc = ComposeEmailController()
             cevc.email = mail
@@ -132,7 +132,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func forward(sender: UIBarButtonItem) {
+    @objc private func forward(_ sender: UIBarButtonItem) {
         if let originalMail = self.detailMail {
             let alert = UIAlertController(title: "转寄信件", message: nil, preferredStyle: .alert)
             alert.addTextField{ textField in
@@ -171,7 +171,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func preferredFontSizeChanged(_ notification: Notification) {
+    @objc private func preferredFontSizeChanged(_ notification: Notification) {
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         userButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
         timeLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)

@@ -58,7 +58,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         loginButton.setTitle("登录", for: .normal)
         loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-        loginButton.addTarget(self, action: #selector(login(sender:)), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(login(_:)), for: .touchUpInside)
         view.addSubview(loginButton)
         
         loginButton.snp.makeConstraints { (make) in
@@ -117,7 +117,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func findLoginFrom1Password(_ sender: UIBarButtonItem) {
+    @objc private func findLoginFrom1Password(_ sender: UIBarButtonItem) {
         OnePasswordExtension.shared().findLogin(forURLString: "newsmth.net", for: self, sender: sender) { (loginDictionary, error) in
             if loginDictionary == nil {
                 return
@@ -125,11 +125,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             self.usernameField.text = loginDictionary?[AppExtensionUsernameKey] as? String
             self.passwordField.text = loginDictionary?[AppExtensionPasswordKey] as? String
             
-            self.login(sender: nil)
+            self.login(nil)
         }
     }
     
-    func login(sender: UIButton?) {
+    @objc private func login(_ sender: UIButton?) {
         let username = usernameField.text
         let password = passwordField.text
         
@@ -181,7 +181,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             }
         } else {
             self.passwordField.resignFirstResponder()
-            self.login(sender: self.loginButton)
+            self.login(self.loginButton)
         }
         return false
     }

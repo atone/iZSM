@@ -83,8 +83,8 @@ class ArticleContentViewController: NTTableViewController {
         footerView.backgroundColor = UIColor.clear
         tableView.tableFooterView = footerView
 
-        let barButtonItems = [UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(sender:))),
-                              UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(tapPageButton(sender:)))]
+        let barButtonItems = [UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(_:))),
+                              UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(tapPageButton(_:)))]
         navigationItem.rightBarButtonItems = barButtonItems
         header = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(refreshAction))
         header?.lastUpdatedTimeLabel.isHidden = true
@@ -92,7 +92,7 @@ class ArticleContentViewController: NTTableViewController {
         footer = MJRefreshAutoNormalFooter(refreshingTarget: self, refreshingAction: #selector(fetchMoreData))
         tableView.mj_footer = footer
         // add double tap gesture recognizer
-        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTap(gestureRecgnizer:)))
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTap(_:)))
         doubleTapGesture.numberOfTapsRequired = 2
         tableView.addGestureRecognizer(doubleTapGesture)
         if traitCollection.forceTouchCapability == .available {
@@ -267,7 +267,7 @@ class ArticleContentViewController: NTTableViewController {
         }
     }
     
-    func fetchMoreData() {
+    @objc func fetchMoreData() {
         if self.isFetchingData {
             return
         }
@@ -384,7 +384,7 @@ class ArticleContentViewController: NTTableViewController {
     }
     
     // MARK: - Actions
-    func refreshAction() {
+    @objc private func refreshAction() {
         if soloUser == nil && currentBackwardNumber > 0 {
             fetchPrevData()
         } else {
@@ -393,7 +393,7 @@ class ArticleContentViewController: NTTableViewController {
         }
     }
     
-    func action(sender: UIBarButtonItem) {
+    @objc private func action(_ sender: UIBarButtonItem) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if let boardID = self.boardID, let articleID = self.articleID {
             let urlString: String
@@ -437,7 +437,7 @@ class ArticleContentViewController: NTTableViewController {
         present(actionSheet, animated: true)
     }
     
-    func tapPageButton(sender: UIBarButtonItem) {
+    @objc private func tapPageButton(_ sender: UIBarButtonItem) {
         let pageListViewController = PageListViewController()
         let height = min(CGFloat(44 * totalSection), view.bounds.height / 2)
         pageListViewController.preferredContentSize = CGSize(width: 200, height: height)
@@ -452,7 +452,7 @@ class ArticleContentViewController: NTTableViewController {
         present(pageListViewController, animated: true)
     }
     
-    func doubleTap(gestureRecgnizer: UITapGestureRecognizer) {
+    @objc private func doubleTap(_ gestureRecgnizer: UITapGestureRecognizer) {
         let point = gestureRecgnizer.location(in: tableView)
         if let indexPath = tableView.indexPathForRow(at: point) {
             dPrint("double tap on article content cell at \(indexPath)")

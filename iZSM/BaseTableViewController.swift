@@ -138,7 +138,7 @@ class BaseTableViewController: NTTableViewController {
     }
     
     // handle font size change
-    func preferredFontSizeChanged(_ notification: Notification) {
+    @objc private func preferredFontSizeChanged(_ notification: Notification) {
         tableView?.reloadData()
     }
     

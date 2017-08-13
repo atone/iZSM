@@ -71,6 +71,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.placeholder = "版面名称/关键字搜索"
         tableView.tableHeaderView = searchController.searchBar
     }
     

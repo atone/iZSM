@@ -112,8 +112,8 @@ struct SMArticle {
         let quotedParagraphStyle = NSMutableParagraphStyle()
         quotedParagraphStyle.alignment = .natural
         quotedParagraphStyle.lineBreakMode = .byWordWrapping
-        quotedParagraphStyle.firstLineHeadIndent = 10
-        quotedParagraphStyle.headIndent = 10
+        quotedParagraphStyle.firstLineHeadIndent = 12
+        quotedParagraphStyle.headIndent = 12
         
         let normal : [String : Any] = [NSFontAttributeName: textFont,
                                        NSParagraphStyleAttributeName: paragraphStyle,

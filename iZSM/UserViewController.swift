@@ -205,7 +205,7 @@ class UserViewController: NTTableViewController {
         }
     }
     
-    @IBAction func logout(segue: UIStoryboardSegue) {
+    @IBAction func logout(_ segue: UIStoryboardSegue) {
         networkActivityIndicatorStart()
         DispatchQueue.global().async {
             self.api.logoutBBS()

@@ -30,7 +30,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="huG-zg-Xer">
                                                     <rect key="frame" x="311" y="6" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="hideTopChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="3tt-G2-03W"/>
+                                                        <action selector="hideTopChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="3tt-G2-03W"/>
                                                     </connections>
                                                 </switch>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="隐藏置顶帖" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xet-7T-8hk">
@@ -65,7 +65,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="11I-Qr-V6U">
                                                     <rect key="frame" x="311" y="6" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="showSignatureChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="p16-jJ-Y39"/>
+                                                        <action selector="showSignatureChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="p16-jJ-Y39"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>
@@ -94,7 +94,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="JXU-55-QNf">
                                                     <rect key="frame" x="311" y="6" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="newReplyFirstChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="7p2-j3-bPQ"/>
+                                                        <action selector="newReplyFirstChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="7p2-j3-bPQ"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>
@@ -123,7 +123,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="7Yb-KJ-UdP">
                                                     <rect key="frame" x="311" y="6" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="rememberLastChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="mEj-f3-ORC"/>
+                                                        <action selector="rememberLastChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="mEj-f3-ORC"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>
@@ -152,7 +152,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="fSh-TT-AFI">
                                                     <rect key="frame" x="311" y="6" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="portraitLockChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="Y3m-IM-pDN"/>
+                                                        <action selector="portraitLockChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="Y3m-IM-pDN"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>
@@ -186,7 +186,7 @@
                                                         <segment title="mobile"/>
                                                     </segments>
                                                     <connections>
-                                                        <action selector="displayModeChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="nqR-NO-F8o"/>
+                                                        <action selector="displayModeChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="nqR-NO-F8o"/>
                                                     </connections>
                                                 </segmentedControl>
                                             </subviews>
@@ -219,7 +219,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="VFw-d3-MlW">
                                                     <rect key="frame" x="311" y="6" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="showAvatarChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="Jvm-jx-G1Q"/>
+                                                        <action selector="showAvatarChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="Jvm-jx-G1Q"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>
@@ -248,7 +248,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="G5y-Rz-9CE">
                                                     <rect key="frame" x="311" y="6" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="noPicModeChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="GYr-fp-UGs"/>
+                                                        <action selector="noPicModeChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="GYr-fp-UGs"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>
@@ -281,7 +281,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="uPH-J1-U46">
                                                     <rect key="frame" x="311" y="6" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="nightModeChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="bAl-hf-aGM"/>
+                                                        <action selector="nightModeSwitchChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="bAl-hf-aGM"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>
@@ -310,7 +310,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="VNg-Hq-fbd">
                                                     <rect key="frame" x="311" y="6" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="shakeToSwitchChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="Hov-Vo-Idq"/>
+                                                        <action selector="shakeToSwitchChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="Hov-Vo-Idq"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>
@@ -343,7 +343,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="9wJ-Ev-cvf">
                                                     <rect key="frame" x="311" y="6" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="backgroundTaskChangedWithSender:" destination="cfW-o0-iaM" eventType="valueChanged" id="3C3-d1-LHB"/>
+                                                        <action selector="backgroundTaskChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="3C3-d1-LHB"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>
@@ -415,7 +415,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="hna-ms-DQv" kind="unwind" unwindAction="logoutWithSegue:" id="Gnh-hn-FZx"/>
+                                            <segue destination="hna-ms-DQv" kind="unwind" unwindAction="logout:" id="Gnh-hn-FZx"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>

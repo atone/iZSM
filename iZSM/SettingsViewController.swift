@@ -79,15 +79,15 @@ class SettingsViewController: NTTableViewController {
         updateUI()
     }
 
-    @IBAction func hideTopChanged(sender: UISwitch) {
+    @IBAction func hideTopChanged(_ sender: UISwitch) {
         setting.hideAlwaysOnTopThread = sender.isOn
     }
 
-    @IBAction func showSignatureChanged(sender: UISwitch) {
+    @IBAction func showSignatureChanged(_ sender: UISwitch) {
         setting.showSignature = sender.isOn
     }
     
-    @IBAction func newReplyFirstChanged(sender: UISwitch) {
+    @IBAction func newReplyFirstChanged(_ sender: UISwitch) {
         if sender.isOn {
             setting.sortMode = .LaterPostFirst
         } else {
@@ -95,7 +95,7 @@ class SettingsViewController: NTTableViewController {
         }
     }
     
-    @IBAction func rememberLastChanged(sender: UISwitch) {
+    @IBAction func rememberLastChanged(_ sender: UISwitch) {
         setting.rememberLast = sender.isOn
         if !sender.isOn {
             let realm = try! Realm()
@@ -106,19 +106,19 @@ class SettingsViewController: NTTableViewController {
         }
     }
     
-    @IBAction func portraitLockChanged(sender: UISwitch) {
+    @IBAction func portraitLockChanged(_ sender: UISwitch) {
         setting.portraitLock = sender.isOn
     }
     
-    @IBAction func displayModeChanged(sender: UISegmentedControl) {
+    @IBAction func displayModeChanged(_ sender: UISegmentedControl) {
         setting.displayMode = AppSetting.DisplayMode(rawValue: sender.selectedSegmentIndex)!
     }
     
-    @IBAction func showAvatarChanged(sender: UISwitch) {
+    @IBAction func showAvatarChanged(_ sender: UISwitch) {
         setting.showAvatar = sender.isOn
     }
     
-    @IBAction func noPicModeChanged(sender: UISwitch) {
+    @IBAction func noPicModeChanged(_ sender: UISwitch) {
         setting.noPicMode = sender.isOn
         if sender.isOn {
             showAvatarSwitch.setOn(false, animated: true)
@@ -129,16 +129,16 @@ class SettingsViewController: NTTableViewController {
         }
     }
     
-    @IBAction func nightModeChanged(sender: UISwitch) {
+    @IBAction func nightModeSwitchChanged(_ sender: UISwitch) {
         setting.nightMode = sender.isOn
         NotificationCenter.default.post(name: AppTheme.kAppThemeChangedNotification, object: nil)
     }
     
-    @IBAction func shakeToSwitchChanged(sender: UISwitch) {
+    @IBAction func shakeToSwitchChanged(_ sender: UISwitch) {
         setting.shakeToSwitch = sender.isOn
     }
 
-    @IBAction func backgroundTaskChanged(sender: UISwitch) {
+    @IBAction func backgroundTaskChanged(_ sender: UISwitch) {
         setting.backgroundTaskEnabled = sender.isOn
         if sender.isOn {
             UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)

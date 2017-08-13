@@ -27,6 +27,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func setupUI() {
         title = "欢迎使用最水木"
+        view.backgroundColor = UIColor.white
         view.addSubview(logoView)
         
         containerView.backgroundColor = UIColor.white

@@ -40,6 +40,7 @@
 		9C56E1D61F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1D11F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m */; };
 		9C56E1D71F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1D31F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m */; };
 		9C5E17121F0F77F100AA5368 /* PageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5E17111F0F77F100AA5368 /* PageListViewController.swift */; };
+		9C642E231F40242800B13794 /* BoardListSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */; };
 		9C69EFBB1F2F15690018B336 /* NSBundle+TZImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C69EF9F1F2F15690018B336 /* NSBundle+TZImagePicker.m */; };
 		9C69EFBC1F2F15690018B336 /* TZAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C69EFA11F2F15690018B336 /* TZAssetCell.m */; };
 		9C69EFBD1F2F15690018B336 /* TZAssetModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C69EFA31F2F15690018B336 /* TZAssetModel.m */; };
@@ -350,6 +351,7 @@
 		9C56E1D21F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDTemplateLayoutCellDebug.h"; sourceTree = "<group>"; };
 		9C56E1D31F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCellDebug.m"; sourceTree = "<group>"; };
 		9C5E17111F0F77F100AA5368 /* PageListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageListViewController.swift; sourceTree = "<group>"; };
+		9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardListSearchResultViewController.swift; sourceTree = "<group>"; };
 		9C69EF9E1F2F15690018B336 /* NSBundle+TZImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+TZImagePicker.h"; sourceTree = "<group>"; };
 		9C69EF9F1F2F15690018B336 /* NSBundle+TZImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+TZImagePicker.m"; sourceTree = "<group>"; };
 		9C69EFA01F2F15690018B336 /* TZAssetCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZAssetCell.h; sourceTree = "<group>"; };
@@ -830,6 +832,7 @@
 				9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */,
 				9C889FCE1DE4995300C33A8D /* FavListViewController.swift */,
 				9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */,
+				9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */,
 				9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */,
 				9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */,
 				9C889FBC1DE4222000C33A8D /* ArticleContentViewController.swift */,
@@ -1633,6 +1636,7 @@
 				9C889FB71DE3EEEF00C33A8D /* ArticleListViewCell.swift in Sources */,
 				9CA3B1911DE3359200E9B121 /* MJRefreshFooter.m in Sources */,
 				9C56E1D71F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */,
+				9C642E231F40242800B13794 /* BoardListSearchResultViewController.swift in Sources */,
 				9C69EFC21F2F15690018B336 /* TZImagePickerController.m in Sources */,
 				9C6EB72C1F177A3D00129EA3 /* NTTabBarController.swift in Sources */,
 				9CB573C41DE5B61800CD6F3E /* LogoView.swift in Sources */,

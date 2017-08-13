@@ -647,10 +647,10 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
         
         let forwardAction = UIAlertAction(title: "转寄给用户", style: .default) { [unowned self] _ in
-            self.forward(article, toBoard: false)
+            self.forward(article)
         }
         let forwardToBoardAction = UIAlertAction(title: "转寄到版面", style: .default) { [unowned self] _ in
-            self.forward(article, toBoard: true)
+            self.cross(article)
         }
         let reportJunkAction = UIAlertAction(title: "举报不良内容", style: .destructive) { [unowned self] _ in
             self.reportJunk(article)
@@ -846,11 +846,11 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
     }
     
-    fileprivate func forward(_ article: SMArticle, toBoard: Bool) {
-        let alert = UIAlertController(title: (toBoard ? "转寄到版面":"转寄给用户"), message: nil, preferredStyle: .alert)
+    fileprivate func forward(_ article: SMArticle) {
+        let alert = UIAlertController(title: "转寄文章", message: nil, preferredStyle: .alert)
         alert.addTextField{ textField in
-            textField.placeholder = toBoard ? "版面ID" : "收件人，不填默认寄给自己"
-            textField.keyboardType = toBoard ? UIKeyboardType.asciiCapable : UIKeyboardType.emailAddress
+            textField.placeholder = "收件人ID或邮箱，不填默认寄给自己"
+            textField.keyboardType = UIKeyboardType.emailAddress
             textField.autocorrectionType = .no
             textField.returnKeyType = .send
             textField.keyboardAppearance = self.setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
@@ -859,18 +859,11 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             if let textField = alert.textFields?.first {
                 networkActivityIndicatorStart()
                 DispatchQueue.global().async {
-                    if toBoard {
-                        let result = self.api.crossArticle(articleID: article.id,
-                                                           fromBoard: article.boardID,
-                                                           toBoard: textField.text!)
-                        dPrint("cross article status: \(result)")
-                    } else {
-                        let user = textField.text!.isEmpty ? AppSetting.shared.username! : textField.text!
-                        let result = self.api.forwardArticle(articleID: article.id,
-                                                             inBoard: article.boardID,
-                                                             toUser: user)
-                        dPrint("forwared article status: \(result)")
-                    }
+                    let userID = textField.text!.isEmpty ? AppSetting.shared.username! : textField.text!
+                    let result = self.api.forwardArticle(articleID: article.id,
+                                                         inBoard: article.boardID,
+                                                         toUser: userID)
+                    dPrint("forwared article status: \(result)")
                     DispatchQueue.main.async {
                         networkActivityIndicatorStop()
                         if self.api.errorCode == 0 {
@@ -887,6 +880,31 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         alert.addAction(okAction)
         alert.addAction(UIAlertAction(title: "取消", style: .cancel))
         self.present(alert, animated: true)
+    }
+    
+    fileprivate func cross(_ article: SMArticle) {
+        let resultController = BoardListSearchResultViewController.searchResultController(title: "转寄到版面") { [unowned self] (board) in
+            self.dismiss(animated: true)
+            networkActivityIndicatorStart()
+            DispatchQueue.global().async {
+                let result = self.api.crossArticle(articleID: article.id,
+                                                   fromBoard: article.boardID,
+                                                   toBoard: board.boardID)
+                dPrint("cross article status: \(result)")
+                DispatchQueue.main.async {
+                    networkActivityIndicatorStop()
+                    if self.api.errorCode == 0 {
+                        SVProgressHUD.showSuccess(withStatus: "转寄成功")
+                    } else if let errorDescription = self.api.errorDescription , errorDescription != "" {
+                        SVProgressHUD.showInfo(withStatus: errorDescription)
+                    } else {
+                        SVProgressHUD.showError(withStatus: "出错了")
+                    }
+                }
+            }
+        }
+        resultController.modalPresentationStyle = .formSheet
+        present(resultController, animated: true)
     }
 }
 
@@ -942,10 +960,10 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
             }
             
             let forwardToUserAction = UIPreviewAction(title: "转寄给用户", style: .default) { [unowned self] _ in
-                self.forward(article, toBoard: false)
+                self.forward(article)
             }
             let forwardToBoardAction = UIPreviewAction(title: "转寄到版面", style: .default) { [unowned self] _ in
-                self.forward(article, toBoard: true)
+                self.cross(article)
             }
             let reportJunkAction = UIPreviewAction(title: "举报不良内容", style: .destructive) { [unowned self] _ in
                 self.reportJunk(article)

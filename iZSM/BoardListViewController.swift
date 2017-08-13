@@ -76,7 +76,8 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                 self.boards.removeAll()
                 if let result = result {
                     self.boards += result
-                    SMBoardInfoUtil.save(boardList: result)
+                    let filteredResult = result.filter { ($0.flag != -1) && ($0.flag & 0x400 == 0) }
+                    SMBoardInfoUtil.save(boardList: filteredResult)
                 }
                 self.tableView.reloadData()
                 self.api.displayErrorIfNeeded()

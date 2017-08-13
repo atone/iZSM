@@ -29,6 +29,9 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         searchMode = false
         api.cancel()
         tableView.mj_header.isHidden = false
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            navigationItem.setRightBarButton(nil, animated: true)
+        }
         boards = originalBoards ?? [SMBoard]()
         originalBoards = nil
         tableView.reloadData()
@@ -38,9 +41,17 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         searchMode = true
         api.cancel()
         tableView.mj_header.isHidden = true
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel(_:)))
+            navigationItem.setRightBarButton(cancelButton, animated: true)
+        }
         originalBoards = boards
         boards = [SMBoard]()
         tableView.reloadData()
+    }
+    
+    @objc private func cancel(_ sender: UIBarButtonItem) {
+        searchController?.isActive = false
     }
     
     func updateSearchResults(for searchController: UISearchController) {

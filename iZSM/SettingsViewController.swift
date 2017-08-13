@@ -64,7 +64,7 @@ class SettingsViewController: NTTableViewController {
         updateUI()
         // add observer to font size change
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(preferredFontSizeChanged(notification:)),
+                                               selector: #selector(preferredFontSizeChanged(_:)),
                                                name: .UIContentSizeCategoryDidChange,
                                                object: nil)
     }
@@ -75,7 +75,7 @@ class SettingsViewController: NTTableViewController {
     }
 
     // handle font size change
-    func preferredFontSizeChanged(notification: Notification) {
+    func preferredFontSizeChanged(_ notification: Notification) {
         updateUI()
     }
 

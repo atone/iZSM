@@ -20,7 +20,7 @@ class BaseTableViewController: NTTableViewController {
         fatalError("clearContent() NOT implemented")
     }
     
-    @objc private func needRefreshNotificationDidPosted(notification: Notification) {
+    @objc private func needRefreshNotificationDidPosted(_ notification: Notification) {
         needRefresh = true
         clearContent()
     }
@@ -43,12 +43,12 @@ class BaseTableViewController: NTTableViewController {
         
         // add observer to font size change
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(preferredFontSizeChanged(notification:)),
+                                               selector: #selector(preferredFontSizeChanged(_:)),
                                                name: .UIContentSizeCategoryDidChange,
                                                object: nil)
         // add observer to set need refresh
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(needRefreshNotificationDidPosted(notification:)),
+                                               selector: #selector(needRefreshNotificationDidPosted(_:)),
                                                name: BaseTableViewController.kNeedRefreshNotification,
                                                object: nil)
         
@@ -138,7 +138,7 @@ class BaseTableViewController: NTTableViewController {
     }
     
     // handle font size change
-    func preferredFontSizeChanged(notification: Notification) {
+    func preferredFontSizeChanged(_ notification: Notification) {
         tableView?.reloadData()
     }
     

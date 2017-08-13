@@ -38,7 +38,7 @@ class FavListViewController: BaseTableViewController {
         tableView?.reloadData()
     }
     
-    func setUpdateFavList(notification: Notification) {
+    func setUpdateFavList(_ notification: Notification) {
         fetchData(showHUD: false)
     }
     
@@ -52,7 +52,7 @@ class FavListViewController: BaseTableViewController {
             navigationItem.titleView = switcher
         }
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(setUpdateFavList(notification:)),
+                                               selector: #selector(setUpdateFavList(_:)),
                                                name: FavListViewController.kUpdateFavListNotification,
                                                object: nil)
         if traitCollection.forceTouchCapability == .available {

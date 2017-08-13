@@ -85,7 +85,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         contentTextView.delegate = self
         
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(preferredFontSizeChanged(notification:)),
+                                               selector: #selector(preferredFontSizeChanged(_:)),
                                                name: .UIContentSizeCategoryDidChange,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
@@ -145,7 +145,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func preferredFontSizeChanged(notification: Notification) {
+    func preferredFontSizeChanged(_ notification: Notification) {
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         userButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
         timeLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)

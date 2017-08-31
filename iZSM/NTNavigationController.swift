@@ -37,7 +37,7 @@ class NTNavigationController: UINavigationController {
     private func changeColor() {
         navigationBar.barStyle = .black
         navigationBar.tintColor = AppTheme.shared.naviContentColor
-        navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: AppTheme.shared.naviContentColor]
+        navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: AppTheme.shared.naviContentColor]
         navigationBar.barTintColor = AppTheme.shared.naviBackgroundColor
     }
 }

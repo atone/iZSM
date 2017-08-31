@@ -9,27 +9,27 @@
 import RealmSwift
 
 class SMBoardInfo: Object {
-    dynamic var bid: Int = 0
-    dynamic var boardID: String = ""
-    dynamic var level: Int = 0
-    dynamic var unread: Bool = false
-    dynamic var currentUsers: Int = 0
-    dynamic var maxOnline: Int = 0
-    dynamic var scoreLevel: Int = 0
-    dynamic var section: Int = 0
-    dynamic var total: Int = 0
-    dynamic var position: Int = 0
-    dynamic var lastPost: Int = 0
-    dynamic var manager: String = ""
-    dynamic var type: String = ""
-    dynamic var flag: Int = 0
-    dynamic var maxTime: Date = Date(timeIntervalSince1970: 0)
-    dynamic var name: String = ""
-    dynamic var score: Int = 0
-    dynamic var group: Int = 0
+    @objc dynamic var bid: Int = 0
+    @objc dynamic var boardID: String = ""
+    @objc dynamic var level: Int = 0
+    @objc dynamic var unread: Bool = false
+    @objc dynamic var currentUsers: Int = 0
+    @objc dynamic var maxOnline: Int = 0
+    @objc dynamic var scoreLevel: Int = 0
+    @objc dynamic var section: Int = 0
+    @objc dynamic var total: Int = 0
+    @objc dynamic var position: Int = 0
+    @objc dynamic var lastPost: Int = 0
+    @objc dynamic var manager: String = ""
+    @objc dynamic var type: String = ""
+    @objc dynamic var flag: Int = 0
+    @objc dynamic var maxTime: Date = Date(timeIntervalSince1970: 0)
+    @objc dynamic var name: String = ""
+    @objc dynamic var score: Int = 0
+    @objc dynamic var group: Int = 0
     
-    dynamic var lastUpdateTime: Date = Date()
-    dynamic var searchCount: Int = 0
+    @objc dynamic var lastUpdateTime: Date = Date()
+    @objc dynamic var searchCount: Int = 0
     
     override static func primaryKey() -> String? {
         return "boardID"

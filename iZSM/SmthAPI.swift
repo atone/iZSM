@@ -784,29 +784,29 @@ class SmthAPI {
         var content = string.trimmingCharacters(in: .whitespacesAndNewlines)
         // 去除末尾的--
         // 以及多余的空格和回车
-        if content.characters.count >= 2 && content.substring(from: content.index(content.endIndex, offsetBy: -2)) == "--" {
-            content = content.substring(to: content.index(content.endIndex, offsetBy: -2))
+        if content.count >= 2 && content[content.index(content.endIndex, offsetBy: -2)...] == "--" {
+            content = String(content[..<content.index(content.endIndex, offsetBy: -2)])
             content = content.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         // 除去签名档，可选
         if !setting.showSignature {
             let pattern = "^--$"
             let regularExpression = try! NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
-            let range = regularExpression.rangeOfFirstMatch(in: content, range: NSMakeRange(0, content.characters.count))
+            let range = regularExpression.rangeOfFirstMatch(in: content, range: NSMakeRange(0, content.count))
             if range.location != NSNotFound {
-                content = content.substring(to: content.index(content.startIndex, offsetBy: range.location))
+                content = String(content[..<content.index(content.startIndex, offsetBy: range.location)])
                 content = content.trimmingCharacters(in: .whitespacesAndNewlines)
             }
         }
         // 去除ANSI控制字符
         var pattern = "\\[(\\d{1,2};?)*m|\\[([ABCDsuKH]|2J)(?![a-zA-Z])|\\[\\d{1,2}[ABCD]|\\[\\d{1,2};\\d{1,2}H"
         var regularExpression = try! NSRegularExpression(pattern: pattern)
-        content = regularExpression.stringByReplacingMatches(in: content, range: NSMakeRange(0, content.characters.count), withTemplate: "")
+        content = regularExpression.stringByReplacingMatches(in: content, range: NSMakeRange(0, content.count), withTemplate: "")
 
         // 去除图片标志[upload=1][/upload]之类
         pattern = "\\[upload=(\\d){1,2}\\]\\[/upload\\]"
         regularExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-        content = regularExpression.stringByReplacingMatches(in: content, range: NSMakeRange(0, content.characters.count), withTemplate: "").trimmingCharacters(in: .whitespacesAndNewlines)
+        content = regularExpression.stringByReplacingMatches(in: content, range: NSMakeRange(0, content.count), withTemplate: "").trimmingCharacters(in: .whitespacesAndNewlines)
         return content as String
     }
     

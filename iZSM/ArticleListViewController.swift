@@ -296,7 +296,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         if thread.flags.hasPrefix("*") {
             var readThread = thread
             let flags = thread.flags
-            readThread.flags = " " + flags.substring(from: flags.index(after: flags.startIndex))
+            readThread.flags = " " + flags[flags.index(after: flags.startIndex)...]
             threads[indexPath.section][indexPath.row] = readThread
         }
         
@@ -349,7 +349,7 @@ extension ArticleListViewController: UIViewControllerPreviewingDelegate, SmthVie
         if thread.flags.hasPrefix("*") {
             var readThread = thread
             let flags = thread.flags
-            readThread.flags = " " + flags.substring(from: flags.index(after: flags.startIndex))
+            readThread.flags = " " + flags[flags.index(after: flags.startIndex)...]
             threads[indexPath.section][indexPath.row] = readThread
         }
         // Reuse the "Peek" view controller for presentation.

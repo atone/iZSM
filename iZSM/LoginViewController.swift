@@ -176,7 +176,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     //MARK: - UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == self.usernameField {
-            if textField.text!.characters.count > 0 {
+            if textField.text!.count > 0 {
                 self.passwordField.becomeFirstResponder()
             }
         } else {

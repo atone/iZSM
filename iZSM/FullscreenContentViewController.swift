@@ -52,9 +52,9 @@ class FullscreenContentViewController: UIViewController {
             titleParagraphStyle.lineBreakMode = .byWordWrapping
             titleParagraphStyle.lineSpacing = titleFont.pointSize / 4
             let title = NSAttributedString(string: article.subject,
-                                           attributes: [NSParagraphStyleAttributeName: titleParagraphStyle,
-                                                        NSFontAttributeName: titleFont,
-                                                        NSForegroundColorAttributeName: titleColor])
+                                           attributes: [NSAttributedStringKey.paragraphStyle: titleParagraphStyle,
+                                                        NSAttributedStringKey.font: titleFont,
+                                                        NSAttributedStringKey.foregroundColor: titleColor])
             fullArticle.append(title)
             fullArticle.appendString("\n")
             
@@ -67,9 +67,9 @@ class FullscreenContentViewController: UIViewController {
             subtitleParagraphStyle.paragraphSpacing = titleFont.pointSize
             subtitleParagraphStyle.paragraphSpacingBefore = titleFont.pointSize / 4
             let subtitle = NSAttributedString(string: subtitleText,
-                                              attributes: [NSParagraphStyleAttributeName: subtitleParagraphStyle,
-                                                           NSFontAttributeName: subtitleFont,
-                                                           NSForegroundColorAttributeName: subtitleColor])
+                                              attributes: [NSAttributedStringKey.paragraphStyle: subtitleParagraphStyle,
+                                                           NSAttributedStringKey.font: subtitleFont,
+                                                           NSAttributedStringKey.foregroundColor: subtitleColor])
             fullArticle.append(subtitle)
             fullArticle.appendString("\n")
             
@@ -80,8 +80,8 @@ class FullscreenContentViewController: UIViewController {
             paragraphStyle.lineBreakMode = .byWordWrapping
             let attributedBody = attributedStringFromContent(article.body)
             let mutableAttributedBody = NSMutableAttributedString(attributedString: attributedBody)
-            mutableAttributedBody.addAttributes([NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: font],
-                                                range: NSMakeRange(0, mutableAttributedBody.string.characters.count))
+            mutableAttributedBody.addAttributes([NSAttributedStringKey.paragraphStyle: paragraphStyle, NSAttributedStringKey.font: font],
+                                                range: NSMakeRange(0, mutableAttributedBody.string.count))
             fullArticle.append(mutableAttributedBody)
             contentTextView.attributedText = fullArticle
         }
@@ -90,12 +90,12 @@ class FullscreenContentViewController: UIViewController {
     private func attributedStringFromContent(_ string: String) -> NSAttributedString {
         let attributeText = NSMutableAttributedString()
         
-        let normal = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: .body),
-                      NSParagraphStyleAttributeName: NSParagraphStyle.default,
-                      NSForegroundColorAttributeName: AppTheme.shared.textColor]
-        let quoted = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: .body),
-                      NSParagraphStyleAttributeName: NSParagraphStyle.default,
-                      NSForegroundColorAttributeName: AppTheme.shared.lightTextColor]
+        let normal: [NSAttributedStringKey: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+                                                    .paragraphStyle: NSParagraphStyle.default,
+                                                    .foregroundColor: AppTheme.shared.textColor]
+        let quoted: [NSAttributedStringKey: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+                                                    .paragraphStyle: NSParagraphStyle.default,
+                                                    .foregroundColor: AppTheme.shared.lightTextColor]
         
         string.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(":") {

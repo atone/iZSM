@@ -1284,7 +1284,7 @@
 					9C1A3BBB1DE2C0ED00CF4A43 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 9TXRXPVXCE;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1792,7 +1792,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "iZSM/iZSM-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1816,7 +1816,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = cn.yunaitong.zsmth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "iZSM/iZSM-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

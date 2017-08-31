@@ -24,7 +24,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     private let titleHintLabel = UILabel()
     private let titleTextField = UITextField()
     private let countLabel = UILabel()
-    fileprivate let contentTextView = UITextView()
+    private let contentTextView = UITextView()
     private lazy var doneButton: UIBarButtonItem = {
         UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
     }()
@@ -34,13 +34,13 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     private lazy var photoButton: UIBarButtonItem = {
         UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(addPhoto(_:)))
     }()
-    fileprivate lazy var attachScrollView: UIScrollView = {
+    private lazy var attachScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
-    fileprivate lazy var attachStack: UIStackView = {
+    private lazy var attachStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.spacing = 5
@@ -72,9 +72,9 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     private let api = SmthAPI()
     private let setting = AppSetting.shared
     
-    fileprivate let maxAttachNumber = 8
-    fileprivate var attachedAssets = [PHAsset]()
-    fileprivate var attachedImages = [UIImage]() {
+    private let maxAttachNumber = 8
+    private var attachedAssets = [PHAsset]()
+    private var attachedImages = [UIImage]() {
         didSet {
             if oldValue.count == 0 && attachedImages.count > 0 {
                 attachScrollView.isHidden = false
@@ -106,17 +106,17 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         titleHintLabel.textAlignment = .center
         titleHintLabel.layer.cornerRadius = cornerRadius
         titleHintLabel.layer.masksToBounds = true
-        titleHintLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
-        titleHintLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
+        titleHintLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        titleHintLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         titleTextField.delegate = self
         titleTextField.addTarget(self, action: #selector(changeDoneButton(_:)), for: .editingChanged)
-        titleTextField.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .horizontal)
-        titleTextField.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
+        titleTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        titleTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         titleTextField.font = UIFont.systemFont(ofSize: 16)
         titleTextField.autocapitalizationType = .none
         titleTextField.returnKeyType = .next
-        contentTextView.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .vertical)
-        contentTextView.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .vertical)
+        contentTextView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        contentTextView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
         contentTextView.autocapitalizationType = .sentences
         contentTextView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
@@ -124,8 +124,8 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         contentTextView.layer.masksToBounds = true
         countLabel.text = "0"
         countLabel.font = UIFont.systemFont(ofSize: 16)
-        countLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
-        countLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
+        countLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        countLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         
         if mode == .replyByMail || mode == .modify {
             navigationItem.rightBarButtonItems = [doneButton]
@@ -192,7 +192,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         countLabel.textColor = AppTheme.shared.lightTextColor
         titleTextField.textColor = AppTheme.shared.lightTextColor
         titleTextField.attributedPlaceholder = NSAttributedString(string: "添加标题",
-                                                                  attributes: [NSForegroundColorAttributeName: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
+                                                                  attributes: [NSAttributedStringKey.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
         titleTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         contentTextView.textColor = AppTheme.shared.textColor
         contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
@@ -210,7 +210,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
             if let article = article {
                 articleTitle = article.replySubject
                 articleContent = article.quotBody
-                countLabel.text = "\(articleTitle!.characters.count)"
+                countLabel.text = "\(articleTitle!.count)"
             }
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
@@ -220,7 +220,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
             if let article = article {
                 articleTitle = article.replySubject
                 articleContent = article.quotBody
-                countLabel.text = "\(articleTitle!.characters.count)"
+                countLabel.text = "\(articleTitle!.count)"
             }
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
@@ -230,7 +230,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
             if let article = article {
                 articleTitle = article.subject
                 articleContent = article.body
-                countLabel.text = "\(articleTitle!.characters.count)"
+                countLabel.text = "\(articleTitle!.count)"
             }
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
@@ -259,7 +259,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
                 
                 var lines = content.components(separatedBy: .newlines)
                 lines = lines.filter {
-                    self.regx.numberOfMatches(in: $0, range: NSMakeRange(0, $0.characters.count)) == 0
+                    self.regx.numberOfMatches(in: $0, range: NSMakeRange(0, $0.count)) == 0
                 }
                 content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
                 content.append("\n\n" + self.signature)
@@ -381,7 +381,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func changeDoneButton(_ textField: UITextField) {
-        if let length = textField.text?.characters.count {
+        if let length = textField.text?.count {
             countLabel.text = "\(length)"
             if length > 0 {
                 doneButton.isEnabled = true
@@ -425,10 +425,10 @@ extension ComposeArticleController: AttachImageViewDelegate {
     func imageTapped(in attachImageView: AttachImageView) {
         if let image = attachImageView.image, let idx = attachedImages.index(of: image) {
             let imagePicker = TZImagePickerController(selectedAssets: attachedAssets as! NSMutableArray, selectedPhotos: attachedImages as! NSMutableArray, index: idx)!
-            imagePicker.didFinishPickingPhotosHandle = { [unowned self] _ in
+            imagePicker.didFinishPickingPhotosHandle = { [unowned self] (_, _, _) in
                 self.contentTextView.becomeFirstResponder()
             }
-            imagePicker.imagePickerControllerDidCancelHandle = { [unowned self] _ in
+            imagePicker.imagePickerControllerDidCancelHandle = { [unowned self] in
                 self.contentTextView.becomeFirstResponder()
             }
             present(imagePicker, animated: true)

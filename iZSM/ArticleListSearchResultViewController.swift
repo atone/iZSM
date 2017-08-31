@@ -21,7 +21,7 @@ class ArticleListSearchResultViewController: BaseTableViewController {
         return NSMakeRange(threadLoaded, setting.threadCountPerSection)
     }
     
-    fileprivate var threads: [[SMThread]] = [[SMThread]]() {
+    private var threads: [[SMThread]] = [[SMThread]]() {
         didSet {
             tableView?.reloadData()
         }
@@ -137,7 +137,7 @@ class ArticleListSearchResultViewController: BaseTableViewController {
         if thread.flags.hasPrefix("*") {
             var readThread = thread
             let flags = thread.flags
-            readThread.flags = " " + flags.substring(from: flags.index(after: flags.startIndex))
+            readThread.flags = " " + flags[flags.index(after: flags.startIndex)...]
             threads[indexPath.section][indexPath.row] = readThread
         }
         
@@ -179,7 +179,7 @@ extension ArticleListSearchResultViewController: UIViewControllerPreviewingDeleg
         if thread.flags.hasPrefix("*") {
             var readThread = thread
             let flags = thread.flags
-            readThread.flags = " " + flags.substring(from: flags.index(after: flags.startIndex))
+            readThread.flags = " " + flags[flags.index(after: flags.startIndex)...]
             threads[indexPath.section][indexPath.row] = readThread
         }
         // Reuse the "Peek" view controller for presentation.

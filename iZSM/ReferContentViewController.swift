@@ -20,7 +20,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     var reference: SMReference?
     var replyMe: Bool = true
     private let api = SmthAPI()
-    fileprivate var article: SMArticle?
+    private var article: SMArticle?
     
     func setupUI() {
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
@@ -135,7 +135,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
             acvc.boardID = reference.boardID
             var title = reference.subject
             if title.hasPrefix("Re: ") {
-                title = title.substring(from: title.index(title.startIndex, offsetBy: 4))
+                title = String(title[title.index(title.startIndex, offsetBy: 4)...])
             }
             acvc.title = title
             acvc.fromTopTen = true
@@ -202,12 +202,12 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     private func attributedStringFromContent(_ string: String) -> NSAttributedString {
         let attributeText = NSMutableAttributedString()
         
-        let normal = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: .body),
-                      NSParagraphStyleAttributeName: NSParagraphStyle.default,
-                      NSForegroundColorAttributeName: AppTheme.shared.textColor]
-        let quoted = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: .body),
-                      NSParagraphStyleAttributeName: NSParagraphStyle.default,
-                      NSForegroundColorAttributeName: AppTheme.shared.lightTextColor]
+        let normal: [NSAttributedStringKey: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+                                                    .paragraphStyle: NSParagraphStyle.default,
+                                                    .foregroundColor: AppTheme.shared.textColor]
+        let quoted: [NSAttributedStringKey: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+                                                    .paragraphStyle: NSParagraphStyle.default,
+                                                    .foregroundColor: AppTheme.shared.lightTextColor]
         
         string.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(":") {

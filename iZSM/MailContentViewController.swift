@@ -224,12 +224,12 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     private func attributedStringFromContent(_ string: String) -> NSAttributedString {
         let attributeText = NSMutableAttributedString()
         
-        let normal = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: .body),
-                      NSParagraphStyleAttributeName: NSParagraphStyle.default,
-                      NSForegroundColorAttributeName: AppTheme.shared.textColor]
-        let quoted = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: .body),
-                      NSParagraphStyleAttributeName: NSParagraphStyle.default,
-                      NSForegroundColorAttributeName: AppTheme.shared.lightTextColor]
+        let normal: [NSAttributedStringKey: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+                                                    .paragraphStyle: NSParagraphStyle.default,
+                                                    .foregroundColor: AppTheme.shared.textColor]
+        let quoted: [NSAttributedStringKey: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+                                                    .paragraphStyle: NSParagraphStyle.default,
+                                                    .foregroundColor: AppTheme.shared.lightTextColor]
         
         string.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(":") {

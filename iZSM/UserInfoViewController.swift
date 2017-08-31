@@ -119,8 +119,8 @@ class UserInfoViewController: UIViewController {
         idLabel.textColor = UIColor.white
         idLabel.font = UIFont.boldSystemFont(ofSize: idLabelFontSize)
         idLabel.textAlignment = .center
-        idLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
-        idLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .vertical)
+        idLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        idLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         idLabel.snp.makeConstraints { (make) in
             make.center.equalTo(view)
         }
@@ -178,8 +178,8 @@ class UserInfoViewController: UIViewController {
         postsContentLabel.textColor = UIColor.white
         postsContentLabel.textAlignment = .center
         postsContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
-        postsContentLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
-        postsContentLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .vertical)
+        postsContentLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        postsContentLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         scoreContentLabel.textColor = UIColor.white
         scoreContentLabel.textAlignment = .center
         scoreContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
@@ -211,8 +211,8 @@ class UserInfoViewController: UIViewController {
         nickLabel.textColor = UIColor.white
         nickLabel.font = UIFont.systemFont(ofSize: nickLabelFontSize)
         nickLabel.textAlignment = .center
-        nickLabel.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .vertical)
-        nickLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .vertical)
+        nickLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+        nickLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         nickLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(idLabel)
             make.top.equalTo(idLabel.snp.bottom)

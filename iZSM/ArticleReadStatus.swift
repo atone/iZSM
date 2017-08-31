@@ -9,10 +9,10 @@
 import RealmSwift
 
 class ArticleReadStatus: Object {
-    dynamic var section: Int = 0
-    dynamic var row: Int = 0
-    dynamic var boardID: String = ""
-    dynamic var articleID: Int = 0
+    @objc dynamic var section: Int = 0
+    @objc dynamic var row: Int = 0
+    @objc dynamic var boardID: String = ""
+    @objc dynamic var articleID: Int = 0
 }
 
 class ArticleReadStatusUtil {

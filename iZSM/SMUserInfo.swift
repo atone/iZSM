@@ -9,22 +9,22 @@
 import RealmSwift
 
 class SMUserInfo: Object {
-    dynamic var title: String = ""
-    dynamic var level: Int = 0
-    dynamic var loginCount: Int = 0
-    dynamic var firstLoginTime: Date = Date(timeIntervalSince1970: 0)
-    dynamic var age: Int = 0
-    dynamic var lastLoginTime: Date = Date(timeIntervalSince1970: 0)
-    dynamic var uid: Int = 0
-    dynamic var life: String = ""
-    dynamic var id: String = ""
-    dynamic var gender: Int = 0
-    dynamic var score: Int = 0
-    dynamic var posts: Int = 0
-    dynamic var faceURL: String = ""
-    dynamic var nick: String = ""
+    @objc dynamic var title: String = ""
+    @objc dynamic var level: Int = 0
+    @objc dynamic var loginCount: Int = 0
+    @objc dynamic var firstLoginTime: Date = Date(timeIntervalSince1970: 0)
+    @objc dynamic var age: Int = 0
+    @objc dynamic var lastLoginTime: Date = Date(timeIntervalSince1970: 0)
+    @objc dynamic var uid: Int = 0
+    @objc dynamic var life: String = ""
+    @objc dynamic var id: String = ""
+    @objc dynamic var gender: Int = 0
+    @objc dynamic var score: Int = 0
+    @objc dynamic var posts: Int = 0
+    @objc dynamic var faceURL: String = ""
+    @objc dynamic var nick: String = ""
     
-    dynamic var lastUpdateTime: Date = Date()
+    @objc dynamic var lastUpdateTime: Date = Date()
     
     override static func primaryKey() -> String? {
         return "id"

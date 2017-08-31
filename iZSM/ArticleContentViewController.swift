@@ -18,23 +18,23 @@ class ArticleContentViewController: NTTableViewController {
 
     private let kArticleContentCellIdentifier = "ArticleContentCell"
     
-    fileprivate var isScrollingStart = true // detect whether scrolling is end
-    fileprivate var isFetchingData = false // whether the app is fetching data
+    private var isScrollingStart = true // detect whether scrolling is end
+    private var isFetchingData = false // whether the app is fetching data
     
-    fileprivate var smarticles = [[SMArticle]]()
+    private var smarticles = [[SMArticle]]()
     
     var articleContentLayout = [String: YYTextLayout]()
     
-    var shouldHidesStatusBar: Bool = false
+    @objc dynamic var shouldHidesStatusBar: Bool = false
     
-    fileprivate let api = SmthAPI()
-    fileprivate let setting = AppSetting.shared
+    private let api = SmthAPI()
+    private let setting = AppSetting.shared
     
-    fileprivate var totalArticleNumber: Int = 0
-    fileprivate var currentForwardNumber: Int = 0
-    fileprivate var currentBackwardNumber: Int = 0
-    fileprivate var currentSection: Int = 0
-    fileprivate var totalSection: Int {
+    private var totalArticleNumber: Int = 0
+    private var currentForwardNumber: Int = 0
+    private var currentBackwardNumber: Int = 0
+    private var currentSection: Int = 0
+    private var totalSection: Int {
         return Int(ceil(Double(totalArticleNumber) / Double(setting.articleCountPerSection)))
     }
     
@@ -46,15 +46,15 @@ class ArticleContentViewController: NTTableViewController {
                            setting.articleCountPerSection)
     }
     
-    fileprivate var section: Int = 0 {
+    private var section: Int = 0 {
         didSet {
             currentSection = section
             currentForwardNumber = section * setting.articleCountPerSection
             currentBackwardNumber = section * setting.articleCountPerSection
         }
     }
-    fileprivate var row: Int = 0
-    fileprivate var soloUser: String?
+    private var row: Int = 0
+    private var soloUser: String?
     
     var boardID: String?
     var boardName: String? // if fromTopTen, this will not be set, so we must query this using api
@@ -118,7 +118,7 @@ class ArticleContentViewController: NTTableViewController {
         return shouldHidesStatusBar
     }
     
-    fileprivate func restorePosition() {
+    private func restorePosition() {
         if let boardID = self.boardID, let articleID = self.articleID,
             let result = ArticleReadStatusUtil.getStatus(boardID: boardID, articleID: articleID)
         {
@@ -127,7 +127,7 @@ class ArticleContentViewController: NTTableViewController {
         }
     }
     
-    fileprivate func savePosition(currentRow :Int? = nil) {
+    private func savePosition(currentRow :Int? = nil) {
         if let currentRow = currentRow {
             ArticleReadStatusUtil.saveStatus(section: currentSection,
                                              row: currentRow,
@@ -691,7 +691,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
     }
     
-    fileprivate func reply(_ article: SMArticle) {
+    private func reply(_ article: SMArticle) {
         let cavc = ComposeArticleController()
         cavc.boardID = article.boardID
         cavc.completionHandler = { [unowned self] in
@@ -704,7 +704,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         present(navigationController, animated: true)
     }
     
-    fileprivate func modify(_ article: SMArticle, at indexPath: IndexPath) {
+    private func modify(_ article: SMArticle, at indexPath: IndexPath) {
         let cavc = ComposeArticleController()
         cavc.boardID = article.boardID
         cavc.mode = .modify
@@ -727,7 +727,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         present(navigationController, animated: true)
     }
     
-    fileprivate func forceUpdateLayout(with article: SMArticle) {
+    private func forceUpdateLayout(with article: SMArticle) {
         let contentWidth = view.bounds.size.width - view.layoutMargins.left - view.layoutMargins.right
         let boundingSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
         // Calculate text layout
@@ -740,7 +740,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         tableView.fd_keyedHeightCache.invalidateHeight(forKey: cacheKey)
     }
     
-    fileprivate func delete(_ article: SMArticle, at indexPath: IndexPath) {
+    private func delete(_ article: SMArticle, at indexPath: IndexPath) {
         let confirmAlert = UIAlertController(title: "确定删除？", message: nil, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "确认", style: .destructive) { [unowned self] _ in
             networkActivityIndicatorStart(withHUD: true)
@@ -776,7 +776,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         present(confirmAlert, animated: true)
     }
     
-    fileprivate func toggleSoloMode(with userID: String, at indexPath: IndexPath) {
+    private func toggleSoloMode(with userID: String, at indexPath: IndexPath) {
         if soloUser == nil {
             soloUser = userID
             navigationItem.rightBarButtonItems?.last?.isEnabled = false
@@ -791,7 +791,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
     }
     
-    fileprivate func reportJunk(_ article: SMArticle) {
+    private func reportJunk(_ article: SMArticle) {
         var adminID = "SYSOP"
         SVProgressHUD.show()
         DispatchQueue.global().async {
@@ -846,7 +846,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
     }
     
-    fileprivate func forward(_ article: SMArticle) {
+    private func forward(_ article: SMArticle) {
         let alert = UIAlertController(title: "转寄文章", message: nil, preferredStyle: .alert)
         alert.addTextField{ textField in
             textField.placeholder = "收件人ID或邮箱，不填默认寄给自己"
@@ -882,7 +882,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         self.present(alert, animated: true)
     }
     
-    fileprivate func cross(_ article: SMArticle) {
+    private func cross(_ article: SMArticle) {
         let resultController = BoardListSearchResultViewController.searchResultController(title: "转寄到版面") { [unowned self] (board) in
             self.dismiss(animated: true)
             networkActivityIndicatorStart()
@@ -934,7 +934,7 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
     func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
         var actions = [UIPreviewActionItem]()
         if let fullscreen = viewController as? FullscreenContentViewController, let article = fullscreen.article {
-            let replyAction = UIPreviewAction(title: "回复本帖", style: .default) { [unowned self] _ in
+            let replyAction = UIPreviewAction(title: "回复本帖", style: .default) { [unowned self] (_, _) in
                 self.reply(article)
             }
             actions.append(replyAction)
@@ -942,30 +942,30 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
             if let currentIndexPath = self.indexPath(for: article) {
                 let currentUser = article.authorID
                 let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
-                let soloAction = UIPreviewAction(title: soloTitle, style: .default) { [unowned self] _ in
+                let soloAction = UIPreviewAction(title: soloTitle, style: .default) { [unowned self] (_, _) in
                     self.toggleSoloMode(with: currentUser, at: currentIndexPath)
                 }
                 actions.append(soloAction)
                 
                 if let myself = setting.username, myself.lowercased() == currentUser.lowercased() {
-                    let modifyAction = UIPreviewAction(title: "修改文章", style: .default) { [unowned self] _ in
+                    let modifyAction = UIPreviewAction(title: "修改文章", style: .default) { [unowned self] (_, _) in
                         self.modify(article, at: currentIndexPath)
                     }
                     actions.append(modifyAction)
-                    let deleteAction = UIPreviewAction(title: "删除文章", style: .destructive) { [unowned self] _ in
+                    let deleteAction = UIPreviewAction(title: "删除文章", style: .destructive) { [unowned self] (_, _) in
                         self.delete(article, at: currentIndexPath)
                     }
                     actions.append(deleteAction)
                 }
             }
             
-            let forwardToUserAction = UIPreviewAction(title: "转寄给用户", style: .default) { [unowned self] _ in
+            let forwardToUserAction = UIPreviewAction(title: "转寄给用户", style: .default) { [unowned self] (_, _) in
                 self.forward(article)
             }
-            let forwardToBoardAction = UIPreviewAction(title: "转寄到版面", style: .default) { [unowned self] _ in
+            let forwardToBoardAction = UIPreviewAction(title: "转寄到版面", style: .default) { [unowned self] (_, _) in
                 self.cross(article)
             }
-            let reportJunkAction = UIPreviewAction(title: "举报不良内容", style: .destructive) { [unowned self] _ in
+            let reportJunkAction = UIPreviewAction(title: "举报不良内容", style: .destructive) { [unowned self] (_, _) in
                 self.reportJunk(article)
             }
             let actionGroup = UIPreviewActionGroup(title: "更多…", style: .default, actions: [forwardToUserAction, forwardToBoardAction, reportJunkAction])

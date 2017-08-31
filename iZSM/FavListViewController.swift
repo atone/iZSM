@@ -31,7 +31,7 @@ class FavListViewController: BaseTableViewController {
     }
     
     var boardID: Int = 0
-    fileprivate var favorites = [SMBoard]()
+    private var favorites = [SMBoard]()
     
     override func clearContent() {
         favorites.removeAll()

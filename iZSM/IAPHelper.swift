@@ -16,12 +16,12 @@ final class IAPHelper: NSObject {
     static let SilverSupport = "cn.yunaitong.zsmth.SilverSupport"
     static let GoldSupport = "cn.yunaitong.zsmth.GoldSupport"
     
-    fileprivate let productIdentifiers: Set<ProductIdentifier>
+    private let productIdentifiers: Set<ProductIdentifier>
     
-    fileprivate var productsRequest: SKProductsRequest?
-    fileprivate var productsRequestCompletionHandler: ProductRequestCompletionHandler?
+    private var productsRequest: SKProductsRequest?
+    private var productsRequestCompletionHandler: ProductRequestCompletionHandler?
     
-    fileprivate var transactionCompletionHandler: TransactionCompletionHandler?
+    private var transactionCompletionHandler: TransactionCompletionHandler?
     
     override init() {
         productIdentifiers = Set([IAPHelper.SilverSupport, IAPHelper.GoldSupport])

@@ -169,11 +169,11 @@ class UserViewController: NTTableViewController {
     func attrTextFromString(string: String, withNewFlag flag: Bool) -> NSAttributedString {
         let normalColor = AppTheme.shared.textColor
         let redColor = AppTheme.shared.redColor
-        let result = NSMutableAttributedString(string: string, attributes: [NSForegroundColorAttributeName: normalColor])
+        let result = NSMutableAttributedString(string: string, attributes: [NSAttributedStringKey.foregroundColor: normalColor])
         if flag {
-            result.append(NSAttributedString(string: " [新]", attributes: [NSForegroundColorAttributeName: redColor]))
+            result.append(NSAttributedString(string: " [新]", attributes: [NSAttributedStringKey.foregroundColor: redColor]))
         }
-        result.addAttribute(NSFontAttributeName, value: UIFont.preferredFont(forTextStyle: .body), range: NSMakeRange(0, result.length))
+        result.addAttribute(NSAttributedStringKey.font, value: UIFont.preferredFont(forTextStyle: .body), range: NSMakeRange(0, result.length))
         return result
     }
     

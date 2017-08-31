@@ -74,31 +74,31 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         sendToLabel.textAlignment = .center
         sendToLabel.layer.cornerRadius = cornerRadius
         sendToLabel.layer.masksToBounds = true
-        sendToLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
-        sendToLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
+        sendToLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        sendToLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         titleHintLabel.text = "标题"
         titleHintLabel.font = UIFont.systemFont(ofSize: 14)
         titleHintLabel.textAlignment = .center
         titleHintLabel.layer.cornerRadius = cornerRadius
         titleHintLabel.layer.masksToBounds = true
-        titleHintLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
-        titleHintLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
+        titleHintLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        titleHintLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         titleTextField.delegate = self
         titleTextField.addTarget(self, action: #selector(changeDoneButton(_:)), for: .editingChanged)
-        titleTextField.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .horizontal)
-        titleTextField.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
+        titleTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        titleTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         titleTextField.font = UIFont.systemFont(ofSize: 16)
         titleTextField.autocapitalizationType = .none
         titleTextField.returnKeyType = .next
         receiverTextField.delegate = self
         receiverTextField.addTarget(self, action: #selector(changeDoneButton(_:)), for: .editingChanged)
-        receiverTextField.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .horizontal)
-        receiverTextField.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
+        receiverTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        receiverTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         receiverTextField.font = UIFont.systemFont(ofSize: 16)
         receiverTextField.autocapitalizationType = .none
         receiverTextField.returnKeyType = .next
-        contentTextView.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .vertical)
-        contentTextView.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .vertical)
+        contentTextView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        contentTextView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
         contentTextView.autocapitalizationType = .sentences
         contentTextView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
@@ -106,8 +106,8 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         contentTextView.layer.masksToBounds = true
         countLabel.text = "0"
         countLabel.font = UIFont.systemFont(ofSize: 16)
-        countLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
-        countLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .horizontal)
+        countLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        countLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         
         doneButton.isEnabled = false
         navigationItem.rightBarButtonItem = doneButton
@@ -170,16 +170,16 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                 emailContent = email.body
                 emailReceiver = email.authorID
             }
-            if emailReceiver == nil || emailReceiver!.characters.count == 0 {
+            if emailReceiver == nil || emailReceiver!.count == 0 {
                 receiverTextField.becomeFirstResponder()
-            } else if emailTitle == nil || emailTitle!.characters.count == 0 {
+            } else if emailTitle == nil || emailTitle!.count == 0 {
                 titleTextField.becomeFirstResponder()
             } else {
                 doneButton.isEnabled = true
                 contentTextView.becomeFirstResponder()
                 contentTextView.selectedRange = NSMakeRange(0, 0)
             }
-            countLabel.text = "\(emailTitle?.characters.count ?? 0)"
+            countLabel.text = "\(emailTitle?.count ?? 0)"
         case .reply:
             title = "回复邮件"
             if let email = email {
@@ -190,7 +190,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             doneButton.isEnabled = true
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
-            countLabel.text = "\(emailTitle?.characters.count ?? 0)"
+            countLabel.text = "\(emailTitle?.count ?? 0)"
         case .feedback:
             title = "邮件反馈"
             doneButton.isEnabled = false
@@ -199,16 +199,16 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                 emailContent = email.body
                 emailReceiver = email.authorID
             }
-            if emailReceiver == nil || emailReceiver!.characters.count == 0 {
+            if emailReceiver == nil || emailReceiver!.count == 0 {
                 receiverTextField.becomeFirstResponder()
-            } else if emailTitle == nil || emailTitle!.characters.count == 0 {
+            } else if emailTitle == nil || emailTitle!.count == 0 {
                 titleTextField.becomeFirstResponder()
             } else {
                 doneButton.isEnabled = true
                 contentTextView.becomeFirstResponder()
                 contentTextView.selectedRange = NSMakeRange(0, 0)
             }
-            countLabel.text = "\(emailTitle?.characters.count ?? 0)"
+            countLabel.text = "\(emailTitle?.count ?? 0)"
         }
     }
     
@@ -221,11 +221,11 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         countLabel.textColor = AppTheme.shared.lightTextColor
         receiverTextField.textColor = AppTheme.shared.lightTextColor
         receiverTextField.attributedPlaceholder = NSAttributedString(string: "收信人",
-                                                                     attributes: [NSForegroundColorAttributeName: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
+                                                                     attributes: [NSAttributedStringKey.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
         receiverTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         titleTextField.textColor = AppTheme.shared.lightTextColor
         titleTextField.attributedPlaceholder = NSAttributedString(string: "添加标题",
-                                                                  attributes: [NSForegroundColorAttributeName: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
+                                                                  attributes: [NSAttributedStringKey.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
         titleTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         contentTextView.textColor = AppTheme.shared.textColor
         contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
@@ -246,7 +246,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             DispatchQueue.global().async {
                 var lines = content.components(separatedBy: .newlines)
                 lines = lines.filter {
-                    self.regx.numberOfMatches(in: $0, range: NSMakeRange(0, $0.characters.count)) == 0
+                    self.regx.numberOfMatches(in: $0, range: NSMakeRange(0, $0.count)) == 0
                 }
                 content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
                 content.append("\n\n" + self.signature)
@@ -332,10 +332,10 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     
     @objc private func changeDoneButton(_ textField: UITextField) {
         if textField === titleTextField {
-            countLabel.text = "\(textField.text!.characters.count)"
+            countLabel.text = "\(textField.text!.count)"
         }
-        let userLength = receiverTextField.text!.characters.count
-        let titleLength = titleTextField.text!.characters.count
+        let userLength = receiverTextField.text!.count
+        let titleLength = titleTextField.text!.count
         if userLength > 0 && titleLength > 0 {
             doneButton.isEnabled = true
         } else {

@@ -17,7 +17,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     var boardID = 0
     var sectionID = 0
     var flag: Int = 0
-    fileprivate var boards: [SMBoard] = [SMBoard]()
+    private var boards: [SMBoard] = [SMBoard]()
     
     var originalBoards: [SMBoard]?
     var searchMode = false
@@ -186,7 +186,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
             let blvc =  BoardListViewController()
             if let r = board.name.range(of: " ") {
-                blvc.title = board.name.substring(to: r.lowerBound)
+                blvc.title = String(board.name[..<r.lowerBound])
             } else {
                 blvc.title = board.name
             }
@@ -255,7 +255,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                 cell = UITableViewCell(style: .value1, reuseIdentifier: kDirectoryIdentifier)
             }
             let name = board.name
-            let splits = name.components(separatedBy: .whitespaces).filter { $0.characters.count > 0 }
+            let splits = name.components(separatedBy: .whitespaces).filter { $0.count > 0 }
             cell.textLabel?.text = splits.first
             if splits.count <= 1 {
                 cell.detailTextLabel?.text = nil
@@ -364,7 +364,7 @@ extension BoardListViewController : UIViewControllerPreviewingDelegate, SmthView
         if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
             let blvc =  BoardListViewController()
             if let r = board.name.range(of: " ") {
-                blvc.title = board.name.substring(to: r.lowerBound)
+                blvc.title = String(board.name[..<r.lowerBound])
             } else {
                 blvc.title = board.name
             }

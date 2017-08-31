@@ -115,27 +115,27 @@ struct SMArticle {
         quotedParagraphStyle.firstLineHeadIndent = 12
         quotedParagraphStyle.headIndent = 12
         
-        let normal : [String : Any] = [NSFontAttributeName: textFont,
-                                       NSParagraphStyleAttributeName: paragraphStyle,
-                                       NSForegroundColorAttributeName: dark ? theme.nightTextColor : theme.dayTextColor]
-        let quoted : [String : Any] = [NSFontAttributeName: textFont,
-                                       NSParagraphStyleAttributeName: quotedParagraphStyle,
-                                       NSForegroundColorAttributeName: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
-        let quotedTitle : [String : Any] = [NSFontAttributeName: boldTextFont,
-                                            NSParagraphStyleAttributeName: quotedParagraphStyle,
-                                            NSForegroundColorAttributeName: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
+        let normal : [NSAttributedStringKey : Any] = [.font: textFont,
+                                                      .paragraphStyle: paragraphStyle,
+                                                      .foregroundColor: dark ? theme.nightTextColor : theme.dayTextColor]
+        let quoted : [NSAttributedStringKey : Any] = [.font: textFont,
+                                                      .paragraphStyle: quotedParagraphStyle,
+                                                      .foregroundColor: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
+        let quotedTitle : [NSAttributedStringKey : Any] = [.font: boldTextFont,
+                                                           .paragraphStyle: quotedParagraphStyle,
+                                                           .foregroundColor: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
         
         let regex = try! NSRegularExpression(pattern: "在.*的(?:大作|邮件)中提到")
         
         self.body.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(":") {
-                var stripLine = line.substring(from: line.index(after: line.startIndex))
+                var stripLine = String(line[line.index(after: line.startIndex)...])
                 stripLine = stripLine.trimmingCharacters(in: .whitespaces)
                 attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: quoted))
-            } else if regex.numberOfMatches(in: line, range: NSMakeRange(0, line.characters.count)) > 0 {
+            } else if regex.numberOfMatches(in: line, range: NSMakeRange(0, line.count)) > 0 {
                 var stripLine = line.trimmingCharacters(in: .whitespaces)
                 if stripLine[stripLine.startIndex] == "【" && stripLine[stripLine.index(before: stripLine.endIndex)] == "】" {
-                    stripLine = stripLine.substring(with: stripLine.index(after: stripLine.startIndex)..<stripLine.index(before: stripLine.endIndex))
+                    stripLine = String(stripLine[stripLine.index(after: stripLine.startIndex)..<stripLine.index(before: stripLine.endIndex)])
                     stripLine = stripLine.trimmingCharacters(in: .whitespaces)
                 }
                 attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: quotedTitle))
@@ -164,7 +164,7 @@ struct SMArticle {
         emoticonParser.parseText(attributeText, selectedRange: nil)
         
         self.quotedAttributedRange.removeAll()
-        attributeText.enumerateAttribute(NSParagraphStyleAttributeName, in: NSMakeRange(0, attributeText.length)) { (value, range, stop) in
+        attributeText.enumerateAttribute(NSAttributedStringKey.paragraphStyle, in: NSMakeRange(0, attributeText.length)) { (value, range, stop) in
             if let value = value as? NSMutableParagraphStyle, value == quotedParagraphStyle {
                 var trimRange = range
                 while trimRange.length > 0
@@ -206,7 +206,7 @@ struct SMArticle {
     private func imageAttachmentsFromBody() -> [ImageInfo]? {
         let pattern = "(?<=\\[img=).*(?=\\]\\[/img\\])"
         let regularExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-        let matches = regularExpression.matches(in: self.body, range: NSMakeRange(0, self.body.characters.count))
+        let matches = regularExpression.matches(in: self.body, range: NSMakeRange(0, self.body.count))
         let nsstring = self.body as NSString
         if matches.count > 0 {
             var imageInfos = [ImageInfo]()
@@ -226,7 +226,7 @@ struct SMArticle {
     private mutating func removeImageURLsFromBody() {
         let pattern = "\\[img=.*\\]\\[/img\\]"
         let regularExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-        self.body = regularExpression.stringByReplacingMatches(in: self.body, range: NSMakeRange(0, self.body.characters.count), withTemplate: "").trimmingCharacters(in: .whitespacesAndNewlines)
+        self.body = regularExpression.stringByReplacingMatches(in: self.body, range: NSMakeRange(0, self.body.count), withTemplate: "").trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 
@@ -392,9 +392,9 @@ struct SMUser {
     var nick: String
     
     static func faceURL(for userID: String, withFaceURL faceURL: String?) -> URL {
-        let prefix = userID.substring(to: userID.index(after: userID.startIndex)).uppercased()
+        let prefix = String(userID[userID.startIndex]).uppercased()
         let faceString: String
-        if let faceURL = faceURL, faceURL.characters.count > 0 {
+        if let faceURL = faceURL, faceURL.count > 0 {
             faceString = "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(faceURL)"
         } else if userID.contains(".") {
             faceString = "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(userID)"

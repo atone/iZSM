@@ -108,10 +108,7 @@ class ArticleListViewCell: UITableViewCell {
     
     private var hasAttachment: Bool {
         if let flags = thread?.flags {
-            let start = flags.index(flags.startIndex, offsetBy: 3)
-            let end = flags.index(after: start)
-            let flag3 = flags.substring(with: start ..< end)
-            if flag3 == "@" {
+            if flags[flags.index(flags.startIndex, offsetBy: 3)] == "@" {
                 return true
             }
         }

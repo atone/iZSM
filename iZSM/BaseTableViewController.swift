@@ -12,7 +12,7 @@ class BaseTableViewController: NTTableViewController {
     let api = SmthAPI()
     let setting = AppSetting.shared
     
-    fileprivate var needRefresh = true
+    private var needRefresh = true
     static let kNeedRefreshNotification = Notification.Name("NeedRefreshContentNotification")
     
     // subclass need override this to actual clear content

@@ -149,8 +149,8 @@ class ArticleContentViewController: NTTableViewController {
         if self.isFetchingData {
             return
         }
-        self.isFetchingData = true
         if let boardID = self.boardID, let articleID = self.articleID {
+            self.isFetchingData = true
             networkActivityIndicatorStart(withHUD: showHUD)
             self.tableView.mj_footer.isHidden = true
             DispatchQueue.global().async {
@@ -231,8 +231,8 @@ class ArticleContentViewController: NTTableViewController {
         if self.isFetchingData {
             return
         }
-        self.isFetchingData = true
         if let boardID = self.boardID, let articleID = self.articleID {
+            self.isFetchingData = true
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
                 let smArticles = self.api.getThreadContentInBoard(boardID: boardID,
@@ -271,8 +271,8 @@ class ArticleContentViewController: NTTableViewController {
         if self.isFetchingData {
             return
         }
-        self.isFetchingData = true
         if let boardID = self.boardID, let articleID = self.articleID {
+            self.isFetchingData = true
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
                 var smArticles = [SMArticle]()

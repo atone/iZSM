@@ -212,19 +212,21 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             }
             
             let currentMode = self.searchMode
+            let searchString = self.searchString
+            let selectedIndex = self.selectedIndex
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
                 var threadSection: [SMThread]?
                 if self.searchMode {
-                    if self.selectedIndex == 0 {
+                    if selectedIndex == 0 {
                         threadSection = self.api.searchArticleInBoard(boardID: boardID,
-                                                                      title: self.searchString,
+                                                                      title: searchString,
                                                                       user: nil,
                                                                       inRange: self.threadRange)
-                    } else if self.selectedIndex == 1 {
+                    } else if selectedIndex == 1 {
                         threadSection = self.api.searchArticleInBoard(boardID: boardID,
                                                                       title: nil,
-                                                                      user: self.searchString,
+                                                                      user: searchString,
                                                                       inRange: self.threadRange)
                     }
                 } else {

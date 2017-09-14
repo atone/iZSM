@@ -393,15 +393,16 @@ struct SMUser {
     
     static func faceURL(for userID: String, withFaceURL faceURL: String?) -> URL {
         let prefix = String(userID[userID.startIndex]).uppercased()
-        let faceString: String
+        var faceString: String
         if let faceURL = faceURL, faceURL.count > 0 {
-            faceString = "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(faceURL)"
+            faceString = faceURL
         } else if userID.contains(".") {
-            faceString = "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(userID)"
+            faceString = userID
         } else {
-            faceString = "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(userID).jpg"
+            faceString = "\(userID).jpg"
         }
-        return URL(string: faceString.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)!
+        faceString = faceString.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+        return URL(string: "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(faceString)")!
     }
 }
 

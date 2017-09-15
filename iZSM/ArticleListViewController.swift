@@ -46,9 +46,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     var searchString: String? {
         return searchController?.searchBar.text
     }
-    var selectedIndex: Int {
-        return searchController?.searchBar.selectedScopeButtonIndex ?? 0
-    }
+    var selectedIndex: Int = 0
     
     private var searchController: UISearchController?
     
@@ -75,12 +73,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         search(forText: searchString, scope: selectedIndex)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        threads = [[SMThread]]()
-        threadLoaded = 0
-        searchController?.searchBar.becomeFirstResponder()
     }
     
     func search(forText searchString: String?, scope: Int) {
@@ -124,7 +116,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         // search related
         definesPresentationContext = true
         searchController = UISearchController(searchResultsController: nil)
-        searchController?.searchBar.scopeButtonTitles = ["标题关键字", "同作者"]
         if #available(iOS 9.1, *) {
             searchController?.obscuresBackgroundDuringPresentation = false
         } else {
@@ -156,6 +147,23 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
     
     @objc private func pressSearchButton(_ sender: UIBarButtonItem) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let titleAction = UIAlertAction(title: "标题关键字", style: .default) { [unowned self] _ in
+            self.selectedIndex = 0
+            self.prepareForSearch()
+        }
+        actionSheet.addAction(titleAction)
+        let userAction = UIAlertAction(title: "同作者", style: .default) { [unowned self] _ in
+            self.selectedIndex = 1
+            self.prepareForSearch()
+        }
+        actionSheet.addAction(userAction)
+        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
+        actionSheet.popoverPresentationController?.barButtonItem = sender
+        present(actionSheet, animated: true)
+    }
+    
+    private func prepareForSearch() {
         if tableView.tableHeaderView == nil {
             if let searchController = searchController {
                 tableView.tableHeaderView = searchController.searchBar
@@ -213,17 +221,16 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             
             let currentMode = self.searchMode
             let searchString = self.searchString
-            let selectedIndex = self.selectedIndex
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
                 var threadSection: [SMThread]?
                 if self.searchMode {
-                    if selectedIndex == 0 {
+                    if self.selectedIndex == 0 {
                         threadSection = self.api.searchArticleInBoard(boardID: boardID,
                                                                       title: searchString,
                                                                       user: nil,
                                                                       inRange: self.threadRange)
-                    } else if selectedIndex == 1 {
+                    } else if self.selectedIndex == 1 {
                         threadSection = self.api.searchArticleInBoard(boardID: boardID,
                                                                       title: nil,
                                                                       user: searchString,

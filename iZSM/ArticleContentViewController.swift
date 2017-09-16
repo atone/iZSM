@@ -10,11 +10,9 @@ import UIKit
 import SVProgressHUD
 import SnapKit
 import YYKit
+import PullToRefreshKit
 
 class ArticleContentViewController: NTTableViewController {
-    
-    private var header: MJRefreshNormalHeader?
-    private var footer: MJRefreshAutoNormalFooter?
 
     private let kArticleContentCellIdentifier = "ArticleContentCell"
     
@@ -79,18 +77,17 @@ class ArticleContentViewController: NTTableViewController {
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
         // set extra cells hidden
-        let footerView = UIView()
-        footerView.backgroundColor = UIColor.clear
-        tableView.tableFooterView = footerView
+        tableView.tableFooterView = UIView()
 
         let barButtonItems = [UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(_:))),
                               UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(tapPageButton(_:)))]
         navigationItem.rightBarButtonItems = barButtonItems
-        header = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(refreshAction))
-        header?.lastUpdatedTimeLabel.isHidden = true
-        tableView.mj_header = header
-        footer = MJRefreshAutoNormalFooter(refreshingTarget: self, refreshingAction: #selector(fetchMoreData))
-        tableView.mj_footer = footer
+        refreshHeader = tableView.setUpHeaderRefresh { [unowned self] in
+            self.refreshAction()
+        }
+        refreshFooter = tableView.setUpFooterRefresh { [unowned self] in
+            self.fetchMoreData()
+        }
         // add double tap gesture recognizer
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTap(_:)))
         doubleTapGesture.numberOfTapsRequired = 2
@@ -152,7 +149,7 @@ class ArticleContentViewController: NTTableViewController {
         if let boardID = self.boardID, let articleID = self.articleID {
             self.isFetchingData = true
             networkActivityIndicatorStart(withHUD: showHUD)
-            self.tableView.mj_footer.isHidden = true
+            self.refreshFooterEnabled = false
             DispatchQueue.global().async {
                 var smArticles = [SMArticle]()
                 if let soloUser = self.soloUser { // 只看某人模式
@@ -190,13 +187,13 @@ class ArticleContentViewController: NTTableViewController {
                 DispatchQueue.main.async {
                     self.isFetchingData = false
                     networkActivityIndicatorStop(withHUD: showHUD)
-                    self.tableView.mj_header.endRefreshing()
-                    self.tableView.mj_footer.endRefreshing()
+                    self.tableView.endHeaderRefreshing()
+                    self.tableView.endFooterRefreshing()
                     self.smarticles.removeAll()
                     self.articleContentLayout.removeAll()
                     self.tableView.fd_keyedHeightCache.invalidateAllHeightCache()
                     if smArticles.count > 0 {
-                        self.tableView.mj_footer.isHidden = false
+                        self.refreshFooterEnabled = true
                         self.smarticles.append(smArticles)
                         self.tableView.reloadData()
                         if restorePosition {
@@ -222,8 +219,8 @@ class ArticleContentViewController: NTTableViewController {
                 }
             }
         } else {
-            self.tableView.mj_header.endRefreshing()
-            self.tableView.mj_footer.endRefreshing()
+            self.tableView.endHeaderRefreshing()
+            self.tableView.endFooterRefreshing()
         }
     }
     
@@ -257,13 +254,13 @@ class ArticleContentViewController: NTTableViewController {
                         self.updateCurrentSection()
                     }
                     self.api.displayErrorIfNeeded()
-                    self.tableView.mj_header.endRefreshing()
-                    self.tableView.mj_footer.endRefreshing()
+                    self.tableView.endHeaderRefreshing()
+                    self.tableView.endFooterRefreshing()
                 }
             }
         } else {
-            tableView.mj_header.endRefreshing()
-            tableView.mj_footer.endRefreshing()
+            tableView.endHeaderRefreshing()
+            tableView.endFooterRefreshing()
         }
     }
     
@@ -302,7 +299,7 @@ class ArticleContentViewController: NTTableViewController {
                     }
                 }
                 
-                DispatchQueue.main.async {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.isFetchingData = false
                     networkActivityIndicatorStop()
                     if smArticles.count > 0 {
@@ -310,18 +307,18 @@ class ArticleContentViewController: NTTableViewController {
                         self.tableView.reloadData()
                     }
                     self.api.displayErrorIfNeeded()
-                    self.tableView.mj_header.endRefreshing()
-                    self.tableView.mj_footer.endRefreshing()
+                    self.tableView.endHeaderRefreshing()
+                    self.tableView.endFooterRefreshing()
                     if self.totalArticleNumber == self.currentForwardNumber {
-                        self.footer?.setTitle("没有新帖子了", for: MJRefreshState.idle)
-                    }else {
-                        self.footer?.setTitle("点击或上拉加载更多", for: MJRefreshState.idle)
+                        self.refreshFooter?.textLabel.text = "没有新帖子了"
+                    } else {
+                        self.refreshFooter?.textLabel.text = "上拉或点击加载更多"
                     }
                 }
             }
         } else {
-            tableView.mj_header.endRefreshing()
-            tableView.mj_footer.endRefreshing()
+            tableView.endHeaderRefreshing()
+            tableView.endFooterRefreshing()
         }
     }
     

@@ -89,7 +89,7 @@ class ArticleListSearchResultViewController: BaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(ArticleListViewCell.self, forCellReuseIdentifier: kArticleListCellIdentifier)
-        tableView.mj_header.isHidden = true
+        refreshHeaderEnabled = false
         if let userID = userID, let boardName = boardName {
             title = "\(userID) 在 \(boardName) 版的大作"
         }

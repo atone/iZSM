@@ -3,7 +3,6 @@
 //
 #import "SMTHURLConnection.h"
 #import "smth_netop.h"
-#import "MJRefresh.h"
 #import "YYPhotoGroupView.h"
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "UINavigationController+FDFullscreenPopGesture.h"

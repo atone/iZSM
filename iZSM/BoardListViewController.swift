@@ -28,7 +28,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     func didDismissSearchController(_ searchController: UISearchController) {
         searchMode = false
         api.cancel()
-        tableView.mj_header.isHidden = false
+        refreshHeaderEnabled = true
         if UIDevice.current.userInterfaceIdiom == .pad {
             navigationItem.setRightBarButton(nil, animated: true)
         }
@@ -40,7 +40,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     func willPresentSearchController(_ searchController: UISearchController) {
         searchMode = true
         api.cancel()
-        tableView.mj_header.isHidden = true
+        refreshHeaderEnabled = false
         if UIDevice.current.userInterfaceIdiom == .pad {
             let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel(_:)))
             navigationItem.setRightBarButton(cancelButton, animated: true)

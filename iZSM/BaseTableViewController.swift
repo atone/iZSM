@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PullToRefreshKit
 
 class BaseTableViewController: NTTableViewController {
     let api = SmthAPI()
@@ -53,19 +54,12 @@ class BaseTableViewController: NTTableViewController {
                                                object: nil)
         
         // set extra cells hidden
-        let footerView = UIView()
-        footerView.backgroundColor = UIColor.clear
-        tableView.tableFooterView = footerView
-        let header = MJRefreshNormalHeader(refreshingTarget: self,
-                                           refreshingAction: #selector(fetchDataWithHeaderRefreshingAndNoHUD))
-        header?.lastUpdatedTimeLabel.isHidden = true
-        tableView.mj_header = header
+        tableView.tableFooterView = UIView()
+        refreshHeader = tableView.setUpHeaderRefresh { [unowned self] in
+            self.fetchData(showHUD: false, headerRefreshing: true)
+        }
         
         super.viewDidLoad()
-    }
-    
-    @objc private func fetchDataWithHeaderRefreshingAndNoHUD() {
-        fetchData(showHUD: false, headerRefreshing: true)
     }
     
     // check login status and fetch initial data
@@ -80,7 +74,7 @@ class BaseTableViewController: NTTableViewController {
             api.accessToken = accessToken
             fetchDataDirectly(showHUD: showHUD) {
                 if headerRefreshing {
-                    self.tableView.mj_header.endRefreshing()
+                    self.tableView.endHeaderRefreshing()
                 }
             }
         } else if let username = setting.username, let password = setting.password { // silent login
@@ -93,12 +87,12 @@ class BaseTableViewController: NTTableViewController {
                         self.setting.accessToken = self.api.accessToken
                         self.fetchDataDirectly(showHUD: showHUD) {
                             if headerRefreshing {
-                                self.tableView.mj_header.endRefreshing()
+                                self.tableView.endHeaderRefreshing()
                             }
                         }
                     } else {
                         if headerRefreshing {
-                            self.tableView.mj_header.endRefreshing()
+                            self.tableView.endHeaderRefreshing()
                         }
                         self.api.displayErrorIfNeeded()
                     }

@@ -60,7 +60,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.mj_header.isHidden = true
+        refreshHeaderEnabled = false
         definesPresentationContext = true
         if #available(iOS 9.1, *) {
             searchController.obscuresBackgroundDuringPresentation = false

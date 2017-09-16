@@ -1,4 +1,5 @@
 github "AgileBits/onepassword-extension" "04f146abd3bd5e6f7ba8b18b916c55f3b3c85aed"
+github "LeoMobileDeveloper/PullToRefreshKit" "0.6.0"
 github "SVProgressHUD/SVProgressHUD" "2.2.1"
 github "SnapKit/SnapKit" "3.2.0"
 github "dennisweissmann/DeviceKit" "1.2.3"

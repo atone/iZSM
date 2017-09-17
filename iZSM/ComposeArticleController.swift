@@ -346,7 +346,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         imagePicker.modalPresentationStyle = .formSheet
         imagePicker.naviBgColor = AppTheme.shared.naviBackgroundColor
         imagePicker.naviTitleColor = AppTheme.shared.naviContentColor
-        imagePicker.selectedAssets = attachedAssets as! NSMutableArray
+        imagePicker.selectedAssets = NSMutableArray(array: attachedAssets)
         imagePicker.allowPickingVideo = false
         imagePicker.allowPickingOriginalPhoto = false
         imagePicker.photoWidth = 1024
@@ -424,7 +424,7 @@ extension ComposeArticleController: AttachImageViewDelegate {
     
     func imageTapped(in attachImageView: AttachImageView) {
         if let image = attachImageView.image, let idx = attachedImages.index(of: image) {
-            let imagePicker = TZImagePickerController(selectedAssets: attachedAssets as! NSMutableArray, selectedPhotos: attachedImages as! NSMutableArray, index: idx)!
+            let imagePicker = TZImagePickerController(selectedAssets: NSMutableArray(array: attachedAssets), selectedPhotos: NSMutableArray(array: attachedImages), index: idx)!
             imagePicker.didFinishPickingPhotosHandle = { [unowned self] (_, _, _) in
                 self.contentTextView.becomeFirstResponder()
             }

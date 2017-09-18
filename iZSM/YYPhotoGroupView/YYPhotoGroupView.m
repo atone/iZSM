@@ -15,6 +15,7 @@
 @interface YYPhotoGroupItem()<NSCopying>
 @property (nonatomic, readonly) UIImage *thumbImage;
 @property (nonatomic, readonly) BOOL thumbClippedToTop;
+@property (nonatomic, assign) CGRect frame; // frame in YYPhotoGroupView
 - (BOOL)shouldClipToTop:(CGSize)imageSize forView:(UIView *)view;
 @end
 @implementation YYPhotoGroupItem
@@ -239,6 +240,7 @@
 
 @property (nonatomic, assign) NSInteger fromItemIndex;
 @property (nonatomic, assign) BOOL isPresented;
+@property (nonatomic, assign) CGRect fromFrame;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign) CGPoint panGestureBeginPoint;
@@ -370,6 +372,11 @@
     _toContainerView = toContainer;
     _inViewController = controller;
     
+    for (YYPhotoGroupItem *item in self.groupItems) {
+        item.frame = [self convertRect:item.thumbView.bounds fromView:item.thumbView];
+    }
+    _fromFrame = [self convertRect:fromView.bounds fromView:fromView];
+    
     NSInteger page = -1;
     for (NSUInteger i = 0; i < self.groupItems.count; i++) {
         if (fromView == ((YYPhotoGroupItem *)self.groupItems[i]).thumbView) {
@@ -421,7 +428,7 @@
     }
     
     if (item.thumbClippedToTop) {
-        CGRect fromFrame = [_fromView convertRect:_fromView.bounds toView:cell];
+        CGRect fromFrame = [self convertRect:_fromFrame toView:cell];
         CGRect originFrame = cell.imageContainerView.frame;
         CGFloat scale = fromFrame.size.width / cell.imageContainerView.width;
         
@@ -448,7 +455,7 @@
         }];
         
     } else {
-        CGRect fromFrame = [_fromView convertRect:_fromView.bounds toView:cell.imageContainerView];
+        CGRect fromFrame = [self convertRect:_fromFrame toView:cell.imageContainerView];
         
         cell.imageContainerView.clipsToBounds = NO;
         cell.imageView.frame = fromFrame;
@@ -488,10 +495,13 @@
     YYPhotoGroupItem *item = _groupItems[currentPage];
     
     UIView *fromView = nil;
+    CGRect fromViewFrame = CGRectZero;
     if (_fromItemIndex == currentPage) {
         fromView = _fromView;
+        fromViewFrame = _fromFrame;
     } else {
         fromView = item.thumbView;
+        fromViewFrame = item.frame;
     }
     
     [self cancelAllImageLoad];
@@ -545,7 +555,7 @@
         _blurBackground.alpha = 0.0;
         if (isFromImageClipped) {
             
-            CGRect fromFrame = [fromView convertRect:fromView.bounds toView:cell];
+            CGRect fromFrame = [self convertRect:fromViewFrame toView:cell];
             CGFloat scale = fromFrame.size.width / cell.imageContainerView.width * cell.zoomScale;
             CGFloat height = fromFrame.size.height / fromFrame.size.width * cell.imageContainerView.width;
             if (isnan(height)) height = cell.imageContainerView.height;
@@ -555,7 +565,7 @@
             cell.imageContainerView.layer.transformScale = scale;
             
         } else {
-            CGRect fromFrame = [fromView convertRect:fromView.bounds toView:cell.imageContainerView];
+            CGRect fromFrame = [self convertRect:fromViewFrame toView:cell.imageContainerView];
             cell.imageContainerView.clipsToBounds = NO;
             cell.imageView.contentMode = fromView.contentMode;
             cell.imageView.frame = fromFrame;

@@ -1,4 +1,4 @@
-github "SnapKit/SnapKit" ~> 3.0.2
+github "SnapKit/SnapKit" ~> 4.0.0
 github "ibireme/YYKit"
 github "SVProgressHUD/SVProgressHUD"
 github "AgileBits/onepassword-extension" "add-framework-support"

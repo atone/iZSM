@@ -16,6 +16,10 @@ class BaseTableViewController: NTTableViewController {
     private var needRefresh = true
     static let kNeedRefreshNotification = Notification.Name("NeedRefreshContentNotification")
     
+    var isVisible: Bool {
+        return isViewLoaded && view.window != nil
+    }
+    
     // subclass need override this to actual clear content
     func clearContent() {
         fatalError("clearContent() NOT implemented")
@@ -137,8 +141,11 @@ class BaseTableViewController: NTTableViewController {
     }
     
     override func didReceiveMemoryWarning() {
-        needRefresh = true
-        clearContent()
+        if !isVisible {
+            needRefresh = true
+            clearContent()
+            dPrint("Memory warning received, clear content on: \(self.description) title: \(self.title ?? "nil")")
+        }
         super.didReceiveMemoryWarning()
     }
 }

@@ -795,9 +795,9 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             if let boards = self.api.queryBoard(query: article.boardID) {
                 for board in boards {
                     if board.boardID == article.boardID {
-                        let managers = board.manager.characters.split { $0 == " " }.map { String($0) }
-                        if managers.count > 0 && !managers[0].isEmpty {
-                            adminID = managers[0]
+                        let managers = board.manager.split(separator: " ")
+                        if managers.count > 0 && !managers.last!.isEmpty {
+                            adminID = String(managers.last!)
                         }
                         break
                     }

@@ -646,7 +646,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         let forwardAction = UIAlertAction(title: "转寄给用户", style: .default) { [unowned self] _ in
             self.forward(article)
         }
-        let forwardToBoardAction = UIAlertAction(title: "转寄到版面", style: .default) { [unowned self] _ in
+        let forwardToBoardAction = UIAlertAction(title: "转载到版面", style: .default) { [unowned self] _ in
             self.cross(article)
         }
         let reportJunkAction = UIAlertAction(title: "举报不良内容", style: .destructive) { [unowned self] _ in
@@ -880,25 +880,32 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     }
     
     private func cross(_ article: SMArticle) {
-        let resultController = BoardListSearchResultViewController.searchResultController(title: "转寄到版面") { [unowned self] (board) in
-            self.dismiss(animated: true)
-            networkActivityIndicatorStart()
-            DispatchQueue.global().async {
-                let result = self.api.crossArticle(articleID: article.id,
-                                                   fromBoard: article.boardID,
-                                                   toBoard: board.boardID)
-                dPrint("cross article status: \(result)")
-                DispatchQueue.main.async {
-                    networkActivityIndicatorStop()
-                    if self.api.errorCode == 0 {
-                        SVProgressHUD.showSuccess(withStatus: "转寄成功")
-                    } else if let errorDescription = self.api.errorDescription , errorDescription != "" {
-                        SVProgressHUD.showInfo(withStatus: errorDescription)
-                    } else {
-                        SVProgressHUD.showError(withStatus: "出错了")
+        let resultController = BoardListSearchResultViewController.searchResultController(title: "转载到版面") { [unowned self] (controller, board) in
+            let confirmAlert = UIAlertController(title: "确认转载?", message: nil, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "确认", style: .default) { [unowned self] _ in
+                self.dismiss(animated: true)
+                networkActivityIndicatorStart()
+                DispatchQueue.global().async {
+                    let result = self.api.crossArticle(articleID: article.id,
+                                                       fromBoard: article.boardID,
+                                                       toBoard: board.boardID)
+                    dPrint("cross article status: \(result)")
+                    DispatchQueue.main.async {
+                        networkActivityIndicatorStop()
+                        if self.api.errorCode == 0 {
+                            SVProgressHUD.showSuccess(withStatus: "转载成功")
+                        } else if let errorDescription = self.api.errorDescription , errorDescription != "" {
+                            SVProgressHUD.showInfo(withStatus: errorDescription)
+                        } else {
+                            SVProgressHUD.showError(withStatus: "出错了")
+                        }
                     }
                 }
             }
+            confirmAlert.addAction(okAction)
+            confirmAlert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+            controller.present(confirmAlert, animated: true)
+            
         }
         resultController.modalPresentationStyle = .formSheet
         present(resultController, animated: true)
@@ -959,7 +966,7 @@ extension ArticleContentViewController: UIViewControllerPreviewingDelegate, Smth
             let forwardToUserAction = UIPreviewAction(title: "转寄给用户", style: .default) { [unowned self] (_, _) in
                 self.forward(article)
             }
-            let forwardToBoardAction = UIPreviewAction(title: "转寄到版面", style: .default) { [unowned self] (_, _) in
+            let forwardToBoardAction = UIPreviewAction(title: "转载到版面", style: .default) { [unowned self] (_, _) in
                 self.cross(article)
             }
             let reportJunkAction = UIPreviewAction(title: "举报不良内容", style: .destructive) { [unowned self] (_, _) in

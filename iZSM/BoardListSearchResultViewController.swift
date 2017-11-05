@@ -18,7 +18,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
     
     private var searchController = UISearchController(searchResultsController: nil)
     
-    var completionHandler: ((SMBoard) -> Void)?
+    var completionHandler: ((BoardListSearchResultViewController, SMBoard) -> Void)?
     
     func didPresentSearchController(_ searchController: UISearchController) {
         searchController.searchBar.becomeFirstResponder()
@@ -98,7 +98,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
         let board = boards[indexPath.row]
         if (board.flag != -1) && (board.flag & 0x400 == 0) && (completionHandler != nil) {
             SMBoardInfoUtil.hitSearch(for: board)
-            completionHandler!(board)
+            completionHandler!(self, board)
         }
     }
     
@@ -160,7 +160,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
         return nil
     }
     
-    static func searchResultController(title: String?, completionHandler: ((SMBoard) -> Void)?) -> UIViewController {
+    static func searchResultController(title: String?, completionHandler: ((BoardListSearchResultViewController, SMBoard) -> Void)?) -> UIViewController {
         let searchResultController = BoardListSearchResultViewController()
         searchResultController.title = title
         searchResultController.completionHandler = completionHandler

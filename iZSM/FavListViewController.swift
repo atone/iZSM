@@ -101,9 +101,15 @@ class FavListViewController: BaseTableViewController {
     
     @objc private func addFavorite(_ sender: UIBarButtonItem) {
         let title = "请选择要\(self.index == 0 ? "收藏" : "关注")的版面"
-        let searchResultController = BoardListSearchResultViewController.searchResultController(title: title) { [unowned self] (board) in
-            self.dismiss(animated: true)
-            self.addFavoriteWithBoardID(boardID: board.boardID)
+        let searchResultController = BoardListSearchResultViewController.searchResultController(title: title) { [unowned self] (controller, board) in
+            let confirmAlert = UIAlertController(title: "确认\(self.index == 0 ? "收藏" : "关注")?", message: nil, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "确认", style: .default) { [unowned self] _ in
+                self.dismiss(animated: true)
+                self.addFavoriteWithBoardID(boardID: board.boardID)
+            }
+            confirmAlert.addAction(okAction)
+            confirmAlert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+            controller.present(confirmAlert, animated: true)
         }
         searchResultController.modalPresentationStyle = .formSheet
         present(searchResultController, animated: true)

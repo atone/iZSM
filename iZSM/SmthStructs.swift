@@ -204,7 +204,7 @@ struct SMArticle {
     }
 
     private func imageAttachmentsFromBody() -> [ImageInfo]? {
-        let pattern = "(?<=\\[img=).*(?=\\]\\[/img\\])"
+        let pattern = "(?<=\\[img=).*(?=\\].*\\[/img\\])"
         let regularExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
         let matches = regularExpression.matches(in: self.body, range: NSMakeRange(0, self.body.count))
         let nsstring = self.body as NSString
@@ -212,7 +212,7 @@ struct SMArticle {
             var imageInfos = [ImageInfo]()
             for match in matches {
                 let range = match.range
-                let urlString = nsstring.substring(with: range)
+                let urlString = nsstring.substring(with: range).trimmingCharacters(in: .whitespaces)
                 let url = URL(string: urlString)!
                 let fileName = url.lastPathComponent
                 imageInfos.append(ImageInfo(thumbnailURL: url, fullImageURL: url, imageName: fileName, imageSize: 0))

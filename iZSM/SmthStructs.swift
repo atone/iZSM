@@ -134,6 +134,13 @@ struct SMArticle {
                 attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: quoted))
             } else if regex.numberOfMatches(in: line, range: NSMakeRange(0, line.count)) > 0 {
                 var stripLine = line.trimmingCharacters(in: .whitespaces)
+                if stripLine[stripLine.startIndex] != "【" {
+                    if let idx = stripLine.firstIndex(of: "【") {
+                        let text = String(stripLine[..<idx]).trimmingCharacters(in: .whitespaces)
+                        attributeText.append(NSAttributedString(string: "\(text)\n", attributes: normal))
+                        stripLine = String(stripLine[idx...])
+                    }
+                }
                 if stripLine[stripLine.startIndex] == "【" && stripLine[stripLine.index(before: stripLine.endIndex)] == "】" {
                     stripLine = String(stripLine[stripLine.index(after: stripLine.startIndex)..<stripLine.index(before: stripLine.endIndex)])
                     stripLine = stripLine.trimmingCharacters(in: .whitespaces)

@@ -43,6 +43,7 @@ class AppSetting {
         static let ShakeToSwitchKey = "SmthAPI.shakeToSwitch"
         static let ShowAvatarKey = "SmthAPI.showAvatarKey"
         static let NoPicModeKey = "SmthAPI.noPicModeKey"
+        static let AddDeviceSignatureKey = "SmthAPI.deviceSignatureKey"
     }
 
     private let defaults = UserDefaults.standard
@@ -68,7 +69,8 @@ class AppSetting {
             Static.NightModeKey : false,
             Static.ShakeToSwitchKey : true,
             Static.ShowAvatarKey : true,
-            Static.NoPicModeKey : false
+            Static.NoPicModeKey : false,
+            Static.AddDeviceSignatureKey : true
         ]
         defaults.register(defaults: initialSettings)
     }
@@ -80,6 +82,13 @@ class AppSetting {
     var signatureRegularExpression : NSRegularExpression {
         let regx = try! NSRegularExpression(pattern: "- 来自「最水木 for .*」")
         return regx
+    }
+    
+    var addDeviceSignature: Bool {
+        get { return defaults.bool(forKey: Static.AddDeviceSignatureKey) }
+        set {
+            defaults.set(newValue, forKey: Static.AddDeviceSignatureKey)
+        }
     }
 
     var username: String? {

@@ -55,6 +55,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     
     private let signature = AppSetting.shared.signature
     private let regx = AppSetting.shared.signatureRegularExpression
+    private let addDeviceSignature = AppSetting.shared.addDeviceSignature
     
     private var articleTitle: String? {
         get { return titleTextField.text }
@@ -262,7 +263,9 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
                     self.regx.numberOfMatches(in: $0, range: NSMakeRange(0, $0.count)) == 0
                 }
                 content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
-                content.append("\n\n" + self.signature)
+                if self.addDeviceSignature {
+                    content.append("\n\n" + self.signature)
+                }
                 
                 switch self.mode {
                 case .post:

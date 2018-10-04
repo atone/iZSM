@@ -22,6 +22,8 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var rememberLastCell: UITableViewCell!
     @IBOutlet weak var portraitLockLabel: UILabel!
     @IBOutlet weak var portraitLockCell: UITableViewCell!
+    @IBOutlet weak var addDeviceSignatureLabel: UILabel!
+    @IBOutlet weak var addDeviceSignatureCell: UITableViewCell!
     @IBOutlet weak var displayModeLabel: UILabel!
     @IBOutlet weak var displayModeCell: UITableViewCell!
     @IBOutlet weak var showAvatarLabel: UILabel!
@@ -45,6 +47,7 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var newReplyFirstSwitch: UISwitch!
     @IBOutlet weak var rememberLastSwitch: UISwitch!
     @IBOutlet weak var portraitLockSwitch: UISwitch!
+    @IBOutlet weak var addDeviceSignatureSwitch: UISwitch!
     @IBOutlet weak var showAvatarSwitch: UISwitch!
     @IBOutlet weak var noPicModeSwitch: UISwitch!
     @IBOutlet weak var nightModeSwitch: UISwitch!
@@ -110,6 +113,10 @@ class SettingsViewController: NTTableViewController {
         setting.portraitLock = sender.isOn
     }
     
+    @IBAction func addDeviceSignatureChanged(_ sender: UISwitch) {
+        setting.addDeviceSignature = sender.isOn
+    }
+    
     @IBAction func displayModeChanged(_ sender: UISegmentedControl) {
         setting.displayMode = AppSetting.DisplayMode(rawValue: sender.selectedSegmentIndex)!
     }
@@ -159,6 +166,8 @@ class SettingsViewController: NTTableViewController {
         rememberLastLabel.textColor = theme.textColor
         portraitLockLabel.font = UIFont.preferredFont(forTextStyle: .body)
         portraitLockLabel.textColor = theme.textColor
+        addDeviceSignatureLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        addDeviceSignatureLabel.textColor = theme.textColor
         displayModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
         displayModeLabel.textColor = theme.textColor
         showAvatarLabel.font = UIFont.preferredFont(forTextStyle: .body)
@@ -191,6 +200,7 @@ class SettingsViewController: NTTableViewController {
         newReplyFirstSwitch.isOn = (setting.sortMode == .LaterPostFirst)
         rememberLastSwitch.isOn = setting.rememberLast
         portraitLockSwitch.isOn = setting.portraitLock
+        addDeviceSignatureSwitch.isOn = setting.addDeviceSignature
         displayModeSegmentedControl.selectedSegmentIndex = setting.displayMode.rawValue
         noPicModeSwitch.isOn = setting.noPicMode
         if setting.noPicMode {
@@ -209,6 +219,7 @@ class SettingsViewController: NTTableViewController {
         newReplyFirstCell.backgroundColor = theme.backgroundColor
         rememberLastCell.backgroundColor = theme.backgroundColor
         portraitLockCell.backgroundColor = theme.backgroundColor
+        addDeviceSignatureCell.backgroundColor = theme.backgroundColor
         displayModeCell.backgroundColor = theme.backgroundColor
         showAvatarCell.backgroundColor = theme.backgroundColor
         noPicModeCell.backgroundColor = theme.backgroundColor

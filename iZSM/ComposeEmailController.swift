@@ -38,6 +38,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     
     private let signature = AppSetting.shared.signature
     private let regx = AppSetting.shared.signatureRegularExpression
+    private let addDeviceSignature = AppSetting.shared.addDeviceSignature
     
     private var emailTitle: String? {
         get { return titleTextField.text }
@@ -249,7 +250,9 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                     self.regx.numberOfMatches(in: $0, range: NSMakeRange(0, $0.count)) == 0
                 }
                 content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
-                content.append("\n\n" + self.signature)
+                if self.addDeviceSignature {
+                    content.append("\n\n" + self.signature)
+                }
                 
                 let result = self.api.sendMailTo(user: receiver, withTitle: title, content: content)
                 dPrint("send mail done. ret = \(result)")

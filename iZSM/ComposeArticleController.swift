@@ -193,7 +193,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         countLabel.textColor = AppTheme.shared.lightTextColor
         titleTextField.textColor = AppTheme.shared.lightTextColor
         titleTextField.attributedPlaceholder = NSAttributedString(string: "添加标题",
-                                                                  attributes: [NSAttributedStringKey.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
+                                                                  attributes: [NSAttributedString.Key.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
         titleTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         contentTextView.textColor = AppTheme.shared.textColor
         contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
@@ -329,7 +329,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow(_:)),
-                                               name: .UIKeyboardWillChangeFrame,
+                                               name: UIResponder.keyboardWillChangeFrameNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(nightModeChanged(_:)),
@@ -362,7 +362,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     
     @objc private func keyboardWillShow(_ notification: Notification) {
         let info = notification.userInfo
-        var keyboardFrame = info?[UIKeyboardFrameEndUserInfoKey] as! CGRect
+        var keyboardFrame = info?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
         keyboardFrame = view.convert(keyboardFrame, from: view.window)
         keyboardHeight = max(view.bounds.height - keyboardFrame.origin.y, 0)
         updateContentLayout()
@@ -418,7 +418,7 @@ extension ComposeArticleController: TZImagePickerControllerDelegate {
 
 extension ComposeArticleController: AttachImageViewDelegate {
     func deleteButtonPressed(in attachImageView: AttachImageView) {
-        if let image = attachImageView.image, let idx = attachedImages.index(of: image) {
+        if let image = attachImageView.image, let idx = attachedImages.firstIndex(of: image) {
             attachedImages.remove(at: idx)
             attachedAssets.remove(at: idx)
         }
@@ -426,7 +426,7 @@ extension ComposeArticleController: AttachImageViewDelegate {
     }
     
     func imageTapped(in attachImageView: AttachImageView) {
-        if let image = attachImageView.image, let idx = attachedImages.index(of: image) {
+        if let image = attachImageView.image, let idx = attachedImages.firstIndex(of: image) {
             let imagePicker = TZImagePickerController(selectedAssets: NSMutableArray(array: attachedAssets), selectedPhotos: NSMutableArray(array: attachedImages), index: idx)!
             imagePicker.didFinishPickingPhotosHandle = { [unowned self] (_, _, _) in
                 self.contentTextView.becomeFirstResponder()

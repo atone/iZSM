@@ -109,7 +109,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
         return false
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let board = boards.remove(at: indexPath.row)
             SMBoardInfoUtil.clearSearchCount(for: board)

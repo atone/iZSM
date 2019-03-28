@@ -44,12 +44,12 @@ class BaseTableViewController: NTTableViewController {
     override func viewDidLoad() {
         // set tableview self-sizing cell
         tableView.estimatedRowHeight = 44
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         
         // add observer to font size change
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(preferredFontSizeChanged(_:)),
-                                               name: .UIContentSizeCategoryDidChange,
+                                               name: UIContentSizeCategory.didChangeNotification,
                                                object: nil)
         // add observer to set need refresh
         NotificationCenter.default.addObserver(self,

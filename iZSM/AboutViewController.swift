@@ -87,7 +87,7 @@ class AboutViewController: NTTableViewController {
         // add observer to font size change
         NotificationCenter.default.addObserver(self,
             selector: #selector(preferredFontSizeChanged(_:)),
-            name: .UIContentSizeCategoryDidChange,
+            name: UIContentSizeCategory.didChangeNotification,
             object: nil)
         
         let size = self.view.bounds.size

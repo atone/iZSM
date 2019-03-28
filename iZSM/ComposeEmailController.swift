@@ -222,11 +222,11 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         countLabel.textColor = AppTheme.shared.lightTextColor
         receiverTextField.textColor = AppTheme.shared.lightTextColor
         receiverTextField.attributedPlaceholder = NSAttributedString(string: "收信人",
-                                                                     attributes: [NSAttributedStringKey.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
+                                                                     attributes: [NSAttributedString.Key.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
         receiverTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         titleTextField.textColor = AppTheme.shared.lightTextColor
         titleTextField.attributedPlaceholder = NSAttributedString(string: "添加标题",
-                                                                  attributes: [NSAttributedStringKey.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
+                                                                  attributes: [NSAttributedString.Key.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
         titleTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         contentTextView.textColor = AppTheme.shared.textColor
         contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
@@ -291,7 +291,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow(_:)),
-                                               name: .UIKeyboardWillChangeFrame,
+                                               name: UIResponder.keyboardWillChangeFrameNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(nightModeChanged(_:)),
@@ -312,8 +312,8 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     
     @objc private func keyboardWillShow(_ notification: Notification) {
         let info = notification.userInfo
-        let animationDuration = info?[UIKeyboardAnimationDurationUserInfoKey] as! Double
-        var keyboardFrame = info?[UIKeyboardFrameEndUserInfoKey] as! CGRect
+        let animationDuration = info?[UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
+        var keyboardFrame = info?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
         keyboardFrame = view.convert(keyboardFrame, from: view.window)
         let height = max(view.bounds.height - keyboardFrame.origin.y, 0)
         keyboardHeight?.update(offset: -height - 5)

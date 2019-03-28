@@ -86,7 +86,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(preferredFontSizeChanged(_:)),
-                                               name: .UIContentSizeCategoryDidChange,
+                                               name: UIContentSizeCategory.didChangeNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(nightModeChanged(_:)),
@@ -202,10 +202,10 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     private func attributedStringFromContent(_ string: String) -> NSAttributedString {
         let attributeText = NSMutableAttributedString()
         
-        let normal: [NSAttributedStringKey: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+        let normal: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
                                                     .foregroundColor: AppTheme.shared.textColor]
-        let quoted: [NSAttributedStringKey: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+        let quoted: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
                                                     .foregroundColor: AppTheme.shared.lightTextColor]
         

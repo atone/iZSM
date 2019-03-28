@@ -80,9 +80,9 @@ class NTTableViewController: UITableViewController {
         tableView.tintColor = AppTheme.shared.tintColor
         tableView.separatorColor = AppTheme.shared.seperatorColor
         
-        refreshHeader?.spinner.activityIndicatorViewStyle = setting.nightMode ? UIActivityIndicatorViewStyle.white : UIActivityIndicatorViewStyle.gray
+        refreshHeader?.spinner.style = setting.nightMode ? UIActivityIndicatorView.Style.white : UIActivityIndicatorView.Style.gray
         refreshHeader?.textLabel.textColor = AppTheme.shared.lightTextColor
-        refreshFooter?.spinner.activityIndicatorViewStyle = setting.nightMode ? UIActivityIndicatorViewStyle.white : UIActivityIndicatorViewStyle.gray
+        refreshFooter?.spinner.style = setting.nightMode ? UIActivityIndicatorView.Style.white : UIActivityIndicatorView.Style.gray
         refreshFooter?.textLabel.textColor = AppTheme.shared.lightTextColor
         
         tableView.reloadData()

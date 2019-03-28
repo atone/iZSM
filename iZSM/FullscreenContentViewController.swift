@@ -52,9 +52,9 @@ class FullscreenContentViewController: UIViewController {
             titleParagraphStyle.lineBreakMode = .byWordWrapping
             titleParagraphStyle.lineSpacing = titleFont.pointSize / 4
             let title = NSAttributedString(string: article.subject,
-                                           attributes: [NSAttributedStringKey.paragraphStyle: titleParagraphStyle,
-                                                        NSAttributedStringKey.font: titleFont,
-                                                        NSAttributedStringKey.foregroundColor: titleColor])
+                                           attributes: [NSAttributedString.Key.paragraphStyle: titleParagraphStyle,
+                                                        NSAttributedString.Key.font: titleFont,
+                                                        NSAttributedString.Key.foregroundColor: titleColor])
             fullArticle.append(title)
             fullArticle.appendString("\n")
             
@@ -67,9 +67,9 @@ class FullscreenContentViewController: UIViewController {
             subtitleParagraphStyle.paragraphSpacing = titleFont.pointSize
             subtitleParagraphStyle.paragraphSpacingBefore = titleFont.pointSize / 4
             let subtitle = NSAttributedString(string: subtitleText,
-                                              attributes: [NSAttributedStringKey.paragraphStyle: subtitleParagraphStyle,
-                                                           NSAttributedStringKey.font: subtitleFont,
-                                                           NSAttributedStringKey.foregroundColor: subtitleColor])
+                                              attributes: [NSAttributedString.Key.paragraphStyle: subtitleParagraphStyle,
+                                                           NSAttributedString.Key.font: subtitleFont,
+                                                           NSAttributedString.Key.foregroundColor: subtitleColor])
             fullArticle.append(subtitle)
             fullArticle.appendString("\n")
             
@@ -80,7 +80,7 @@ class FullscreenContentViewController: UIViewController {
             paragraphStyle.lineBreakMode = .byWordWrapping
             let attributedBody = attributedStringFromContent(article.body)
             let mutableAttributedBody = NSMutableAttributedString(attributedString: attributedBody)
-            mutableAttributedBody.addAttributes([NSAttributedStringKey.paragraphStyle: paragraphStyle, NSAttributedStringKey.font: font],
+            mutableAttributedBody.addAttributes([NSAttributedString.Key.paragraphStyle: paragraphStyle, NSAttributedString.Key.font: font],
                                                 range: NSMakeRange(0, mutableAttributedBody.string.count))
             fullArticle.append(mutableAttributedBody)
             contentTextView.attributedText = fullArticle
@@ -90,10 +90,10 @@ class FullscreenContentViewController: UIViewController {
     private func attributedStringFromContent(_ string: String) -> NSAttributedString {
         let attributeText = NSMutableAttributedString()
         
-        let normal: [NSAttributedStringKey: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+        let normal: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
                                                     .foregroundColor: AppTheme.shared.textColor]
-        let quoted: [NSAttributedStringKey: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+        let quoted: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
                                                     .foregroundColor: AppTheme.shared.lightTextColor]
         
@@ -121,7 +121,7 @@ class FullscreenContentViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(refreshContent(_:)),
-                                               name: .UIContentSizeCategoryDidChange,
+                                               name: UIContentSizeCategory.didChangeNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(refreshContent(_:)),

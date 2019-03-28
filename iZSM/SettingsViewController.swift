@@ -68,7 +68,7 @@ class SettingsViewController: NTTableViewController {
         // add observer to font size change
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(preferredFontSizeChanged(_:)),
-                                               name: .UIContentSizeCategoryDidChange,
+                                               name: UIContentSizeCategory.didChangeNotification,
                                                object: nil)
     }
 
@@ -148,9 +148,9 @@ class SettingsViewController: NTTableViewController {
     @IBAction func backgroundTaskChanged(_ sender: UISwitch) {
         setting.backgroundTaskEnabled = sender.isOn
         if sender.isOn {
-            UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+            UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
         } else {
-            UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
+            UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
         }
     }
 

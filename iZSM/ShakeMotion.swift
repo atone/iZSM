@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIWindow {
-    open override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+    open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if AppSetting.shared.shakeToSwitch && motion == .motionShake {
             dPrint("shaking phone... switch color theme")
             AppSetting.shared.nightMode = !AppSetting.shared.nightMode

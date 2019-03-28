@@ -115,13 +115,13 @@ struct SMArticle {
         quotedParagraphStyle.firstLineHeadIndent = 12
         quotedParagraphStyle.headIndent = 12
         
-        let normal : [NSAttributedStringKey : Any] = [.font: textFont,
+        let normal : [NSAttributedString.Key : Any] = [.font: textFont,
                                                       .paragraphStyle: paragraphStyle,
                                                       .foregroundColor: dark ? theme.nightTextColor : theme.dayTextColor]
-        let quoted : [NSAttributedStringKey : Any] = [.font: textFont,
+        let quoted : [NSAttributedString.Key : Any] = [.font: textFont,
                                                       .paragraphStyle: quotedParagraphStyle,
                                                       .foregroundColor: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
-        let quotedTitle : [NSAttributedStringKey : Any] = [.font: boldTextFont,
+        let quotedTitle : [NSAttributedString.Key : Any] = [.font: boldTextFont,
                                                            .paragraphStyle: quotedParagraphStyle,
                                                            .foregroundColor: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
         
@@ -171,7 +171,7 @@ struct SMArticle {
         emoticonParser.parseText(attributeText, selectedRange: nil)
         
         self.quotedAttributedRange.removeAll()
-        attributeText.enumerateAttribute(NSAttributedStringKey.paragraphStyle, in: NSMakeRange(0, attributeText.length)) { (value, range, stop) in
+        attributeText.enumerateAttribute(NSAttributedString.Key.paragraphStyle, in: NSMakeRange(0, attributeText.length)) { (value, range, stop) in
             if let value = value as? NSMutableParagraphStyle, value == quotedParagraphStyle {
                 var trimRange = range
                 while trimRange.length > 0
@@ -186,7 +186,7 @@ struct SMArticle {
     }
     
     func attachmentURL(at pos: Int) -> URL {
-        let string = "https://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(pos)"
+        let string = "http://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(pos)"
         return URL(string: string)!
     }
 
@@ -198,7 +198,7 @@ struct SMArticle {
             if fileName.hasSuffix(".jpg") || fileName.hasSuffix(".jpeg")
                 || fileName.hasSuffix(".gif") || fileName.hasSuffix(".bmp")
                 || fileName.hasSuffix(".png") {
-                    let baseURLString = "https://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
+                    let baseURLString = "http://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
                     let thumbnailURL = URL(string: baseURLString + (attachments.count==1 ? "" : "/middle"))!
                     let fullImageURL = URL(string: baseURLString)!
                     let imageName = attachment.name

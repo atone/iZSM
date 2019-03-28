@@ -67,7 +67,7 @@ class ArticleContentCell: UITableViewCell {
         setup()
     }
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
     }
@@ -383,7 +383,7 @@ class ArticleContentCell: UITableViewCell {
     @objc private func singleTapOnImage(_ recognizer: UIGestureRecognizer) {
         if
             let imageView = recognizer.view as? YYAnimatedImageView,
-            let index = imageViews.index(of: imageView)
+            let index = imageViews.firstIndex(of: imageView)
         {
             delegate?.cell(self, didClickImageAt: index)
         }

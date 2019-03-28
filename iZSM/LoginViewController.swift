@@ -15,7 +15,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     private let logoView = UIImageView(image: #imageLiteral(resourceName: "Logo"))
     private let usernameField = UITextField()
     private let passwordField = UITextField()
-    private let spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    private let spinner = UIActivityIndicatorView(style: .gray)
     private let loginButton = UIButton(type: .system)
     private let containerView = UIView()
     private let lineView = UIView()
@@ -164,7 +164,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let x = CGPoint(x: posLbl.x+10, y: posLbl.y)
         
         let animation = CABasicAnimation(keyPath: "position")
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         animation.fromValue = NSValue(cgPoint: x)
         animation.toValue = NSValue(cgPoint: y)
         animation.autoreverses = true

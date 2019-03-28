@@ -1126,13 +1126,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Naitong Yu";
 				TargetAttributes = {
 					9C1A3BBB1DE2C0ED00CF4A43 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 9TXRXPVXCE;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1147,7 +1147,7 @@
 			};
 			buildConfigurationList = 9C1A3BB71DE2C0ED00CF4A43 /* Build configuration list for PBXProject "iZSM" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = Chinese;
+			developmentRegion = zh;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				zh,
@@ -1638,7 +1638,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "iZSM/iZSM-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1662,7 +1662,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = cn.yunaitong.zsmth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "iZSM/iZSM-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

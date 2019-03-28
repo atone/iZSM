@@ -832,11 +832,11 @@ class SmthAPI {
     private func convertedAttData(from image: UIImage) -> Data {
         let newImage = resizedAttImage(from: image)
         var compressionQuality: CGFloat = 1
-        var data = UIImageJPEGRepresentation(newImage, compressionQuality)!
+        var data = newImage.jpegData(compressionQuality: compressionQuality)!
         let maxSize = 1 * 1024 * 1024
         while data.count > maxSize && compressionQuality > 0.1 {
             compressionQuality -= 0.1
-            data = UIImageJPEGRepresentation(newImage, compressionQuality)!
+            data = newImage.jpegData(compressionQuality: compressionQuality)!
         }
         return data
     }
@@ -855,11 +855,11 @@ class SmthAPI {
     private func convertedFaceData(from image: UIImage) -> Data {
         let newImage = resizedFaceImage(from: image)
         var compressionQuality: CGFloat = 1
-        var data = UIImageJPEGRepresentation(newImage, compressionQuality)!
+        var data = newImage.jpegData(compressionQuality: compressionQuality)!
         let maxSize = 50 * 1024
         while data.count > maxSize && compressionQuality > 0.1 {
             compressionQuality -= 0.1
-            data = UIImageJPEGRepresentation(newImage, compressionQuality)!
+            data = newImage.jpegData(compressionQuality: compressionQuality)!
         }
         return data
     }

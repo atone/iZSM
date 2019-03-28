@@ -24,7 +24,7 @@ class UserViewController: NTTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.estimatedRowHeight = 44
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.reloadData()
         setupUserInfoView()
         
@@ -33,7 +33,7 @@ class UserViewController: NTTableViewController {
         // add observer to font size change
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(preferredFontSizeChanged(_:)),
-                                               name: .UIContentSizeCategoryDidChange,
+                                               name: UIContentSizeCategory.didChangeNotification,
                                                object: nil)
     }
     
@@ -49,9 +49,9 @@ class UserViewController: NTTableViewController {
     
     func setupUserInfoView() {
         userInfoVC.delegate = self
-        userInfoVC.willMove(toParentViewController: self)
-        addChildViewController(userInfoVC)
-        userInfoVC.didMove(toParentViewController: self)
+        userInfoVC.willMove(toParent: self)
+        addChild(userInfoVC)
+        userInfoVC.didMove(toParent: self)
     }
     
     func updateUserInfoView() {
@@ -169,11 +169,11 @@ class UserViewController: NTTableViewController {
     func attrTextFromString(string: String, withNewFlag flag: Bool) -> NSAttributedString {
         let normalColor = AppTheme.shared.textColor
         let redColor = AppTheme.shared.redColor
-        let result = NSMutableAttributedString(string: string, attributes: [NSAttributedStringKey.foregroundColor: normalColor])
+        let result = NSMutableAttributedString(string: string, attributes: [NSAttributedString.Key.foregroundColor: normalColor])
         if flag {
-            result.append(NSAttributedString(string: " [新]", attributes: [NSAttributedStringKey.foregroundColor: redColor]))
+            result.append(NSAttributedString(string: " [新]", attributes: [NSAttributedString.Key.foregroundColor: redColor]))
         }
-        result.addAttribute(NSAttributedStringKey.font, value: UIFont.preferredFont(forTextStyle: .body), range: NSMakeRange(0, result.length))
+        result.addAttribute(NSAttributedString.Key.font, value: UIFont.preferredFont(forTextStyle: .body), range: NSMakeRange(0, result.length))
         return result
     }
     

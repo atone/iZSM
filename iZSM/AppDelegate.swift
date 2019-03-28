@@ -66,7 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return handled
     }
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = AppTheme.shared.backgroundColor
@@ -89,9 +89,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // set the background fetch mode
         if setting.backgroundTaskEnabled {
-            application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+            application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
         } else {
-            application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
+            application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
         }
         
         // register notification
@@ -100,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerUserNotificationSettings(mySettings)
         
         // if open from notification, then handle it
-        if let localNotif = launchOptions?[UIApplicationLaunchOptionsKey.localNotification] as? UILocalNotification {
+        if let localNotif = launchOptions?[UIApplication.LaunchOptionsKey.localNotification] as? UILocalNotification {
             dPrint("launch from didFinishLaunchingWithOptions:")
             navigateToNewMessagePage(notification: localNotif)
         }
@@ -119,7 +119,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var shouldPerformAdditionalDelegateHandling = true
         
         // If a shortcut was launched, display its information and take the appropriate action
-        if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
+        if let shortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
             launchedShortcutItem = shortcutItem
             // This will block "performActionForShortcutItem:completionHandler" from being called.
             shouldPerformAdditionalDelegateHandling = false

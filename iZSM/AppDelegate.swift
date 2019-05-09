@@ -364,8 +364,9 @@ extension SmthAPI {
             var errorMsg: String = "未知错误"
             if errorCode == -1 {
                 errorMsg = "网络错误"
-            } else if errorCode == 10014 {
-                errorMsg = "token失效，需要重新登录"
+            } else if errorCode == 10014 || errorCode == 10010 {
+                errorMsg = "token失效，请刷新"
+                AppSetting.shared.accessToken = nil // clear expired access token
             } else if errorCode == 10417 {
                 errorMsg = "您还没有驻版"
             } else if let errorDesc = errorDescription, !errorDesc.isEmpty {

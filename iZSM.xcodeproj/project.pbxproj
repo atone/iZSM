@@ -380,6 +380,7 @@
 		9C889FCC1DE4832E00C33A8D /* YYPhotoGroupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYPhotoGroupView.m; sourceTree = "<group>"; };
 		9C889FCE1DE4995300C33A8D /* FavListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavListViewController.swift; sourceTree = "<group>"; };
 		9C889FD01DE4B66E00C33A8D /* ComposeArticleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeArticleController.swift; sourceTree = "<group>"; };
+		9C8DC6262329F48800DDE69F /* iZSM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iZSM.entitlements; sourceTree = "<group>"; };
 		9CA1E6151F6D5A6900402A31 /* PullToRefreshKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PullToRefreshKit.framework; path = Carthage/Build/iOS/PullToRefreshKit.framework; sourceTree = "<group>"; };
 		9CA3B15D1DE3323B00E9B121 /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
 		9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotTableViewController.swift; sourceTree = "<group>"; };
@@ -641,6 +642,7 @@
 		9C1A3BBE1DE2C0ED00CF4A43 /* iZSM */ = {
 			isa = PBXGroup;
 			children = (
+				9C8DC6262329F48800DDE69F /* iZSM.entitlements */,
 				9CA3B1A41DE33E6F00E9B121 /* TableViewCells */,
 				9CA3B15C1DE331F800E9B121 /* ViewControllers */,
 				9C1A3BEE1DE2EA8B00CF4A43 /* SmthAPI */,
@@ -1561,7 +1563,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1614,7 +1616,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -1628,6 +1630,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = iZSM/iZSM.entitlements;
 				DEVELOPMENT_TEAM = 9TXRXPVXCE;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1635,6 +1638,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = iZSM/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1642,6 +1646,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = cn.yunaitong.zsmth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "iZSM/iZSM-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1653,6 +1658,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = iZSM/iZSM.entitlements;
 				DEVELOPMENT_TEAM = 9TXRXPVXCE;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1660,6 +1666,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = iZSM/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1667,6 +1674,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = cn.yunaitong.zsmth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "iZSM/iZSM-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};

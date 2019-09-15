@@ -148,7 +148,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         
         titleHintLabel.snp.makeConstraints { (make) in
             make.leading.equalTo(view.snp.leadingMargin)
-            make.top.equalTo(topLayoutGuide.snp.bottom).offset(5)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(5)
             make.width.equalTo(38)
             make.height.equalTo(20)
         }
@@ -166,7 +166,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         contentTextView.snp.makeConstraints { (make) in
             make.leading.equalTo(titleHintLabel)
             make.trailing.equalTo(countLabel)
-            self.contentViewOffset = make.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-5).constraint
+            self.contentViewOffset = make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-5).constraint
             make.top.equalTo(countLabel.snp.bottom).offset(5)
         }
         

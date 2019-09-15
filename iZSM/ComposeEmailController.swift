@@ -123,7 +123,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         
         sendToLabel.snp.makeConstraints { (make) in
             make.leading.equalTo(view.snp.leadingMargin)
-            make.top.equalTo(topLayoutGuide.snp.bottom).offset(5)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(5)
             make.width.equalTo(38)
             make.height.equalTo(20)
         }
@@ -155,7 +155,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         contentTextView.snp.makeConstraints { (make) in
             make.leading.equalTo(titleHintLabel)
             make.trailing.equalTo(countLabel)
-            self.keyboardHeight = make.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-5).constraint
+            self.keyboardHeight = make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-5).constraint
             make.top.equalTo(countLabel.snp.bottom).offset(5)
         }
         updateColor()

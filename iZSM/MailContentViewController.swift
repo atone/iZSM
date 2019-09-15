@@ -36,7 +36,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         view.addSubview(contentTextView)
         titleLabel.snp.makeConstraints { (make) in
             make.leading.equalTo(view.snp.leadingMargin)
-            make.top.equalTo(topLayoutGuide.snp.bottom).offset(5)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(5)
             make.trailing.equalTo(view.snp.trailingMargin)
         }
         userButton.snp.makeConstraints { (make) in
@@ -51,7 +51,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
             make.leading.equalTo(titleLabel)
             make.trailing.equalTo(titleLabel)
             make.top.equalTo(userButton.snp.bottom).offset(5)
-            make.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-5)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-5)
         }
         
         if inbox {
@@ -176,7 +176,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
             let webViewController = NTSafariViewController(url: URL)
             present(webViewController, animated: true)
         } else {
-            UIApplication.shared.openURL(URL)
+            UIApplication.shared.open(URL, options: [:], completionHandler: nil)
         }
         return false
     }

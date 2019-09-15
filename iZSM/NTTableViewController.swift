@@ -60,4 +60,16 @@ class NTTableViewController: UITableViewController {
             }
         }
     }
+    
+    private func updateRefresherView() {
+        refreshHeader?.spinner.style = .medium
+        refreshFooter?.spinner.style = .medium
+        refreshHeader?.textLabel.textColor = UIColor.secondaryLabel
+        refreshFooter?.textLabel.textColor = UIColor.secondaryLabel
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        updateRefresherView()
+    }
 }

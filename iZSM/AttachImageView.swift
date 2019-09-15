@@ -45,7 +45,7 @@ class AttachImageView: UIView {
         imageView.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
         imageView.addGestureRecognizer(tapGesture)
-        deleteButton.setImage(#imageLiteral(resourceName: "delete"), for: .normal)
+        deleteButton.setImage(UIImage(systemName: "minus.circle.fill"), for: .normal)
         deleteButton.backgroundColor = UIColor.white
         deleteButton.tintColor = UIColor.red
         deleteButton.layer.cornerRadius = buttonSize / 2

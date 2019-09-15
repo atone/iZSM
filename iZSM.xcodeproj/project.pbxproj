@@ -638,7 +638,6 @@
 		9C1A3BBE1DE2C0ED00CF4A43 /* iZSM */ = {
 			isa = PBXGroup;
 			children = (
-				9C8DC6262329F48800DDE69F /* iZSM.entitlements */,
 				9CA3B1A41DE33E6F00E9B121 /* TableViewCells */,
 				9CA3B15C1DE331F800E9B121 /* ViewControllers */,
 				9C1A3BEE1DE2EA8B00CF4A43 /* SmthAPI */,
@@ -660,6 +659,7 @@
 				9C1A3BBF1DE2C0ED00CF4A43 /* AppDelegate.swift */,
 				9C1A3BCB1DE2C0ED00CF4A43 /* Info.plist */,
 				9C1A3BDC1DE2E28500CF4A43 /* iZSM-Bridging-Header.h */,
+				9C8DC6262329F48800DDE69F /* iZSM.entitlements */,
 			);
 			name = "Support Files";
 			sourceTree = "<group>";

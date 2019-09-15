@@ -11,7 +11,7 @@ import PullToRefreshKit
 
 class NTTableViewController: UITableViewController {
     
-    struct PullToRefreshKitConst{
+    struct PullToRefreshKitConst {
         //KVO
         static let KPathOffSet = "contentOffset"
         static let KPathPanState = "state"

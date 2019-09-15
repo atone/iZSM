@@ -60,31 +60,4 @@ class NTTableViewController: UITableViewController {
             }
         }
     }
-
-    override func viewDidLoad() {
-        changeColor()
-        // add observer to night mode change
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(nightModeChanged(_:)),
-                                               name: AppTheme.kAppThemeChangedNotification,
-                                               object: nil)
-        super.viewDidLoad()
-    }
-    
-    @objc private func nightModeChanged(_ notification: Notification) {
-        changeColor()
-    }
-    
-    func changeColor() {
-        tableView.backgroundColor = (tableView.style == .grouped) ? AppTheme.shared.lightBackgroundColor : AppTheme.shared.backgroundColor
-        tableView.tintColor = AppTheme.shared.tintColor
-        tableView.separatorColor = AppTheme.shared.seperatorColor
-        
-        refreshHeader?.spinner.style = setting.nightMode ? UIActivityIndicatorView.Style.white : UIActivityIndicatorView.Style.gray
-        refreshHeader?.textLabel.textColor = AppTheme.shared.lightTextColor
-        refreshFooter?.spinner.style = setting.nightMode ? UIActivityIndicatorView.Style.white : UIActivityIndicatorView.Style.gray
-        refreshFooter?.textLabel.textColor = AppTheme.shared.lightTextColor
-        
-        tableView.reloadData()
-    }
 }

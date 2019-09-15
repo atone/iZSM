@@ -27,17 +27,30 @@ class NTNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         changeColor()
-        NotificationCenter.default.addObserver(self, selector: #selector(nightModeChanged(_:)), name: AppTheme.kAppThemeChangedNotification, object: nil)
-    }
-    
-    @objc private func nightModeChanged(_ notification: Notification) {
-        changeColor()
     }
     
     private func changeColor() {
         navigationBar.barStyle = .black
-        navigationBar.tintColor = AppTheme.shared.naviContentColor
-        navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: AppTheme.shared.naviContentColor]
-        navigationBar.barTintColor = AppTheme.shared.naviBackgroundColor
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            let naviForgoundColor = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 1)
+            let naviBackgroundColor = UIColor.black
+            navigationBar.tintColor = naviForgoundColor
+            navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: naviForgoundColor]
+            navigationBar.barTintColor = naviBackgroundColor
+        default:
+            let naviForgoundColor = UIColor.white
+            let naviBackgroundColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
+            navigationBar.tintColor = naviForgoundColor
+            navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: naviForgoundColor]
+            navigationBar.barTintColor = naviBackgroundColor
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            changeColor()
+        }
     }
 }

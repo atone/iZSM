@@ -53,10 +53,6 @@ class UserInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(nightModeChanged(_:)),
-                                               name: AppTheme.kAppThemeChangedNotification,
-                                               object: nil)
         setupUI()
         setupContent()
     }
@@ -64,16 +60,6 @@ class UserInfoViewController: UIViewController {
     func updateUserInfoView(with user: SMUser?) {
         self.user = user
         setupContent()
-    }
-    
-    @objc private func nightModeChanged(_ notification: Notification) {
-        updateColor()
-    }
-    
-    private func updateColor() {
-        toolbar.barStyle = AppSetting.shared.nightMode ? UIBarStyle.black : UIBarStyle.default
-        search.tintColor = AppTheme.shared.tintColor
-        compose.tintColor = AppTheme.shared.tintColor
     }
     
     private func setupUI() {
@@ -219,7 +205,6 @@ class UserInfoViewController: UIViewController {
             make.bottom.equalTo(postsContentLabel.snp.top)
             make.width.lessThanOrEqualToSuperview()
         }
-        updateColor()
     }
     
     private func setupContent() {

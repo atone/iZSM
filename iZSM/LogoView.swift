@@ -26,10 +26,9 @@ class LogoView: UIView {
     }
     
     func updateUI() {
-        backgroundColor = AppTheme.shared.lightBackgroundColor
-        titleLabel.textColor = AppTheme.shared.absoluteTintColor
+        titleLabel.textColor = UIColor(named: "SmthColor")
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
-        versionLabel.textColor = AppTheme.shared.lightTextColor
+        versionLabel.textColor = UIColor.secondaryLabel
         versionLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
     }
 
@@ -61,7 +60,6 @@ class LogoView: UIView {
             make.centerX.equalToSuperview()
             make.top.equalTo(titleLabel.snp.bottom)
         }
-        
         
         updateUI()
     }

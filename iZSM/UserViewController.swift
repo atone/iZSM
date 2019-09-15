@@ -158,17 +158,12 @@ class UserViewController: NTTableViewController {
             cell.textLabel?.text = nil
         }
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = AppTheme.shared.backgroundColor
-        let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
-        selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        cell.selectedBackgroundView = selectedBackgroundView
-        cell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
         return cell
     }
     
     func attrTextFromString(string: String, withNewFlag flag: Bool) -> NSAttributedString {
-        let normalColor = AppTheme.shared.textColor
-        let redColor = AppTheme.shared.redColor
+        let normalColor = UIColor.label
+        let redColor = UIColor.systemRed
         let result = NSMutableAttributedString(string: string, attributes: [NSAttributedString.Key.foregroundColor: normalColor])
         if flag {
             result.append(NSAttributedString(string: " [新]", attributes: [NSAttributedString.Key.foregroundColor: redColor]))
@@ -267,8 +262,8 @@ extension UserViewController: UserInfoViewControllerDelegate {
         }
         let imagePicker = TZImagePickerController(maxImagesCount: 1, delegate: self)!
         imagePicker.modalPresentationStyle = .formSheet
-        imagePicker.naviBgColor = AppTheme.shared.naviBackgroundColor
-        imagePicker.naviTitleColor = AppTheme.shared.naviContentColor
+        imagePicker.naviBgColor = navigationController?.navigationBar.barTintColor
+        imagePicker.naviTitleColor = navigationController?.navigationBar.tintColor
         imagePicker.allowPickingVideo = false
         imagePicker.allowPickingOriginalPhoto = false
         imagePicker.allowCrop = true

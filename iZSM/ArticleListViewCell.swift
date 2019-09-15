@@ -31,9 +31,9 @@ class ArticleListViewCell: UITableViewCell {
             if let thread = self.thread {
                 titleLabel.text = thread.subject + (hasAttachment ? " 📎" : "") + " (\(thread.count - 1))"
                 if isAlwaysTop {
-                    titleLabel.textColor = AppTheme.shared.redColor
+                    titleLabel.textColor = UIColor.systemRed
                 } else {
-                    titleLabel.textColor = AppTheme.shared.textColor
+                    titleLabel.textColor = UIColor.label
                 }
                 authorLabel.text = thread.authorID
                 timeLabel.text = thread.lastReplyTime.relativeDateString
@@ -49,10 +49,6 @@ class ArticleListViewCell: UITableViewCell {
     }
     
     func setupUI() {
-        let selectedBackgroundView = UIView(frame: contentView.bounds)
-        selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.selectedBackgroundView = selectedBackgroundView
-        
         titleLabel.numberOfLines = 0
         unreadLabel.text = "⦁"
         unreadLabel.font = UIFont.systemFont(ofSize: 12)
@@ -68,7 +64,6 @@ class ArticleListViewCell: UITableViewCell {
             make.trailing.equalTo(contentView.snp.trailingMargin)
             make.top.equalTo(contentView.snp.topMargin)
         }
-
         authorLabel.snp.makeConstraints { (make) in
             make.top.equalTo(titleLabel.snp.bottom).offset(5)
             make.leading.equalTo(titleLabel.snp.leading)
@@ -90,11 +85,9 @@ class ArticleListViewCell: UITableViewCell {
         timeLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         authorLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         
-        self.backgroundColor = AppTheme.shared.backgroundColor
-        self.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
-        authorLabel.textColor = AppTheme.shared.tintColor
-        unreadLabel.textColor = AppTheme.shared.tintColor
-        timeLabel.textColor = AppTheme.shared.lightTextColor
+        authorLabel.textColor = UIColor(named: "SmthColor")
+        unreadLabel.textColor = UIColor(named: "SmthColor")
+        timeLabel.textColor = UIColor.secondaryLabel
     }
     
     private var isAlwaysTop: Bool {
@@ -114,5 +107,4 @@ class ArticleListViewCell: UITableViewCell {
         }
         return false
     }
-
 }

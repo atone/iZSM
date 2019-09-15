@@ -49,7 +49,7 @@ class PageListViewController: UITableViewController {
         cell.textLabel?.text = "第 \(indexPath.row + 1) 页"
         if indexPath.row == currentPage {
             cell.detailTextLabel?.text = "✓"
-            cell.detailTextLabel?.textColor = AppTheme.shared.absoluteTintColor
+            cell.detailTextLabel?.textColor = UIColor(named: "SmthColor")
         } else {
             cell.detailTextLabel?.text = nil
         }

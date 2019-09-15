@@ -115,6 +115,13 @@ class ArticleContentViewController: NTTableViewController {
         return shouldHidesStatusBar
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection != previousTraitCollection {
+            tableView.reloadData()
+        }
+    }
+    
     private func restorePosition() {
         if let boardID = self.boardID, let articleID = self.articleID,
             let result = ArticleReadStatusUtil.getStatus(boardID: boardID, articleID: articleID)
@@ -321,8 +328,6 @@ class ArticleContentViewController: NTTableViewController {
             tableView.endFooterRefreshing()
         }
     }
-    
-
     
     // MARK: - TableView Data Source and Delegate
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -602,7 +607,6 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 userInfoVC.article = cell.article
                 userInfoVC.delegate = self
                 let presentationCtr = userInfoVC.presentationController as! UIPopoverPresentationController
-                presentationCtr.backgroundColor = AppTheme.shared.backgroundColor
                 presentationCtr.sourceView = sender
                 presentationCtr.delegate = self
                 self.present(userInfoVC, animated: true)
@@ -729,10 +733,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         let boundingSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
         // Calculate text layout
         let layout = YYTextLayout(containerSize: boundingSize, text: article.attributedBody)!
-        let darkLayout = YYTextLayout(containerSize: boundingSize, text: article.attributedDarkBody)!
         // Store in dictionary
         articleContentLayout["\(article.id)_\(Int(contentWidth))"] = layout
-        articleContentLayout["\(article.id)_\(Int(contentWidth))_dark"] = darkLayout
         let cacheKey = "\(article.id)_\(Int(contentWidth))" as NSString
         tableView.fd_keyedHeightCache.invalidateHeight(forKey: cacheKey)
     }
@@ -809,7 +811,6 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 alert.addTextField { textField in
                     textField.placeholder = "如垃圾广告、色情内容、人身攻击等"
                     textField.returnKeyType = .done
-                    textField.keyboardAppearance = self.setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
                 }
                 let okAction = UIAlertAction(title: "举报", style: .default) { [unowned alert, unowned self] _ in
                     if let textField = alert.textFields?.first {
@@ -850,7 +851,6 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             textField.keyboardType = UIKeyboardType.emailAddress
             textField.autocorrectionType = .no
             textField.returnKeyType = .send
-            textField.keyboardAppearance = self.setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
         }
         let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert, unowned self] _ in
             if let textField = alert.textFields?.first {

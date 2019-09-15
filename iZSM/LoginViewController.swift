@@ -15,7 +15,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     private let logoView = UIImageView(image: #imageLiteral(resourceName: "Logo"))
     private let usernameField = UITextField()
     private let passwordField = UITextField()
-    private let spinner = UIActivityIndicatorView(style: .gray)
+    private let spinner = UIActivityIndicatorView(style: .medium)
     private let loginButton = UIButton(type: .system)
     private let containerView = UIView()
     private let lineView = UIView()
@@ -27,10 +27,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func setupUI() {
         title = "欢迎使用最水木"
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor.systemBackground
+        logoView.clipsToBounds = true
         view.addSubview(logoView)
         
-        containerView.backgroundColor = UIColor.white
+        containerView.backgroundColor = UIColor.clear
         containerView.layer.borderColor = UIColor.lightGray.cgColor
         containerView.layer.borderWidth = 1
         containerView.layer.cornerRadius = 4
@@ -102,10 +103,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        logoView.layer.cornerRadius = logoView.frame.width / 4
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        isModalInPresentation = true
         
         usernameField.delegate = self
         passwordField.delegate = self

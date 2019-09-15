@@ -72,19 +72,15 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     }
     
     private func updateColor() {
-        view.backgroundColor = AppTheme.shared.backgroundColor
-        view.tintColor = AppTheme.shared.tintColor
-        titleLabel.textColor = AppTheme.shared.textColor
-        userButton.tintColor = AppTheme.shared.tintColor
-        timeLabel.textColor = AppTheme.shared.lightTextColor
+        view.backgroundColor = UIColor.systemBackground
+        view.tintColor = UIColor(named: "SmthColor")
+        titleLabel.textColor = UIColor.label
+        userButton.tintColor = UIColor(named: "SmthColor")
+        timeLabel.textColor = UIColor.secondaryLabel
         contentTextView.backgroundColor = UIColor.clear
         if let body = detailMail?.body {
             contentTextView.attributedText = attributedStringFromContent(body)
         }
-    }
-    
-    @objc private func nightModeChanged(_ notification: Notification) {
-        updateColor()
     }
     
     override func viewDidLoad() {
@@ -94,10 +90,6 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(preferredFontSizeChanged(_:)),
                                                name: UIContentSizeCategory.didChangeNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(nightModeChanged(_:)),
-                                               name: AppTheme.kAppThemeChangedNotification,
                                                object: nil)
         setupUI()
         fetchData()
@@ -140,7 +132,6 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
                 textField.autocorrectionType = .no
                 textField.keyboardType = .asciiCapable
                 textField.returnKeyType = .send
-                textField.keyboardAppearance = AppSetting.shared.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
             }
             let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert] _ in
                 if let textField = alert.textFields?.first {
@@ -226,10 +217,10 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         
         let normal: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
-                                                    .foregroundColor: AppTheme.shared.textColor]
+                                                    .foregroundColor: UIColor.label]
         let quoted: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
-                                                    .foregroundColor: AppTheme.shared.lightTextColor]
+                                                    .foregroundColor: UIColor.secondaryLabel]
         
         string.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(":") {

@@ -26,10 +26,6 @@ class ReminderListCell: UITableViewCell {
     }
     
     func setupUI() {
-        let selectedBackgroundView = UIView(frame: contentView.bounds)
-        selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.selectedBackgroundView = selectedBackgroundView
-        
         titleLabel.numberOfLines = 0
         unreadLabel.text = "⦁"
         unreadLabel.font = UIFont.systemFont(ofSize: 12)
@@ -66,12 +62,10 @@ class ReminderListCell: UITableViewCell {
         timeLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         authorLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         
-        titleLabel.textColor = AppTheme.shared.textColor
-        authorLabel.textColor = AppTheme.shared.tintColor
-        unreadLabel.textColor = AppTheme.shared.tintColor
-        timeLabel.textColor = AppTheme.shared.lightTextColor
-        self.backgroundColor = AppTheme.shared.backgroundColor
-        self.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
+        titleLabel.textColor = UIColor.label
+        authorLabel.textColor = UIColor(named: "SmthColor")
+        unreadLabel.textColor = UIColor(named: "SmthColor")
+        timeLabel.textColor = UIColor.secondaryLabel
     }
 
     var reference: SMReference? {

@@ -69,8 +69,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.backgroundColor = AppTheme.shared.backgroundColor
-        window?.tintColor = AppTheme.shared.absoluteTintColor
+        window?.backgroundColor = UIColor.systemBackground
+        window?.tintColor = UIColor(named: "SmthColor")
         mainController.viewControllers = rootViewControllers()
         
         window?.rootViewController = mainController
@@ -78,14 +78,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // set the SVProgressHUD setting
         SVProgressHUD.setMinimumDismissTimeInterval(2)
-        if setting.nightMode {
-            SVProgressHUD.setDefaultStyle(.dark)
-        } else {
-            SVProgressHUD.setDefaultStyle(.light)
-        }
-        
-        // register color change notification
-        NotificationCenter.default.addObserver(self, selector: #selector(nightModeChanged(_:)), name: AppTheme.kAppThemeChangedNotification, object: nil)
         
         // set the background fetch mode
         if setting.backgroundTaskEnabled {
@@ -275,20 +267,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             default:
                 break
             }
-        }
-    }
-    
-    @objc private func nightModeChanged(_ notification: Notification) {
-        changeColor()
-    }
-    
-    private func changeColor() {
-        window?.backgroundColor = AppTheme.shared.backgroundColor
-        window?.tintColor = AppTheme.shared.absoluteTintColor
-        if setting.nightMode {
-            SVProgressHUD.setDefaultStyle(.dark)
-        } else {
-            SVProgressHUD.setDefaultStyle(.light)
         }
     }
 }

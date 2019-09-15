@@ -13,11 +13,6 @@ class NTSafariViewController: SFSafariViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if #available(iOS 10.0, *) {
-            preferredControlTintColor = AppTheme.shared.absoluteTintColor
-        } else {
-            view.tintColor = AppTheme.shared.absoluteTintColor
-        }
+        preferredControlTintColor = UIColor(named: "SmthColor")
     }
 }

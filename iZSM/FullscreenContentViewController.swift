@@ -44,13 +44,13 @@ class FullscreenContentViewController: UIViewController {
     }
     
     private func updateContent() {
-        view.backgroundColor = AppTheme.shared.backgroundColor
+        view.backgroundColor = UIColor.systemBackground
         if let article = article {
             let fullArticle = NSMutableAttributedString()
             
             let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .title2)
             let titleFont = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
-            let titleColor = AppTheme.shared.textColor
+            let titleColor = UIColor.label
             let titleParagraphStyle = NSMutableParagraphStyle()
             titleParagraphStyle.alignment = .center
             titleParagraphStyle.lineBreakMode = .byWordWrapping
@@ -64,7 +64,7 @@ class FullscreenContentViewController: UIViewController {
             
             let subtitleText = "作者: \(article.authorID) 时间: \(article.timeString)"
             let subtitleFont = UIFont.preferredFont(forTextStyle: .subheadline)
-            let subtitleColor = AppTheme.shared.lightTextColor
+            let subtitleColor = UIColor.secondaryLabel
             let subtitleParagraphStyle = NSMutableParagraphStyle()
             subtitleParagraphStyle.alignment = .center
             subtitleParagraphStyle.lineBreakMode = .byWordWrapping
@@ -96,10 +96,10 @@ class FullscreenContentViewController: UIViewController {
         
         let normal: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
-                                                    .foregroundColor: AppTheme.shared.textColor]
+                                                    .foregroundColor: UIColor.label]
         let quoted: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
-                                                    .foregroundColor: AppTheme.shared.lightTextColor]
+                                                    .foregroundColor: UIColor.secondaryLabel]
         
         string.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(":") {
@@ -126,10 +126,6 @@ class FullscreenContentViewController: UIViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(refreshContent(_:)),
                                                name: UIContentSizeCategory.didChangeNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(refreshContent(_:)),
-                                               name: AppTheme.kAppThemeChangedNotification,
                                                object: nil)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapToDismiss(_:)))
         contentTextView.addGestureRecognizer(tapGesture)

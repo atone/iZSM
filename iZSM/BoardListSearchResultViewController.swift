@@ -80,15 +80,6 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
         searchController.isActive = true
     }
     
-    override func changeColor() {
-        super.changeColor()
-        if setting.nightMode {
-            searchController.searchBar.barStyle = .black
-        } else {
-            searchController.searchBar.barStyle = .default
-        }
-    }
-    
     override func clearContent() {
         boards.removeAll()
         tableView.reloadData()
@@ -119,13 +110,6 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
         }
     }
     
-    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        if let headerFooterView = view as? UITableViewHeaderFooterView {
-            headerFooterView.contentView.backgroundColor = AppTheme.shared.lightBackgroundColor
-            headerFooterView.textLabel?.textColor = AppTheme.shared.textColor
-        }
-    }
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return boards.count
     }
@@ -143,13 +127,8 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
         
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        cell.textLabel?.textColor = AppTheme.shared.textColor
-        cell.detailTextLabel?.textColor = AppTheme.shared.lightTextColor
-        cell.backgroundColor = AppTheme.shared.backgroundColor
-        let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
-        selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        cell.selectedBackgroundView = selectedBackgroundView
-        cell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
+        cell.textLabel?.textColor = UIColor.label
+        cell.detailTextLabel?.textColor = UIColor.secondaryLabel
         return cell
     }
     

@@ -187,16 +187,14 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     }
     
     private func updateColor() {
-        view.backgroundColor = AppTheme.shared.backgroundColor
-        titleHintLabel.textColor = AppTheme.shared.backgroundColor
-        titleHintLabel.backgroundColor = AppTheme.shared.lightTextColor
-        countLabel.textColor = AppTheme.shared.lightTextColor
-        titleTextField.textColor = AppTheme.shared.lightTextColor
+        view.backgroundColor = UIColor.systemBackground
+        titleHintLabel.textColor = UIColor.systemBackground
+        titleHintLabel.backgroundColor = UIColor.secondaryLabel
+        countLabel.textColor = UIColor.secondaryLabel
+        titleTextField.textColor = UIColor.secondaryLabel
         titleTextField.attributedPlaceholder = NSAttributedString(string: "添加标题",
-                                                                  attributes: [NSAttributedString.Key.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
-        titleTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
-        contentTextView.textColor = AppTheme.shared.textColor
-        contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
+                                                                  attributes: [NSAttributedString.Key.foregroundColor: UIColor.secondaryLabel.withAlphaComponent(0.6)])
+        contentTextView.textColor = UIColor.label
     }
     
     private func setupMode() {
@@ -236,10 +234,6 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
             contentTextView.becomeFirstResponder()
             contentTextView.selectedRange = NSMakeRange(0, 0)
         }
-    }
-    
-    @objc private func nightModeChanged(_ notification: Notification) {
-        updateColor()
     }
     
     @objc private func cancel(_ sender: UIBarButtonItem) {
@@ -331,10 +325,6 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
                                                selector: #selector(keyboardWillShow(_:)),
                                                name: UIResponder.keyboardWillChangeFrameNotification,
                                                object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(nightModeChanged(_:)),
-                                               name: AppTheme.kAppThemeChangedNotification,
-                                               object: nil)
         setupUI()
         setupMode()
     }
@@ -347,8 +337,8 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     @objc private func addPhoto(_ sender: UIBarButtonItem) {
         let imagePicker = TZImagePickerController(maxImagesCount: maxAttachNumber, delegate: self)!
         imagePicker.modalPresentationStyle = .formSheet
-        imagePicker.naviBgColor = AppTheme.shared.naviBackgroundColor
-        imagePicker.naviTitleColor = AppTheme.shared.naviContentColor
+        imagePicker.naviBgColor = navigationController?.navigationBar.barTintColor
+        imagePicker.naviTitleColor = navigationController?.navigationBar.tintColor
         imagePicker.selectedAssets = NSMutableArray(array: attachedAssets)
         imagePicker.allowPickingVideo = false
         imagePicker.allowPickingOriginalPhoto = false

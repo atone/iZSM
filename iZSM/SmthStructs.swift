@@ -44,7 +44,6 @@ struct SMArticle {
     var imageAtt: [ImageInfo]
     var timeString: String
     var attributedBody: NSAttributedString
-    var attributedDarkBody: NSAttributedString
     var quotedAttributedRange: [NSRange]
     
     var replySubject: String {
@@ -82,7 +81,6 @@ struct SMArticle {
         self.imageAtt = [ImageInfo]()
         self.timeString = time.shortDateString
         self.attributedBody = NSAttributedString()
-        self.attributedDarkBody = NSAttributedString()
         self.quotedAttributedRange = []
     }
 
@@ -95,12 +93,10 @@ struct SMArticle {
             imageAtt += extraInfos
             removeImageURLsFromBody()
         }
-        self.attributedBody = attributedBody(forDarkTheme: false)
-        self.attributedDarkBody = attributedBody(forDarkTheme: true)
+        self.attributedBody = makeAttributedBody()
     }
 
-    private mutating func attributedBody(forDarkTheme dark: Bool) -> NSAttributedString {
-        let theme = AppTheme.shared
+    private mutating func makeAttributedBody() -> NSAttributedString {
         let attributeText = NSMutableAttributedString()
         
         let textFont = UIFont.preferredFont(forTextStyle: .body)
@@ -117,13 +113,13 @@ struct SMArticle {
         
         let normal : [NSAttributedString.Key : Any] = [.font: textFont,
                                                       .paragraphStyle: paragraphStyle,
-                                                      .foregroundColor: dark ? theme.nightTextColor : theme.dayTextColor]
+                                                      .foregroundColor: UIColor.label]
         let quoted : [NSAttributedString.Key : Any] = [.font: textFont,
                                                       .paragraphStyle: quotedParagraphStyle,
-                                                      .foregroundColor: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
+                                                      .foregroundColor: UIColor.secondaryLabel]
         let quotedTitle : [NSAttributedString.Key : Any] = [.font: boldTextFont,
                                                            .paragraphStyle: quotedParagraphStyle,
-                                                           .foregroundColor: dark ? theme.nightLightTextColor : theme.dayLightTextColor]
+                                                           .foregroundColor: UIColor.secondaryLabel]
         
         let regex = try! NSRegularExpression(pattern: "在.*的(?:大作|邮件)中提到")
         
@@ -154,14 +150,13 @@ struct SMArticle {
         let types: NSTextCheckingResult.CheckingType = .link
         let detector = try! NSDataDetector(types: types.rawValue)
         let matches = detector.matches(in: attributeText.string, range: NSMakeRange(0, attributeText.length))
-        let backgroundColor: UIColor = dark ? theme.nightLightBackgroundColor : theme.dayLightBackgroundColor
-        let highlightColor: UIColor = dark ? theme.nightActiveUrlColor : theme.dayActiveUrlColor
-        let urlColor: UIColor = dark ? theme.nightUrlColor : theme.dayUrlColor
+        let backgroundColor: UIColor = UIColor.secondarySystemBackground
+        let urlColor: UIColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
         
         for match in matches {
             let border = YYTextBorder(fill: backgroundColor, cornerRadius: 3)
             let highlight = YYTextHighlight()
-            highlight.setColor(highlightColor)
+            highlight.setColor(urlColor)
             highlight.setBackgroundBorder(border)
             attributeText.setTextHighlight(highlight, range: match.range)
             attributeText.setColor(urlColor, range: match.range)

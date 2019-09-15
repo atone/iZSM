@@ -30,10 +30,6 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var showAvatarCell: UITableViewCell!
     @IBOutlet weak var noPicModeLabel: UILabel!
     @IBOutlet weak var noPicModeCell: UITableViewCell!
-    @IBOutlet weak var nightModelLabel: UILabel!
-    @IBOutlet weak var nightModelCell: UITableViewCell!
-    @IBOutlet weak var shakeToSwitchLabel: UILabel!
-    @IBOutlet weak var shakeToSwitchCell: UITableViewCell!
     @IBOutlet weak var backgroundTaskLabel: UILabel!
     @IBOutlet weak var backgroundTaskCell: UITableViewCell!
     @IBOutlet weak var clearCacheLabel: UILabel!
@@ -50,14 +46,11 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var addDeviceSignatureSwitch: UISwitch!
     @IBOutlet weak var showAvatarSwitch: UISwitch!
     @IBOutlet weak var noPicModeSwitch: UISwitch!
-    @IBOutlet weak var nightModeSwitch: UISwitch!
-    @IBOutlet weak var shakeToSwitchSwitch: UISwitch!
     @IBOutlet weak var backgroundTaskSwitch: UISwitch!
     @IBOutlet weak var displayModeSegmentedControl: UISegmentedControl!
 
 
     let setting = AppSetting.shared
-    let theme = AppTheme.shared
     
     var cache: YYImageCache?
 
@@ -135,15 +128,6 @@ class SettingsViewController: NTTableViewController {
             showAvatarSwitch.isEnabled = true
         }
     }
-    
-    @IBAction func nightModeSwitchChanged(_ sender: UISwitch) {
-        setting.nightMode = sender.isOn
-        NotificationCenter.default.post(name: AppTheme.kAppThemeChangedNotification, object: nil)
-    }
-    
-    @IBAction func shakeToSwitchChanged(_ sender: UISwitch) {
-        setting.shakeToSwitch = sender.isOn
-    }
 
     @IBAction func backgroundTaskChanged(_ sender: UISwitch) {
         setting.backgroundTaskEnabled = sender.isOn
@@ -157,33 +141,29 @@ class SettingsViewController: NTTableViewController {
     func updateUI() {
         // update label fonts
         hideTopLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        hideTopLabel.textColor = theme.textColor
+        hideTopLabel.textColor = UIColor.label
         showSignatureLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        showSignatureLabel.textColor = theme.textColor
+        showSignatureLabel.textColor = UIColor.label
         newReplyFirstLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        newReplyFirstLabel.textColor = theme.textColor
+        newReplyFirstLabel.textColor = UIColor.label
         rememberLastLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        rememberLastLabel.textColor = theme.textColor
+        rememberLastLabel.textColor = UIColor.label
         portraitLockLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        portraitLockLabel.textColor = theme.textColor
+        portraitLockLabel.textColor = UIColor.label
         addDeviceSignatureLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        addDeviceSignatureLabel.textColor = theme.textColor
+        addDeviceSignatureLabel.textColor = UIColor.label
         displayModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        displayModeLabel.textColor = theme.textColor
+        displayModeLabel.textColor = UIColor.label
         showAvatarLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        showAvatarLabel.textColor = theme.textColor
+        showAvatarLabel.textColor = UIColor.label
         noPicModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        noPicModeLabel.textColor = theme.textColor
-        nightModelLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        nightModelLabel.textColor = theme.textColor
-        shakeToSwitchLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        shakeToSwitchLabel.textColor = theme.textColor
+        noPicModeLabel.textColor = UIColor.label
         backgroundTaskLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        backgroundTaskLabel.textColor = theme.textColor
+        backgroundTaskLabel.textColor = UIColor.label
         clearCacheLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        clearCacheLabel.textColor = theme.textColor
+        clearCacheLabel.textColor = UIColor.label
         cacheSizeLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        cacheSizeLabel.textColor = theme.lightTextColor
+        cacheSizeLabel.textColor = UIColor.secondaryLabel
         var cacheSize = 0
         if let cache = cache {
             cacheSize = cache.diskCache.totalCost() / 1024 / 1024
@@ -191,10 +171,10 @@ class SettingsViewController: NTTableViewController {
         cacheSizeLabel.text = "\(cacheSize) MB"
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
         logoutLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
-        logoutLabel.textColor = theme.redColor
+        logoutLabel.textColor = UIColor.systemRed
 
         // update switch states
-        UISwitch.appearance().onTintColor = theme.tintColor
+        UISwitch.appearance().onTintColor = UIColor(named: "SmthColor")
         hideTopSwitch.isOn = setting.hideAlwaysOnTopThread
         showSignatureSwitch.isOn = setting.showSignature
         newReplyFirstSwitch.isOn = (setting.sortMode == .LaterPostFirst)
@@ -210,30 +190,7 @@ class SettingsViewController: NTTableViewController {
             showAvatarSwitch.isOn = setting.showAvatar
             showAvatarSwitch.isEnabled = true
         }
-        nightModeSwitch.isOn = setting.nightMode
-        shakeToSwitchSwitch.isOn = setting.shakeToSwitch
         backgroundTaskSwitch.isOn = setting.backgroundTaskEnabled
-        
-        hideTopCell.backgroundColor = theme.backgroundColor
-        showSignatureCell.backgroundColor = theme.backgroundColor
-        newReplyFirstCell.backgroundColor = theme.backgroundColor
-        rememberLastCell.backgroundColor = theme.backgroundColor
-        portraitLockCell.backgroundColor = theme.backgroundColor
-        addDeviceSignatureCell.backgroundColor = theme.backgroundColor
-        displayModeCell.backgroundColor = theme.backgroundColor
-        showAvatarCell.backgroundColor = theme.backgroundColor
-        noPicModeCell.backgroundColor = theme.backgroundColor
-        nightModelCell.backgroundColor = theme.backgroundColor
-        shakeToSwitchCell.backgroundColor = theme.backgroundColor
-        backgroundTaskCell.backgroundColor = theme.backgroundColor
-        clearCacheCell.backgroundColor = theme.backgroundColor
-        logoutCell.backgroundColor = theme.backgroundColor
-    }
-    
-    override func changeColor() {
-        super.changeColor()
-        updateUI()
-        tableView.reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -261,13 +218,6 @@ class SettingsViewController: NTTableViewController {
                     self.updateUI()
                 }
             }
-            
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        if let headerFooterView = view as? UITableViewHeaderFooterView {
-            headerFooterView.textLabel?.textColor = AppTheme.shared.lightTextColor
         }
     }
 }

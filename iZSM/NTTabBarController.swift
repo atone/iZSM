@@ -3,10 +3,11 @@
 //  iZSM
 //
 //  Created by Naitong Yu on 2017/7/13.
-//  Copyright © 2017年 Naitong Yu. All rights reserved.
+//  Copyright © 2017 Naitong Yu. All rights reserved.
 //
 
 import UIKit
+import SVProgressHUD
 
 class NTTabBarController: UITabBarController {
 
@@ -26,17 +27,21 @@ class NTTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        changeColor()
-        NotificationCenter.default.addObserver(self, selector: #selector(nightModeChanged(_:)), name: AppTheme.kAppThemeChangedNotification, object: nil)
+        updateSVProgressHUDStyle()
     }
     
-    @objc private func nightModeChanged(_ notification: Notification) {
-        changeColor()
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            updateSVProgressHUDStyle()
+        }
     }
     
-    private func changeColor() {
-        tabBar.tintColor = AppTheme.shared.tintColor
-        tabBar.barTintColor = AppTheme.shared.tabBackgroundColor
+    private func updateSVProgressHUDStyle() {
+        if traitCollection.userInterfaceStyle == .dark {
+            SVProgressHUD.setDefaultStyle(.dark)
+        } else {
+            SVProgressHUD.setDefaultStyle(.light)
+        }
     }
-
 }

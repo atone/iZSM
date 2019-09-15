@@ -99,7 +99,6 @@ class ArticleContentCell: UITableViewCell {
         replyLabel.text = "回复"
         replyLabel.textAlignment = .center
         replyLabel.layer.cornerRadius = 4
-        replyLabel.layer.borderWidth = 1
         replyLabel.clipsToBounds = true
         replyTapRecognizer.addTarget(self, action: #selector(reply(_:)))
         replyTapRecognizer.numberOfTapsRequired = 1
@@ -110,7 +109,6 @@ class ArticleContentCell: UITableViewCell {
         moreLabel.text = "•••"
         moreLabel.textAlignment = .center
         moreLabel.layer.cornerRadius = 4
-        moreLabel.layer.borderWidth = 1
         moreLabel.clipsToBounds = true
         moreTapRecognizer.addTarget(self, action: #selector(action(_:)))
         moreTapRecognizer.numberOfTapsRequired = 1
@@ -140,16 +138,15 @@ class ArticleContentCell: UITableViewCell {
     }
     
     func updateColor() {
-        self.backgroundColor = AppTheme.shared.backgroundColor
-        authorLabel.textColor = AppTheme.shared.textColor
-        floorAndTimeLabel.textColor = AppTheme.shared.lightTextColor
-        replyLabel.textColor = AppTheme.shared.tintColor
-        replyLabel.layer.borderColor = AppTheme.shared.tintColor.cgColor
-        moreLabel.textColor = AppTheme.shared.tintColor
-        moreLabel.layer.borderColor = AppTheme.shared.tintColor.cgColor
+        authorLabel.textColor = UIColor.label
+        floorAndTimeLabel.textColor = UIColor.secondaryLabel
+        replyLabel.textColor = UIColor(named: "SmthColor")
+        replyLabel.backgroundColor = UIColor.secondarySystemBackground
+        moreLabel.textColor = UIColor(named: "SmthColor")
+        moreLabel.backgroundColor = UIColor.secondarySystemBackground
         
         for quotBar in quotBars {
-            quotBar.backgroundColor = AppTheme.shared.lightTextColor.withAlphaComponent(0.5)
+            quotBar.backgroundColor = UIColor.secondaryLabel.withAlphaComponent(0.5)
         }
     }
     
@@ -219,18 +216,16 @@ class ArticleContentCell: UITableViewCell {
         
         // contentLabel's layout also needs to be updated
         if let article = article {
-            if let layout = controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))\(setting.nightMode ? "_dark" : "")"] {
-                if contentLabel.textLayout != layout {
-                    contentLabel.textLayout = layout
-                }
+            if let layout = controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))"] {
+                contentLabel.textLayout = layout
             } else {
                 dPrint("ERROR: This should not happen. Calculating layout and updating cache.")
                 // Calculate layout
-                let attributedText: NSAttributedString = setting.nightMode ? article.attributedDarkBody : article.attributedBody
+                let attributedText: NSAttributedString = article.attributedBody
                 let container = fixedLineHeightContainer(boundingSize: CGSize(width: boundingWidth, height: CGFloat.greatestFiniteMagnitude))
                 let layout = YYTextLayout(container: container, text: attributedText)!
                 // Store it in dictionary
-                controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))\(setting.nightMode ? "_dark" : "")"] = layout
+                controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))"] = layout
                 contentLabel.textLayout = layout
             }
             
@@ -299,10 +294,8 @@ class ArticleContentCell: UITableViewCell {
             // Calculate text layout
             let container = fixedLineHeightContainer(boundingSize: boundingSize)
             let layout = YYTextLayout(container: container, text: article.attributedBody)!
-            let darkLayout = YYTextLayout(container: container, text: article.attributedDarkBody)!
             // Store in dictionary
             controller.articleContentLayout["\(article.id)_\(Int(boundingSize.width))"] = layout
-            controller.articleContentLayout["\(article.id)_\(Int(boundingSize.width))_dark"] = darkLayout
             // Set size with calculated text layout
             textBoundingSize = layout.textBoundingSize
         }
@@ -372,7 +365,7 @@ class ArticleContentCell: UITableViewCell {
         if let ranges = ranges {
             for _ in ranges {
                 let quotBar = UIView()
-                quotBar.backgroundColor = AppTheme.shared.lightTextColor.withAlphaComponent(0.5)
+                quotBar.backgroundColor = UIColor.secondaryLabel.withAlphaComponent(0.5)
                 contentView.addSubview(quotBar)
                 quotBars.append(quotBar)
             }

@@ -106,19 +106,25 @@ class AboutViewController: NTTableViewController {
                                 self.silverSupport = prod
                                 self.priceFormatter.locale = prod.priceLocale
                                 if let priceString = self.priceFormatter.string(from: prod.price) {
-                                    self.silverSupportLabel.text = "我要赞赏 (\(priceString))"
+                                    DispatchQueue.main.async {
+                                        self.silverSupportLabel.text = "我要赞赏 (\(priceString))"
+                                    }
                                 }
                             } else if prod.productIdentifier == IAPHelper.GoldSupport {
                                 self.goldSupport = prod
                                 self.priceFormatter.locale = prod.priceLocale
                                 if let priceString = self.priceFormatter.string(from: prod.price) {
-                                    self.goldSupportLabel.text = "我要赞赏 (\(priceString))"
+                                    DispatchQueue.main.async {
+                                        self.goldSupportLabel.text = "我要赞赏 (\(priceString))"
+                                    }
                                 }
                             }
                         }
                     } else {
-                        self.silverSupportLabel.text = "我要赞赏 (请重试)"
-                        self.goldSupportLabel.text = "我要赞赏 (请重试)"
+                        DispatchQueue.main.async {
+                            self.silverSupportLabel.text = "我要赞赏 (请重试)"
+                            self.goldSupportLabel.text = "我要赞赏 (请重试)"
+                        }
                     }
                 }
             }
@@ -197,26 +203,15 @@ class AboutViewController: NTTableViewController {
 
     func updateUI() {
         silverSupportLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        silverSupportLabel.textColor = IAPHelper.canMakePayments() ? AppTheme.shared.textColor : AppTheme.shared.lightTextColor
+        silverSupportLabel.textColor = IAPHelper.canMakePayments() ? UIColor.label : UIColor.secondaryLabel
         goldSupportLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        goldSupportLabel.textColor = IAPHelper.canMakePayments() ? AppTheme.shared.textColor : AppTheme.shared.lightTextColor
+        goldSupportLabel.textColor = IAPHelper.canMakePayments() ? UIColor.label : UIColor.secondaryLabel
         rateLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        rateLabel.textColor = AppTheme.shared.textColor
+        rateLabel.textColor = UIColor.label
         mailLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        mailLabel.textColor = AppTheme.shared.textColor
+        mailLabel.textColor = UIColor.label
         websiteLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        websiteLabel.textColor = AppTheme.shared.textColor
-        
-        silverSupportCell.backgroundColor = AppTheme.shared.backgroundColor
-        silverSupportCell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
-        goldSupportCell.backgroundColor = AppTheme.shared.backgroundColor
-        goldSupportCell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
-        rateCell.backgroundColor = AppTheme.shared.backgroundColor
-        rateCell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
-        mailCell.backgroundColor = AppTheme.shared.backgroundColor
-        mailCell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
-        websiteCell.backgroundColor = AppTheme.shared.backgroundColor
-        websiteCell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
+        websiteLabel.textColor = UIColor.label
         logoView.updateUI()
     }
 

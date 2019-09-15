@@ -214,26 +214,19 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     }
     
     private func updateColor() {
-        view.backgroundColor = AppTheme.shared.backgroundColor
-        sendToLabel.textColor = AppTheme.shared.backgroundColor
-        sendToLabel.backgroundColor = AppTheme.shared.lightTextColor
-        titleHintLabel.textColor = AppTheme.shared.backgroundColor
-        titleHintLabel.backgroundColor = AppTheme.shared.lightTextColor
-        countLabel.textColor = AppTheme.shared.lightTextColor
-        receiverTextField.textColor = AppTheme.shared.lightTextColor
+        view.backgroundColor = UIColor.systemBackground
+        sendToLabel.textColor = UIColor.systemBackground
+        sendToLabel.backgroundColor = UIColor.secondaryLabel
+        titleHintLabel.textColor = UIColor.systemBackground
+        titleHintLabel.backgroundColor = UIColor.secondaryLabel
+        countLabel.textColor = UIColor.secondaryLabel
+        receiverTextField.textColor = UIColor.secondaryLabel
         receiverTextField.attributedPlaceholder = NSAttributedString(string: "收信人",
-                                                                     attributes: [NSAttributedString.Key.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
-        receiverTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
-        titleTextField.textColor = AppTheme.shared.lightTextColor
+                                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.secondaryLabel.withAlphaComponent(0.6)])
+        titleTextField.textColor = UIColor.secondaryLabel
         titleTextField.attributedPlaceholder = NSAttributedString(string: "添加标题",
-                                                                  attributes: [NSAttributedString.Key.foregroundColor: AppTheme.shared.lightTextColor.withAlphaComponent(0.6)])
-        titleTextField.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
-        contentTextView.textColor = AppTheme.shared.textColor
-        contentTextView.keyboardAppearance = setting.nightMode ? UIKeyboardAppearance.dark : UIKeyboardAppearance.default
-    }
-    
-    @objc private func nightModeChanged(_ notification: Notification) {
-        updateColor()
+                                                                  attributes: [NSAttributedString.Key.foregroundColor: UIColor.secondaryLabel.withAlphaComponent(0.6)])
+        contentTextView.textColor = UIColor.label
     }
     
     @objc private func cancel(_ sender: UIBarButtonItem) {
@@ -292,10 +285,6 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow(_:)),
                                                name: UIResponder.keyboardWillChangeFrameNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(nightModeChanged(_:)),
-                                               name: AppTheme.kAppThemeChangedNotification,
                                                object: nil)
         setupUI()
         setupMode()

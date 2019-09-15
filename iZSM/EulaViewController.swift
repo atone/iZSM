@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import WebKit
 
 class EulaViewController: UIViewController {
     
-    private let webView = UIWebView()
+    private let webView = WKWebView()
     private let setting = AppSetting.shared
     
     weak var delegate: EulaViewControllerDelegate?
@@ -18,6 +19,7 @@ class EulaViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        isModalInPresentation = true
     }
     
     func setupUI() {
@@ -29,7 +31,7 @@ class EulaViewController: UIViewController {
         let urlPath = Bundle.main.path(forResource: "EULA", ofType: "rtf")
         let url = URL(fileURLWithPath: urlPath!)
         let request = URLRequest(url: url)
-        webView.loadRequest(request)
+        webView.load(request)
         
         title = "水木社区管理规则"
         let agreeButton = UIBarButtonItem(title: "同意", style: .plain, target: self, action: #selector(agreeTapped(_:)))

@@ -39,8 +39,6 @@ class AppSetting {
         static let RememberLastKey = "SmthAPI.rememberLastKey"
         static let DisplayModeKey = "SmthAPI.displayModeKey"
         static let PortraitLockKey = "SmthAPI.portraitLockKey"
-        static let NightModeKey = "SmthAPI.nightModeKey"
-        static let ShakeToSwitchKey = "SmthAPI.shakeToSwitch"
         static let ShowAvatarKey = "SmthAPI.showAvatarKey"
         static let NoPicModeKey = "SmthAPI.noPicModeKey"
         static let AddDeviceSignatureKey = "SmthAPI.deviceSignatureKey"
@@ -66,8 +64,6 @@ class AppSetting {
             Static.RememberLastKey : true,
             Static.DisplayModeKey : DisplayMode.mobile.rawValue,
             Static.PortraitLockKey : true,
-            Static.NightModeKey : false,
-            Static.ShakeToSwitchKey : true,
             Static.ShowAvatarKey : true,
             Static.NoPicModeKey : false,
             Static.AddDeviceSignatureKey : true
@@ -231,20 +227,6 @@ class AppSetting {
         get { return defaults.bool(forKey: Static.PortraitLockKey) }
         set {
             defaults.set(newValue, forKey: Static.PortraitLockKey)
-        }
-    }
-    
-    var nightMode: Bool {
-        get { return defaults.bool(forKey: Static.NightModeKey) }
-        set {
-            defaults.set(newValue, forKey: Static.NightModeKey)
-        }
-    }
-    
-    var shakeToSwitch: Bool {
-        get { return defaults.bool(forKey: Static.ShakeToSwitchKey) }
-        set {
-            defaults.set(newValue, forKey: Static.ShakeToSwitchKey)
         }
     }
     

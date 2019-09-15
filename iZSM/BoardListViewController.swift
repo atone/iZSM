@@ -118,15 +118,6 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
     }
     
-    override func changeColor() {
-        super.changeColor()
-        if setting.nightMode {
-            searchController?.searchBar.barStyle = .black
-        } else {
-            searchController?.searchBar.barStyle = .default
-        }
-    }
-    
     override func clearContent() {
         boards.removeAll()
         tableView.reloadData()
@@ -224,13 +215,6 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         }
     }
     
-    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        if let headerFooterView = view as? UITableViewHeaderFooterView {
-            headerFooterView.contentView.backgroundColor = AppTheme.shared.lightBackgroundColor
-            headerFooterView.textLabel?.textColor = AppTheme.shared.textColor
-        }
-    }
-    
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -265,13 +249,8 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         }
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        cell.textLabel?.textColor = AppTheme.shared.textColor
-        cell.detailTextLabel?.textColor = AppTheme.shared.lightTextColor
-        cell.backgroundColor = AppTheme.shared.backgroundColor
-        let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
-        selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        cell.selectedBackgroundView = selectedBackgroundView
-        cell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
+        cell.textLabel?.textColor = UIColor.label
+        cell.detailTextLabel?.textColor = UIColor.secondaryLabel
         return cell
     }
     

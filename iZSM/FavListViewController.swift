@@ -173,13 +173,8 @@ class FavListViewController: BaseTableViewController {
         cell.detailTextLabel?.text = fav.boardID
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        cell.textLabel?.textColor = AppTheme.shared.textColor
-        cell.detailTextLabel?.textColor = AppTheme.shared.lightTextColor
-        cell.backgroundColor = AppTheme.shared.backgroundColor
-        let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
-        selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        cell.selectedBackgroundView = selectedBackgroundView
-        cell.selectedBackgroundView?.backgroundColor = AppTheme.shared.selectedBackgroundColor
+        cell.textLabel?.textColor = UIColor.label
+        cell.detailTextLabel?.textColor = UIColor.secondaryLabel
         return cell
     }
     

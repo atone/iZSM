@@ -20,10 +20,6 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
     
     var completionHandler: ((BoardListSearchResultViewController, SMBoard) -> Void)?
     
-    func didPresentSearchController(_ searchController: UISearchController) {
-        searchController.searchBar.becomeFirstResponder()
-    }
-    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         dismiss(animated: true)
     }
@@ -68,7 +64,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = "版面名称/关键字搜索"
-        tableView.tableHeaderView = searchController.searchBar
+        navigationItem.searchController = searchController
     }
     
     override func viewDidAppear(_ animated: Bool) {

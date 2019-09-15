@@ -29,9 +29,6 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         searchMode = false
         api.cancel()
         refreshHeaderEnabled = true
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            navigationItem.setRightBarButton(nil, animated: true)
-        }
         boards = originalBoards ?? [SMBoard]()
         originalBoards = nil
         tableView.reloadData()
@@ -41,17 +38,9 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         searchMode = true
         api.cancel()
         refreshHeaderEnabled = false
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel(_:)))
-            navigationItem.setRightBarButton(cancelButton, animated: true)
-        }
         originalBoards = boards
         boards = [SMBoard]()
         tableView.reloadData()
-    }
-    
-    @objc private func cancel(_ sender: UIBarButtonItem) {
-        searchController?.isActive = false
     }
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -91,14 +80,12 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             // search related
             definesPresentationContext = true
             searchController = UISearchController(searchResultsController: nil)
-            searchController?.searchBar.overrideUserInterfaceStyle = traitCollection.userInterfaceStyle
             searchController?.obscuresBackgroundDuringPresentation = false
             searchController?.delegate = self
             searchController?.searchResultsUpdater = self
             searchController?.hidesNavigationBarDuringPresentation = false
             searchController?.searchBar.placeholder = "版面名称/关键字搜索"
-            navigationItem.titleView = searchController?.searchBar
-            searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
+            navigationItem.searchController = searchController
         }
         
         // add long press gesture recognizer
@@ -109,17 +96,6 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         }
         
         super.viewDidLoad()
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
-            searchController?.searchBar.overrideUserInterfaceStyle = traitCollection.userInterfaceStyle
-        }
-    }
-    
-    deinit {
-        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
     }
     
     override func clearContent() {

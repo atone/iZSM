@@ -51,7 +51,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     private var searchController: UISearchController?
     
     func didDismissSearchController(_ searchController: UISearchController) {
-        tableView.tableHeaderView = nil
         searchMode = false
         api.cancel()
         refreshHeaderEnabled = true
@@ -68,11 +67,17 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         originalThreadLoaded = threadLoaded
         threads = [[SMThread]]()
         threadLoaded = 0
-        searchController.searchBar.becomeFirstResponder()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         search(forText: searchString, scope: selectedIndex)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        if selectedScope != selectedIndex {
+            selectedIndex = selectedScope
+            search(forText: searchBar.text, scope: selectedScope)
+        }
     }
     
     func search(forText searchString: String?, scope: Int) {
@@ -119,54 +124,22 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         searchController?.obscuresBackgroundDuringPresentation = false
         searchController?.delegate = self
         searchController?.searchBar.delegate = self
-        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
+        searchController?.searchBar.scopeButtonTitles = ["标题关键字", "同作者"]
+        searchController?.searchBar.selectedScopeButtonIndex = 0
+        navigationItem.searchController = searchController
         
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search,
-                                           target: self,
-                                           action: #selector(pressSearchButton(_:)))
         let composeButton = UIBarButtonItem(barButtonSystemItem: .add,
                                             target: self,
                                             action: #selector(composeArticle(_:)))
-        navigationItem.rightBarButtonItems = [composeButton, searchButton]
+        navigationItem.rightBarButtonItem =  composeButton
         
         if traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: view)
         }
     }
     
-    deinit {
-        searchController?.loadViewIfNeeded()  // workaround for bug: [Warning] Attempting to load the view of a view controller while it is deallocating is not allowed and may result in undefined behavior <UISearchController: 0x10cd30220>
-    }
-    
     override func clearContent() {
         threads.removeAll()
-    }
-    
-    @objc private func pressSearchButton(_ sender: UIBarButtonItem) {
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let titleAction = UIAlertAction(title: "标题关键字", style: .default) { [unowned self] _ in
-            self.selectedIndex = 0
-            self.prepareForSearch()
-        }
-        actionSheet.addAction(titleAction)
-        let userAction = UIAlertAction(title: "同作者", style: .default) { [unowned self] _ in
-            self.selectedIndex = 1
-            self.prepareForSearch()
-        }
-        actionSheet.addAction(userAction)
-        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
-        actionSheet.popoverPresentationController?.barButtonItem = sender
-        present(actionSheet, animated: true)
-    }
-    
-    private func prepareForSearch() {
-        if tableView.tableHeaderView == nil {
-            if let searchController = searchController {
-                tableView.tableHeaderView = searchController.searchBar
-                tableView.scrollRectToVisible(searchController.searchBar.frame, animated: false)
-                searchController.isActive = true
-            }
-        }
     }
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {

@@ -62,11 +62,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
         super.viewDidLoad()
         refreshHeaderEnabled = false
         definesPresentationContext = true
-        if #available(iOS 9.1, *) {
-            searchController.obscuresBackgroundDuringPresentation = false
-        } else {
-            searchController.dimsBackgroundDuringPresentation = false
-        }
+        searchController.obscuresBackgroundDuringPresentation = false
         searchController.delegate = self
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self

@@ -33,11 +33,7 @@ class FullscreenContentViewController: UIViewController {
         contentTextView.snp.makeConstraints { (make) in
             make.leading.equalTo(view)
             make.trailing.equalTo(view)
-            if #available(iOS 11.0, *) {
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin)
-            } else {
-                make.top.equalTo(view).offset(20)
-            }
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin)
             make.bottom.equalTo(view)
         }
         updateContent()

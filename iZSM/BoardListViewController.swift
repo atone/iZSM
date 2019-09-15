@@ -91,11 +91,8 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             // search related
             definesPresentationContext = true
             searchController = UISearchController(searchResultsController: nil)
-            if #available(iOS 9.1, *) {
-                searchController?.obscuresBackgroundDuringPresentation = false
-            } else {
-                searchController?.dimsBackgroundDuringPresentation = false
-            }
+            searchController?.searchBar.overrideUserInterfaceStyle = traitCollection.userInterfaceStyle
+            searchController?.obscuresBackgroundDuringPresentation = false
             searchController?.delegate = self
             searchController?.searchResultsUpdater = self
             searchController?.hidesNavigationBarDuringPresentation = false
@@ -112,6 +109,13 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         }
         
         super.viewDidLoad()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            searchController?.searchBar.overrideUserInterfaceStyle = traitCollection.userInterfaceStyle
+        }
     }
     
     deinit {

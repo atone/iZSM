@@ -41,7 +41,7 @@ class SMUserInfoUtil {
                 let realm = try! Realm()
                 let userInfo = userInfoFrom(user: user, updateTime: Date())
                 try! realm.write {
-                    realm.add(userInfo, update: true)
+                    realm.add(userInfo, update: .modified)
                 }
                 dPrint("update user info for \(user.id) success!")
                 DispatchQueue.main.async {
@@ -79,7 +79,7 @@ class SMUserInfoUtil {
                         if let user = user {
                             let userInfo = userInfoFrom(user: user, updateTime: Date())
                             try! realm.write {
-                                realm.add(userInfo, update: true)
+                                realm.add(userInfo, update: .modified)
                             }
                             let userID = userInfo.id
                             if let username = AppSetting.shared.username {

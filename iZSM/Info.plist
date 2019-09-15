@@ -22,6 +22,10 @@
 	<string>462</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>cn.yunaitong.zsmth.refresh</string>
+	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>org-appextension-feature-password-management</string>

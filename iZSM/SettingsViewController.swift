@@ -131,11 +131,6 @@ class SettingsViewController: NTTableViewController {
 
     @IBAction func backgroundTaskChanged(_ sender: UISwitch) {
         setting.backgroundTaskEnabled = sender.isOn
-        if sender.isOn {
-            UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
-        } else {
-            UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
-        }
     }
 
     func updateUI() {

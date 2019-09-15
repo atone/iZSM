@@ -688,7 +688,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             let webViewController = NTSafariViewController(url: url)
             present(webViewController, animated: true)
         } else {
-            UIApplication.shared.openURL(url)
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
     

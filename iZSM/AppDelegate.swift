@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import UserNotifications
+import BackgroundTasks
 import RealmSwift
 import SVProgressHUD
 
@@ -80,21 +82,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         SVProgressHUD.setMinimumDismissTimeInterval(2)
         
         // set the background fetch mode
-        if setting.backgroundTaskEnabled {
-            application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
-        } else {
-            application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: "cn.yunaitong.zsmth.refresh", using: nil) { task in
+            self.handleAppRefresh(task: task as! BGAppRefreshTask)
         }
         
         // register notification
-        let type: UIUserNotificationType = [.alert, .badge, .sound]
-        let mySettings = UIUserNotificationSettings(types: type, categories: nil)
-        application.registerUserNotificationSettings(mySettings)
-        
-        // if open from notification, then handle it
-        if let localNotif = launchOptions?[UIApplication.LaunchOptionsKey.localNotification] as? UILocalNotification {
-            dPrint("launch from didFinishLaunchingWithOptions:")
-            navigateToNewMessagePage(notification: localNotif)
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .badge, .sound]) {
+            (granted, error) in
+            if !granted {
+                dPrint("Notification authorization not granted!")
+            }
         }
         
         // realm migration
@@ -155,6 +153,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        if setting.backgroundTaskEnabled {
+            scheduleAppRefresh()
+        }
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -175,12 +176,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
-        dPrint("launch from didReceive notification")
-        navigateToNewMessagePage(notification: notification)
+    func scheduleAppRefresh() {
+        let request = BGAppRefreshTaskRequest(identifier: "cn.yunaitong.zsmth.refresh")
+        request.earliestBeginDate = Date(timeIntervalSinceNow: 15 * 60) // 15 minites later
+        do {
+            try BGTaskScheduler.shared.submit(request)
+            dPrint("Successfully submitted refresh task")
+        } catch {
+            dPrint("Could not schedule app refresh: \(error)")
+        }
     }
-
-    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    
+    func handleAppRefresh(task: BGAppRefreshTask) {
+        task.expirationHandler = {
+            dPrint("Background refresh task expired")
+        }
+        
+        if !setting.backgroundTaskEnabled {
+            dPrint("User disabled background refresh task")
+            task.setTaskCompleted(success: true)
+            return
+        }
+        
+        scheduleAppRefresh()
+        
         if self.setting.accessToken != nil {
             DispatchQueue.global().async {
                 let newMailCount = self.api.getMailStatus()?.newCount ?? 0
@@ -188,36 +207,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let newReferCount = self.api.getReferCount(mode: .AtMe)?.newCount ?? 0
                 dPrint("mail \(self.setting.mailCount) -> \(newMailCount), reply \(self.setting.replyCount) -> \(newReplyCount), refer \(self.setting.referCount) -> \(newReferCount)")
                 let allCount = newMailCount + newReplyCount + newReferCount
-                application.applicationIconBadgeNumber = allCount
+                UIApplication.shared.applicationIconBadgeNumber = allCount
                 
                 if newMailCount > self.setting.mailCount {
                     dPrint("new mail")
-                    let mailNotif = UILocalNotification()
-                    mailNotif.alertAction = nil
-                    mailNotif.alertBody = "您收到 \(newMailCount) 封新邮件"
-                    mailNotif.alertTitle = "新邮件"
-                    mailNotif.soundName = UILocalNotificationDefaultSoundName
-                    application.presentLocalNotificationNow(mailNotif)
+                    let content = UNMutableNotificationContent()
+                    content.title = "新邮件"
+                    content.body = "您收到 \(newMailCount) 封新邮件"
+                    content.sound = UNNotificationSound.default
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0, repeats: false)
+                    let request = UNNotificationRequest(identifier: "zsmth.newmail", content: content, trigger: trigger)
+                    let center = UNUserNotificationCenter.current()
+                    center.add(request) { error in
+                        if error != nil {
+                            print("Unable to send new mail notification")
+                        }
+                    }
                 }
                 
                 if newReplyCount > self.setting.replyCount {
                     dPrint("new reply")
-                    let replyNotif = UILocalNotification()
-                    replyNotif.alertAction = nil
-                    replyNotif.alertBody = "您收到 \(newReplyCount) 条新回复"
-                    replyNotif.alertTitle = "新回复"
-                    replyNotif.soundName = UILocalNotificationDefaultSoundName
-                    application.presentLocalNotificationNow(replyNotif)
+                    let content = UNMutableNotificationContent()
+                    content.title = "新回复"
+                    content.body = "您收到 \(newReplyCount) 条新回复"
+                    content.sound = UNNotificationSound.default
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0, repeats: false)
+                    let request = UNNotificationRequest(identifier: "zsmth.newreply", content: content, trigger: trigger)
+                    let center = UNUserNotificationCenter.current()
+                    center.add(request) { error in
+                        if error != nil {
+                            print("Unable to send new reply notification")
+                        }
+                    }
                 }
                 
                 if newReferCount > self.setting.referCount {
                     dPrint("new refer")
-                    let atNotif = UILocalNotification()
-                    atNotif.alertAction = nil
-                    atNotif.alertBody = "有人 @ 了您"
-                    atNotif.alertTitle = "新提醒"
-                    atNotif.soundName = UILocalNotificationDefaultSoundName
-                    application.presentLocalNotificationNow(atNotif)
+                    let content = UNMutableNotificationContent()
+                    content.title = "新提醒"
+                    content.body = "有人 @ 了您"
+                    content.sound = UNNotificationSound.default
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0, repeats: false)
+                    let request = UNNotificationRequest(identifier: "zsmth.newrefer", content: content, trigger: trigger)
+                    let center = UNUserNotificationCenter.current()
+                    center.add(request) { error in
+                        if error != nil {
+                            print("Unable to send new refer notification")
+                        }
+                    }
                 }
                 
                 let hasNewData = (newMailCount > self.setting.mailCount)
@@ -229,57 +266,69 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.setting.referCount = newReferCount
                 
                 if hasNewData {
-                    completionHandler(.newData)
                     dPrint("new data")
                 } else {
-                    completionHandler(.noData)
                     dPrint("no new data")
                 }
+                task.setTaskCompleted(success: true)
             }
         } else {
-            completionHandler(.noData)
+            task.setTaskCompleted(success: false)
             dPrint("no data, user not login or token expired")
         }
     }
 
-    func navigateToNewMessagePage(notification: UILocalNotification) {
+    func navigateToNewMessagePage(with identifier: String) {
         mainController.selectedIndex = 3
         if let nvc = mainController.selectedViewController as? NTNavigationController,
             let userVC = nvc.viewControllers.first as? UserViewController,
             let showVC = nvc.viewControllers.last {
             userVC.tabBarItem.badgeValue = "\(UIApplication.shared.applicationIconBadgeNumber)"
-            switch notification.alertTitle! {
-            case "新邮件":
+            switch identifier {
+            case "zsmth.newmail":
                 let mbvc = MailBoxViewController()
                 mbvc.inbox = true
                 mbvc.userVC = userVC
                 showVC.show(mbvc, sender: showVC)
-            case "新回复":
+            case "zsmth.newreply":
                 let rvc = ReminderViewController()
                 rvc.replyMe = true
                 rvc.userVC = userVC
                 showVC.show(rvc, sender: showVC)
-            case "新提醒":
+            case "zsmth.newrefer":
                 let rvc = ReminderViewController()
                 rvc.replyMe = false
                 rvc.userVC = userVC
                 showVC.show(rvc, sender: showVC)
             default:
+                dPrint("Invalid identifier: \(identifier)")
                 break
             }
         }
     }
 }
 
+extension AppDelegate : UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let identifier = response.notification.request.identifier
+        navigateToNewMessagePage(with: identifier)
+        completionHandler()
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let identifier = notification.request.identifier
+        navigateToNewMessagePage(with: identifier)
+        completionHandler(UNNotificationPresentationOptions(rawValue: 0))
+    }
+}
+
 func networkActivityIndicatorStart(withHUD: Bool = false) {
-    UIApplication.shared.isNetworkActivityIndicatorVisible = true
     if withHUD {
         SVProgressHUD.show()
     }
 }
 
 func networkActivityIndicatorStop(withHUD: Bool = false) {
-    UIApplication.shared.isNetworkActivityIndicatorVisible = false
     if withHUD {
         SVProgressHUD.dismiss()
     }

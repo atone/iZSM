@@ -151,7 +151,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
             let webViewController = NTSafariViewController(url: URL)
             present(webViewController, animated: true)
         } else {
-            UIApplication.shared.openURL(URL)
+            UIApplication.shared.open(URL, options:[:], completionHandler: nil)
         }
         return false
     }

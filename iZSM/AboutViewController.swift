@@ -171,7 +171,7 @@ class AboutViewController: NTTableViewController {
             }
         case IndexPath(row: 0, section: 1):
             let urlAddress = "https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=979484184&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"
-            UIApplication.shared.openURL(URL(string: urlAddress)!)
+            UIApplication.shared.open(URL(string: urlAddress)!, options: [:], completionHandler: nil)
         case IndexPath(row: 1, section: 1):
             let cevc = ComposeEmailController()
             var versionText: String = ""

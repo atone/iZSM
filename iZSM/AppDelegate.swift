@@ -14,25 +14,6 @@ import SVProgressHUD
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
-    enum ShortcutIdentifier: String {
-        case hot
-        case board
-        case favorite
-        case user
-        
-        init?(fullType: String) {
-            guard let last = fullType.components(separatedBy: ".").last else { return nil }
-            self.init(rawValue: last)
-        }
-        
-        var type: String {
-            return Bundle.main.bundleIdentifier! + ".\(self.rawValue)"
-        }
-    }
-    
-    static let kApplicationShortcutUserInfoIcon = "ApplicationShortcutUserInfoIconKey"
-
     var window: UIWindow?
     
     /// Saved shortcut item used as a result of an app launch, used later when app is activated.
@@ -44,22 +25,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func handle(shortcutItem: UIApplicationShortcutItem) -> Bool {
         var handled = false
-        // Verify that the provided `shortcutItem`'s `type` is one handled by the application.
-        guard ShortcutIdentifier(fullType: shortcutItem.type) != nil else { return false }
-        
-        guard let shortCutType = shortcutItem.type as String? else { return false }
-        
-        switch shortCutType {
-        case ShortcutIdentifier.hot.type:
+        guard let shortType = shortcutItem.type.components(separatedBy: ".").last else { return false }
+        switch shortType {
+        case "hot":
             mainController.selectedIndex = 0
             handled = true
-        case ShortcutIdentifier.board.type:
+        case "board":
             mainController.selectedIndex = 1
             handled = true
-        case ShortcutIdentifier.favorite.type:
+        case "favorite":
             mainController.selectedIndex = 2
             handled = true
-        case ShortcutIdentifier.user.type:
+        case "user":
             mainController.selectedIndex = 3
             handled = true
         default:

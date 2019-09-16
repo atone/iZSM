@@ -165,17 +165,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func handleAppRefresh(task: BGAppRefreshTask) {
+        // schedule another refresh task
+        scheduleAppRefresh()
+        
         task.expirationHandler = {
             dPrint("Background refresh task expired")
         }
-        
-        if !setting.backgroundTaskEnabled {
-            dPrint("User disabled background refresh task")
-            task.setTaskCompleted(success: true)
-            return
-        }
-        
-        scheduleAppRefresh()
         
         if self.setting.accessToken != nil {
             DispatchQueue.global().async {

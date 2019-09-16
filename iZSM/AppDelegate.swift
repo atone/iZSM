@@ -19,9 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// Saved shortcut item used as a result of an app launch, used later when app is activated.
     var launchedShortcutItem: UIApplicationShortcutItem?
     
+    var messageTimer: Timer?
+    
     let mainController = NTTabBarController()
     let setting = AppSetting.shared
-    let api = SmthAPI()
     
     func handle(shortcutItem: UIApplicationShortcutItem) -> Bool {
         var handled = false
@@ -65,6 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // register notification
         let center = UNUserNotificationCenter.current()
+        center.delegate = self
         center.requestAuthorization(options: [.alert, .badge, .sound]) {
             (granted, error) in
             if !granted {
@@ -133,6 +135,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if setting.backgroundTaskEnabled {
             scheduleAppRefresh()
         }
+        
+        if let messageTimer = self.messageTimer {
+            messageTimer.invalidate()
+            self.messageTimer = nil
+            dPrint("Message timer invalidated")
+        }
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -141,16 +149,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        guard let shortcut = launchedShortcutItem else { return }
+        if let shortcut = launchedShortcutItem {
+            let handled = handle(shortcutItem: shortcut)
+            dPrint("handle shortcut item in didBecomeActive: \(handled)")
+            launchedShortcutItem = nil
+        }
         
-        let handled = handle(shortcutItem: shortcut)
-        dPrint("handle shortcut item in didBecomeActive: \(handled)")
-        
-        launchedShortcutItem = nil
-    }
-
-    func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        if messageTimer == nil {
+            messageTimer = Timer.scheduledTimer(withTimeInterval: 15 * 60, repeats: true) { timer in
+                MessageCenter.shared.checkUnreadMessage()
+            }
+            dPrint("Schedule timer to check unread message every 15 minutes")
+        }
     }
     
     func scheduleAppRefresh() {
@@ -172,81 +182,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             dPrint("Background refresh task expired")
         }
         
-        if self.setting.accessToken != nil {
-            DispatchQueue.global().async {
-                let newMailCount = self.api.getMailStatus()?.newCount ?? 0
-                let newReplyCount = self.api.getReferCount(mode: .ReplyToMe)?.newCount ?? 0
-                let newReferCount = self.api.getReferCount(mode: .AtMe)?.newCount ?? 0
-                dPrint("mail \(self.setting.mailCount) -> \(newMailCount), reply \(self.setting.replyCount) -> \(newReplyCount), refer \(self.setting.referCount) -> \(newReferCount)")
-                let allCount = newMailCount + newReplyCount + newReferCount
-                UIApplication.shared.applicationIconBadgeNumber = allCount
-                
-                if newMailCount > self.setting.mailCount {
-                    dPrint("new mail")
-                    let content = UNMutableNotificationContent()
-                    content.title = "新邮件"
-                    content.body = "您收到 \(newMailCount) 封新邮件"
-                    content.sound = UNNotificationSound.default
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0, repeats: false)
-                    let request = UNNotificationRequest(identifier: "zsmth.newmail", content: content, trigger: trigger)
-                    let center = UNUserNotificationCenter.current()
-                    center.add(request) { error in
-                        if error != nil {
-                            print("Unable to send new mail notification")
-                        }
-                    }
-                }
-                
-                if newReplyCount > self.setting.replyCount {
-                    dPrint("new reply")
-                    let content = UNMutableNotificationContent()
-                    content.title = "新回复"
-                    content.body = "您收到 \(newReplyCount) 条新回复"
-                    content.sound = UNNotificationSound.default
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0, repeats: false)
-                    let request = UNNotificationRequest(identifier: "zsmth.newreply", content: content, trigger: trigger)
-                    let center = UNUserNotificationCenter.current()
-                    center.add(request) { error in
-                        if error != nil {
-                            print("Unable to send new reply notification")
-                        }
-                    }
-                }
-                
-                if newReferCount > self.setting.referCount {
-                    dPrint("new refer")
-                    let content = UNMutableNotificationContent()
-                    content.title = "新提醒"
-                    content.body = "有人 @ 了您"
-                    content.sound = UNNotificationSound.default
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0, repeats: false)
-                    let request = UNNotificationRequest(identifier: "zsmth.newrefer", content: content, trigger: trigger)
-                    let center = UNUserNotificationCenter.current()
-                    center.add(request) { error in
-                        if error != nil {
-                            print("Unable to send new refer notification")
-                        }
-                    }
-                }
-                
-                let hasNewData = (newMailCount > self.setting.mailCount)
-                    || (newReplyCount > self.setting.replyCount)
-                    || (newReferCount > self.setting.referCount)
-                
-                self.setting.mailCount = newMailCount
-                self.setting.replyCount = newReplyCount
-                self.setting.referCount = newReferCount
-                
-                if hasNewData {
-                    dPrint("new data")
-                } else {
-                    dPrint("no new data")
-                }
-                task.setTaskCompleted(success: true)
-            }
-        } else {
-            task.setTaskCompleted(success: false)
-            dPrint("no data, user not login or token expired")
+        MessageCenter.shared.checkUnreadMessage(postUserNotification: true) { success in
+            task.setTaskCompleted(success: success)
         }
     }
 
@@ -283,12 +220,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate : UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let identifier = response.notification.request.identifier
+        dPrint("Handle \(identifier) notification in userNotificationCenter(_:didReceive:withCompletionHandler:)")
         navigateToNewMessagePage(with: identifier)
         completionHandler()
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let identifier = notification.request.identifier
+        dPrint("Handle \(identifier) notification in userNotificationCenter(_:willPresent:withNotificationHandler:)")
         navigateToNewMessagePage(with: identifier)
         completionHandler(UNNotificationPresentationOptions(rawValue: 0))
     }

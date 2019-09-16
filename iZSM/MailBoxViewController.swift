@@ -159,8 +159,7 @@ class MailBoxViewController: BaseTableViewController {
                 }
             }
             if allRead {
-                let unreadCount = UIApplication.shared.applicationIconBadgeNumber
-                userVC?.updateBadge(unreadCount: unreadCount - 1)
+                MessageCenter.shared.checkUnreadMessage()
             }
         }
         show(mcvc, sender: self)

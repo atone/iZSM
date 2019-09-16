@@ -18,8 +18,9 @@ class UserViewController: NTTableViewController {
     
     private let userInfoVC = UserInfoViewController()
     
-    let api = SmthAPI()
-    let setting = AppSetting.shared
+    private let api = SmthAPI()
+    private let setting = AppSetting.shared
+    private let msgCenter = MessageCenter.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +35,11 @@ class UserViewController: NTTableViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(preferredFontSizeChanged(_:)),
                                                name: UIContentSizeCategory.didChangeNotification,
+                                               object: nil)
+        // add observer to update unread message count
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateUnreadMessage(_:)),
+                                               name: MessageCenter.kUpdateMessageCountNotification,
                                                object: nil)
     }
     
@@ -70,7 +76,7 @@ class UserViewController: NTTableViewController {
             tableView.deselectRow(at: selectedRow, animated: true)
         }
         updateUserInfoView()
-        checkUnreadMessage()
+        msgCenter.checkUnreadMessage()
     }
     
     // remove observer of notification
@@ -146,9 +152,9 @@ class UserViewController: NTTableViewController {
         // Configure the cell...
         switch indexPath {
         case let index where index.section == 0:
-            let flag = (index.row == 0 && setting.mailCount > 0)
-            || (index.row == 2 && setting.replyCount > 0)
-            || (index.row == 3 && setting.referCount > 0)
+            let flag = (index.row == 0 && msgCenter.mailCount > 0)
+            || (index.row == 2 && msgCenter.replyCount > 0)
+            || (index.row == 3 && msgCenter.referCount > 0)
             cell.textLabel?.attributedText = attrTextFromString(string: labelContents[index.row], withNewFlag: flag)
         case IndexPath(row: 0, section: 1):
             cell.textLabel?.attributedText = attrTextFromString(string: "设置", withNewFlag: false)
@@ -172,31 +178,20 @@ class UserViewController: NTTableViewController {
         return result
     }
     
-    func checkUnreadMessage() {
-        networkActivityIndicatorStart()
-        DispatchQueue.global().async {
-            let newMailCount = self.api.getMailStatus()?.newCount ?? 0
-            let newReplyCount = self.api.getReferCount(mode: .ReplyToMe)?.newCount ?? 0
-            let newReferCount = self.api.getReferCount(mode: .AtMe)?.newCount ?? 0
-            DispatchQueue.main.async {
-                networkActivityIndicatorStop()
-                let allCount = newMailCount + newReplyCount + newReferCount
-                self.updateBadge(unreadCount: allCount)
-                self.setting.mailCount = newMailCount
-                self.setting.replyCount = newReplyCount
-                self.setting.referCount = newReferCount
-                self.tableView.reloadData()
-            }
-        }
+    @objc private func updateUnreadMessage(_ notification: Notification) {
+        updateUI()
     }
     
-    func updateBadge(unreadCount: Int) {
-        let count = max(unreadCount, 0)
-        UIApplication.shared.applicationIconBadgeNumber = count
-        if count > 0 {
-            self.tabBarItem.badgeValue = "\(count)"
-        } else {
-            self.tabBarItem.badgeValue = nil
+    func updateUI() {
+        let count = msgCenter.mailCount + msgCenter.replyCount + msgCenter.referCount
+        DispatchQueue.main.async {
+            UIApplication.shared.applicationIconBadgeNumber = count
+            if count > 0 {
+                self.tabBarItem.badgeValue = "\(count)"
+            } else {
+                self.tabBarItem.badgeValue = nil
+            }
+            self.tableView.reloadData()
         }
     }
     
@@ -215,9 +210,6 @@ class UserViewController: NTTableViewController {
                 self.setting.username = nil
                 self.setting.password = nil
                 self.setting.accessToken = nil
-                self.setting.mailCount = 0
-                self.setting.replyCount = 0
-                self.setting.referCount = 0
                 self.userInfoVC.updateUserInfoView(with: nil)
                 NotificationCenter.default.post(name: BaseTableViewController.kNeedRefreshNotification,
                                                 object: nil)

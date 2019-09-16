@@ -83,6 +83,7 @@
 		9CB573C11DE5B46D00CD6F3E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */; };
 		9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */; };
 		9CB573C41DE5B61800CD6F3E /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C31DE5B61800CD6F3E /* LogoView.swift */; };
+		9CC1FD5B232F5C02006CFE33 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */; };
 		9CD4ABFD1F34362400C3D9BF /* em1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB331F34362400C3D9BF /* em1.gif */; };
 		9CD4ABFE1F34362400C3D9BF /* em10.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB341F34362400C3D9BF /* em10.gif */; };
 		9CD4ABFF1F34362400C3D9BF /* em11.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB351F34362400C3D9BF /* em11.gif */; };
@@ -391,6 +392,7 @@
 		9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		9CB573C31DE5B61800CD6F3E /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
+		9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
 		9CD4AB331F34362400C3D9BF /* em1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = em1.gif; sourceTree = "<group>"; };
 		9CD4AB341F34362400C3D9BF /* em10.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = em10.gif; sourceTree = "<group>"; };
 		9CD4AB351F34362400C3D9BF /* em11.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = em11.gif; sourceTree = "<group>"; };
@@ -699,6 +701,7 @@
 				9C1A3BEF1DE2EA9900CF4A43 /* AppSetting.swift */,
 				9C1A3BF01DE2EA9900CF4A43 /* SmthAPI.swift */,
 				9C1A3BF11DE2EA9900CF4A43 /* SmthStructs.swift */,
+				9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */,
 			);
 			name = SmthAPI;
 			sourceTree = "<group>";
@@ -1438,6 +1441,7 @@
 				9C25D5A71DE55452005CB55C /* ComposeEmailController.swift in Sources */,
 				9C69EFC41F2F15690018B336 /* TZPhotoPickerController.m in Sources */,
 				9C69EFBC1F2F15690018B336 /* TZAssetCell.m in Sources */,
+				9CC1FD5B232F5C02006CFE33 /* MessageCenter.swift in Sources */,
 				9C25D5AB1DE56BAE005CB55C /* MailBoxViewController.swift in Sources */,
 				9C1A3BEB1DE2E6EB00CF4A43 /* client_signature.m in Sources */,
 				9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */,

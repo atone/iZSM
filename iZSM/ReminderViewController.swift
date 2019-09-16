@@ -132,8 +132,7 @@ class ReminderViewController: BaseTableViewController {
             readReference.flag = 1
             references[indexPath.section][indexPath.row] = readReference
             
-            let unreadCount = UIApplication.shared.applicationIconBadgeNumber
-            userVC?.updateBadge(unreadCount: unreadCount - 1)
+            MessageCenter.shared.checkUnreadMessage()
         }
         show(rcvc, sender: self)
     }

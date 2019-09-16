@@ -365,7 +365,7 @@ class ArticleContentCell: UITableViewCell {
         if let ranges = ranges {
             for _ in ranges {
                 let quotBar = UIView()
-                quotBar.backgroundColor = UIColor.secondaryLabel.withAlphaComponent(0.5)
+                quotBar.backgroundColor = UIColor.tertiaryLabel
                 contentView.addSubview(quotBar)
                 quotBars.append(quotBar)
             }

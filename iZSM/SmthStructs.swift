@@ -147,19 +147,50 @@ struct SMArticle {
             }
         }
         
+        let backgroundColor: UIColor = UIColor.secondarySystemBackground
+        let urlColor: UIColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
+        let border = YYTextBorder(fill: backgroundColor, cornerRadius: 3)
+        let highlight = YYTextHighlight()
+        highlight.setColor(urlColor)
+        highlight.setBackgroundBorder(border)
+        
+        let re = try! NSRegularExpression(pattern: "\\[url=(.*)\\](.*)\\[/url\\]", options: .caseInsensitive)
+        let reMatches = re.matches(in: attributeText.string, range: NSMakeRange(0, attributeText.length))
+        for match in reMatches.reversed() {
+            let url = attributeText.attributedSubstring(from: match.range(at: 1))
+            let content = attributeText.attributedSubstring(from: match.range(at: 2))
+            let contentLength = content.string.trimmingCharacters(in: .whitespacesAndNewlines).count
+            let mutable = NSMutableAttributedString(attributedString: contentLength > 0 ? content : url)
+            mutable.setLink(url.string, range: NSMakeRange(0, mutable.length))
+            mutable.setTextHighlight(highlight, range: NSMakeRange(0, mutable.length))
+            mutable.setColor(urlColor, range: NSMakeRange(0, mutable.length))
+            attributeText.replaceCharacters(in: match.range, with: mutable)
+        }
+        
         let types: NSTextCheckingResult.CheckingType = .link
         let detector = try! NSDataDetector(types: types.rawValue)
         let matches = detector.matches(in: attributeText.string, range: NSMakeRange(0, attributeText.length))
-        let backgroundColor: UIColor = UIColor.secondarySystemBackground
-        let urlColor: UIColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
-        
         for match in matches {
-            let border = YYTextBorder(fill: backgroundColor, cornerRadius: 3)
-            let highlight = YYTextHighlight()
-            highlight.setColor(urlColor)
-            highlight.setBackgroundBorder(border)
             attributeText.setTextHighlight(highlight, range: match.range)
             attributeText.setColor(urlColor, range: match.range)
+            attributeText.setLink(attributeText.attributedSubstring(from: match.range).string, range: match.range)
+        }
+        
+        for attachment in self.attachments {
+            let fileName = attachment.name.lowercased()
+            if !(fileName.hasSuffix(".jpg") || fileName.hasSuffix(".jpeg")
+                || fileName.hasSuffix(".gif") || fileName.hasSuffix(".bmp")
+                || fileName.hasSuffix(".png")) {
+                let urlString = "http://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
+                let mutable = NSMutableAttributedString(string: fileName)
+                mutable.setLink(urlString, range: NSMakeRange(0, mutable.length))
+                mutable.setTextHighlight(highlight, range: NSMakeRange(0, mutable.length))
+                mutable.setColor(urlColor, range: NSMakeRange(0, mutable.length))
+                mutable.setFont(textFont, range: NSMakeRange(0, mutable.length))
+                mutable.setParagraphStyle(paragraphStyle, range: NSMakeRange(0, mutable.length))
+                attributeText.appendString("\n")
+                attributeText.append(mutable)
+            }
         }
         
         let emoticonParser = SMEmoticon.shared.parser

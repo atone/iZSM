@@ -120,7 +120,8 @@ class ArticleContentCell: UITableViewCell {
         contentLabel.fadeOnAsynchronouslyDisplay = false
         contentLabel.ignoreCommonProperties = true
         contentLabel.highlightTapAction = { [unowned self] (containerView, text, range, rect) in
-            var urlString = text.attributedSubstring(from: range).string
+            let attributes = text.attributedSubstring(from: range).attributes!
+            var urlString = attributes[NSAttributedString.Key.link.rawValue] as! String
             if !urlString.contains(":") {
                 if urlString.contains("@") {
                     urlString = "mailto:\(urlString.lowercased())"

@@ -413,6 +413,7 @@ extension ComposeArticleController: AttachImageViewDelegate {
             attachedAssets.remove(at: idx)
         }
         attachStack.removeArrangedSubview(attachImageView)
+        attachImageView.removeFromSuperview()
     }
     
     func imageTapped(in attachImageView: AttachImageView) {

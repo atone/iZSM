@@ -262,24 +262,24 @@ extension Date {
         }
         timeInterval = -timeInterval
         if timeInterval < 60 {
-            return "\(timeInterval) 秒前"
+            return "\(timeInterval)秒前"
         }
         timeInterval /= 60
         if timeInterval < 60 {
-            return "\(timeInterval) 分钟前"
+            return "\(timeInterval)分钟前"
         }
         let minute = timeInterval % 60
         timeInterval /= 60
         if timeInterval < 24 {
             if minute > 0 {
-                return "\(timeInterval) 小时 \(minute) 分钟前"
+                return "\(timeInterval)小时\(minute)分钟前"
             } else {
-                return "\(timeInterval) 小时前"
+                return "\(timeInterval)小时前"
             }
         }
         timeInterval /= 24
         if timeInterval < 365 {
-            return "\(timeInterval) 天前"
+            return "\(timeInterval)天前"
         }
         return shortDateString
     }

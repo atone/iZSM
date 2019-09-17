@@ -23,10 +23,10 @@ class UserInfoViewController: UIViewController {
     private let avatarWidth: CGFloat = 100
     private let margin: CGFloat = 15
     private let margin2: CGFloat = 5
-    private let width: CGFloat = 280
+    private let width: CGFloat = 300
     private let height: CGFloat = 320
     
-    private let backgroundImageView = YYAnimatedImageView()
+    private var backgroundImageView: YYAnimatedImageView?
     private let backgroundView = UIView()
     
     private let avatarImageView = YYAnimatedImageView()
@@ -63,52 +63,48 @@ class UserInfoViewController: UIViewController {
     }
     
     private func setupUI() {
+        overrideUserInterfaceStyle = .dark
         preferredContentSize = CGSize(width: width, height: height)
-        view.backgroundColor = UIColor.black
-        backgroundImageView.frame = view.bounds
-        backgroundImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(backgroundImageView)
+        view.backgroundColor = UIColor.systemBackground
         if !UIAccessibility.isReduceTransparencyEnabled {
-            let blurEffect = UIBlurEffect(style: .dark)
+            backgroundImageView = YYAnimatedImageView()
+            backgroundImageView!.frame = view.bounds
+            backgroundImageView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            view.addSubview(backgroundImageView!)
+            let blurEffect = UIBlurEffect(style: .systemMaterial)
             let blurEffectView = UIVisualEffectView(effect: blurEffect)
             blurEffectView.frame = view.bounds
             blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             view.addSubview(blurEffectView)
-            backgroundView.backgroundColor = UIColor.clear
-        } else {
-            backgroundView.backgroundColor = UIColor.black
         }
         view.addSubview(toolbar)
         toolbar.snp.makeConstraints { (make) in
-            make.leading.trailing.bottom.equalTo(view)
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }
-        toolbar.items = [padding]
+        let lastLogin = UIBarButtonItem(customView: lastLoginLabel)
+        lastLoginLabel.textColor = UIColor.secondaryLabel
+        lastLoginLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
+        toolbar.items = [lastLogin, padding]
         if delegate?.shouldEnableSearch() ?? true {
             toolbar.items?.append(search)
         }
         if delegate?.shouldEnableCompose() ?? true {
             toolbar.items?.append(compose)
         }
-        view.addSubview(lastLoginLabel)
-        lastLoginLabel.textColor = UIColor.gray
-        lastLoginLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
-        lastLoginLabel.snp.makeConstraints { (make) in
-            make.top.bottom.equalTo(toolbar)
-            make.leading.equalTo(toolbar).offset(margin)
-        }
+
         view.addSubview(backgroundView)
         backgroundView.snp.makeConstraints { (make) in
-            make.leading.trailing.top.equalTo(view)
+            make.leading.trailing.top.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalTo(toolbar.snp.top)
         }
         backgroundView.addSubview(idLabel)
-        idLabel.textColor = UIColor.white
+        idLabel.textColor = UIColor.label
         idLabel.font = UIFont.boldSystemFont(ofSize: idLabelFontSize)
         idLabel.textAlignment = .center
         idLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         idLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         idLabel.snp.makeConstraints { (make) in
-            make.center.equalTo(view)
+            make.center.equalTo(backgroundView)
         }
         backgroundView.addSubview(avatarImageView)
         avatarImageView.clipsToBounds = true
@@ -119,8 +115,8 @@ class UserInfoViewController: UIViewController {
         avatarImageView.snp.makeConstraints { (make) in
             make.width.equalTo(avatarWidth)
             make.height.equalTo(avatarWidth)
-            make.centerX.equalTo(view)
-            make.centerY.equalTo(view).dividedBy(2)
+            make.centerX.equalTo(backgroundView)
+            make.centerY.equalTo(backgroundView).dividedBy(2)
         }
         backgroundView.addSubview(infoStackView)
         infoStackView.axis = .horizontal
@@ -135,19 +131,19 @@ class UserInfoViewController: UIViewController {
             make.trailing.equalTo(backgroundView).offset(-margin)
             make.bottom.equalTo(backgroundView).offset(-margin)
         }
-        titleLabel.textColor = UIColor.lightGray
+        titleLabel.textColor = UIColor.secondaryLabel
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
-        levelLabel.textColor = UIColor.lightGray
+        levelLabel.textColor = UIColor.secondaryLabel
         levelLabel.textAlignment = .center
         levelLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
-        postsLabel.textColor = UIColor.lightGray
+        postsLabel.textColor = UIColor.secondaryLabel
         postsLabel.textAlignment = .center
         postsLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
-        scoreLabel.textColor = UIColor.lightGray
+        scoreLabel.textColor = UIColor.secondaryLabel
         scoreLabel.textAlignment = .center
         scoreLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
-        loginLabel.textColor = UIColor.lightGray
+        loginLabel.textColor = UIColor.secondaryLabel
         loginLabel.textAlignment = .center
         loginLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
         backgroundView.addSubview(titleContentLabel)
@@ -155,21 +151,21 @@ class UserInfoViewController: UIViewController {
         backgroundView.addSubview(postsContentLabel)
         backgroundView.addSubview(scoreContentLabel)
         backgroundView.addSubview(loginContentLabel)
-        titleContentLabel.textColor = UIColor.white
+        titleContentLabel.textColor = UIColor.label
         titleContentLabel.textAlignment = .center
         titleContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
-        levelContentLabel.textColor = UIColor.white
+        levelContentLabel.textColor = UIColor.label
         levelContentLabel.textAlignment = .center
         levelContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
-        postsContentLabel.textColor = UIColor.white
+        postsContentLabel.textColor = UIColor.label
         postsContentLabel.textAlignment = .center
         postsContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
         postsContentLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         postsContentLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        scoreContentLabel.textColor = UIColor.white
+        scoreContentLabel.textColor = UIColor.label
         scoreContentLabel.textAlignment = .center
         scoreContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
-        loginContentLabel.textColor = UIColor.white
+        loginContentLabel.textColor = UIColor.label
         loginContentLabel.textAlignment = .center
         loginContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
         titleContentLabel.snp.makeConstraints { (make) in
@@ -194,7 +190,7 @@ class UserInfoViewController: UIViewController {
         }
         
         backgroundView.addSubview(nickLabel)
-        nickLabel.textColor = UIColor.white
+        nickLabel.textColor = UIColor.label
         nickLabel.font = UIFont.systemFont(ofSize: nickLabelFontSize)
         nickLabel.textAlignment = .center
         nickLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
@@ -217,7 +213,7 @@ class UserInfoViewController: UIViewController {
             avatarImageView.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
                                          placeholder: defaultImage,
                                          options: [.progressiveBlur, .setImageWithFadeAnimation])
-            backgroundImageView.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
+            backgroundImageView?.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
                                              placeholder: defaultImage,
                                              options: [.progressiveBlur, .setImageWithFadeAnimation])
             titleLabel.text = "身份"

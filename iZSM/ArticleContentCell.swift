@@ -177,8 +177,8 @@ class ArticleContentCell: UITableViewCell {
         
         super.layoutSubviews()
         
-        let leftMargin = controller.view.layoutMargins.left
-        let rightMargin = controller.view.layoutMargins.right
+        let leftMargin = contentView.layoutMargins.left
+        let rightMargin = contentView.layoutMargins.right
         let size = contentView.bounds.size
         
         let authorFontSize: CGFloat = size.width < 350 ? 16 : 18

@@ -34,7 +34,7 @@ class LogoView: UIView {
 
     func setup() {
         contentMode = .redraw
-        imageView.image = #imageLiteral(resourceName: "Logo")
+        imageView.image = UIImage(named: "Logo")
         imageView.clipsToBounds = true
         addSubview(imageView)
         titleLabel.text = "最水木 (iZSM)"

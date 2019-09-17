@@ -12,7 +12,7 @@ import OnePasswordExtension
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
-    private let logoView = UIImageView(image: #imageLiteral(resourceName: "Logo"))
+    private let logoView = UIImageView(image: UIImage(named: "Logo"))
     private let usernameField = UITextField()
     private let passwordField = UITextField()
     private let spinner = UIActivityIndicatorView(style: .medium)
@@ -119,7 +119,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         passwordField.text = setting.password
         
         if OnePasswordExtension.shared().isAppExtensionAvailable() {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "onepassword"), style: .plain, target: self, action: #selector(findLoginFrom1Password(_:)))
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "onepassword"), style: .plain, target: self, action: #selector(findLoginFrom1Password(_:)))
         }
     }
     

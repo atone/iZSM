@@ -209,7 +209,7 @@ class UserInfoViewController: UIViewController {
             let genderSymbol = user.gender == 0 ? "♂" : "♀"
             idLabel.text = "\(user.id) \(genderSymbol)"
             nickLabel.text = user.nick
-            let defaultImage = user.gender == 0 ? #imageLiteral(resourceName: "face_default_m") : #imageLiteral(resourceName: "face_default_f")
+            let defaultImage = user.gender == 0 ? UIImage(named: "face_default_m") : UIImage(named: "face_default_f")
             avatarImageView.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
                                          placeholder: defaultImage,
                                          options: [.progressiveBlur, .setImageWithFadeAnimation])
@@ -228,8 +228,8 @@ class UserInfoViewController: UIViewController {
             loginContentLabel.text = "\(user.loginCount)"
             lastLoginLabel.text = "上次登录: \(user.lastLoginTime.shortDateString)"
         } else {
-            avatarImageView.image = #imageLiteral(resourceName: "face_default")
-            backgroundImageView.image = #imageLiteral(resourceName: "face_default")
+            avatarImageView.image = UIImage(named: "face_default")
+            backgroundImageView?.image = UIImage(named: "face_default")
             setContent(hidden: true)
         }
     }

@@ -325,7 +325,7 @@ class ArticleContentCell: UITableViewCell {
     private func drawImagesWithInfo(imageAtt: [ImageInfo]?) {
         if setting.showAvatar, let article = self.article {
             avatarImageView.setImageWith(SMUser.faceURL(for: article.authorID, withFaceURL: nil),
-                                         placeholder: #imageLiteral(resourceName: "face_default"),
+                                         placeholder: UIImage(named: "face_default"),
                                          options: [.progressiveBlur, .setImageWithFadeAnimation])
         }
         
@@ -342,7 +342,7 @@ class ArticleContentCell: UITableViewCell {
                 imageView.contentMode = .scaleAspectFill
                 imageView.clipsToBounds = true
                 imageView.setImageWith(imageInfo.thumbnailURL,
-                                       placeholder: #imageLiteral(resourceName: "loading"),
+                                       placeholder: UIImage(named: "loading"),
                                        options: [.progressiveBlur, .showNetworkActivity, .setImageWithFadeAnimation])
                 imageView.isUserInteractionEnabled = true
                 let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapOnImage(_:)))

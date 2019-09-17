@@ -14,6 +14,7 @@ class LogoView: UIView {
     let imageView = UIImageView()
     let titleLabel = UILabel()
     let versionLabel = UILabel()
+    let imageWidth: CGFloat = 120
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,6 +52,7 @@ class LogoView: UIView {
         imageView.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
+            make.width.height.equalTo(imageWidth)
         }
         titleLabel.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C07EC982330D85300EAEC8E /* NTLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C07EC972330D85300EAEC8E /* NTLabel.swift */; };
 		9C086E011F1E3BE300023788 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C086E001F1E3BE300023788 /* StoreKit.framework */; };
 		9C103B8C2322975100A89B07 /* TZImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C103B8A2322975100A89B07 /* TZImageRequestOperation.m */; };
 		9C118CF01F3BFFC700D6F405 /* NTSafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C118CEF1F3BFFC700D6F405 /* NTSafariViewController.swift */; };
@@ -289,6 +290,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9C07EC972330D85300EAEC8E /* NTLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTLabel.swift; sourceTree = "<group>"; };
 		9C086E001F1E3BE300023788 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9C103B8A2322975100A89B07 /* TZImageRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZImageRequestOperation.m; sourceTree = "<group>"; };
 		9C103B8B2322975100A89B07 /* TZImageRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZImageRequestOperation.h; sourceTree = "<group>"; };
@@ -1086,6 +1088,7 @@
 		9CEBD0771F24F9B200E4E29E /* Misc */ = {
 			isa = PBXGroup;
 			children = (
+				9C07EC972330D85300EAEC8E /* NTLabel.swift */,
 				9CB573C31DE5B61800CD6F3E /* LogoView.swift */,
 				9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */,
 				9CD9E6441F1DB10E00713853 /* IAPHelper.swift */,
@@ -1459,6 +1462,7 @@
 				9CA3B1A61DE33E8D00E9B121 /* HotTableViewCell.swift in Sources */,
 				9C889FBD1DE4222000C33A8D /* ArticleContentViewController.swift in Sources */,
 				9CB5708F1F2B87E000974BC0 /* AttachImageView.swift in Sources */,
+				9C07EC982330D85300EAEC8E /* NTLabel.swift in Sources */,
 				9C5E17121F0F77F100AA5368 /* PageListViewController.swift in Sources */,
 				9C118CF01F3BFFC700D6F405 /* NTSafariViewController.swift in Sources */,
 				9CB573B91DE58E8800CD6F3E /* MailContentViewController.swift in Sources */,

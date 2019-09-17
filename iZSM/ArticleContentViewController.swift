@@ -608,6 +608,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 userInfoVC.delegate = self
                 let presentationCtr = userInfoVC.presentationController as! UIPopoverPresentationController
                 presentationCtr.sourceView = sender
+                presentationCtr.sourceRect = sender!.bounds
                 presentationCtr.delegate = self
                 self.present(userInfoVC, animated: true)
             }

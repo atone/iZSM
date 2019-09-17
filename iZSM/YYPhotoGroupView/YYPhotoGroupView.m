@@ -770,6 +770,7 @@
     [[UIActivityViewController alloc] initWithActivityItems:@[imageItem] applicationActivities:nil];
     if ([activityViewController respondsToSelector:@selector(popoverPresentationController)]) {
         activityViewController.popoverPresentationController.sourceView = self;
+        activityViewController.popoverPresentationController.sourceRect = self.bounds;
     }
 
     UIViewController *toVC = self.toContainerView.viewController;

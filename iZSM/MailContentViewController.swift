@@ -106,6 +106,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
                 userInfoVC.delegate = self
                 let presentationCtr = userInfoVC.presentationController as! UIPopoverPresentationController
                 presentationCtr.sourceView = button
+                presentationCtr.sourceRect = button.bounds
                 presentationCtr.delegate = self
                 self.present(userInfoVC, animated: true)
             }

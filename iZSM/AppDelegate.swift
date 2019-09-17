@@ -253,40 +253,35 @@ func dPrint(_ item: @autoclosure () -> Any) {
 var globalShouldRotate = true
 
 private let formatter = DateFormatter()
+
 extension Date {
-    
     var relativeDateString: String {
-        
         var timeInterval = Int(self.timeIntervalSinceNow)
         if timeInterval >= 0 {
             return "现在"
         }
-        
         timeInterval = -timeInterval
         if timeInterval < 60 {
-            return "\(timeInterval)秒前"
+            return "\(timeInterval) 秒前"
         }
         timeInterval /= 60
         if timeInterval < 60 {
-            return "\(timeInterval)分钟前"
+            return "\(timeInterval) 分钟前"
         }
+        let minute = timeInterval % 60
         timeInterval /= 60
         if timeInterval < 24 {
-            return "\(timeInterval)小时前"
+            if minute > 0 {
+                return "\(timeInterval) 小时 \(minute) 分钟前"
+            } else {
+                return "\(timeInterval) 小时前"
+            }
         }
         timeInterval /= 24
-        if timeInterval < 7 {
-            return "\(timeInterval)天前"
-        }
-        if timeInterval < 30 {
-            return "\(timeInterval/7)周前"
-        }
         if timeInterval < 365 {
-            return "\(timeInterval/30)个月前"
+            return "\(timeInterval) 天前"
         }
-        timeInterval /= 365
-        return "\(timeInterval)年前"
-        
+        return shortDateString
     }
     
     var shortDateString: String {

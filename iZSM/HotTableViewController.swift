@@ -30,7 +30,7 @@ class HotTableViewController: BaseTableViewController {
     
     private let kArticleCellIdentifier = "Article"
     
-    var content: [SMHotSection] = [SMHotSection]() {
+    var content = [SMHotSection]() {
         didSet { tableView?.reloadData() }
     }
     

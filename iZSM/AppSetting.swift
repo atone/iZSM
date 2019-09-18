@@ -42,6 +42,8 @@ class AppSetting {
         static let ShowAvatarKey = "SmthAPI.showAvatarKey"
         static let NoPicModeKey = "SmthAPI.noPicModeKey"
         static let AddDeviceSignatureKey = "SmthAPI.deviceSignatureKey"
+        static let CustomHotSectionKey = "SmthAPI.customHotSectionKey"
+        static let AvailableHotSectionsKey = "SmthAPI.availableHotSectionsKey"
     }
 
     private let defaults = UserDefaults.standard
@@ -66,7 +68,9 @@ class AppSetting {
             Static.PortraitLockKey : true,
             Static.ShowAvatarKey : true,
             Static.NoPicModeKey : false,
-            Static.AddDeviceSignatureKey : true
+            Static.AddDeviceSignatureKey : true,
+            Static.CustomHotSectionKey : false,
+            Static.AvailableHotSectionsKey : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         ]
         defaults.register(defaults: initialSettings)
     }
@@ -241,6 +245,20 @@ class AppSetting {
         get { return defaults.bool(forKey: Static.NoPicModeKey) }
         set {
             defaults.set(newValue, forKey: Static.NoPicModeKey)
+        }
+    }
+    
+    var customHotSection: Bool {
+        get { return defaults.bool(forKey: Static.CustomHotSectionKey) }
+        set {
+            defaults.set(newValue, forKey: Static.CustomHotSectionKey)
+        }
+    }
+    
+    var availableHotSections: [Int] {
+        get { return defaults.array(forKey: Static.AvailableHotSectionsKey) as? [Int] ?? [] }
+        set {
+            defaults.set(newValue, forKey: Static.AvailableHotSectionsKey)
         }
     }
 }

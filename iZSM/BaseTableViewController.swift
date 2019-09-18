@@ -72,7 +72,7 @@ class BaseTableViewController: NTTableViewController {
             let eulaViewController = EulaViewController()
             eulaViewController.delegate = self
             let navigationController = NTNavigationController(rootViewController: eulaViewController)
-            navigationController.modalPresentationStyle = .formSheet
+            navigationController.isModalInPresentation = true
             present(navigationController, animated: true)
         } else if let accessToken = setting.accessToken { // fetch data directly
             api.accessToken = accessToken
@@ -106,7 +106,8 @@ class BaseTableViewController: NTTableViewController {
             let loginViewController = LoginViewController()
             loginViewController.delegate = self
             let navigationController = NTNavigationController(rootViewController: loginViewController)
-            present(navigationController, animated: false)
+            navigationController.isModalInPresentation = true
+            present(navigationController, animated: true)
         }
     }
     

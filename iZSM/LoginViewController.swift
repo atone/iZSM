@@ -100,6 +100,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         logoView.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().dividedBy(2)
+            make.width.height.equalTo(120)
         }
     }
     
@@ -111,7 +112,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        isModalInPresentation = true
         
         usernameField.delegate = self
         passwordField.delegate = self

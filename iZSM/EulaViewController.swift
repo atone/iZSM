@@ -19,7 +19,6 @@ class EulaViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        isModalInPresentation = true
     }
     
     func setupUI() {

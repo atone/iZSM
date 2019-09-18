@@ -14,7 +14,7 @@ class AppSetting {
 
     static let shared = AppSetting()
     
-    let device = Device()
+    let device = Device.current
     
     enum DisplayMode: Int {
         case nForum = 0, www2, mobile

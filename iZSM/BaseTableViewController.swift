@@ -59,7 +59,10 @@ class BaseTableViewController: NTTableViewController {
         
         // set extra cells hidden
         tableView.tableFooterView = UIView()
-        refreshHeader = tableView.setUpHeaderRefresh { [unowned self] in
+        let header = DefaultRefreshHeader.header()
+        header.imageRenderingWithTintColor = true
+        header.tintColor = UIColor.secondaryLabel
+        tableView.configRefreshHeader(with: header, container: self) { [unowned self] in
             self.fetchData(showHUD: false, headerRefreshing: true)
         }
         
@@ -78,7 +81,7 @@ class BaseTableViewController: NTTableViewController {
             api.accessToken = accessToken
             fetchDataDirectly(showHUD: showHUD) {
                 if headerRefreshing {
-                    self.tableView.endHeaderRefreshing()
+                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
                 }
             }
         } else if let username = setting.username, let password = setting.password { // silent login
@@ -91,12 +94,12 @@ class BaseTableViewController: NTTableViewController {
                         self.setting.accessToken = self.api.accessToken
                         self.fetchDataDirectly(showHUD: showHUD) {
                             if headerRefreshing {
-                                self.tableView.endHeaderRefreshing()
+                                self.tableView.switchRefreshHeader(to: .normal(.none, 0))
                             }
                         }
                     } else {
                         if headerRefreshing {
-                            self.tableView.endHeaderRefreshing()
+                            self.tableView.switchRefreshHeader(to: .normal(.none, 0))
                         }
                         self.api.displayErrorIfNeeded()
                     }

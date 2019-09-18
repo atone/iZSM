@@ -48,7 +48,7 @@ class HotTableViewCell: UITableViewCell {
         }
         userIDLabel.snp.makeConstraints { (make) in
             make.leading.equalTo(boardLabel.snp.trailing)
-            make.baseline.equalTo(boardLabel)
+            make.lastBaseline.equalTo(boardLabel)
             make.trailing.lessThanOrEqualTo(replyLabel.snp.leading).offset(-5)
         }
         replyLabel.snp.makeConstraints { (make) in

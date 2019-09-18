@@ -30,11 +30,6 @@ class NTTableViewController: UITableViewController {
         static let rightTag  = 100004
     }
     
-    private let setting = AppSetting.shared
-    
-    var refreshHeader: DefaultRefreshHeader?
-    var refreshFooter: DefaultRefreshFooter?
-    
     var refreshHeaderEnabled: Bool = true {
         didSet {
             let headerContainer = self.view.viewWithTag(PullToRefreshKitConst.headerTag)
@@ -59,17 +54,5 @@ class NTTableViewController: UITableViewController {
                 footerContainer?.isHidden = true
             }
         }
-    }
-    
-    private func updateRefresherView() {
-        refreshHeader?.spinner.style = .medium
-        refreshFooter?.spinner.style = .medium
-        refreshHeader?.textLabel.textColor = UIColor.secondaryLabel
-        refreshFooter?.textLabel.textColor = UIColor.secondaryLabel
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        updateRefresherView()
     }
 }

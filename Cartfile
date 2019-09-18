@@ -1,8 +1,4 @@
-github "SnapKit/SnapKit" ~> 4.0.0
 github "ibireme/YYKit"
 github "SVProgressHUD/SVProgressHUD"
 github "AgileBits/onepassword-extension" "add-framework-support"
-github "realm/realm-cocoa"
-github "evgenyneu/keychain-swift"
-github "dennisweissmann/DeviceKit" ~> 1.0
 github "atone/PullToRefreshKit"

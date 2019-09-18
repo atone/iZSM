@@ -69,6 +69,19 @@ class ArticleContentViewController: NTTableViewController {
         }
     }
     
+    lazy var refreshHeader: DefaultRefreshHeader = {
+        let header = DefaultRefreshHeader.header()
+        header.imageRenderingWithTintColor = true
+        header.tintColor = UIColor.secondaryLabel
+        return header
+    }()
+    
+    lazy var refreshFooter: DefaultRefreshFooter = {
+        let footer = DefaultRefreshFooter.footer()
+        footer.tintColor = UIColor.secondaryLabel
+        return footer
+    }()
+    
     // MARK: - ViewController Related
     override func viewDidLoad() {
         tableView.register(ArticleContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)
@@ -82,10 +95,10 @@ class ArticleContentViewController: NTTableViewController {
         let barButtonItems = [UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(_:))),
                               UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(tapPageButton(_:)))]
         navigationItem.rightBarButtonItems = barButtonItems
-        refreshHeader = tableView.setUpHeaderRefresh { [unowned self] in
+        tableView.configRefreshHeader(with: refreshHeader, container: self) { [unowned self] in
             self.refreshAction()
         }
-        refreshFooter = tableView.setUpFooterRefresh { [unowned self] in
+        tableView.configRefreshFooter(with: refreshFooter, container: self) { [unowned self] in
             self.fetchMoreData()
         }
         // add double tap gesture recognizer
@@ -194,8 +207,8 @@ class ArticleContentViewController: NTTableViewController {
                 DispatchQueue.main.async {
                     self.isFetchingData = false
                     networkActivityIndicatorStop(withHUD: showHUD)
-                    self.tableView.endHeaderRefreshing()
-                    self.tableView.endFooterRefreshing()
+                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                    self.tableView.switchRefreshFooter(to: .normal)
                     self.smarticles.removeAll()
                     self.articleContentLayout.removeAll()
                     self.tableView.fd_keyedHeightCache.invalidateAllHeightCache()
@@ -226,8 +239,8 @@ class ArticleContentViewController: NTTableViewController {
                 }
             }
         } else {
-            self.tableView.endHeaderRefreshing()
-            self.tableView.endFooterRefreshing()
+            self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+            self.tableView.switchRefreshFooter(to: .normal)
         }
     }
     
@@ -261,13 +274,13 @@ class ArticleContentViewController: NTTableViewController {
                         self.updateCurrentSection()
                     }
                     self.api.displayErrorIfNeeded()
-                    self.tableView.endHeaderRefreshing()
-                    self.tableView.endFooterRefreshing()
+                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                    self.tableView.switchRefreshFooter(to: .normal)
                 }
             }
         } else {
-            tableView.endHeaderRefreshing()
-            tableView.endFooterRefreshing()
+            tableView.switchRefreshHeader(to: .normal(.none, 0))
+            tableView.switchRefreshFooter(to: .normal)
         }
     }
     
@@ -314,18 +327,18 @@ class ArticleContentViewController: NTTableViewController {
                         self.tableView.reloadData()
                     }
                     self.api.displayErrorIfNeeded()
-                    self.tableView.endHeaderRefreshing()
-                    self.tableView.endFooterRefreshing()
+                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                    self.tableView.switchRefreshFooter(to: .normal)
                     if self.totalArticleNumber == self.currentForwardNumber {
-                        self.refreshFooter?.textLabel.text = "没有新帖子了"
+                        self.refreshFooter.textLabel.text = "没有新帖子了"
                     } else {
-                        self.refreshFooter?.textLabel.text = "上拉或点击加载更多"
+                        self.refreshFooter.textLabel.text = "上拉或点击加载更多"
                     }
                 }
             }
         } else {
-            tableView.endHeaderRefreshing()
-            tableView.endFooterRefreshing()
+            tableView.switchRefreshHeader(to: .normal(.none, 0))
+            tableView.switchRefreshFooter(to: .normal)
         }
     }
     

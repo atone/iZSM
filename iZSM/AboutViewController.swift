@@ -185,7 +185,7 @@ class AboutViewController: NTTableViewController {
 
             let title = "「\(versionText)」应用问题反馈"
             let receiver = "atone"
-            let content = "\n\n设备类型: \(Device())\n系统版本: \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)\n应用版本: \(versionText)"
+            let content = "\n\n设备类型: \(Device.current)\n系统版本: \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)\n应用版本: \(versionText)"
             cevc.email = SMMail(subject: title, body: content, authorID: receiver, position: 0, time: Date(), flags: "", attachments: [])
             cevc.mode = .feedback
             let navigationController = NTNavigationController(rootViewController: cevc)

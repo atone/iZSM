@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,7 +13,6 @@
 		9C118CF01F3BFFC700D6F405 /* NTSafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C118CEF1F3BFFC700D6F405 /* NTSafariViewController.swift */; };
 		9C1A3BC01DE2C0ED00CF4A43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BBF1DE2C0ED00CF4A43 /* AppDelegate.swift */; };
 		9C1A3BCA1DE2C0ED00CF4A43 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C1A3BC81DE2C0ED00CF4A43 /* LaunchScreen.storyboard */; };
-		9C1A3BD61DE2C5EF00CF4A43 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C1A3BD51DE2C5EF00CF4A43 /* SnapKit.framework */; };
 		9C1A3BD91DE2CBAF00CF4A43 /* EulaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BD81DE2CBAF00CF4A43 /* EulaViewController.swift */; };
 		9C1A3BDB1DE2CDB100CF4A43 /* EULA.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 9C1A3BDA1DE2CDB100CF4A43 /* EULA.rtf */; };
 		9C1A3BE01DE2E5AD00CF4A43 /* libSMTH_0.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */; };
@@ -28,10 +27,7 @@
 		9C25D5AB1DE56BAE005CB55C /* MailBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5AA1DE56BAE005CB55C /* MailBoxViewController.swift */; };
 		9C25D5AD1DE56BC8005CB55C /* ReminderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5AC1DE56BC8005CB55C /* ReminderViewController.swift */; };
 		9C25D5AF1DE56FC9005CB55C /* MailListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5AE1DE56FC9005CB55C /* MailListCell.swift */; };
-		9C4728F01F0FC64D00C289FC /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4728EE1F0FC64D00C289FC /* Realm.framework */; };
-		9C4728F11F0FC64D00C289FC /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4728EF1F0FC64D00C289FC /* RealmSwift.framework */; };
 		9C4728F31F0FC80100C289FC /* ArticleReadStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */; };
-		9C48F6AF1F34553A003FA686 /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C48F6AE1F34553A003FA686 /* DeviceKit.framework */; };
 		9C4D0B091F1A6F91007B4D83 /* NTTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */; };
 		9C4E6AB11F1158EB00ABAEFA /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */; };
 		9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */; };
@@ -70,11 +66,15 @@
 		9C889FD11DE4B66E00C33A8D /* ComposeArticleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FD01DE4B66E00C33A8D /* ComposeArticleController.swift */; };
 		9C9C3902232E04E40079AC71 /* NTTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9C3901232E04E40079AC71 /* NTTabBarController.swift */; };
 		9C9C3904232E0F5B0079AC71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C9C3903232E0F5B0079AC71 /* Assets.xcassets */; };
-		9CA1E6161F6D5A6A00402A31 /* PullToRefreshKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA1E6151F6D5A6900402A31 /* PullToRefreshKit.framework */; };
 		9CA3B15E1DE3323B00E9B121 /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA3B15D1DE3323B00E9B121 /* BaseTableViewController.swift */; };
 		9CA3B1A31DE33C0800E9B121 /* HotTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */; };
 		9CA3B1A61DE33E8D00E9B121 /* HotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA3B1A51DE33E8D00E9B121 /* HotTableViewCell.swift */; };
 		9CA3B1A81DE35A2300E9B121 /* BoardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */; };
+		9CA70D39233266E200F575C7 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D38233266E200F575C7 /* KeychainSwift */; };
+		9CA70D3C23326A4900F575C7 /* DeviceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D3B23326A4900F575C7 /* DeviceKit */; };
+		9CA70D3F233272FE00F575C7 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D3E233272FE00F575C7 /* RealmSwift */; };
+		9CA70D422332749600F575C7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D412332749600F575C7 /* SnapKit */; };
+		9CA70D5A2332952D00F575C7 /* PullToRefreshKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */; };
 		9CAD5A2F1F10A2950008E62C /* SMUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CAD5A2E1F10A2950008E62C /* SMUserInfo.swift */; };
 		9CB5708F1F2B87E000974BC0 /* AttachImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */; };
 		9CB573B71DE588EC00CD6F3E /* ReminderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */; };
@@ -286,7 +286,6 @@
 		9CD4ACC31F34362400C3D9BF /* emc9.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4ABFC1F34362400C3D9BF /* emc9.gif */; };
 		9CD9E6451F1DB10E00713853 /* IAPHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD9E6441F1DB10E00713853 /* IAPHelper.swift */; };
 		9CF349301F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF3492F1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m */; };
-		9CFEC1D41F19E330008E5976 /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -299,7 +298,6 @@
 		9C1A3BBF1DE2C0ED00CF4A43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9C1A3BC91DE2C0ED00CF4A43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9C1A3BCB1DE2C0ED00CF4A43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9C1A3BD51DE2C5EF00CF4A43 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		9C1A3BD81DE2CBAF00CF4A43 /* EulaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EulaViewController.swift; sourceTree = "<group>"; };
 		9C1A3BDA1DE2CDB100CF4A43 /* EULA.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = EULA.rtf; path = Resources/EULA.rtf; sourceTree = "<group>"; };
 		9C1A3BDC1DE2E28500CF4A43 /* iZSM-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iZSM-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -318,10 +316,7 @@
 		9C25D5AA1DE56BAE005CB55C /* MailBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailBoxViewController.swift; sourceTree = "<group>"; };
 		9C25D5AC1DE56BC8005CB55C /* ReminderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderViewController.swift; sourceTree = "<group>"; };
 		9C25D5AE1DE56FC9005CB55C /* MailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailListCell.swift; sourceTree = "<group>"; };
-		9C4728EE1F0FC64D00C289FC /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
-		9C4728EF1F0FC64D00C289FC /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Carthage/Build/iOS/RealmSwift.framework; sourceTree = "<group>"; };
 		9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleReadStatus.swift; sourceTree = "<group>"; };
-		9C48F6AE1F34553A003FA686 /* DeviceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceKit.framework; path = Carthage/Build/iOS/DeviceKit.framework; sourceTree = "<group>"; };
 		9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTTableViewController.swift; sourceTree = "<group>"; };
 		9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
 		9C56E1CC1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDIndexPathHeightCache.h"; sourceTree = "<group>"; };
@@ -380,11 +375,11 @@
 		9C8DC6262329F48800DDE69F /* iZSM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iZSM.entitlements; sourceTree = "<group>"; };
 		9C9C3901232E04E40079AC71 /* NTTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTTabBarController.swift; sourceTree = "<group>"; };
 		9C9C3903232E0F5B0079AC71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		9CA1E6151F6D5A6900402A31 /* PullToRefreshKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PullToRefreshKit.framework; path = Carthage/Build/iOS/PullToRefreshKit.framework; sourceTree = "<group>"; };
 		9CA3B15D1DE3323B00E9B121 /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
 		9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotTableViewController.swift; sourceTree = "<group>"; };
 		9CA3B1A51DE33E8D00E9B121 /* HotTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotTableViewCell.swift; sourceTree = "<group>"; };
 		9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardListViewController.swift; sourceTree = "<group>"; };
+		9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PullToRefreshKit.framework; path = Carthage/Build/iOS/PullToRefreshKit.framework; sourceTree = "<group>"; };
 		9CAD5A2E1F10A2950008E62C /* SMUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMUserInfo.swift; sourceTree = "<group>"; };
 		9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachImageView.swift; sourceTree = "<group>"; };
 		9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderListCell.swift; sourceTree = "<group>"; };
@@ -597,7 +592,6 @@
 		9CD9E6441F1DB10E00713853 /* IAPHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAPHelper.swift; sourceTree = "<group>"; };
 		9CF3492E1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FDFullscreenPopGesture.h"; sourceTree = "<group>"; };
 		9CF3492F1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FDFullscreenPopGesture.m"; sourceTree = "<group>"; };
-		9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KeychainSwift.framework; path = Carthage/Build/iOS/KeychainSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -605,17 +599,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CA70D3F233272FE00F575C7 /* RealmSwift in Frameworks */,
 				9C1A3BE01DE2E5AD00CF4A43 /* libSMTH_0.2.3.a in Frameworks */,
-				9C48F6AF1F34553A003FA686 /* DeviceKit.framework in Frameworks */,
-				9CFEC1D41F19E330008E5976 /* KeychainSwift.framework in Frameworks */,
 				9C889FC71DE4733A00C33A8D /* OnePasswordExtension.framework in Frameworks */,
-				9CA1E6161F6D5A6A00402A31 /* PullToRefreshKit.framework in Frameworks */,
-				9C4728F01F0FC64D00C289FC /* Realm.framework in Frameworks */,
-				9C4728F11F0FC64D00C289FC /* RealmSwift.framework in Frameworks */,
-				9C1A3BD61DE2C5EF00CF4A43 /* SnapKit.framework in Frameworks */,
+				9CA70D3C23326A4900F575C7 /* DeviceKit in Frameworks */,
+				9CA70D39233266E200F575C7 /* KeychainSwift in Frameworks */,
 				9C1A3BF61DE2EEAA00CF4A43 /* SVProgressHUD.framework in Frameworks */,
 				9C086E011F1E3BE300023788 /* StoreKit.framework in Frameworks */,
 				9C889FB91DE409B100C33A8D /* YYKit.framework in Frameworks */,
+				9CA70D422332749600F575C7 /* SnapKit in Frameworks */,
+				9CA70D5A2332952D00F575C7 /* PullToRefreshKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -672,13 +665,8 @@
 			isa = PBXGroup;
 			children = (
 				9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */,
-				9C48F6AE1F34553A003FA686 /* DeviceKit.framework */,
-				9CFEC1D31F19E330008E5976 /* KeychainSwift.framework */,
 				9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */,
-				9CA1E6151F6D5A6900402A31 /* PullToRefreshKit.framework */,
-				9C4728EE1F0FC64D00C289FC /* Realm.framework */,
-				9C4728EF1F0FC64D00C289FC /* RealmSwift.framework */,
-				9C1A3BD51DE2C5EF00CF4A43 /* SnapKit.framework */,
+				9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */,
 				9C086E001F1E3BE300023788 /* StoreKit.framework */,
 				9C1A3BF51DE2EEAA00CF4A43 /* SVProgressHUD.framework */,
 				9C889FB81DE409B100C33A8D /* YYKit.framework */,
@@ -1122,6 +1110,12 @@
 			dependencies = (
 			);
 			name = iZSM;
+			packageProductDependencies = (
+				9CA70D38233266E200F575C7 /* KeychainSwift */,
+				9CA70D3B23326A4900F575C7 /* DeviceKit */,
+				9CA70D3E233272FE00F575C7 /* RealmSwift */,
+				9CA70D412332749600F575C7 /* SnapKit */,
+			);
 			productName = iZSM;
 			productReference = 9C1A3BBC1DE2C0ED00CF4A43 /* iZSM.app */;
 			productType = "com.apple.product-type.application";
@@ -1161,6 +1155,12 @@
 				Base,
 			);
 			mainGroup = 9C1A3BB31DE2C0ED00CF4A43;
+			packageReferences = (
+				9CA70D37233266E200F575C7 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				9CA70D3A23326A4900F575C7 /* XCRemoteSwiftPackageReference "DeviceKit" */,
+				9CA70D3D233272FE00F575C7 /* XCRemoteSwiftPackageReference "realm-cocoa" */,
+				9CA70D402332749600F575C7 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 9C1A3BBD1DE2C0ED00CF4A43 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1392,30 +1392,20 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/YYKit.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SnapKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/OnePasswordExtension.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/RealmSwift.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/KeychainSwift.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/DeviceKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/PullToRefreshKit.framework",
 			);
 			name = "Run Script";
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/YYKit.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SnapKit.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/OnePasswordExtension.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Realm.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RealmSwift.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/KeychainSwift.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/DeviceKit.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PullToRefreshKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1619,7 +1609,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1639,7 +1630,10 @@
 				);
 				INFOPLIST_FILE = iZSM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/iZSM/Resources",
@@ -1667,7 +1661,10 @@
 				);
 				INFOPLIST_FILE = iZSM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/iZSM/Resources",
@@ -1702,6 +1699,64 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9CA70D37233266E200F575C7 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 16.0.0;
+			};
+		};
+		9CA70D3A23326A4900F575C7 /* XCRemoteSwiftPackageReference "DeviceKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devicekit/DeviceKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.0;
+			};
+		};
+		9CA70D3D233272FE00F575C7 /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-cocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.18.0;
+			};
+		};
+		9CA70D402332749600F575C7 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9CA70D38233266E200F575C7 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9CA70D37233266E200F575C7 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
+		9CA70D3B23326A4900F575C7 /* DeviceKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9CA70D3A23326A4900F575C7 /* XCRemoteSwiftPackageReference "DeviceKit" */;
+			productName = DeviceKit;
+		};
+		9CA70D3E233272FE00F575C7 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9CA70D3D233272FE00F575C7 /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			productName = RealmSwift;
+		};
+		9CA70D412332749600F575C7 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9CA70D402332749600F575C7 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9C1A3BB41DE2C0ED00CF4A43 /* Project object */;
 }

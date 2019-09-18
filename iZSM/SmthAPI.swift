@@ -597,7 +597,7 @@ class SmthAPI {
             let flags = dict["flags"] as? String,
             let timeInterval = dict["time"] as? Double
         {
-            let body = cleanedStringFrom(string: rawBody)
+            let body = cleanedString(from: rawBody)
             let time = Date(timeIntervalSince1970: timeInterval)
             var attachments = [SMAttachment]()
             if let rawAttachments = dict["attachment_list"] as? [[String:Any]] {
@@ -631,7 +631,7 @@ class SmthAPI {
             } else if let rawPosition = dict["position"] as? String {
                 position = Int(rawPosition) ?? 0
             }
-            let body = cleanedStringFrom(string: rawBody)
+            let body = cleanedString(from: rawBody)
             var attachments = [SMAttachment]()
             if let rawAttachments = dict["attachment_list"] as? [[String:Any]] {
                 for rawAttachment in rawAttachments {
@@ -779,35 +779,44 @@ class SmthAPI {
         return nil
     }
 
-    private func cleanedStringFrom(string: String) -> String {
+    private func cleanedString(from string: String) -> String {
         // 去除头尾多余的空格和回车
-        var content = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        var lines = string.trimmingCharacters(in: .whitespacesAndNewlines)
+            .split(omittingEmptySubsequences: false) { $0.isNewline }
+            .map { $0.trimmingCharacters(in: .whitespaces) }
         // 去除末尾的--
         // 以及多余的空格和回车
-        if content.count >= 2 && content.dropFirst(content.count - 2) == "--" {
-            content = String(content.dropLast(2))
-            content = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        if lines.last == "--" {
+            lines.removeLast()
+            while lines.last == "" {
+                lines.removeLast()
+            }
         }
         // 除去签名档，可选
         if !setting.showSignature {
-            let pattern = "^--$"
-            let regularExpression = try! NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
-            let match = regularExpression.rangeOfFirstMatch(in: content, range: NSMakeRange(0, content.count))
-            if match.location != NSNotFound {
-                content = String(content[..<content.index(content.startIndex, offsetBy: match.location)])
-                content = content.trimmingCharacters(in: .whitespacesAndNewlines)
+            if let index = lines.firstIndex(of: "--") {
+                var i = lines.count
+                while i > index {
+                    lines.removeLast()
+                    i -= 1
+                }
+                while lines.last == "" {
+                    lines.removeLast()
+                }
             }
         }
         // 去除ANSI控制字符
-        var pattern = "\\[(\\d{1,2};?)*m|\\[([ABCDsuKH]|2J)(?![a-zA-Z])|\\[\\d{1,2}[ABCD]|\\[\\d{1,2};\\d{1,2}H"
-        var regularExpression = try! NSRegularExpression(pattern: pattern)
-        content = regularExpression.stringByReplacingMatches(in: content, range: NSMakeRange(0, content.count), withTemplate: "")
-
+        let ansiRE = try! NSRegularExpression(pattern: "\\[(\\d{1,2};?)*m|\\[([ABCDsuKH]|2J)(?![a-zA-Z])|\\[\\d{1,2}[ABCD]|\\[\\d{1,2};\\d{1,2}H")
         // 去除图片标志[upload=1][/upload]之类
-        pattern = "\\[upload=(\\d){1,2}\\].*?\\[/upload\\]"
-        regularExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-        content = regularExpression.stringByReplacingMatches(in: content, range: NSMakeRange(0, content.count), withTemplate: "").trimmingCharacters(in: .whitespacesAndNewlines)
-        return content
+        let pictRE = try! NSRegularExpression(pattern: "\\[upload=(\\d){1,2}\\].*?\\[/upload\\]")
+        lines = lines.map { line in
+            var cleaned = ansiRE.stringByReplacingMatches(in: line, range: NSMakeRange(0, line.count), withTemplate: "")
+            cleaned = pictRE.stringByReplacingMatches(in: cleaned, range: NSMakeRange(0, cleaned.count), withTemplate: "")
+            return cleaned
+        }
+        // 过滤掉部分未过滤的来源信息
+        lines = lines.filter { !$0.contains("※ 来源:·") && !$0.contains("※ 修改:·") }
+        return lines.joined(separator: "\n")
     }
     
     private func image(with image: UIImage, scaledTo newSize: CGSize) -> UIImage {

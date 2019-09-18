@@ -12,9 +12,8 @@ import SnapKit
 class ArticleListViewCell: UITableViewCell {
 
     let titleLabel = UILabel()
-    let authorLabel = UILabel()
-    let timeLabel = UILabel()
-    let unreadLabel = UILabel()
+    let infoLabel = UILabel()
+    let replyLabel = NTLabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -29,18 +28,22 @@ class ArticleListViewCell: UITableViewCell {
     var thread: SMThread? {
         didSet {
             if let thread = self.thread {
-                titleLabel.text = thread.subject + (hasAttachment ? " 📎" : "") + " (\(thread.count - 1))"
+                titleLabel.text = thread.subject + (hasAttachment ? " 📎" : "")
                 if isAlwaysTop {
                     titleLabel.textColor = UIColor.systemRed
                 } else {
                     titleLabel.textColor = UIColor.label
                 }
-                authorLabel.text = thread.authorID
-                timeLabel.text = thread.lastReplyTime.relativeDateString
-                if thread.flags.hasPrefix("*") {
-                    unreadLabel.isHidden = false
+                replyLabel.text = "\(thread.count - 1)"
+                if thread.count == 1 {
+                    replyLabel.isHidden = true
                 } else {
-                    unreadLabel.isHidden = true
+                    replyLabel.isHidden = false
+                }
+                if thread.flags.hasPrefix("*") {
+                    replyLabel.backgroundColor = UIColor.systemGray
+                } else {
+                    replyLabel.backgroundColor = UIColor.systemGray3
                 }
                 
                 updateUI()
@@ -50,44 +53,57 @@ class ArticleListViewCell: UITableViewCell {
     
     func setupUI() {
         titleLabel.numberOfLines = 0
-        unreadLabel.text = "⦁"
-        unreadLabel.font = UIFont.systemFont(ofSize: 12)
-        updateUI()
         
         contentView.addSubview(titleLabel)
-        contentView.addSubview(timeLabel)
-        contentView.addSubview(authorLabel)
-        contentView.addSubview(unreadLabel)
+        contentView.addSubview(replyLabel)
+        contentView.addSubview(infoLabel)
+        
+        replyLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         titleLabel.snp.makeConstraints { (make) in
             make.leading.equalTo(contentView.snp.leadingMargin)
-            make.trailing.equalTo(contentView.snp.trailingMargin)
+            make.trailing.lessThanOrEqualTo(replyLabel.snp.leading).offset(-5)
             make.top.equalTo(contentView.snp.topMargin)
         }
-        authorLabel.snp.makeConstraints { (make) in
+        infoLabel.snp.makeConstraints { (make) in
+            make.leading.equalTo(titleLabel)
+            make.trailing.lessThanOrEqualTo(replyLabel.snp.leading).offset(-5)
             make.top.equalTo(titleLabel.snp.bottom).offset(5)
-            make.leading.equalTo(titleLabel.snp.leading)
             make.bottom.equalTo(contentView.snp.bottomMargin)
         }
-        timeLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(authorLabel.snp.centerY)
-            make.trailing.equalTo(titleLabel.snp.trailing)
-        }
-        unreadLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(titleLabel.snp.centerY)
-            make.trailing.equalTo(titleLabel.snp.leading).offset(-1)
+        replyLabel.snp.makeConstraints { (make) in
+            make.centerY.equalTo(contentView)
+            make.trailing.equalTo(contentView.snp.trailingMargin)
         }
     }
     
     func updateUI() {
-        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
-        titleLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
-        timeLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-        authorLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+        let titleDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
+        let replyDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
         
-        authorLabel.textColor = UIColor(named: "SmthColor")
-        unreadLabel.textColor = UIColor(named: "SmthColor")
-        timeLabel.textColor = UIColor.secondaryLabel
+        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize)
+        replyLabel.font = UIFont.boldSystemFont(ofSize: replyDescriptor.pointSize)
+        
+        if let thread = self.thread {
+            let infoDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote)
+            let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize)
+            let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize)
+            let normalAttributes: [NSAttributedString.Key : Any] = [.font: normalInfoFont, .foregroundColor: UIColor.secondaryLabel]
+            let userIDAttributes: [NSAttributedString.Key : Any] = [.font: boldInfoFont, .foregroundColor: UIColor.secondaryLabel]
+            let attributedText = NSMutableAttributedString(string: thread.authorID, attributes: userIDAttributes)
+            attributedText.append(NSAttributedString(string: " • \(thread.lastReplyTime.relativeDateString)", attributes: normalAttributes))
+            if thread.count > 1 {
+                attributedText.append(NSAttributedString(string: " • 最后回复", attributes: normalAttributes))
+                attributedText.append(NSAttributedString(string: thread.lastReplyAuthorID, attributes: userIDAttributes))
+            }
+            infoLabel.attributedText = attributedText
+        }
+        
+        replyLabel.textColor = UIColor.systemBackground
+        let paddingWidth = replyDescriptor.pointSize / 2
+        replyLabel.contentInsets = UIEdgeInsets(top: 0, left: paddingWidth, bottom: 0, right: paddingWidth)
+        replyLabel.clipsToBounds = true
+        replyLabel.layer.cornerRadius = paddingWidth
     }
     
     private var isAlwaysTop: Bool {

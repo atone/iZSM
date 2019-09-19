@@ -78,16 +78,18 @@ class UserViewController: NTTableViewController {
         }
         updateUserInfoView()
         msgCenter.checkUnreadMessage()
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            globalLockPortrait = true
+            UIDevice.current.setValue(UIDeviceOrientation.portrait.rawValue, forKey: "orientation")
+            UIViewController.attemptRotationToDeviceOrientation()
+        }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        globalLockPortrait = true
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        globalLockPortrait = false
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            globalLockPortrait = false
+        }
     }
     
     // remove observer of notification

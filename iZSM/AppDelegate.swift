@@ -251,6 +251,7 @@ func dPrint(_ item: @autoclosure () -> Any) {
 }
 
 var globalShouldRotate = true
+var globalLockPortrait = false
 
 private let formatter = DateFormatter()
 

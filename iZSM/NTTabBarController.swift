@@ -18,7 +18,7 @@ class NTTabBarController: UITabBarController {
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if setting.portraitLock {
+        if setting.portraitLock || globalLockPortrait {
             return [.portrait, .portraitUpsideDown]
         } else {
             return .all

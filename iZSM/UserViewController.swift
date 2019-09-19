@@ -46,8 +46,8 @@ class UserViewController: NTTableViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let scale: CGFloat = view.bounds.width < 350 ? 1 : 0.75
-        let newSize = CGSize(width: view.bounds.width, height: view.bounds.width * scale)
+        let newHeight = CGFloat.minimum(view.bounds.width * 0.75, view.bounds.height * 0.4)
+        let newSize = CGSize(width: view.bounds.width, height: newHeight)
         if userInfoVC.view.frame.size != newSize {
             userInfoVC.view.frame.size = newSize
             tableView.tableHeaderView = userInfoVC.view
@@ -78,6 +78,16 @@ class UserViewController: NTTableViewController {
         }
         updateUserInfoView()
         msgCenter.checkUnreadMessage()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        globalLockPortrait = true
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        globalLockPortrait = false
     }
     
     // remove observer of notification

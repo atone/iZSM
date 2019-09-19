@@ -100,16 +100,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var controllerArray = [NTNavigationController]()
         let hotTableViewController = HotTableViewController()
         hotTableViewController.title = "热点话题"
-        hotTableViewController.tabBarItem = UITabBarItem(title: "十大", image: UIImage(systemName: "timer"), tag: 0)
+        hotTableViewController.tabBarItem = UITabBarItem(title: "十大", image: UIImage(systemName: "clock"), selectedImage: UIImage(systemName: "clock.fill"))
         let boardListViewController = BoardListViewController()
         boardListViewController.title = "版面列表"
-        boardListViewController.tabBarItem = UITabBarItem(title: "版面", image: UIImage(systemName: "list.bullet"), tag: 1)
+        boardListViewController.tabBarItem = UITabBarItem(title: "版面", image: UIImage(systemName: "book"), selectedImage: UIImage(systemName: "book.fill"))
         let favListViewController = FavListViewController()
         favListViewController.title = "收藏夹"
-        favListViewController.tabBarItem = UITabBarItem(title: "收藏", image: UIImage(systemName: "star.fill"), tag: 2)
+        favListViewController.tabBarItem = UITabBarItem(title: "收藏", image: UIImage(systemName: "star"), selectedImage: UIImage(systemName: "star.fill"))
         let userViewController = UserViewController(style: .grouped)
         userViewController.title = "我"
-        userViewController.tabBarItem = UITabBarItem(title: "用户", image: UIImage(systemName: "person.fill"), tag: 3)
+        userViewController.tabBarItem = UITabBarItem(title: "用户", image: UIImage(systemName: "person"), selectedImage: UIImage(systemName: "person.fill"))
         controllerArray.append(NTNavigationController(rootViewController: hotTableViewController))
         controllerArray.append(NTNavigationController(rootViewController: boardListViewController))
         controllerArray.append(NTNavigationController(rootViewController: favListViewController))

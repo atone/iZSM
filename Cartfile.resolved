@@ -1,4 +1,5 @@
 github "AgileBits/onepassword-extension" "bcc4cc97fed9a6e73fa204f2e61138e353cb3ef7"
 github "SVProgressHUD/SVProgressHUD" "2.2.5"
 github "atone/PullToRefreshKit" "0.9.0"
+github "banchichen/TZImagePickerController" "3.2.3"
 github "ibireme/YYKit" "1.0.9"

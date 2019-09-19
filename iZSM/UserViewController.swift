@@ -10,6 +10,7 @@ import UIKit
 import MobileCoreServices
 import RealmSwift
 import SVProgressHUD
+import TZImagePickerController
 
 class UserViewController: NTTableViewController {
     

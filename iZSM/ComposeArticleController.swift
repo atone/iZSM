@@ -11,6 +11,7 @@ import Photos
 import MobileCoreServices
 import SnapKit
 import SVProgressHUD
+import TZImagePickerController
 
 class ComposeArticleController: UIViewController, UITextFieldDelegate {
     

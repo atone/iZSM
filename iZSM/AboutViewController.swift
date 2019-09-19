@@ -92,7 +92,8 @@ class AboutViewController: NTTableViewController {
         
         let size = self.view.bounds.size
         let smallWidth = size.width < size.height ? size.width : size.height
-        logoView.frame = CGRect(x: 0, y: 0, width: size.width, height: smallWidth * 2 / 3)
+        let newHeight = CGFloat.minimum(smallWidth * 2 / 3, view.bounds.height * 0.4)
+        logoView.frame = CGRect(x: 0, y: 0, width: size.width, height: newHeight)
         tableView.tableHeaderView = logoView
         
         if IAPHelper.canMakePayments() {
@@ -150,6 +151,22 @@ class AboutViewController: NTTableViewController {
                     self.present(alert, animated: true)
                 }
             }
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            globalLockPortrait = true
+            UIDevice.current.setValue(UIDeviceOrientation.portrait.rawValue, forKey: "orientation")
+            UIViewController.attemptRotationToDeviceOrientation()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            globalLockPortrait = false
         }
     }
 

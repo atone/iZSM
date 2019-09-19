@@ -69,6 +69,8 @@ class UserInfoViewController: UIViewController {
         if !UIAccessibility.isReduceTransparencyEnabled {
             backgroundImageView = YYAnimatedImageView()
             backgroundImageView!.frame = view.bounds
+            backgroundImageView!.contentMode = .scaleAspectFill
+            backgroundImageView!.clipsToBounds = true
             backgroundImageView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             view.addSubview(backgroundImageView!)
             let blurEffect = UIBlurEffect(style: .systemMaterial)

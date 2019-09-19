@@ -81,17 +81,23 @@ class UserInfoViewController: UIViewController {
         toolbar.snp.makeConstraints { (make) in
             make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }
-        let lastLogin = UIBarButtonItem(customView: lastLoginLabel)
-        lastLoginLabel.textColor = UIColor.secondaryLabel
-        lastLoginLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
-        toolbar.items = [lastLogin, padding]
+        toolbar.items = [padding]
         if delegate?.shouldEnableSearch() ?? true {
             toolbar.items?.append(search)
         }
         if delegate?.shouldEnableCompose() ?? true {
             toolbar.items?.append(compose)
         }
-
+        view.addSubview(lastLoginLabel)
+        lastLoginLabel.textColor = UIColor.secondaryLabel
+        lastLoginLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
+        lastLoginLabel.isUserInteractionEnabled = true
+        lastLoginLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(clickLastLogin(_:))))
+        lastLoginLabel.snp.makeConstraints { (make) in
+            make.top.bottom.equalTo(toolbar)
+            make.leading.equalTo(toolbar).offset(margin)
+            make.trailing.lessThanOrEqualTo(toolbar).offset(-margin)
+        }
         view.addSubview(backgroundView)
         backgroundView.snp.makeConstraints { (make) in
             make.leading.trailing.top.equalTo(view.safeAreaLayoutGuide)
@@ -248,6 +254,16 @@ class UserInfoViewController: UIViewController {
         postsContentLabel.isHidden = hidden
         scoreContentLabel.isHidden = hidden
         loginContentLabel.isHidden = hidden
+    }
+    
+    @objc private func clickLastLogin(_ sender: UIGestureRecognizer) {
+        if let user = user, let text = lastLoginLabel.text {
+            if text.starts(with: "上次登录") {
+                lastLoginLabel.text = "注册时间: \(user.firstLoginTime.shortDateString)"
+            } else {
+                lastLoginLabel.text = "上次登录: \(user.lastLoginTime.shortDateString)"
+            }
+        }
     }
     
     @objc private func clickCompose(_ sender: UIBarButtonItem) {

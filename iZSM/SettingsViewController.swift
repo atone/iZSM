@@ -26,6 +26,8 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var addDeviceSignatureCell: UITableViewCell!
     @IBOutlet weak var displayModeLabel: UILabel!
     @IBOutlet weak var displayModeCell: UITableViewCell!
+    @IBOutlet weak var customHotSectionLabel: UILabel!
+    @IBOutlet weak var customHotSectionCell: UITableViewCell!
     @IBOutlet weak var showAvatarLabel: UILabel!
     @IBOutlet weak var showAvatarCell: UITableViewCell!
     @IBOutlet weak var noPicModeLabel: UILabel!
@@ -149,6 +151,8 @@ class SettingsViewController: NTTableViewController {
         addDeviceSignatureLabel.textColor = UIColor.label
         displayModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
         displayModeLabel.textColor = UIColor.label
+        customHotSectionLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        customHotSectionLabel.textColor = UIColor.label
         showAvatarLabel.font = UIFont.preferredFont(forTextStyle: .body)
         showAvatarLabel.textColor = UIColor.label
         noPicModeLabel.font = UIFont.preferredFont(forTextStyle: .body)

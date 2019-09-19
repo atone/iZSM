@@ -29,6 +29,7 @@ struct SMHotSection {
 class HotTableViewController: BaseTableViewController {
     
     private let kArticleCellIdentifier = "Article"
+    static let kUpdateHotSectionNotification = Notification.Name("UpdateHotSectionNotification")
     
     var content = [SMHotSection]() {
         didSet { tableView?.reloadData() }
@@ -39,18 +40,26 @@ class HotTableViewController: BaseTableViewController {
         DispatchQueue.global().async {
             let topTen = self.api.getHotThreadListInSection(section: 0) ?? [SMHotThread]()
             var content = [SMHotSection]()
-            for sec in SMHotSection.sections {
-                let hotThread = self.api.getHotThreadListInSection(section: sec.id + 1)
-                content.append(SMHotSection(id: sec.id + 1, name: sec.name, hotThreads: hotThread ?? [SMHotThread]()))
-            }
-            content.sort { (leftSections, rightSections) -> Bool in
-                let leftTotalCount = leftSections.hotThreads.reduce(0) { (partialCount, hotThread) -> Int in
-                    partialCount + hotThread.count
+            if !self.setting.customHotSection {
+                for sec in SMHotSection.sections {
+                    let hotThread = self.api.getHotThreadListInSection(section: sec.id + 1)
+                    content.append(SMHotSection(id: sec.id + 1, name: sec.name, hotThreads: hotThread ?? [SMHotThread]()))
                 }
-                let rightTotalCount = rightSections.hotThreads.reduce(0) { (partialCount, hotThread) -> Int in
-                    partialCount + hotThread.count
+                content.sort { (leftSections, rightSections) -> Bool in
+                    let leftTotalCount = leftSections.hotThreads.reduce(0) { (partialCount, hotThread) -> Int in
+                        partialCount + hotThread.count
+                    }
+                    let rightTotalCount = rightSections.hotThreads.reduce(0) { (partialCount, hotThread) -> Int in
+                        partialCount + hotThread.count
+                    }
+                    return leftTotalCount > rightTotalCount
                 }
-                return leftTotalCount > rightTotalCount
+            } else {
+                for secID in self.setting.availableHotSections {
+                    let sec = SMHotSection.sections[secID]
+                    let hotThread = self.api.getHotThreadListInSection(section: sec.id + 1)
+                    content.append(SMHotSection(id: sec.id + 1, name: sec.name, hotThreads: hotThread ?? [SMHotThread]()))
+                }
             }
             content.insert(SMHotSection(id: 0, name: "本日十大热门话题", hotThreads: topTen), at: 0)
             DispatchQueue.main.async {
@@ -70,9 +79,17 @@ class HotTableViewController: BaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(HotTableViewCell.self, forCellReuseIdentifier: kArticleCellIdentifier)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateHotSection(_:)),
+                                               name: HotTableViewController.kUpdateHotSectionNotification,
+                                               object: nil)
         if traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: view)
         }
+    }
+    
+    @objc private func updateHotSection(_ notification: Notification) {
+        fetchData(showHUD: false)
     }
     
     // MARK: - Table view data source and delegate

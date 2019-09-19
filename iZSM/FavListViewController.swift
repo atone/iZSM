@@ -60,11 +60,6 @@ class FavListViewController: BaseTableViewController {
         }
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         guard let userID =  AppSetting.shared.username else {
             completion?()

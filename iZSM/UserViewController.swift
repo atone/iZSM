@@ -92,11 +92,6 @@ class UserViewController: NTTableViewController {
         }
     }
     
-    // remove observer of notification
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     // handle font size change
     @objc private func preferredFontSizeChanged(_ notification: Notification) {
         tableView.reloadData()

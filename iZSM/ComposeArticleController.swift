@@ -347,10 +347,6 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         present(imagePicker, animated: true)
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     @objc private func keyboardWillShow(_ notification: Notification) {
         let info = notification.userInfo
         var keyboardFrame = info?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect

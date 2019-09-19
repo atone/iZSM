@@ -133,12 +133,6 @@ class AboutViewController: NTTableViewController {
             goldSupportLabel.text = "我要赞赏 (不可用)"
         }
     }
-    
-
-    // remove observer of notification
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
 
     // handle font size change
     @objc private func preferredFontSizeChanged(_ notification: Notification) {

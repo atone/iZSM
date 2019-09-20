@@ -78,7 +78,8 @@ class AppSetting {
     }
     
     var signature: String {
-        return "- 来自「最水木 for \(device)」"
+        // 水木会过滤掉字符ʀ，故用r替换
+        return "- 来自「最水木 for \(device)」".replacingOccurrences(of: "ʀ", with: "r")
     }
     
     var signatureRegularExpression : NSRegularExpression {

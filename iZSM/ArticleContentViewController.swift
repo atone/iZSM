@@ -140,7 +140,7 @@ class ArticleContentViewController: NTTableViewController {
                                              boardID: boardID!,
                                              articleID: articleID!)
         } else {
-            let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + 64)
+            let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + view.safeAreaInsets.top)
             if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
                 ArticleReadStatusUtil.saveStatus(section: currentSection,
                                                  row: indexPath.row,

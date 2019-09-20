@@ -45,6 +45,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         usernameField.autocapitalizationType = .none
         usernameField.autocorrectionType = .no
         usernameField.keyboardType = .asciiCapable
+        usernameField.textContentType = .username
         usernameField.returnKeyType = .next
         containerView.addSubview(usernameField)
         
@@ -52,6 +53,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         passwordField.isSecureTextEntry = true
         passwordField.placeholder = "密码"
         passwordField.autocapitalizationType = .none
+        passwordField.textContentType = .password
         passwordField.returnKeyType = .done
         containerView.addSubview(passwordField)
         

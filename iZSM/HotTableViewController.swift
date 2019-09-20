@@ -35,6 +35,8 @@ class HotTableViewController: BaseTableViewController {
         didSet { tableView?.reloadData() }
     }
     
+    private var indexMap = [String : IndexPath]()
+    
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         networkActivityIndicatorStart(withHUD: showHUD)
         DispatchQueue.global().async {
@@ -83,9 +85,6 @@ class HotTableViewController: BaseTableViewController {
                                                selector: #selector(updateHotSection(_:)),
                                                name: HotTableViewController.kUpdateHotSectionNotification,
                                                object: nil)
-        if traitCollection.forceTouchCapability == .available {
-            registerForPreviewing(with: self, sourceView: view)
-        }
     }
     
     @objc private func updateHotSection(_ notification: Notification) {
@@ -127,89 +126,67 @@ class HotTableViewController: BaseTableViewController {
     }
 }
 
-extension HotTableViewController : UIViewControllerPreviewingDelegate, SmthViewControllerPreviewingDelegate {
-    /// Create a previewing view controller to be shown at "Peek".
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        // Obtain the index path and the cell that was pressed.
-        guard
-            let indexPath = tableView.indexPathForRow(at: location),
-            let cell = tableView.cellForRow(at: indexPath) else { return nil }
+extension HotTableViewController {
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let cell = tableView.cellForRow(at: indexPath) else { return nil }
+        let thread = self.content[indexPath.section].hotThreads[indexPath.row]
+        let identifier = NSUUID().uuidString
+        indexMap[identifier] = indexPath
+        let urlString: String
+        switch self.setting.displayMode {
+        case .nForum:
+            urlString = "https://www.newsmth.net/nForum/#!article/\(thread.boardID)/\(thread.id)"
+        case .www2:
+            urlString = "https://www.newsmth.net/bbstcon.php?board=\(thread.boardID)&gid=\(thread.id)"
+        case .mobile:
+            urlString = "https://m.newsmth.net/article/\(thread.boardID)/\(thread.id)"
+        }
+        let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
+            self.getViewController(with: thread)
+        }
+        let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
+            let shareAction = UIAction(title: "分享本帖", image: UIImage(systemName: "square.and.arrow.up")) { [unowned self] action in
+                let title = "水木\(thread.boardID)版：【\(thread.subject)】"
+                let url = URL(string: urlString)!
+                let activityViewController = UIActivityViewController(activityItems: [title, url],
+                                                                      applicationActivities: nil)
+                activityViewController.popoverPresentationController?.sourceView = cell
+                activityViewController.popoverPresentationController?.sourceRect = cell.bounds
+                self.present(activityViewController, animated: true)
+            }
+            let openAction = UIAction(title: "浏览网页版", image: UIImage(systemName: "safari")) { [unowned self] action in
+                let webViewController = NTSafariViewController(url: URL(string: urlString)!)
+                self.present(webViewController, animated: true)
+            }
+            let gotoBoardAction = UIAction(title: "进入 \(thread.boardID) 版", image: UIImage(systemName: "list.bullet")) { [unowned self] action in
+                let alvc = ArticleListViewController()
+                alvc.boardID = thread.boardID
+                alvc.boardName = thread.boardID
+                alvc.hidesBottomBarWhenPushed = true
+                self.show(alvc, sender: self)
+            }
+            return UIMenu(title: "", children: [shareAction, openAction, gotoBoardAction])
+        }
+        return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)
+    }
+    
+    override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        animator.addCompletion { [unowned self] in
+            guard let identifier = configuration.identifier as? String else { return }
+            guard let indexPath = self.indexMap[identifier] else { return }
+            let thread = self.content[indexPath.section].hotThreads[indexPath.row]
+            let acvc = self.getViewController(with: thread)
+            self.show(acvc, sender: self)
+        }
+    }
+    
+    private func getViewController(with thread: SMHotThread) -> ArticleContentViewController {
         let acvc = ArticleContentViewController()
-        let thread = content[indexPath.section].hotThreads[indexPath.row]
         acvc.articleID = thread.id
         acvc.boardID = thread.boardID
         acvc.title = thread.subject
         acvc.fromTopTen = true
-        acvc.previewDelegate = self
         acvc.hidesBottomBarWhenPushed = true
-
-        // Set the source rect to the cell frame, so surrounding elements are blurred.
-        previewingContext.sourceRect = cell.frame
-        
         return acvc
-    }
-    
-    /// Present the view controller for the "Pop" action.
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        // Reuse the "Peek" view controller for presentation.
-        show(viewControllerToCommit, sender: self)
-    }
-    
-    func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
-        var actions = [UIPreviewActionItem]()
-        if let acvc = viewController as? ArticleContentViewController {
-            if let boardID = acvc.boardID, let articleID = acvc.articleID {
-                let urlString: String
-                switch self.setting.displayMode {
-                case .nForum:
-                    urlString = "https://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
-                case .www2:
-                    urlString = "https://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
-                case .mobile:
-                    urlString = "https://m.newsmth.net/article/\(boardID)/\(articleID)"
-                }
-                if let cell = cell(for: articleID, and: boardID) {
-                    let shareAction = UIPreviewAction(title: "分享本帖", style: .default) { [unowned self] (action, controller) in
-                        let title = "水木\(acvc.boardName ?? boardID)版：【\(acvc.title ?? "无标题")】"
-                        let url = URL(string: urlString)!
-                        let activityViewController = UIActivityViewController(activityItems: [title, url],
-                                                                              applicationActivities: nil)
-                        activityViewController.popoverPresentationController?.sourceView = cell
-                        activityViewController.popoverPresentationController?.sourceRect = cell.bounds
-                        self.present(activityViewController, animated: true)
-                    }
-                    actions.append(shareAction)
-                }
-                let openAction = UIPreviewAction(title: "浏览网页版", style: .default) {[unowned self] (action, controller) in
-                    let webViewController = NTSafariViewController(url: URL(string: urlString)!)
-                    self.present(webViewController, animated: true)
-                }
-                actions.append(openAction)
-                
-            }
-            if let boardID = acvc.boardID, let boardName = acvc.boardName {
-                let gotoBoardAction = UIPreviewAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] (action, controller) in
-                    let alvc = ArticleListViewController()
-                    alvc.boardID = boardID
-                    alvc.boardName = boardName
-                    alvc.hidesBottomBarWhenPushed = true
-                    self.show(alvc, sender: self)
-                }
-                actions.append(gotoBoardAction)
-            }
-        }
-        return actions
-    }
-    
-    private func cell(for articleID: Int, and boardID: String) -> UITableViewCell? {
-        for section in 0..<content.count {
-            for row in 0..<content[section].hotThreads.count {
-                let hotThread = content[section].hotThreads[row]
-                if hotThread.id == articleID && hotThread.boardID == boardID {
-                    return tableView.cellForRow(at: IndexPath(row: row, section: section))
-                }
-            }
-        }
-        return nil
     }
 }

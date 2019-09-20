@@ -178,7 +178,3 @@ extension BaseTableViewController: EulaViewControllerDelegate {
         dPrint("decline tapped")
     }
 }
-
-protocol SmthViewControllerPreviewingDelegate: class {
-    func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem]
-}

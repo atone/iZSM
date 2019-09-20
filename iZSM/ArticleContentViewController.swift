@@ -19,6 +19,8 @@ class ArticleContentViewController: NTTableViewController {
     private var isScrollingStart = true // detect whether scrolling is end
     private var isFetchingData = false // whether the app is fetching data
     
+    private var indexMap = [String : IndexPath]()
+    
     private var smarticles = [[SMArticle]]()
     
     var articleContentLayout = [String: YYTextLayout]()
@@ -59,16 +61,6 @@ class ArticleContentViewController: NTTableViewController {
     var articleID: Int?
     var fromTopTen: Bool = false
     
-    weak var previewDelegate: SmthViewControllerPreviewingDelegate?
-    
-    override var previewActionItems: [UIPreviewActionItem] {
-        if let previewDelegate = self.previewDelegate {
-            return previewDelegate.previewActionItems(for: self)
-        } else {
-            return [UIPreviewActionItem]()
-        }
-    }
-    
     lazy var refreshHeader: DefaultRefreshHeader = {
         let header = DefaultRefreshHeader.header()
         header.imageRenderingWithTintColor = true
@@ -105,9 +97,6 @@ class ArticleContentViewController: NTTableViewController {
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTap(_:)))
         doubleTapGesture.numberOfTapsRequired = 2
         tableView.addGestureRecognizer(doubleTapGesture)
-        if traitCollection.forceTouchCapability == .available {
-            registerForPreviewing(with: self, sourceView: view)
-        }
         super.viewDidLoad()
         restorePosition()
         fetchData(restorePosition: true, showHUD: true)
@@ -926,81 +915,67 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     }
 }
 
-extension ArticleContentViewController: UIViewControllerPreviewingDelegate, SmthViewControllerPreviewingDelegate {
-    
-    /// Create a previewing view controller to be shown at "Peek".
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = tableView.indexPathForRow(at: location),
-            let cell = tableView.cellForRow(at: indexPath) else { return nil }
-        let fullscreen = FullscreenContentViewController()
-        fullscreen.article = smarticles[indexPath.section][indexPath.row]
-        fullscreen.previewDelegate = self
-        fullscreen.modalPresentationStyle = .fullScreen
-        fullscreen.modalTransitionStyle = .crossDissolve
-        
-        // Set the source rect to the cell frame, so surrounding elements are blurred.
-        previewingContext.sourceRect = cell.frame
-        
-        return fullscreen
-    }
-    
-    /// Present the view controller for the "Pop" action.
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        present(viewControllerToCommit, animated: true)
-    }
-    
-    func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
-        var actions = [UIPreviewActionItem]()
-        if let fullscreen = viewController as? FullscreenContentViewController, let article = fullscreen.article {
-            let replyAction = UIPreviewAction(title: "回复本帖", style: .default) { [unowned self] (_, _) in
+extension ArticleContentViewController {
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let article = smarticles[indexPath.section][indexPath.row]
+        let identifier = NSUUID().uuidString
+        indexMap[identifier] = indexPath
+        let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
+            self.getViewController(with: article)
+        }
+        let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
+            var actionArray = [UIMenuElement]()
+            let replyAction = UIAction(title: "回复本帖", image: UIImage(systemName: "arrowshape.turn.up.left")) { [unowned self] action in
                 self.reply(article)
             }
-            actions.append(replyAction)
-            
-            if let currentIndexPath = self.indexPath(for: article) {
-                let currentUser = article.authorID
-                let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
-                let soloAction = UIPreviewAction(title: soloTitle, style: .default) { [unowned self] (_, _) in
-                    self.toggleSoloMode(with: currentUser, at: currentIndexPath)
-                }
-                actions.append(soloAction)
-                
-                if let myself = setting.username, myself.lowercased() == currentUser.lowercased() {
-                    let modifyAction = UIPreviewAction(title: "修改文章", style: .default) { [unowned self] (_, _) in
-                        self.modify(article, at: currentIndexPath)
-                    }
-                    actions.append(modifyAction)
-                    let deleteAction = UIPreviewAction(title: "删除文章", style: .destructive) { [unowned self] (_, _) in
-                        self.delete(article, at: currentIndexPath)
-                    }
-                    actions.append(deleteAction)
-                }
+            actionArray.append(replyAction)
+            let currentUser = article.authorID
+            let soloTitle = self.soloUser == nil ? "只看 \(currentUser)" : "看所有人"
+            let soloAction = UIAction(title: soloTitle, image: UIImage(systemName: "person")) { [unowned self] action in
+                self.toggleSoloMode(with: currentUser, at: indexPath)
             }
-            
-            let forwardToUserAction = UIPreviewAction(title: "转寄给用户", style: .default) { [unowned self] (_, _) in
+            actionArray.append(soloAction)
+            if let myself = self.setting.username, myself.lowercased() == currentUser.lowercased() {
+                let modifyAction = UIAction(title: "修改文章", image: UIImage(systemName: "pencil")) { [unowned self] action in
+                    self.modify(article, at: indexPath)
+                }
+                actionArray.append(modifyAction)
+                let deleteAction = UIAction(title: "删除文章", image: UIImage(systemName: "trash"), attributes: .destructive) { [unowned self] action in
+                    self.delete(article, at: indexPath)
+                }
+                actionArray.append(deleteAction)
+            }
+            let forwardToUserAction = UIAction(title: "转寄给用户", image: UIImage(systemName: "envelope")) { [unowned self] action in
                 self.forward(article)
             }
-            let forwardToBoardAction = UIPreviewAction(title: "转载到版面", style: .default) { [unowned self] (_, _) in
+            let forwardToBoardAction = UIAction(title: "转载到版面", image: UIImage(systemName: "text.insert")) { [unowned self] action in
                 self.cross(article)
             }
-            let reportJunkAction = UIPreviewAction(title: "举报不良内容", style: .destructive) { [unowned self] (_, _) in
+            let reportJunkAction = UIAction(title: "举报不良内容", attributes: .destructive) { [unowned self] action in
                 self.reportJunk(article)
             }
-            let actionGroup = UIPreviewActionGroup(title: "更多…", style: .default, actions: [forwardToUserAction, forwardToBoardAction, reportJunkAction])
-            actions.append(actionGroup)
+            let moreMenu = UIMenu(title: "更多…", children: [forwardToUserAction, forwardToBoardAction, reportJunkAction])
+            actionArray.append(moreMenu)
+            return UIMenu(title: "", children: actionArray)
         }
-        return actions
+        return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)
     }
     
-    private func indexPath(for article: SMArticle) -> IndexPath? {
-        for section in 0..<smarticles.count {
-            for row in 0..<smarticles[section].count {
-                if smarticles[section][row].id == article.id
-                    && smarticles[section][row].boardID == article.boardID {
-                    return IndexPath(row: row, section: section)
-                }
-            }
+    override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        animator.addCompletion { [unowned self] in
+            guard let identifier = configuration.identifier as? String else { return }
+            guard let indexPath = self.indexMap[identifier] else { return }
+            let article = self.smarticles[indexPath.section][indexPath.row]
+            let fullscreen = self.getViewController(with: article)
+            self.present(fullscreen, animated: true)
         }
-        return nil
+    }
+    
+    private func getViewController(with article: SMArticle) -> FullscreenContentViewController {
+        let fullscreen = FullscreenContentViewController()
+        fullscreen.article = article
+        fullscreen.modalPresentationStyle = .fullScreen
+        fullscreen.modalTransitionStyle = .crossDissolve
+        return fullscreen
     }
 }

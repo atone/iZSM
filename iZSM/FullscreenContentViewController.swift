@@ -13,16 +13,6 @@ class FullscreenContentViewController: UIViewController {
     
     var article: SMArticle?
     
-    weak var previewDelegate: SmthViewControllerPreviewingDelegate?
-    
-    override var previewActionItems: [UIPreviewActionItem] {
-        if let previewDelegate = previewDelegate {
-            return previewDelegate.previewActionItems(for: self)
-        } else {
-            return [UIPreviewActionItem]()
-        }
-    }
-    
     private let contentTextView = UITextView()
     
     private func setupUI() {

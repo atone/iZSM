@@ -30,6 +30,8 @@ class FavListViewController: BaseTableViewController {
         }
     }
     
+    private var indexMap = [String : IndexPath]()
+    
     var boardID: Int = 0
     private var favorites = [SMBoard]()
     
@@ -55,9 +57,6 @@ class FavListViewController: BaseTableViewController {
                                                selector: #selector(setUpdateFavList(_:)),
                                                name: FavListViewController.kUpdateFavListNotification,
                                                object: nil)
-        if traitCollection.forceTouchCapability == .available {
-            registerForPreviewing(with: self, sourceView: view)
-        }
     }
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
@@ -227,15 +226,28 @@ class FavListViewController: BaseTableViewController {
     }
 }
 
-extension FavListViewController : UIViewControllerPreviewingDelegate, SmthViewControllerPreviewingDelegate {
-    /// Create a previewing view controller to be shown at "Peek".
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        // Obtain the index path and the cell that was pressed.
-        guard
-            let indexPath = tableView.indexPathForRow(at: location),
-            let cell = tableView.cellForRow(at: indexPath) else { return nil }
-        previewingContext.sourceRect = cell.frame
+extension FavListViewController {
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let board = favorites[indexPath.row]
+        let identifier = NSUUID().uuidString
+        indexMap[identifier] = indexPath
+        let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
+            self.getViewController(with: board)
+        }
+        return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: nil)
+    }
+    
+    override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        animator.addCompletion { [unowned self] in
+            guard let identifier = configuration.identifier as? String else { return }
+            guard let indexPath = self.indexMap[identifier] else { return }
+            let board = self.favorites[indexPath.row]
+            let vc = self.getViewController(with: board)
+            self.show(vc, sender: self)
+        }
+    }
+    
+    private func getViewController(with board: SMBoard) -> BaseTableViewController {
         if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
             let flvc = FavListViewController()
             flvc.title = board.name
@@ -245,44 +257,8 @@ extension FavListViewController : UIViewControllerPreviewingDelegate, SmthViewCo
             let alvc = ArticleListViewController()
             alvc.boardID = board.boardID
             alvc.boardName = board.name
-            alvc.previewDelegate = self
             alvc.hidesBottomBarWhenPushed = true
             return alvc
         }
-    }
-    
-    /// Present the view controller for the "Pop" action.
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        // Reuse the "Peek" view controller for presentation.
-        show(viewControllerToCommit, sender: self)
-    }
-    
-    func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
-        var actions = [UIPreviewActionItem]()
-        if let alvc = viewController as? ArticleListViewController, let boardID = alvc.boardID, let boardName = alvc.boardName {
-            let title = "取消\(self.index == 0 ? "收藏" : "关注") \(boardName) 版"
-            let delFavAction = UIPreviewAction(title: title, style: .destructive) { [unowned self] (action, controller) in
-                networkActivityIndicatorStart()
-                DispatchQueue.global().async {
-                    if self.index == 0 {
-                        self.api.deleteFavorite(boardID: boardID)
-                    } else {
-                        let _ = self.api.quitMemberOfBoard(boardID: boardID)
-                    }
-                    DispatchQueue.main.async {
-                        networkActivityIndicatorStop()
-                        if self.api.errorCode == 0 {
-                            SVProgressHUD.showSuccess(withStatus: "操作完成")
-                            NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                                                            object: nil)
-                        } else {
-                            SVProgressHUD.showInfo(withStatus: self.api.errorDescription)
-                        }
-                    }
-                }
-            }
-            actions.append(delFavAction)
-        }
-        return actions
     }
 }

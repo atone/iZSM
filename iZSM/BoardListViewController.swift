@@ -14,6 +14,8 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     private let kBoardIdentifier = "Board"
     private let kDirectoryIdentifier = "Directory"
     
+    private var indexMap = [String : IndexPath]()
+    
     var boardID = 0
     var sectionID = 0
     var flag: Int = 0
@@ -86,13 +88,6 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             searchController?.hidesNavigationBarDuringPresentation = false
             searchController?.searchBar.placeholder = "版面名称/关键字搜索"
             navigationItem.searchController = searchController
-        }
-        
-        // add long press gesture recognizer
-        tableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self,
-                                                                    action: #selector(handleLongPress(_:))))
-        if traitCollection.forceTouchCapability == .available {
-            registerForPreviewing(with: self, sourceView: view)
         }
         
         super.viewDidLoad()
@@ -241,31 +236,6 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         return nil
     }
     
-    @objc private func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
-        if gestureRecognizer.state == .began {
-            let point = gestureRecognizer.location(in: tableView)
-            if let indexPath = tableView.indexPathForRow(at: point) {
-                let board = boards[indexPath.row]
-                if (board.flag != -1) && (board.flag & 0x400 == 0) { //是版面
-                    let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                    let addFavAction = UIAlertAction(title: "添加到收藏夹", style: .default) { [unowned self] _ in
-                        self.addFavoriteWithBoardID(boardID: board.boardID)
-                    }
-                    actionSheet.addAction(addFavAction)
-                    let addMemAction = UIAlertAction(title: "关注版面 (驻版)", style: .default) { [unowned self] _ in
-                        self.addMemberWithBoardID(boardID: board.boardID)
-                    }
-                    actionSheet.addAction(addMemAction)
-                    actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
-                    let cell = tableView.cellForRow(at: indexPath)!
-                    actionSheet.popoverPresentationController?.sourceView = cell
-                    actionSheet.popoverPresentationController?.sourceRect = cell.bounds
-                    present(actionSheet, animated: true)
-                }
-            }
-        }
-    }
-    
     func addFavoriteWithBoardID(boardID: String) {
         networkActivityIndicatorStart(withHUD: true)
         DispatchQueue.global().async {
@@ -311,15 +281,40 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     }
 }
 
-extension BoardListViewController : UIViewControllerPreviewingDelegate, SmthViewControllerPreviewingDelegate {
-    /// Create a previewing view controller to be shown at "Peek".
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        // Obtain the index path and the cell that was pressed.
-        guard
-            let indexPath = tableView.indexPathForRow(at: location),
-            let cell = tableView.cellForRow(at: indexPath) else { return nil }
-        previewingContext.sourceRect = cell.frame
+extension BoardListViewController {
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let board = boards[indexPath.row]
+        let identifier = NSUUID().uuidString
+        indexMap[identifier] = indexPath
+        let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
+            self.getViewController(with: board)
+        }
+        let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
+            if (board.flag != -1) && (board.flag & 0x400 == 0) {
+                let addFavAction = UIAction(title: "收藏 \(board.name) 版", image: UIImage(systemName: "star")) { [unowned self] action in
+                    self.addFavoriteWithBoardID(boardID: board.boardID)
+                }
+                let addMemAction = UIAction(title: "关注 \(board.name) 版 (驻版)", image: UIImage(systemName: "heart")) { [unowned self] action in
+                    self.addMemberWithBoardID(boardID: board.boardID)
+                }
+                return UIMenu(title: "", children: [addFavAction, addMemAction])
+            }
+            return nil
+        }
+        return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)
+    }
+    
+    override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        animator.addCompletion { [unowned self] in
+            guard let identifier = configuration.identifier as? String else { return }
+            guard let indexPath = self.indexMap[identifier] else { return }
+            let board = self.boards[indexPath.row]
+            let vc = self.getViewController(with: board)
+            self.show(vc, sender: self)
+        }
+    }
+    
+    private func getViewController(with board: SMBoard) -> BaseTableViewController {
         if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
             let blvc =  BoardListViewController()
             if let r = board.name.range(of: " ") {
@@ -335,30 +330,8 @@ extension BoardListViewController : UIViewControllerPreviewingDelegate, SmthView
             let alvc = ArticleListViewController()
             alvc.boardID = board.boardID
             alvc.boardName = board.name
-            alvc.previewDelegate = self
             alvc.hidesBottomBarWhenPushed = true
             return alvc
         }
-    }
-    
-    /// Present the view controller for the "Pop" action.
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        // Reuse the "Peek" view controller for presentation.
-        show(viewControllerToCommit, sender: self)
-    }
-    
-    func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
-        var actions = [UIPreviewActionItem]()
-        if let alvc = viewController as? ArticleListViewController, let boardID = alvc.boardID, let boardName = alvc.boardName {
-            let addFavAction = UIPreviewAction(title: "收藏 \(boardName) 版", style: .default) { [unowned self] (action, controller) in
-                self.addFavoriteWithBoardID(boardID: boardID)
-            }
-            actions.append(addFavAction)
-            let addMemAction = UIPreviewAction(title: "关注 \(boardName) 版 (驻版)", style: .default) { [unowned self] (action, controller) in
-                self.addMemberWithBoardID(boardID: boardID)
-            }
-            actions.append(addMemAction)
-        }
-        return actions
     }
 }

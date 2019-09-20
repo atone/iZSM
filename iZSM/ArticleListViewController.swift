@@ -17,15 +17,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         didSet { title = boardName }
     }
     
-    weak var previewDelegate: SmthViewControllerPreviewingDelegate?
-    
-    override var previewActionItems: [UIPreviewActionItem] {
-        if let previewDelegate = self.previewDelegate {
-            return previewDelegate.previewActionItems(for: self)
-        } else {
-            return [UIPreviewActionItem]()
-        }
-    }
+    private var indexMap = [String : IndexPath]()
     
     var threadLoaded = 0
     private var threadRange: NSRange {
@@ -132,10 +124,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                                             target: self,
                                             action: #selector(composeArticle(_:)))
         navigationItem.rightBarButtonItem =  composeButton
-        
-        if traitCollection.forceTouchCapability == .available {
-            registerForPreviewing(with: self, sourceView: view)
-        }
     }
     
     override func clearContent() {
@@ -293,91 +281,66 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
 }
 
-extension ArticleListViewController: UIViewControllerPreviewingDelegate, SmthViewControllerPreviewingDelegate {
-    // MARK: UIViewControllerPreviewingDelegate
-    
-    /// Create a previewing view controller to be shown at "Peek".
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        // Obtain the index path and the cell that was pressed.
-        guard
-            let indexPath = tableView.indexPathForRow(at: location),
-            let cell = tableView.cellForRow(at: indexPath) else { return nil }
-        let acvc = ArticleContentViewController()
+extension ArticleListViewController {
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let cell = tableView.cellForRow(at: indexPath) else { return nil }
         let thread = threads[indexPath.section][indexPath.row]
+        let identifier = NSUUID().uuidString
+        indexMap[identifier] = indexPath
+        let urlString: String
+        switch self.setting.displayMode {
+        case .nForum:
+            urlString = "https://www.newsmth.net/nForum/#!article/\(thread.boardID)/\(thread.id)"
+        case .www2:
+            urlString = "https://www.newsmth.net/bbstcon.php?board=\(thread.boardID)&gid=\(thread.id)"
+        case .mobile:
+            urlString = "https://m.newsmth.net/article/\(thread.boardID)/\(thread.id)"
+        }
+        let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
+            self.getViewController(with: thread)
+        }
+        let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
+            let openAction = UIAction(title: "浏览网页版", image: UIImage(systemName: "safari")) { [unowned self] action in
+                let webViewController = NTSafariViewController(url: URL(string: urlString)!)
+                self.present(webViewController, animated: true)
+            }
+            let shareAction = UIAction(title: "分享本帖", image: UIImage(systemName: "square.and.arrow.up")) { [unowned self] action in
+                let title = "水木\(thread.boardName)版：【\(thread.subject)】"
+                let url = URL(string: urlString)!
+                let activityViewController = UIActivityViewController(activityItems: [title, url],
+                                                                      applicationActivities: nil)
+                activityViewController.popoverPresentationController?.sourceView = cell
+                activityViewController.popoverPresentationController?.sourceRect = cell.bounds
+                self.present(activityViewController, animated: true)
+            }
+            return UIMenu(title: "", children: [openAction, shareAction])
+        }
+        return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)
+    }
+    
+    override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        animator.addCompletion { [unowned self] in
+            guard let identifier = configuration.identifier as? String else { return }
+            guard let indexPath = self.indexMap[identifier] else { return }
+            let thread = self.threads[indexPath.section][indexPath.row]
+            if thread.flags.hasPrefix("*") {
+                var readThread = thread
+                let flags = thread.flags
+                readThread.flags = " " + flags.dropFirst()
+                self.threads[indexPath.section][indexPath.row] = readThread
+            }
+            let acvc = self.getViewController(with: thread)
+            self.show(acvc, sender: self)
+        }
+    }
+    
+    private func getViewController(with thread: SMThread) -> ArticleContentViewController {
+        let acvc = ArticleContentViewController()
         acvc.articleID = thread.id
         acvc.boardID = thread.boardID
         acvc.boardName = thread.boardName
         acvc.title = thread.subject
-        acvc.previewDelegate = self
         acvc.hidesBottomBarWhenPushed = true
-        
-        // Set the source rect to the cell frame, so surrounding elements are blurred.
-        previewingContext.sourceRect = cell.frame
-        
         return acvc
-    }
-    
-    /// Present the view controller for the "Pop" action.
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        let rect = previewingContext.sourceRect
-        let center = CGPoint(x: rect.origin.x + rect.width / 2, y: rect.origin.y + rect.height / 2)
-        guard let indexPath = tableView.indexPathForRow(at: center) else { return }
-        let thread = threads[indexPath.section][indexPath.row]
-        
-        if thread.flags.hasPrefix("*") {
-            var readThread = thread
-            let flags = thread.flags
-            readThread.flags = " " + flags[flags.index(after: flags.startIndex)...]
-            threads[indexPath.section][indexPath.row] = readThread
-        }
-        // Reuse the "Peek" view controller for presentation.
-        show(viewControllerToCommit, sender: self)
-    }
-    
-    func previewActionItems(for viewController: UIViewController) -> [UIPreviewActionItem] {
-        var actions = [UIPreviewActionItem]()
-        if let acvc = viewController as? ArticleContentViewController {
-            if let boardID = acvc.boardID, let articleID = acvc.articleID {
-                let urlString: String
-                switch self.setting.displayMode {
-                case .nForum:
-                    urlString = "https://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
-                case .www2:
-                    urlString = "https://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
-                case .mobile:
-                    urlString = "https://m.newsmth.net/article/\(boardID)/\(articleID)"
-                }
-                let openAction = UIPreviewAction(title: "浏览网页版", style: .default) {[unowned self] (action, controller) in
-                    let webViewController = NTSafariViewController(url: URL(string: urlString)!)
-                    self.present(webViewController, animated: true)
-                }
-                actions.append(openAction)
-                if let cell = cell(for: articleID, and: boardID) {
-                    let shareAction = UIPreviewAction(title: "分享本帖", style: .default) { [unowned self] (action, controller) in
-                        let title = "水木\(acvc.boardName ?? boardID)版：【\(acvc.title ?? "无标题")】"
-                        let url = URL(string: urlString)!
-                        let activityViewController = UIActivityViewController(activityItems: [title, url],
-                                                                              applicationActivities: nil)
-                        activityViewController.popoverPresentationController?.sourceView = cell
-                        activityViewController.popoverPresentationController?.sourceRect = cell.bounds
-                        self.present(activityViewController, animated: true)
-                    }
-                    actions.append(shareAction)
-                }
-            }
-        }
-        return actions
-    }
-    
-    private func cell(for articleID: Int, and boardID: String) -> UITableViewCell? {
-        for section in 0..<threads.count {
-            for row in 0..<threads[section].count {
-                let thread = threads[section][row]
-                if thread.id == articleID && thread.boardID == boardID {
-                    return tableView.cellForRow(at: IndexPath(row: row, section: section))
-                }
-            }
-        }
-        return nil
     }
 }

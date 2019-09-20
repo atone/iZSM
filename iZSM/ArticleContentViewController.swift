@@ -84,9 +84,11 @@ class ArticleContentViewController: NTTableViewController {
         // set extra cells hidden
         tableView.tableFooterView = UIView()
 
-        let barButtonItems = [UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(_:))),
-                              UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(tapPageButton(_:)))]
-        navigationItem.rightBarButtonItems = barButtonItems
+        if soloUser == nil {
+            let barButtonItems = [UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(_:))),
+                                  UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(tapPageButton(_:)))]
+            navigationItem.rightBarButtonItems = barButtonItems
+        }
         tableView.configRefreshHeader(with: refreshHeader, container: self) { [unowned self] in
             self.refreshAction()
         }
@@ -98,8 +100,12 @@ class ArticleContentViewController: NTTableViewController {
         doubleTapGesture.numberOfTapsRequired = 2
         tableView.addGestureRecognizer(doubleTapGesture)
         super.viewDidLoad()
-        restorePosition()
-        fetchData(restorePosition: true, showHUD: true)
+        if soloUser == nil {
+            restorePosition()
+            fetchData(restorePosition: true, showHUD: true)
+        } else {
+            fetchData(restorePosition: false, showHUD: true)
+        }
     }
     
     deinit {
@@ -163,7 +169,7 @@ class ArticleContentViewController: NTTableViewController {
                 var smArticles = [SMArticle]()
                 if let soloUser = self.soloUser { // 只看某人模式
                     while smArticles.count < self.setting.articleCountPerSection
-                        && self.currentForwardNumber < self.totalArticleNumber
+                        && (self.totalArticleNumber == 0 || self.currentForwardNumber < self.totalArticleNumber)
                     {
                         if let articles = self.api.getThreadContentInBoard(boardID: boardID,
                                                                            articleID: articleID,
@@ -633,7 +639,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             let currentUser = article.authorID
             let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
             let soloAction = UIAlertAction(title: soloTitle, style: .default) { [unowned self] _ in
-                self.toggleSoloMode(with: currentUser, at: currentIndexPath)
+                //self.toggleSoloMode(with: currentUser, at: currentIndexPath)
+                self.showSoloMode(with: currentUser)
             }
             actionSheet.addAction(soloAction)
             
@@ -761,7 +768,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                             if self.soloUser == nil {
                                 self.navigationController?.popViewController(animated: true)
                             } else {
-                                self.toggleSoloMode(with: self.soloUser!, at: indexPath)
+                                //self.toggleSoloMode(with: self.soloUser!, at: indexPath)
+                                self.navigationController?.popViewController(animated: true)
                             }
                         }
                     } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
@@ -791,6 +799,17 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             restorePosition()
             fetchData(restorePosition: true, showHUD: true)
         }
+    }
+    
+    private func showSoloMode(with userID: String) {
+        let acvc = ArticleContentViewController()
+        acvc.articleID = articleID
+        acvc.boardID = boardID
+        acvc.boardName = boardName
+        acvc.title = "只看\(userID)"
+        acvc.soloUser = userID
+        acvc.hidesBottomBarWhenPushed = true
+        show(acvc, sender: self)
     }
     
     private func reportJunk(_ article: SMArticle) {
@@ -932,7 +951,8 @@ extension ArticleContentViewController {
             let currentUser = article.authorID
             let soloTitle = self.soloUser == nil ? "只看 \(currentUser)" : "看所有人"
             let soloAction = UIAction(title: soloTitle, image: UIImage(systemName: "person")) { [unowned self] action in
-                self.toggleSoloMode(with: currentUser, at: indexPath)
+                //self.toggleSoloMode(with: currentUser, at: indexPath)
+                self.showSoloMode(with: currentUser)
             }
             actionArray.append(soloAction)
             if let myself = self.setting.username, myself.lowercased() == currentUser.lowercased() {

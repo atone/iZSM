@@ -14,8 +14,6 @@ class AppSetting {
 
     static let shared = AppSetting()
     
-    let device = Device.current
-    
     enum DisplayMode: Int {
         case nForum = 0, www2, mobile
     }
@@ -77,9 +75,13 @@ class AppSetting {
         defaults.register(defaults: initialSettings)
     }
     
-    var signature: String {
+    var deviceName: String {
         // 水木会过滤掉字符ʀ，故用r替换
-        return "- 来自「最水木 for \(device)」".replacingOccurrences(of: "ʀ", with: "r")
+        return Device.current.description.replacingOccurrences(of: "ʀ", with: "r")
+    }
+    
+    var signature: String {
+        return "- 来自「最水木 for \(deviceName)」"
     }
     
     var signatureRegularExpression : NSRegularExpression {

@@ -638,7 +638,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         if let currentIndexPath = tableView.indexPath(for: cell) {
             let currentUser = article.authorID
             if soloUser == nil {
-                let soloAction = UIAlertAction(title: "只看\(currentUser)", style: .default) { [unowned self] _ in
+                let soloAction = UIAlertAction(title: "只看 \(currentUser)", style: .default) { [unowned self] _ in
                     //self.toggleSoloMode(with: currentUser, at: currentIndexPath)
                     self.showSoloMode(with: currentUser)
                 }
@@ -952,7 +952,7 @@ extension ArticleContentViewController {
             actionArray.append(replyAction)
             let currentUser = article.authorID
             if self.soloUser == nil {
-                let soloAction = UIAction(title: "只看\(currentUser)", image: UIImage(systemName: "person")) { [unowned self] action in
+                let soloAction = UIAction(title: "只看 \(currentUser)", image: UIImage(systemName: "person")) { [unowned self] action in
                     //self.toggleSoloMode(with: currentUser, at: indexPath)
                     self.showSoloMode(with: currentUser)
                 }

@@ -225,7 +225,7 @@ struct SMArticle {
                 || fileName.hasSuffix(".gif") || fileName.hasSuffix(".bmp")
                 || fileName.hasSuffix(".png") {
                     let baseURLString = "http://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
-                    let thumbnailURL = URL(string: baseURLString + (attachments.count==1 ? "" : "/middle"))!
+                    let thumbnailURL = URL(string: baseURLString)!
                     let fullImageURL = URL(string: baseURLString)!
                     let imageName = attachment.name
                     let imageSize = attachment.size

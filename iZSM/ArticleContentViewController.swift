@@ -637,12 +637,13 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         var shouldCollapse = false
         if let currentIndexPath = tableView.indexPath(for: cell) {
             let currentUser = article.authorID
-            let soloTitle = soloUser == nil ? "只看 \(currentUser)" : "看所有人"
-            let soloAction = UIAlertAction(title: soloTitle, style: .default) { [unowned self] _ in
-                //self.toggleSoloMode(with: currentUser, at: currentIndexPath)
-                self.showSoloMode(with: currentUser)
+            if soloUser == nil {
+                let soloAction = UIAlertAction(title: "只看\(currentUser)", style: .default) { [unowned self] _ in
+                    //self.toggleSoloMode(with: currentUser, at: currentIndexPath)
+                    self.showSoloMode(with: currentUser)
+                }
+                actionSheet.addAction(soloAction)
             }
-            actionSheet.addAction(soloAction)
             
             if let myself = setting.username, myself.lowercased() == currentUser.lowercased() {
                 shouldCollapse = true // collapse the other actions
@@ -939,6 +940,7 @@ extension ArticleContentViewController {
         let article = smarticles[indexPath.section][indexPath.row]
         let identifier = NSUUID().uuidString
         indexMap[identifier] = indexPath
+        var shouldCollapse = false
         let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
             self.getViewController(with: article)
         }
@@ -949,13 +951,15 @@ extension ArticleContentViewController {
             }
             actionArray.append(replyAction)
             let currentUser = article.authorID
-            let soloTitle = self.soloUser == nil ? "只看 \(currentUser)" : "看所有人"
-            let soloAction = UIAction(title: soloTitle, image: UIImage(systemName: "person")) { [unowned self] action in
-                //self.toggleSoloMode(with: currentUser, at: indexPath)
-                self.showSoloMode(with: currentUser)
+            if self.soloUser == nil {
+                let soloAction = UIAction(title: "只看\(currentUser)", image: UIImage(systemName: "person")) { [unowned self] action in
+                    //self.toggleSoloMode(with: currentUser, at: indexPath)
+                    self.showSoloMode(with: currentUser)
+                }
+                actionArray.append(soloAction)
             }
-            actionArray.append(soloAction)
             if let myself = self.setting.username, myself.lowercased() == currentUser.lowercased() {
+                shouldCollapse = true
                 let modifyAction = UIAction(title: "修改文章", image: UIImage(systemName: "pencil")) { [unowned self] action in
                     self.modify(article, at: indexPath)
                 }
@@ -974,8 +978,12 @@ extension ArticleContentViewController {
             let reportJunkAction = UIAction(title: "举报不良内容", attributes: .destructive) { [unowned self] action in
                 self.reportJunk(article)
             }
-            let moreMenu = UIMenu(title: "更多…", children: [forwardToUserAction, forwardToBoardAction, reportJunkAction])
-            actionArray.append(moreMenu)
+            if shouldCollapse {
+                let moreMenu = UIMenu(title: "更多…", children: [forwardToUserAction, forwardToBoardAction, reportJunkAction])
+                actionArray.append(moreMenu)
+            } else {
+                actionArray.append(contentsOf: [forwardToUserAction, forwardToBoardAction, reportJunkAction])
+            }
             return UIMenu(title: "", children: actionArray)
         }
         return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)

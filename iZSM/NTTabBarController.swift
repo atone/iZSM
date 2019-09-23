@@ -25,6 +25,10 @@ class NTTabBarController: UITabBarController {
         }
     }
     
+    override var childForStatusBarHidden: UIViewController? {
+        return selectedViewController
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.systemBackground

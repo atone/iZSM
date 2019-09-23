@@ -23,4 +23,8 @@ class NTNavigationController: UINavigationController {
             return .all
         }
     }
+    
+    override var childForStatusBarHidden: UIViewController? {
+        return topViewController
+    }
 }

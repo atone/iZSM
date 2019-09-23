@@ -457,7 +457,6 @@ class ArticleContentViewController: NTTableViewController {
         pageListViewController.delegate = self
         let presentationCtr = pageListViewController.presentationController as! UIPopoverPresentationController
         presentationCtr.barButtonItem = navigationItem.rightBarButtonItems?.last
-        presentationCtr.backgroundColor = UIColor.white
         presentationCtr.delegate = self
         present(pageListViewController, animated: true)
     }

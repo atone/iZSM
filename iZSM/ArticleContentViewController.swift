@@ -940,9 +940,6 @@ extension ArticleContentViewController {
         let identifier = NSUUID().uuidString
         indexMap[identifier] = indexPath
         var shouldCollapse = false
-        let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
-            self.getViewController(with: article)
-        }
         let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
             var actionArray = [UIMenuElement]()
             let replyAction = UIAction(title: "回复本帖", image: UIImage(systemName: "arrowshape.turn.up.left")) { [unowned self] action in
@@ -985,7 +982,7 @@ extension ArticleContentViewController {
             }
             return UIMenu(title: "", children: actionArray)
         }
-        return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)
+        return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: nil, actionProvider: actions)
     }
     
     override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {

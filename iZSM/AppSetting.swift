@@ -79,10 +79,6 @@ class AppSetting {
         var name = Device.current.description
         // 水木会过滤掉字符ʀ，故用r替换
         name = name.replacingOccurrences(of: "ʀ", with: "r")
-        // temporary workaround for new devices
-        name = name.replacingOccurrences(of: "iPhone12,1", with: "iPhone 11")
-        name = name.replacingOccurrences(of: "iPhone12,3", with: "iPhone 11 Pro")
-        name = name.replacingOccurrences(of: "iPhone12,5", with: "iPhone 11 Pro Max")
         return name
     }
     

@@ -88,6 +88,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             searchController?.hidesNavigationBarDuringPresentation = false
             searchController?.searchBar.placeholder = "版面名称/关键字搜索"
             navigationItem.searchController = searchController
+            navigationItem.scrollEdgeAppearance = UINavigationBarAppearance() // fix transparent search bar
         }
         
         super.viewDidLoad()

@@ -119,6 +119,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         searchController?.searchBar.scopeButtonTitles = ["标题关键字", "同作者"]
         searchController?.searchBar.selectedScopeButtonIndex = 0
         navigationItem.searchController = searchController
+        navigationItem.scrollEdgeAppearance = UINavigationBarAppearance() // fix transparent search bar
         
         let composeButton = UIBarButtonItem(barButtonSystemItem: .add,
                                             target: self,

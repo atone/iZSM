@@ -10,7 +10,8 @@ import UIKit
 import SnapKit
 
 class FullscreenContentViewController: UIViewController {
-    
+    let setting = AppSetting.shared
+    private let fixedScale: CGFloat = 1.1
     var article: SMArticle?
     
     private let contentTextView = UITextView()
@@ -18,6 +19,7 @@ class FullscreenContentViewController: UIViewController {
     private func setupUI() {
         view.addSubview(contentTextView)
         contentTextView.backgroundColor = UIColor.clear
+        contentTextView.alwaysBounceVertical = true
         contentTextView.isEditable = false
         contentTextView.dataDetectorTypes = [.link, .phoneNumber]
         contentTextView.snp.makeConstraints { (make) in
@@ -34,8 +36,8 @@ class FullscreenContentViewController: UIViewController {
         if let article = article {
             let fullArticle = NSMutableAttributedString()
             
-            let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .title2)
-            let titleFont = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
+            let titleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
+            let titleFont = UIFont.boldSystemFont(ofSize: titleDescr.pointSize * setting.fontScale * fixedScale)
             let titleColor = UIColor(named: "MainText")!
             let titleParagraphStyle = NSMutableParagraphStyle()
             titleParagraphStyle.alignment = .center
@@ -49,7 +51,8 @@ class FullscreenContentViewController: UIViewController {
             fullArticle.appendString("\n")
             
             let subtitleText = "作者: \(article.authorID) 时间: \(article.timeString)"
-            let subtitleFont = UIFont.preferredFont(forTextStyle: .subheadline)
+            let subtitleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
+            let subtitleFont = UIFont.systemFont(ofSize: subtitleDescr.pointSize * setting.fontScale * fixedScale)
             let subtitleColor = UIColor.secondaryLabel
             let subtitleParagraphStyle = NSMutableParagraphStyle()
             subtitleParagraphStyle.alignment = .center
@@ -63,14 +66,15 @@ class FullscreenContentViewController: UIViewController {
             fullArticle.append(subtitle)
             fullArticle.appendString("\n")
             
-            let font = UIFont.preferredFont(forTextStyle: .title3)
+            let bodyDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+            let bodyFont = UIFont.systemFont(ofSize: bodyDescr.pointSize * setting.fontScale * fixedScale)
             let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineSpacing = font.pointSize / 4
+            paragraphStyle.lineSpacing = bodyFont.pointSize / 4
             paragraphStyle.alignment = .natural
             paragraphStyle.lineBreakMode = .byWordWrapping
             let attributedBody = attributedStringFromContent(article.body)
             let mutableAttributedBody = NSMutableAttributedString(attributedString: attributedBody)
-            mutableAttributedBody.addAttributes([NSAttributedString.Key.paragraphStyle: paragraphStyle, NSAttributedString.Key.font: font],
+            mutableAttributedBody.addAttributes([NSAttributedString.Key.paragraphStyle: paragraphStyle, NSAttributedString.Key.font: bodyFont],
                                                 range: NSMakeRange(0, mutableAttributedBody.string.count))
             fullArticle.append(mutableAttributedBody)
             contentTextView.attributedText = fullArticle
@@ -78,12 +82,14 @@ class FullscreenContentViewController: UIViewController {
     }
     
     private func attributedStringFromContent(_ string: String) -> NSAttributedString {
+        let bodyDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        let bodyFont = UIFont.systemFont(ofSize: bodyDescr.pointSize * setting.fontScale * fixedScale)
         let attributeText = NSMutableAttributedString()
         
-        let normal: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+        let normal: [NSAttributedString.Key: Any] = [.font: bodyFont,
                                                     .paragraphStyle: NSParagraphStyle.default,
                                                     .foregroundColor: UIColor(named: "MainText")!]
-        let quoted: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+        let quoted: [NSAttributedString.Key: Any] = [.font: bodyFont,
                                                     .paragraphStyle: NSParagraphStyle.default,
                                                     .foregroundColor: UIColor.secondaryLabel]
         
@@ -112,6 +118,10 @@ class FullscreenContentViewController: UIViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(refreshContent(_:)),
                                                name: UIContentSizeCategory.didChangeNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(refreshContent(_:)),
+                                               name: SettingsViewController.fontScaleDidChangeNotification,
                                                object: nil)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapToDismiss(_:)))
         contentTextView.addGestureRecognizer(tapGesture)

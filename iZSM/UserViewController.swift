@@ -37,6 +37,10 @@ class UserViewController: NTTableViewController {
                                                selector: #selector(preferredFontSizeChanged(_:)),
                                                name: UIContentSizeCategory.didChangeNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(preferredFontSizeChanged(_:)),
+                                               name: SettingsViewController.fontScaleDidChangeNotification,
+                                               object: nil)
         // add observer to update unread message count
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateUnreadMessage(_:)),
@@ -182,7 +186,9 @@ class UserViewController: NTTableViewController {
         if flag {
             result.append(NSAttributedString(string: " [新]", attributes: [NSAttributedString.Key.foregroundColor: redColor]))
         }
-        result.addAttribute(NSAttributedString.Key.font, value: UIFont.preferredFont(forTextStyle: .body), range: NSMakeRange(0, result.length))
+        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        let font = UIFont.systemFont(ofSize: descriptor.pointSize * setting.fontScale)
+        result.addAttribute(NSAttributedString.Key.font, value: font, range: NSMakeRange(0, result.length))
         return result
     }
     

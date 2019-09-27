@@ -13,55 +13,10 @@ import SVProgressHUD
 class AboutViewController: NTTableViewController {
 
     @IBOutlet weak var silverSupportLabel: UILabel!
-    @IBOutlet weak var silverSupportCell: UITableViewCell! {
-        didSet {
-            if let cell = silverSupportCell {
-                let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
-                selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                cell.selectedBackgroundView = selectedBackgroundView
-            }
-        }
-    }
     @IBOutlet weak var goldSupportLabel: UILabel!
-    @IBOutlet weak var goldSupportCell: UITableViewCell! {
-        didSet {
-            if let cell = goldSupportCell {
-                let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
-                selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                cell.selectedBackgroundView = selectedBackgroundView
-            }
-        }
-    }
     @IBOutlet weak var rateLabel: UILabel!
-    @IBOutlet weak var rateCell: UITableViewCell! {
-        didSet {
-            if let cell = rateCell {
-                let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
-                selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                cell.selectedBackgroundView = selectedBackgroundView
-            }
-        }
-    }
     @IBOutlet weak var mailLabel: UILabel!
-    @IBOutlet weak var mailCell: UITableViewCell! {
-        didSet {
-            if let cell = mailCell {
-                let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
-                selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                cell.selectedBackgroundView = selectedBackgroundView
-            }
-        }
-    }
     @IBOutlet weak var websiteLabel: UILabel!
-    @IBOutlet weak var websiteCell: UITableViewCell! {
-        didSet {
-            if let cell = websiteCell {
-                let selectedBackgroundView = UIView(frame: cell.contentView.bounds)
-                selectedBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                cell.selectedBackgroundView = selectedBackgroundView
-            }
-        }
-    }
     
     let logoView = LogoView(frame: CGRect.zero)
     
@@ -85,9 +40,13 @@ class AboutViewController: NTTableViewController {
         // Do any additional setup after loading the view.
         // add observer to font size change
         NotificationCenter.default.addObserver(self,
-            selector: #selector(preferredFontSizeChanged(_:)),
-            name: UIContentSizeCategory.didChangeNotification,
-            object: nil)
+                                               selector: #selector(preferredFontSizeChanged(_:)),
+                                               name: UIContentSizeCategory.didChangeNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(preferredFontSizeChanged(_:)),
+                                               name: SettingsViewController.fontScaleDidChangeNotification,
+                                               object: nil)
         
         let size = self.view.bounds.size
         let smallWidth = size.width < size.height ? size.width : size.height
@@ -212,15 +171,17 @@ class AboutViewController: NTTableViewController {
     }
 
     func updateUI() {
-        silverSupportLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        let font = UIFont.systemFont(ofSize: descriptor.pointSize * AppSetting.shared.fontScale)
+        silverSupportLabel.font = font
         silverSupportLabel.textColor = IAPHelper.canMakePayments() ? UIColor(named: "MainText") : UIColor.secondaryLabel
-        goldSupportLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        goldSupportLabel.font = font
         goldSupportLabel.textColor = IAPHelper.canMakePayments() ? UIColor(named: "MainText") : UIColor.secondaryLabel
-        rateLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        rateLabel.font = font
         rateLabel.textColor = UIColor(named: "MainText")
-        mailLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        mailLabel.font = font
         mailLabel.textColor = UIColor(named: "MainText")
-        websiteLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        websiteLabel.font = font
         websiteLabel.textColor = UIColor(named: "MainText")
         logoView.updateUI()
     }

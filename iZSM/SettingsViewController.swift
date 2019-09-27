@@ -13,32 +13,19 @@ import RealmSwift
 
 class SettingsViewController: NTTableViewController {
     @IBOutlet weak var hideTopLabel: UILabel!
-    @IBOutlet weak var hideTopCell: UITableViewCell!
     @IBOutlet weak var showSignatureLabel: UILabel!
-    @IBOutlet weak var showSignatureCell: UITableViewCell!
     @IBOutlet weak var newReplyFirstLabel: UILabel!
-    @IBOutlet weak var newReplyFirstCell: UITableViewCell!
     @IBOutlet weak var rememberLastLabel: UILabel!
-    @IBOutlet weak var rememberLastCell: UITableViewCell!
     @IBOutlet weak var portraitLockLabel: UILabel!
-    @IBOutlet weak var portraitLockCell: UITableViewCell!
     @IBOutlet weak var addDeviceSignatureLabel: UILabel!
-    @IBOutlet weak var addDeviceSignatureCell: UITableViewCell!
     @IBOutlet weak var displayModeLabel: UILabel!
-    @IBOutlet weak var displayModeCell: UITableViewCell!
     @IBOutlet weak var customHotSectionLabel: UILabel!
-    @IBOutlet weak var customHotSectionCell: UITableViewCell!
     @IBOutlet weak var showAvatarLabel: UILabel!
-    @IBOutlet weak var showAvatarCell: UITableViewCell!
     @IBOutlet weak var noPicModeLabel: UILabel!
-    @IBOutlet weak var noPicModeCell: UITableViewCell!
     @IBOutlet weak var backgroundTaskLabel: UILabel!
-    @IBOutlet weak var backgroundTaskCell: UITableViewCell!
     @IBOutlet weak var clearCacheLabel: UILabel!
-    @IBOutlet weak var clearCacheCell: UITableViewCell!
     @IBOutlet weak var cacheSizeLabel: UILabel!
     @IBOutlet weak var logoutLabel: UILabel!
-    @IBOutlet weak var logoutCell: UITableViewCell!
 
     @IBOutlet weak var hideTopSwitch: UISwitch!
     @IBOutlet weak var showSignatureSwitch: UISwitch!
@@ -50,9 +37,23 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var noPicModeSwitch: UISwitch!
     @IBOutlet weak var backgroundTaskSwitch: UISwitch!
     @IBOutlet weak var displayModeSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var fontSizeSlider: UISlider!
 
 
     let setting = AppSetting.shared
+    let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    static let fontScaleDidChangeNotification = Notification.Name("fontScaleDidChangeNotification")
+    
+    var fontScaleIndex: Int {
+        get { return setting.customFontScaleIndex }
+        set {
+            if newValue != setting.customFontScaleIndex {
+                setting.customFontScaleIndex = newValue
+                feedbackGenerator.impactOccurred()
+                NotificationCenter.default.post(Notification(name: SettingsViewController.fontScaleDidChangeNotification))
+            }
+        }
+    }
     
     var cache: YYImageCache?
 
@@ -65,11 +66,10 @@ class SettingsViewController: NTTableViewController {
                                                selector: #selector(preferredFontSizeChanged(_:)),
                                                name: UIContentSizeCategory.didChangeNotification,
                                                object: nil)
-    }
-
-    // remove observer of notification
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(preferredFontSizeChanged(_:)),
+                                               name: SettingsViewController.fontScaleDidChangeNotification,
+                                               object: nil)
     }
 
     // handle font size change
@@ -116,6 +116,12 @@ class SettingsViewController: NTTableViewController {
         setting.displayMode = AppSetting.DisplayMode(rawValue: sender.selectedSegmentIndex)!
     }
     
+    @IBAction func fontSizeScaleChanged(_ sender: UISlider) {
+        let index = Int(sender.value + 0.5)
+        sender.setValue(Float(index), animated: false)
+        fontScaleIndex = index
+    }
+    
     @IBAction func showAvatarChanged(_ sender: UISwitch) {
         setting.showAvatar = sender.isOn
     }
@@ -137,43 +143,43 @@ class SettingsViewController: NTTableViewController {
 
     func updateUI() {
         // update label fonts
-        hideTopLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        let font = UIFont.systemFont(ofSize: descriptor.pointSize * setting.fontScale)
+        hideTopLabel.font = font
         hideTopLabel.textColor = UIColor(named: "MainText")
-        showSignatureLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        showSignatureLabel.font = font
         showSignatureLabel.textColor = UIColor(named: "MainText")
-        newReplyFirstLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        newReplyFirstLabel.font = font
         newReplyFirstLabel.textColor = UIColor(named: "MainText")
-        rememberLastLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        rememberLastLabel.font = font
         rememberLastLabel.textColor = UIColor(named: "MainText")
-        portraitLockLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        portraitLockLabel.font = font
         portraitLockLabel.textColor = UIColor(named: "MainText")
-        addDeviceSignatureLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        addDeviceSignatureLabel.font = font
         addDeviceSignatureLabel.textColor = UIColor(named: "MainText")
-        displayModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        displayModeLabel.font = font
         displayModeLabel.textColor = UIColor(named: "MainText")
-        customHotSectionLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        customHotSectionLabel.font = font
         customHotSectionLabel.textColor = UIColor(named: "MainText")
-        showAvatarLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        showAvatarLabel.font = font
         showAvatarLabel.textColor = UIColor(named: "MainText")
-        noPicModeLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        noPicModeLabel.font = font
         noPicModeLabel.textColor = UIColor(named: "MainText")
-        backgroundTaskLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        backgroundTaskLabel.font = font
         backgroundTaskLabel.textColor = UIColor(named: "MainText")
-        clearCacheLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        clearCacheLabel.font = font
         clearCacheLabel.textColor = UIColor(named: "MainText")
-        cacheSizeLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        cacheSizeLabel.font = font
         cacheSizeLabel.textColor = UIColor.secondaryLabel
         var cacheSize = 0
         if let cache = cache {
             cacheSize = cache.diskCache.totalCost() / 1024 / 1024
         }
         cacheSizeLabel.text = "\(cacheSize) MB"
-        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
-        logoutLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
+        logoutLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize * setting.fontScale)
         logoutLabel.textColor = UIColor.systemRed
 
         // update switch states
-        UISwitch.appearance().onTintColor = UIColor(named: "SmthColor")
         hideTopSwitch.isOn = setting.hideAlwaysOnTopThread
         showSignatureSwitch.isOn = setting.showSignature
         newReplyFirstSwitch.isOn = (setting.sortMode == .LaterPostFirst)
@@ -181,6 +187,7 @@ class SettingsViewController: NTTableViewController {
         portraitLockSwitch.isOn = setting.portraitLock
         addDeviceSignatureSwitch.isOn = setting.addDeviceSignature
         displayModeSegmentedControl.selectedSegmentIndex = setting.displayMode.rawValue
+        fontSizeSlider.value = Float(fontScaleIndex)
         noPicModeSwitch.isOn = setting.noPicMode
         if setting.noPicMode {
             showAvatarSwitch.isOn = false
@@ -201,7 +208,7 @@ class SettingsViewController: NTTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath == IndexPath(row: 0, section: 3) {
+        if indexPath == IndexPath(row: 0, section: 4) {
             tableView.deselectRow(at: indexPath, animated: true)
             SVProgressHUD.show()
             DispatchQueue.global().async {

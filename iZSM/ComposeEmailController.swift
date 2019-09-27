@@ -100,7 +100,8 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         receiverTextField.returnKeyType = .next
         contentTextView.setContentHuggingPriority(.defaultLow, for: .vertical)
         contentTextView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-        contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
+        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        contentTextView.font = UIFont.systemFont(ofSize: descriptor.pointSize * setting.fontScale)
         contentTextView.autocapitalizationType = .sentences
         contentTextView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
         contentTextView.layer.cornerRadius = cornerRadius

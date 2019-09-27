@@ -43,6 +43,7 @@ class AppSetting {
         static let CustomHotSectionKey = "SmthAPI.customHotSectionKey"
         static let AvailableHotSectionsKey = "SmthAPI.availableHotSectionsKey"
         static let DisabledHotSectionsKey = "SmthAPI.disabledHotSectionsKey"
+        static let CustomFontScaleIndexKey = "SmthAPI.customFontScaleIndexKey"
     }
 
     private let defaults = UserDefaults.standard
@@ -70,7 +71,8 @@ class AppSetting {
             Static.AddDeviceSignatureKey : true,
             Static.CustomHotSectionKey : false,
             Static.AvailableHotSectionsKey : [1, 2, 3, 4, 5, 6, 7, 8, 9],
-            Static.DisabledHotSectionsKey : [0]
+            Static.DisabledHotSectionsKey : [0],
+            Static.CustomFontScaleIndexKey: 2
         ]
         defaults.register(defaults: initialSettings)
     }
@@ -273,6 +275,28 @@ class AppSetting {
         get { return defaults.array(forKey: Static.DisabledHotSectionsKey) as? [Int] ?? [] }
         set {
             defaults.set(newValue, forKey: Static.DisabledHotSectionsKey)
+        }
+    }
+    
+    var customFontScaleIndex: Int {
+        get { return defaults.integer(forKey: Static.CustomFontScaleIndexKey) }
+        set {
+            defaults.set(newValue, forKey: Static.CustomFontScaleIndexKey)
+        }
+    }
+    
+    var fontScale: CGFloat {
+        switch customFontScaleIndex {
+        case 0:
+            return 0.9
+        case 1:
+            return 0.95
+        case 3:
+            return 1.1
+        case 4:
+            return 1.2
+        default:
+            return 1.0
         }
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 class ArticleListViewCell: UITableViewCell {
-
+    let setting = AppSetting.shared
     let titleLabel = UILabel()
     let infoLabel = UILabel()
     let replyLabel = NTLabel()
@@ -53,6 +53,7 @@ class ArticleListViewCell: UITableViewCell {
     
     func setupUI() {
         titleLabel.numberOfLines = 0
+        replyLabel.lineBreakMode = .byClipping
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(replyLabel)
@@ -81,13 +82,13 @@ class ArticleListViewCell: UITableViewCell {
         let titleDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
         let replyDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
         
-        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize)
-        replyLabel.font = UIFont.boldSystemFont(ofSize: replyDescriptor.pointSize)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.fontScale)
+        replyLabel.font = UIFont.boldSystemFont(ofSize: replyDescriptor.pointSize * setting.fontScale)
         
         if let thread = self.thread {
             let infoDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote)
-            let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize)
-            let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize)
+            let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize * setting.fontScale)
+            let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.fontScale)
             let normalAttributes: [NSAttributedString.Key : Any] = [.font: normalInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let userIDAttributes: [NSAttributedString.Key : Any] = [.font: boldInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let attributedText = NSMutableAttributedString(string: thread.authorID, attributes: userIDAttributes)
@@ -100,7 +101,7 @@ class ArticleListViewCell: UITableViewCell {
         }
         
         replyLabel.textColor = UIColor.systemBackground
-        let paddingWidth = replyDescriptor.pointSize / 2
+        let paddingWidth = replyDescriptor.pointSize * setting.fontScale / 2
         replyLabel.contentInsets = UIEdgeInsets(top: 0, left: paddingWidth, bottom: 0, right: paddingWidth)
         replyLabel.clipsToBounds = true
         replyLabel.layer.cornerRadius = paddingWidth

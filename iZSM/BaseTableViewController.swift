@@ -51,6 +51,10 @@ class BaseTableViewController: NTTableViewController {
                                                selector: #selector(preferredFontSizeChanged(_:)),
                                                name: UIContentSizeCategory.didChangeNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(preferredFontSizeChanged(_:)),
+                                               name: SettingsViewController.fontScaleDidChangeNotification,
+                                               object: nil)
         // add observer to set need refresh
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(needRefreshNotificationDidPosted(_:)),

@@ -99,8 +99,9 @@ struct SMArticle {
     private mutating func makeAttributedBody() -> NSAttributedString {
         let attributeText = NSMutableAttributedString()
         
-        let textFont = UIFont.preferredFont(forTextStyle: .body)
-        let boldTextFont = UIFont.boldSystemFont(ofSize: textFont.pointSize)
+        let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        let textFont = UIFont.systemFont(ofSize: fontDescriptor.pointSize * AppSetting.shared.fontScale)
+        let boldTextFont = UIFont.boldSystemFont(ofSize: fontDescriptor.pointSize * AppSetting.shared.fontScale)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .natural
         paragraphStyle.lineBreakMode = .byWordWrapping

@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 
 class MailListCell: UITableViewCell {
+    let setting = AppSetting.shared
     let titleLabel = UILabel()
     let authorLabel = UILabel()
     let timeLabel = UILabel()
@@ -57,10 +58,11 @@ class MailListCell: UITableViewCell {
     }
     
     func updateUI() {
-        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
-        titleLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
-        timeLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-        authorLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+        let titleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescr.pointSize * setting.fontScale)
+        let otherDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote)
+        timeLabel.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.fontScale)
+        authorLabel.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.fontScale)
         
         titleLabel.textColor = UIColor(named: "MainText")
         authorLabel.textColor = UIColor(named: "SmthColor")

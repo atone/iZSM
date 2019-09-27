@@ -258,7 +258,7 @@ class ArticleContentCell: UITableViewCell {
     private func fixedLineHeightContainer(boundingSize: CGSize) -> YYTextContainer {
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
         let modifier = YYTextLinePositionHorizontalFixedModifier()
-        modifier.fixedLineHeight = descriptor.pointSize * 1.4
+        modifier.fixedLineHeight = descriptor.pointSize * setting.fontScale * 1.4
         let container = YYTextContainer()
         container.size = boundingSize
         container.linePositionModifier = modifier

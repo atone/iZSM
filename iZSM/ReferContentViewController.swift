@@ -11,7 +11,7 @@ import SnapKit
 import SVProgressHUD
 
 class ReferContentViewController: UIViewController, UITextViewDelegate {
-        
+    let setting = AppSetting.shared
     let titleLabel = UILabel()
     let userButton = UIButton(type: .system)
     let timeLabel = UILabel()
@@ -23,11 +23,16 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     private var article: SMArticle?
     
     func setupUI() {
-        titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
-        userButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        let titleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
+        let otherDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
+        let bodyDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescr.pointSize * setting.fontScale)
+        titleLabel.numberOfLines = 0
+        userButton.titleLabel?.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.fontScale)
         userButton.addTarget(self, action: #selector(clickUserButton(_:)), for: .touchUpInside)
-        timeLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
+        timeLabel.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.fontScale)
+        contentTextView.font = UIFont.systemFont(ofSize: bodyDescr.pointSize * setting.fontScale)
+        contentTextView.alwaysBounceVertical = true
         contentTextView.isEditable = false
         contentTextView.dataDetectorTypes = [.phoneNumber, .link]
         view.addSubview(titleLabel)
@@ -84,6 +89,10 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
                                                selector: #selector(preferredFontSizeChanged(_:)),
                                                name: UIContentSizeCategory.didChangeNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(preferredFontSizeChanged(_:)),
+                                               name: SettingsViewController.fontScaleDidChangeNotification,
+                                               object: nil)
         setupUI()
         fetchData()
     }
@@ -139,10 +148,13 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     }
     
     @objc private func preferredFontSizeChanged(_ notification: Notification) {
-        titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
-        userButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        timeLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
+        let titleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
+        let otherDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
+        let bodyDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescr.pointSize * setting.fontScale)
+        userButton.titleLabel?.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.fontScale)
+        timeLabel.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.fontScale)
+        contentTextView.font = UIFont.systemFont(ofSize: bodyDescr.pointSize * setting.fontScale)
     }
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
@@ -193,12 +205,14 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     }
     
     private func attributedStringFromContent(_ string: String) -> NSAttributedString {
+        let bodyDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        let bodyFont = UIFont.systemFont(ofSize: bodyDescr.pointSize * setting.fontScale)
         let attributeText = NSMutableAttributedString()
         
-        let normal: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+        let normal: [NSAttributedString.Key: Any] = [.font: bodyFont,
                                                     .paragraphStyle: NSParagraphStyle.default,
                                                     .foregroundColor: UIColor(named: "MainText")!]
-        let quoted: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
+        let quoted: [NSAttributedString.Key: Any] = [.font: bodyFont,
                                                     .paragraphStyle: NSParagraphStyle.default,
                                                     .foregroundColor: UIColor.secondaryLabel]
         

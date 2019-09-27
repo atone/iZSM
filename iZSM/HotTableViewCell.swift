@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 
 class HotTableViewCell: UITableViewCell {
+    let setting = AppSetting.shared
     let titleLabel = UILabel()
     let boardLabel = NTLabel()
     let userIDLabel = UILabel()
@@ -28,6 +29,8 @@ class HotTableViewCell: UITableViewCell {
     /// Setup constraints
     func setupUI() {
         titleLabel.numberOfLines = 0
+        boardLabel.lineBreakMode = .byClipping
+        replyLabel.lineBreakMode = .byClipping
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(boardLabel)
@@ -62,20 +65,20 @@ class HotTableViewCell: UITableViewCell {
         let titleDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
         let replyDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
         
-        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize)
-        replyLabel.font = UIFont.boldSystemFont(ofSize: replyDescriptor.pointSize)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.fontScale)
+        replyLabel.font = UIFont.boldSystemFont(ofSize: replyDescriptor.pointSize * setting.fontScale)
         
         if let thread = hotThread {
             let infoDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote)
-            let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize)
-            let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize)
+            let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize * setting.fontScale)
+            let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.fontScale)
             let normalAttributes: [NSAttributedString.Key : Any] = [.font: normalInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let userIDAttributes: [NSAttributedString.Key : Any] = [.font: boldInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let attributedText = NSMutableAttributedString(string: " • ", attributes: normalAttributes)
             attributedText.append(NSAttributedString(string: thread.authorID, attributes: userIDAttributes))
             userIDLabel.attributedText = attributedText
             
-            let paddingWidth = infoDescriptor.pointSize / 2
+            let paddingWidth = infoDescriptor.pointSize * setting.fontScale / 2
             boardLabel.contentInsets = UIEdgeInsets(top: 0, left: paddingWidth, bottom: 0, right: paddingWidth)
             boardLabel.clipsToBounds = true
             boardLabel.layer.cornerRadius = paddingWidth / 2
@@ -86,7 +89,7 @@ class HotTableViewCell: UITableViewCell {
         titleLabel.textColor = UIColor(named: "MainText")
         replyLabel.textColor = UIColor.systemBackground
         replyLabel.backgroundColor = UIColor.systemGray
-        let paddingWidth = replyDescriptor.pointSize / 2
+        let paddingWidth = replyDescriptor.pointSize * setting.fontScale / 2
         replyLabel.contentInsets = UIEdgeInsets(top: 0, left: paddingWidth, bottom: 0, right: paddingWidth)
         replyLabel.clipsToBounds = true
         replyLabel.layer.cornerRadius = paddingWidth

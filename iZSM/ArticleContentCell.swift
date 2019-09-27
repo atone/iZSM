@@ -15,13 +15,11 @@ class ArticleContentCell: UITableViewCell {
     
     private let authorLabel = UILabel()
     private let floorAndTimeLabel = UILabel()
-    private let replyLabel = UILabel()
-    private let moreLabel = UILabel()
+    private let replyButton = UIButton(type: .system)
+    private let moreButton = UIButton(type: .system)
     
     private let avatarTapRecognizer = UITapGestureRecognizer()
     private let authorTapRecognizer = UITapGestureRecognizer()
-    private let replyTapRecognizer = UITapGestureRecognizer()
-    private let moreTapRecognizer = UITapGestureRecognizer()
     
     var imageViews = [YYAnimatedImageView]()
     
@@ -96,25 +94,17 @@ class ArticleContentCell: UITableViewCell {
         
         self.contentView.addSubview(floorAndTimeLabel)
         
-        replyLabel.text = "回复"
-        replyLabel.textAlignment = .center
-        replyLabel.layer.cornerRadius = 4
-        replyLabel.clipsToBounds = true
-        replyTapRecognizer.addTarget(self, action: #selector(reply(_:)))
-        replyTapRecognizer.numberOfTapsRequired = 1
-        replyLabel.addGestureRecognizer(replyTapRecognizer)
-        replyLabel.isUserInteractionEnabled = true
-        self.contentView.addSubview(replyLabel)
+        replyButton.setTitle("回复", for: .normal)
+        replyButton.layer.cornerRadius = 4
+        replyButton.clipsToBounds = true
+        replyButton.addTarget(self, action: #selector(reply(_:)), for: .touchUpInside)
+        self.contentView.addSubview(replyButton)
         
-        moreLabel.text = "•••"
-        moreLabel.textAlignment = .center
-        moreLabel.layer.cornerRadius = 4
-        moreLabel.clipsToBounds = true
-        moreTapRecognizer.addTarget(self, action: #selector(action(_:)))
-        moreTapRecognizer.numberOfTapsRequired = 1
-        moreLabel.addGestureRecognizer(moreTapRecognizer)
-        moreLabel.isUserInteractionEnabled = true
-        self.contentView.addSubview(moreLabel)
+        moreButton.setTitle("•••", for: .normal)
+        moreButton.layer.cornerRadius = 4
+        moreButton.clipsToBounds = true
+        moreButton.addTarget(self, action: #selector(action(_:)), for: .touchUpInside)
+        self.contentView.addSubview(moreButton)
         
         contentLabel.displaysAsynchronously = true
         contentLabel.fadeOnAsynchronouslyDisplay = false
@@ -141,10 +131,8 @@ class ArticleContentCell: UITableViewCell {
     func updateColor() {
         authorLabel.textColor = UIColor(named: "MainText")
         floorAndTimeLabel.textColor = UIColor.secondaryLabel
-        replyLabel.textColor = UIColor(named: "SmthColor")
-        replyLabel.backgroundColor = UIColor.secondarySystemBackground
-        moreLabel.textColor = UIColor(named: "SmthColor")
-        moreLabel.backgroundColor = UIColor.secondarySystemBackground
+        replyButton.backgroundColor = UIColor.secondarySystemBackground
+        moreButton.backgroundColor = UIColor.secondarySystemBackground
         
         for quotBar in quotBars {
             quotBar.backgroundColor = UIColor.secondaryLabel.withAlphaComponent(0.5)
@@ -205,10 +193,10 @@ class ArticleContentCell: UITableViewCell {
             floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin, y: margin1 + margin2 / 2), size: floorAndTimeLabel.bounds.size)
         }
         
-        replyLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
-        replyLabel.frame = CGRect(x: size.width - rightMargin - margin3 - replyButtonWidth - moreButtonWidth, y: margin1 - buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
-        moreLabel.font = UIFont.systemFont(ofSize: replyMoreFontSize)
-        moreLabel.frame = CGRect(x: size.width - rightMargin - moreButtonWidth, y: margin1 - buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
+        replyButton.titleLabel?.font = UIFont.systemFont(ofSize: replyMoreFontSize)
+        replyButton.frame = CGRect(x: size.width - rightMargin - margin3 - replyButtonWidth - moreButtonWidth, y: margin1 - buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
+        moreButton.titleLabel?.font = UIFont.systemFont(ofSize: replyMoreFontSize)
+        moreButton.frame = CGRect(x: size.width - rightMargin - moreButtonWidth, y: margin1 - buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
         
         let boundingWidth = size.width - leftMargin - rightMargin
         let imageHeight = heightForImages(count: self.imageViews.count, boundingWidth: boundingWidth)
@@ -383,12 +371,12 @@ class ArticleContentCell: UITableViewCell {
         }
     }
     
-    @objc private func reply(_ recognizer: UITapGestureRecognizer) {
-        delegate?.cell(self, didClickReply: recognizer.view)
+    @objc private func reply(_ button: UIButton) {
+        delegate?.cell(self, didClickReply: button)
     }
     
-    @objc private func action(_ recognizer: UITapGestureRecognizer) {
-        delegate?.cell(self, didClickMore: recognizer.view)
+    @objc private func action(_ button: UIButton) {
+        delegate?.cell(self, didClickMore: button)
     }
     
     @objc private func showUserInfo(_ recognizer: UITapGestureRecognizer) {

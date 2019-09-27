@@ -82,13 +82,13 @@ class ArticleListViewCell: UITableViewCell {
         let titleDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
         let replyDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
         
-        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.fontScale)
-        replyLabel.font = UIFont.boldSystemFont(ofSize: replyDescriptor.pointSize * setting.fontScale)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+        replyLabel.font = UIFont.boldSystemFont(ofSize: replyDescriptor.pointSize * setting.smallFontScale)
         
         if let thread = self.thread {
             let infoDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote)
-            let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize * setting.fontScale)
-            let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.fontScale)
+            let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
+            let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
             let normalAttributes: [NSAttributedString.Key : Any] = [.font: normalInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let userIDAttributes: [NSAttributedString.Key : Any] = [.font: boldInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let attributedText = NSMutableAttributedString(string: thread.authorID, attributes: userIDAttributes)
@@ -101,7 +101,7 @@ class ArticleListViewCell: UITableViewCell {
         }
         
         replyLabel.textColor = UIColor.systemBackground
-        let paddingWidth = replyDescriptor.pointSize * setting.fontScale / 2
+        let paddingWidth = replyDescriptor.pointSize * setting.smallFontScale / 2
         replyLabel.contentInsets = UIEdgeInsets(top: 0, left: paddingWidth, bottom: 0, right: paddingWidth)
         replyLabel.clipsToBounds = true
         replyLabel.layer.cornerRadius = paddingWidth

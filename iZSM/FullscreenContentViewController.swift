@@ -11,7 +11,6 @@ import SnapKit
 
 class FullscreenContentViewController: UIViewController {
     let setting = AppSetting.shared
-    private let fixedScale: CGFloat = 1.1
     var article: SMArticle?
     
     private let contentTextView = UITextView()
@@ -37,7 +36,7 @@ class FullscreenContentViewController: UIViewController {
             let fullArticle = NSMutableAttributedString()
             
             let titleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
-            let titleFont = UIFont.boldSystemFont(ofSize: titleDescr.pointSize * setting.fontScale * fixedScale)
+            let titleFont = UIFont.boldSystemFont(ofSize: titleDescr.pointSize * setting.largeFontScale)
             let titleColor = UIColor(named: "MainText")!
             let titleParagraphStyle = NSMutableParagraphStyle()
             titleParagraphStyle.alignment = .center
@@ -52,7 +51,7 @@ class FullscreenContentViewController: UIViewController {
             
             let subtitleText = "作者: \(article.authorID) 时间: \(article.timeString)"
             let subtitleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
-            let subtitleFont = UIFont.systemFont(ofSize: subtitleDescr.pointSize * setting.fontScale * fixedScale)
+            let subtitleFont = UIFont.systemFont(ofSize: subtitleDescr.pointSize * setting.largeFontScale)
             let subtitleColor = UIColor.secondaryLabel
             let subtitleParagraphStyle = NSMutableParagraphStyle()
             subtitleParagraphStyle.alignment = .center
@@ -67,7 +66,7 @@ class FullscreenContentViewController: UIViewController {
             fullArticle.appendString("\n")
             
             let bodyDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
-            let bodyFont = UIFont.systemFont(ofSize: bodyDescr.pointSize * setting.fontScale * fixedScale)
+            let bodyFont = UIFont.systemFont(ofSize: bodyDescr.pointSize * setting.largeFontScale)
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = bodyFont.pointSize / 4
             paragraphStyle.alignment = .natural
@@ -83,7 +82,7 @@ class FullscreenContentViewController: UIViewController {
     
     private func attributedStringFromContent(_ string: String) -> NSAttributedString {
         let bodyDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
-        let bodyFont = UIFont.systemFont(ofSize: bodyDescr.pointSize * setting.fontScale * fixedScale)
+        let bodyFont = UIFont.systemFont(ofSize: bodyDescr.pointSize * setting.largeFontScale)
         let attributeText = NSMutableAttributedString()
         
         let normal: [NSAttributedString.Key: Any] = [.font: bodyFont,

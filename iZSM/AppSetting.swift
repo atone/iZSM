@@ -299,4 +299,12 @@ class AppSetting {
             return 1.0
         }
     }
+    
+    var smallFontScale: CGFloat {
+        return fontScale * 0.95
+    }
+    
+    var largeFontScale: CGFloat {
+        return fontScale * 1.1
+    }
 }

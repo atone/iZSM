@@ -58,11 +58,11 @@ class MailListCell: UITableViewCell {
     }
     
     func updateUI() {
-        let titleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
-        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescr.pointSize * setting.fontScale)
-        let otherDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote)
-        timeLabel.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.fontScale)
-        authorLabel.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.fontScale)
+        let titleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescr.pointSize * setting.smallFontScale)
+        let otherDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
+        timeLabel.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.smallFontScale)
+        authorLabel.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.smallFontScale)
         
         titleLabel.textColor = UIColor(named: "MainText")
         authorLabel.textColor = UIColor(named: "SmthColor")

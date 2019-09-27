@@ -65,20 +65,20 @@ class HotTableViewCell: UITableViewCell {
         let titleDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
         let replyDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
         
-        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.fontScale)
-        replyLabel.font = UIFont.boldSystemFont(ofSize: replyDescriptor.pointSize * setting.fontScale)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+        replyLabel.font = UIFont.boldSystemFont(ofSize: replyDescriptor.pointSize * setting.smallFontScale)
         
         if let thread = hotThread {
             let infoDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote)
-            let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize * setting.fontScale)
-            let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.fontScale)
+            let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
+            let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
             let normalAttributes: [NSAttributedString.Key : Any] = [.font: normalInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let userIDAttributes: [NSAttributedString.Key : Any] = [.font: boldInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let attributedText = NSMutableAttributedString(string: " • ", attributes: normalAttributes)
             attributedText.append(NSAttributedString(string: thread.authorID, attributes: userIDAttributes))
             userIDLabel.attributedText = attributedText
             
-            let paddingWidth = infoDescriptor.pointSize * setting.fontScale / 2
+            let paddingWidth = infoDescriptor.pointSize * setting.smallFontScale / 2
             boardLabel.contentInsets = UIEdgeInsets(top: 0, left: paddingWidth, bottom: 0, right: paddingWidth)
             boardLabel.clipsToBounds = true
             boardLabel.layer.cornerRadius = paddingWidth / 2
@@ -89,7 +89,7 @@ class HotTableViewCell: UITableViewCell {
         titleLabel.textColor = UIColor(named: "MainText")
         replyLabel.textColor = UIColor.systemBackground
         replyLabel.backgroundColor = UIColor.systemGray
-        let paddingWidth = replyDescriptor.pointSize * setting.fontScale / 2
+        let paddingWidth = replyDescriptor.pointSize * setting.smallFontScale / 2
         replyLabel.contentInsets = UIEdgeInsets(top: 0, left: paddingWidth, bottom: 0, right: paddingWidth)
         replyLabel.clipsToBounds = true
         replyLabel.layer.cornerRadius = paddingWidth

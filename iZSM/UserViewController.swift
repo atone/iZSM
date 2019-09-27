@@ -176,7 +176,7 @@ class UserViewController: NTTableViewController {
     }
     
     func attrTextFromString(string: String, withNewFlag flag: Bool) -> NSAttributedString {
-        let normalColor = UIColor.label
+        let normalColor = UIColor(named: "MainText")!
         let redColor = UIColor.systemRed
         let result = NSMutableAttributedString(string: string, attributes: [NSAttributedString.Key.foregroundColor: normalColor])
         if flag {

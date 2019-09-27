@@ -32,7 +32,7 @@ class ArticleListViewCell: UITableViewCell {
                 if isAlwaysTop {
                     titleLabel.textColor = UIColor.systemRed
                 } else {
-                    titleLabel.textColor = UIColor.label
+                    titleLabel.textColor = UIColor(named: "MainText")
                 }
                 replyLabel.text = "\(thread.count - 1)"
                 if thread.count == 1 {

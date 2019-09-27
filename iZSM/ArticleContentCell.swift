@@ -139,7 +139,7 @@ class ArticleContentCell: UITableViewCell {
     }
     
     func updateColor() {
-        authorLabel.textColor = UIColor.label
+        authorLabel.textColor = UIColor(named: "MainText")
         floorAndTimeLabel.textColor = UIColor.secondaryLabel
         replyLabel.textColor = UIColor(named: "SmthColor")
         replyLabel.backgroundColor = UIColor.secondarySystemBackground

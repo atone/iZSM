@@ -226,7 +226,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         titleTextField.textColor = UIColor.secondaryLabel
         titleTextField.attributedPlaceholder = NSAttributedString(string: "添加标题",
                                                                   attributes: [NSAttributedString.Key.foregroundColor: UIColor.secondaryLabel.withAlphaComponent(0.6)])
-        contentTextView.textColor = UIColor.label
+        contentTextView.textColor = UIColor(named: "MainText")
     }
     
     @objc private func cancel(_ sender: UIBarButtonItem) {

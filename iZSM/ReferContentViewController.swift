@@ -67,7 +67,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     private func updateColor() {
         view.backgroundColor = UIColor.systemBackground
         view.tintColor = UIColor(named: "SmthColor")
-        titleLabel.textColor = UIColor.label
+        titleLabel.textColor = UIColor(named: "MainText")
         userButton.tintColor = UIColor(named: "SmthColor")
         timeLabel.textColor = UIColor.secondaryLabel
         contentTextView.backgroundColor = UIColor.clear
@@ -197,7 +197,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         
         let normal: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
-                                                    .foregroundColor: UIColor.label]
+                                                    .foregroundColor: UIColor(named: "MainText")!]
         let quoted: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
                                                     .foregroundColor: UIColor.secondaryLabel]

@@ -113,7 +113,7 @@ struct SMArticle {
         
         let normal : [NSAttributedString.Key : Any] = [.font: textFont,
                                                       .paragraphStyle: paragraphStyle,
-                                                      .foregroundColor: UIColor.label]
+                                                      .foregroundColor: UIColor(named: "MainText")!]
         let quoted : [NSAttributedString.Key : Any] = [.font: textFont,
                                                       .paragraphStyle: quotedParagraphStyle,
                                                       .foregroundColor: UIColor.secondaryLabel]

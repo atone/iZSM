@@ -83,7 +83,7 @@ class HotTableViewCell: UITableViewCell {
             boardLabel.font = normalInfoFont
             boardLabel.backgroundColor = UIColor.secondarySystemFill
         }
-        titleLabel.textColor = UIColor.label
+        titleLabel.textColor = UIColor(named: "MainText")
         replyLabel.textColor = UIColor.systemBackground
         replyLabel.backgroundColor = UIColor.systemGray
         let paddingWidth = replyDescriptor.pointSize / 2

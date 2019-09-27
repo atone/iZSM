@@ -62,7 +62,7 @@ class MailListCell: UITableViewCell {
         timeLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         authorLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         
-        titleLabel.textColor = UIColor.label
+        titleLabel.textColor = UIColor(named: "MainText")
         authorLabel.textColor = UIColor(named: "SmthColor")
         unreadLabel.textColor = UIColor(named: "SmthColor")
         timeLabel.textColor = UIColor.secondaryLabel

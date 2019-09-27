@@ -119,7 +119,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
         
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        cell.textLabel?.textColor = UIColor.label
+        cell.textLabel?.textColor = UIColor(named: "MainText")
         cell.detailTextLabel?.textColor = UIColor.secondaryLabel
         return cell
     }

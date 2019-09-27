@@ -36,7 +36,7 @@ class FullscreenContentViewController: UIViewController {
             
             let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .title2)
             let titleFont = UIFont.boldSystemFont(ofSize: descriptor.pointSize)
-            let titleColor = UIColor.label
+            let titleColor = UIColor(named: "MainText")!
             let titleParagraphStyle = NSMutableParagraphStyle()
             titleParagraphStyle.alignment = .center
             titleParagraphStyle.lineBreakMode = .byWordWrapping
@@ -82,7 +82,7 @@ class FullscreenContentViewController: UIViewController {
         
         let normal: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
-                                                    .foregroundColor: UIColor.label]
+                                                    .foregroundColor: UIColor(named: "MainText")!]
         let quoted: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .body),
                                                     .paragraphStyle: NSParagraphStyle.default,
                                                     .foregroundColor: UIColor.secondaryLabel]

@@ -213,15 +213,15 @@ class AboutViewController: NTTableViewController {
 
     func updateUI() {
         silverSupportLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        silverSupportLabel.textColor = IAPHelper.canMakePayments() ? UIColor.label : UIColor.secondaryLabel
+        silverSupportLabel.textColor = IAPHelper.canMakePayments() ? UIColor(named: "MainText") : UIColor.secondaryLabel
         goldSupportLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        goldSupportLabel.textColor = IAPHelper.canMakePayments() ? UIColor.label : UIColor.secondaryLabel
+        goldSupportLabel.textColor = IAPHelper.canMakePayments() ? UIColor(named: "MainText") : UIColor.secondaryLabel
         rateLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        rateLabel.textColor = UIColor.label
+        rateLabel.textColor = UIColor(named: "MainText")
         mailLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        mailLabel.textColor = UIColor.label
+        mailLabel.textColor = UIColor(named: "MainText")
         websiteLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        websiteLabel.textColor = UIColor.label
+        websiteLabel.textColor = UIColor(named: "MainText")
         logoView.updateUI()
     }
 

@@ -47,12 +47,11 @@
         <attribute name="title" attributeType="String" defaultValueString=""/>
         <attribute name="uid" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
-    <configuration name="Cloud" usedWithCloudKit="YES">
-        <memberEntity name="ArticleReadStatus"/>
-    </configuration>
+    <configuration name="Cloud" usedWithCloudKit="YES"/>
     <configuration name="Local">
         <memberEntity name="SMBoardInfo"/>
         <memberEntity name="SMUserInfo"/>
+        <memberEntity name="ArticleReadStatus"/>
     </configuration>
     <elements>
         <element name="ArticleReadStatus" positionX="-329.8828125" positionY="35.9609375" width="128" height="133"/>

@@ -206,31 +206,25 @@ class SettingsViewController: NTTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath == IndexPath(row: 0, section: 4) {
             tableView.deselectRow(at: indexPath, animated: true)
-            let alert = UIAlertController(title: "提示", message: "通过iCloud同步到其他设备上的阅读进度也将会被清理，是否确认？", preferredStyle: .alert)
-            let confirm = UIAlertAction(title: "确认", style: .default) { action in
-                SVProgressHUD.show()
-                let container = CoreDataHelper.shared.persistentContainer
-                container.performBackgroundTask { context in
-                    let deleteUserInfoRequest = NSBatchDeleteRequest(fetchRequest: SMUserInfo.fetchRequest())
-                    let deleteBoardInfoRequest = NSBatchDeleteRequest(fetchRequest: SMBoardInfo.fetchRequest())
-                    let deleteReadStatusRequest = NSBatchDeleteRequest(fetchRequest: ArticleReadStatus.fetchRequest())
-                    do {
-                        try context.execute(deleteUserInfoRequest)
-                        try context.execute(deleteBoardInfoRequest)
-                        try context.execute(deleteReadStatusRequest)
-                    } catch {
-                        dPrint(error.localizedDescription)
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        SVProgressHUD.dismiss()
-                        SVProgressHUD.showSuccess(withStatus: "清除成功")
-                        self.updateUI()
-                    }
+            SVProgressHUD.show()
+            let container = CoreDataHelper.shared.persistentContainer
+            container.performBackgroundTask { context in
+                let deleteUserInfoRequest = NSBatchDeleteRequest(fetchRequest: SMUserInfo.fetchRequest())
+                let deleteBoardInfoRequest = NSBatchDeleteRequest(fetchRequest: SMBoardInfo.fetchRequest())
+                let deleteReadStatusRequest = NSBatchDeleteRequest(fetchRequest: ArticleReadStatus.fetchRequest())
+                do {
+                    try context.execute(deleteUserInfoRequest)
+                    try context.execute(deleteBoardInfoRequest)
+                    try context.execute(deleteReadStatusRequest)
+                } catch {
+                    dPrint(error.localizedDescription)
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    SVProgressHUD.dismiss()
+                    SVProgressHUD.showSuccess(withStatus: "清除成功")
+                    self.updateUI()
                 }
             }
-            alert.addAction(confirm)
-            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-            present(alert, animated: true)
         } else if indexPath == IndexPath(row: 1, section: 4) {
             tableView.deselectRow(at: indexPath, animated: true)
             SVProgressHUD.show()

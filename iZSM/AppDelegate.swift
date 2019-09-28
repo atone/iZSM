@@ -72,9 +72,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        // Initialize CoreData and CloudKit
-        _ = CoreDataHelper.shared.persistentContainer
-        
         var shouldPerformAdditionalDelegateHandling = true
         
         // If a shortcut was launched, display its information and take the appropriate action

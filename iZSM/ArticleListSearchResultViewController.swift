@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SVProgressHUD
 
 class ArticleListSearchResultViewController: BaseTableViewController {
     
@@ -145,65 +146,88 @@ class ArticleListSearchResultViewController: BaseTableViewController {
 }
 
 extension ArticleListSearchResultViewController {
-     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-           guard let cell = tableView.cellForRow(at: indexPath) else { return nil }
-           let thread = threads[indexPath.section][indexPath.row]
-           let identifier = NSUUID().uuidString
-           indexMap[identifier] = indexPath
-           let urlString: String
-           switch self.setting.displayMode {
-           case .nForum:
-               urlString = "https://www.newsmth.net/nForum/#!article/\(thread.boardID)/\(thread.id)"
-           case .www2:
-               urlString = "https://www.newsmth.net/bbstcon.php?board=\(thread.boardID)&gid=\(thread.id)"
-           case .mobile:
-               urlString = "https://m.newsmth.net/article/\(thread.boardID)/\(thread.id)"
-           }
-           let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
-               self.getViewController(with: thread)
-           }
-           let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
-               let openAction = UIAction(title: "浏览网页版", image: UIImage(systemName: "safari")) { [unowned self] action in
-                   let webViewController = NTSafariViewController(url: URL(string: urlString)!)
-                   self.present(webViewController, animated: true)
-               }
-               let shareAction = UIAction(title: "分享本帖", image: UIImage(systemName: "square.and.arrow.up")) { [unowned self] action in
-                   let title = "水木\(thread.boardName)版：【\(thread.subject)】"
-                   let url = URL(string: urlString)!
-                   let activityViewController = UIActivityViewController(activityItems: [title, url],
-                                                                         applicationActivities: nil)
-                   activityViewController.popoverPresentationController?.sourceView = cell
-                   activityViewController.popoverPresentationController?.sourceRect = cell.bounds
-                   self.present(activityViewController, animated: true)
-               }
-               return UIMenu(title: "", children: [openAction, shareAction])
-           }
-           return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)
-       }
-       
-       override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
-           animator.addCompletion { [unowned self] in
-               guard let identifier = configuration.identifier as? String else { return }
-               guard let indexPath = self.indexMap[identifier] else { return }
-               let thread = self.threads[indexPath.section][indexPath.row]
-               if thread.flags.hasPrefix("*") {
-                   var readThread = thread
-                   let flags = thread.flags
-                   readThread.flags = " " + flags.dropFirst()
-                   self.threads[indexPath.section][indexPath.row] = readThread
-               }
-               let acvc = self.getViewController(with: thread)
-               self.show(acvc, sender: self)
-           }
-       }
-       
-       private func getViewController(with thread: SMThread) -> ArticleContentViewController {
-           let acvc = ArticleContentViewController()
-           acvc.articleID = thread.id
-           acvc.boardID = thread.boardID
-           acvc.boardName = thread.boardName
-           acvc.title = thread.subject
-           acvc.hidesBottomBarWhenPushed = true
-           return acvc
-       }
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let cell = tableView.cellForRow(at: indexPath) else { return nil }
+        let thread = threads[indexPath.section][indexPath.row]
+        let identifier = NSUUID().uuidString
+        indexMap[identifier] = indexPath
+        let urlString: String
+        switch self.setting.displayMode {
+        case .nForum:
+            urlString = "https://www.newsmth.net/nForum/#!article/\(thread.boardID)/\(thread.id)"
+        case .www2:
+            urlString = "https://www.newsmth.net/bbstcon.php?board=\(thread.boardID)&gid=\(thread.id)"
+        case .mobile:
+            urlString = "https://m.newsmth.net/article/\(thread.boardID)/\(thread.id)"
+        }
+        let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
+            self.getViewController(with: thread)
+        }
+        let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
+            let openAction = UIAction(title: "浏览网页版", image: UIImage(systemName: "safari")) { [unowned self] action in
+                let webViewController = NTSafariViewController(url: URL(string: urlString)!)
+                self.present(webViewController, animated: true)
+            }
+            let starAction = UIAction(title: "收藏本帖", image: UIImage(systemName: "star")) { [unowned self] action in
+                let alertController = UIAlertController(title: "备注", message: nil, preferredStyle: .alert)
+                alertController.addTextField { textField in
+                    textField.placeholder = "备注信息（可选）"
+                    textField.returnKeyType = .done
+                }
+                let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alertController] _ in
+                    if let textField = alertController.textFields?.first {
+                        var comment: String? = nil
+                        if let text = textField.text, text.count > 0 {
+                            comment = text
+                        }
+                        networkActivityIndicatorStart(withHUD: true)
+                        StarThread.updateInfo(articleID: thread.id, articleTitle: thread.subject, authorID: thread.authorID, boardID: thread.boardID, comment: comment) {
+                            networkActivityIndicatorStop(withHUD: true)
+                            SVProgressHUD.showSuccess(withStatus: "收藏成功")
+                        }
+                    }
+                }
+                alertController.addAction(okAction)
+                alertController.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+                self.present(alertController, animated: true)
+            }
+            let shareAction = UIAction(title: "分享本帖", image: UIImage(systemName: "square.and.arrow.up")) { [unowned self] action in
+                let title = "水木\(thread.boardName)版：【\(thread.subject)】"
+                let url = URL(string: urlString)!
+                let activityViewController = UIActivityViewController(activityItems: [title, url],
+                                                                      applicationActivities: nil)
+                activityViewController.popoverPresentationController?.sourceView = cell
+                activityViewController.popoverPresentationController?.sourceRect = cell.bounds
+                self.present(activityViewController, animated: true)
+            }
+            return UIMenu(title: "", children: [openAction, starAction, shareAction])
+        }
+        return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)
+    }
+    
+    override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        animator.addCompletion { [unowned self] in
+            guard let identifier = configuration.identifier as? String else { return }
+            guard let indexPath = self.indexMap[identifier] else { return }
+            let thread = self.threads[indexPath.section][indexPath.row]
+            if thread.flags.hasPrefix("*") {
+                var readThread = thread
+                let flags = thread.flags
+                readThread.flags = " " + flags.dropFirst()
+                self.threads[indexPath.section][indexPath.row] = readThread
+            }
+            let acvc = self.getViewController(with: thread)
+            self.show(acvc, sender: self)
+        }
+    }
+    
+    private func getViewController(with thread: SMThread) -> ArticleContentViewController {
+        let acvc = ArticleContentViewController()
+        acvc.articleID = thread.id
+        acvc.boardID = thread.boardID
+        acvc.boardName = thread.boardName
+        acvc.title = thread.subject
+        acvc.hidesBottomBarWhenPushed = true
+        return acvc
+    }
 }

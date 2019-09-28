@@ -35,6 +35,9 @@
 		9C56E1D51F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CF1F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m */; };
 		9C56E1D61F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1D11F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m */; };
 		9C56E1D71F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1D31F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m */; };
+		9C57261B233F7389003FE851 /* StarThread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C572619233F7389003FE851 /* StarThread+CoreDataClass.swift */; };
+		9C57261E233F8CD1003FE851 /* StarThreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C57261D233F8CD1003FE851 /* StarThreadViewController.swift */; };
+		9C572620233F901F003FE851 /* StarThreadViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C57261F233F901F003FE851 /* StarThreadViewCell.swift */; };
 		9C5E17121F0F77F100AA5368 /* PageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5E17111F0F77F100AA5368 /* PageListViewController.swift */; };
 		9C642E231F40242800B13794 /* BoardListSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */; };
 		9C6EB72A1F1776E200129EA3 /* NTNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6EB7291F1776E200129EA3 /* NTNavigationController.swift */; };
@@ -315,6 +318,9 @@
 		9C56E1D11F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCell.m"; sourceTree = "<group>"; };
 		9C56E1D21F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDTemplateLayoutCellDebug.h"; sourceTree = "<group>"; };
 		9C56E1D31F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCellDebug.m"; sourceTree = "<group>"; };
+		9C572619233F7389003FE851 /* StarThread+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "StarThread+CoreDataClass.swift"; path = "CoreData/StarThread+CoreDataClass.swift"; sourceTree = "<group>"; };
+		9C57261D233F8CD1003FE851 /* StarThreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarThreadViewController.swift; sourceTree = "<group>"; };
+		9C57261F233F901F003FE851 /* StarThreadViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarThreadViewCell.swift; sourceTree = "<group>"; };
 		9C5E17111F0F77F100AA5368 /* PageListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageListViewController.swift; sourceTree = "<group>"; };
 		9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardListSearchResultViewController.swift; sourceTree = "<group>"; };
 		9C6EB7291F1776E200129EA3 /* NTNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTNavigationController.swift; sourceTree = "<group>"; };
@@ -698,6 +704,7 @@
 				9CA3B15D1DE3323B00E9B121 /* BaseTableViewController.swift */,
 				9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */,
 				9C889FCE1DE4995300C33A8D /* FavListViewController.swift */,
+				9C57261D233F8CD1003FE851 /* StarThreadViewController.swift */,
 				9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */,
 				9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */,
 				9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */,
@@ -724,6 +731,7 @@
 			isa = PBXGroup;
 			children = (
 				9CA3B1A51DE33E8D00E9B121 /* HotTableViewCell.swift */,
+				9C57261F233F901F003FE851 /* StarThreadViewCell.swift */,
 				9C889FB61DE3EEEF00C33A8D /* ArticleListViewCell.swift */,
 				9C889FBE1DE4271200C33A8D /* ArticleContentCell.swift */,
 				9C25D5AE1DE56FC9005CB55C /* MailListCell.swift */,
@@ -739,6 +747,7 @@
 				9C6FA0BD233E81BD004267EA /* ArticleReadStatus+CoreDataClass.swift */,
 				9C6FA0C1233E88E9004267EA /* SMUserInfo+CoreDataClass.swift */,
 				9CCE887A233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift */,
+				9C572619233F7389003FE851 /* StarThread+CoreDataClass.swift */,
 			);
 			name = Persistence;
 			sourceTree = "<group>";
@@ -1347,8 +1356,10 @@
 				9C25D5A91DE5634B005CB55C /* UserViewController.swift in Sources */,
 				9C25D5AD1DE56BC8005CB55C /* ReminderViewController.swift in Sources */,
 				9C9C3902232E04E40079AC71 /* NTTabBarController.swift in Sources */,
+				9C57261E233F8CD1003FE851 /* StarThreadViewController.swift in Sources */,
 				9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */,
 				9C1A3BF41DE2EA9900CF4A43 /* SmthStructs.swift in Sources */,
+				9C572620233F901F003FE851 /* StarThreadViewCell.swift in Sources */,
 				9C889FCD1DE4832E00C33A8D /* YYPhotoGroupView.m in Sources */,
 				9C7C6B151F13BD9D00940300 /* ArticleListSearchResultViewController.swift in Sources */,
 				9C889FCF1DE4995300C33A8D /* FavListViewController.swift in Sources */,
@@ -1359,6 +1370,7 @@
 				9CB573B71DE588EC00CD6F3E /* ReminderListCell.swift in Sources */,
 				9C25D5A71DE55452005CB55C /* ComposeEmailController.swift in Sources */,
 				9CC1FD5B232F5C02006CFE33 /* MessageCenter.swift in Sources */,
+				9C57261B233F7389003FE851 /* StarThread+CoreDataClass.swift in Sources */,
 				9C25D5AB1DE56BAE005CB55C /* MailBoxViewController.swift in Sources */,
 				9C1A3BEB1DE2E6EB00CF4A43 /* client_signature.m in Sources */,
 				9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */,

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SVProgressHUD
 
 struct SMHotSection {
     static let sections: [SMSection] = [
@@ -165,6 +166,29 @@ extension HotTableViewController {
                 activityViewController.popoverPresentationController?.sourceRect = cell.bounds
                 self.present(activityViewController, animated: true)
             }
+            let starAction = UIAction(title: "收藏本帖", image: UIImage(systemName: "star")) { [unowned self] action in
+                let alertController = UIAlertController(title: "备注", message: nil, preferredStyle: .alert)
+                alertController.addTextField { textField in
+                    textField.placeholder = "备注信息（可选）"
+                    textField.returnKeyType = .done
+                }
+                let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alertController] _ in
+                    if let textField = alertController.textFields?.first {
+                        var comment: String? = nil
+                        if let text = textField.text, text.count > 0 {
+                            comment = text
+                        }
+                        networkActivityIndicatorStart(withHUD: true)
+                        StarThread.updateInfo(articleID: thread.id, articleTitle: thread.subject, authorID: thread.authorID, boardID: thread.boardID, comment: comment) {
+                            networkActivityIndicatorStop(withHUD: true)
+                            SVProgressHUD.showSuccess(withStatus: "收藏成功")
+                        }
+                    }
+                }
+                alertController.addAction(okAction)
+                alertController.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+                self.present(alertController, animated: true)
+            }
             let openAction = UIAction(title: "浏览网页版", image: UIImage(systemName: "safari")) { [unowned self] action in
                 let webViewController = NTSafariViewController(url: URL(string: urlString)!)
                 self.present(webViewController, animated: true)
@@ -176,7 +200,7 @@ extension HotTableViewController {
                 alvc.hidesBottomBarWhenPushed = true
                 self.show(alvc, sender: self)
             }
-            return UIMenu(title: "", children: [shareAction, openAction, gotoBoardAction])
+            return UIMenu(title: "", children: [shareAction, starAction, openAction, gotoBoardAction])
         }
         return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)
     }

@@ -60,6 +60,7 @@ class ArticleContentViewController: NTTableViewController {
     var boardName: String? // if fromTopTen, this will not be set, so we must query this using api
     var articleID: Int?
     var fromTopTen: Bool = false
+    var fromStar: Bool = false
     
     lazy var refreshHeader: DefaultRefreshHeader = {
         let header = DefaultRefreshHeader.header()
@@ -193,7 +194,7 @@ class ArticleContentViewController: NTTableViewController {
                     }
                 }
                 
-                if self.fromTopTen && self.boardName == nil { // get boardName
+                if (self.fromTopTen || self.fromStar) && self.boardName == nil { // get boardName
                     SMBoardInfo.querySMBoardInfo(for: boardID) { (board) in
                         self.boardName = board?.name
                     }
@@ -424,13 +425,39 @@ class ArticleContentViewController: NTTableViewController {
                 self.present(activityViewController, animated: true)
             }
             actionSheet.addAction(shareAction)
+            if !fromStar, let authorID = smarticles.first?.first?.authorID, let title = self.title {
+                let starAction = UIAlertAction(title: "收藏本帖", style: .default) { [unowned self] _ in
+                    let alertController = UIAlertController(title: "备注", message: nil, preferredStyle: .alert)
+                    alertController.addTextField { textField in
+                        textField.placeholder = "备注信息（可选）"
+                        textField.returnKeyType = .done
+                    }
+                    let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alertController] _ in
+                        if let textField = alertController.textFields?.first {
+                            var comment: String? = nil
+                            if let text = textField.text, text.count > 0 {
+                                comment = text
+                            }
+                            networkActivityIndicatorStart(withHUD: true)
+                            StarThread.updateInfo(articleID: articleID, articleTitle: title, authorID: authorID, boardID: boardID, comment: comment) {
+                                networkActivityIndicatorStop(withHUD: true)
+                                SVProgressHUD.showSuccess(withStatus: "收藏成功")
+                            }
+                        }
+                    }
+                    alertController.addAction(okAction)
+                    alertController.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+                    self.present(alertController, animated: true)
+                }
+                actionSheet.addAction(starAction)
+            }
             let openAction = UIAlertAction(title: "浏览网页版", style: .default) {[unowned self] _ in
                 let webViewController = NTSafariViewController(url: URL(string: urlString)!)
                 self.present(webViewController, animated: true)
             }
             actionSheet.addAction(openAction)
         }
-        if fromTopTen {
+        if fromTopTen || fromStar {
             if let boardID = self.boardID, let boardName = self.boardName {
                 let gotoBoardAction = UIAlertAction(title: "进入 \(boardName) 版", style: .default) {[unowned self] _ in
                     let alvc = ArticleListViewController()

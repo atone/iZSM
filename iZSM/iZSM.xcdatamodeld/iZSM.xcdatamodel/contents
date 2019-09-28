@@ -47,7 +47,19 @@
         <attribute name="title" attributeType="String" defaultValueString=""/>
         <attribute name="uid" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
-    <configuration name="Cloud" usedWithCloudKit="YES"/>
+    <entity name="StarThread" representedClassName="StarThread" syncable="YES" codeGenerationType="category">
+        <attribute name="accessTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="articleID" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="articleTitle" attributeType="String" defaultValueString=""/>
+        <attribute name="authorID" attributeType="String" defaultValueString=""/>
+        <attribute name="boardID" attributeType="String" defaultValueString=""/>
+        <attribute name="comment" optional="YES" attributeType="String"/>
+        <attribute name="createTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="userID" attributeType="String" defaultValueString=""/>
+    </entity>
+    <configuration name="Cloud" usedWithCloudKit="YES">
+        <memberEntity name="StarThread"/>
+    </configuration>
     <configuration name="Local">
         <memberEntity name="SMBoardInfo"/>
         <memberEntity name="SMUserInfo"/>
@@ -57,5 +69,6 @@
         <element name="ArticleReadStatus" positionX="-329.8828125" positionY="35.9609375" width="128" height="133"/>
         <element name="SMBoardInfo" positionX="-54" positionY="27" width="128" height="343"/>
         <element name="SMUserInfo" positionX="220.4375" positionY="27.72265625" width="128" height="268"/>
+        <element name="StarThread" positionX="-126" positionY="180" width="128" height="163"/>
     </elements>
 </model>

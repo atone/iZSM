@@ -47,9 +47,7 @@ class FavListViewController: BaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if boardID == 0 { //不能在子目录下进行收藏删除和添加，驻版没有子版面
-            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
-                                                                target: self,
-                                                                action: #selector(addFavorite(_:)))
+            navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addFavorite(_:))), UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(showStarThreadVC(_:)))]
             navigationItem.leftBarButtonItem = editButtonItem
             navigationItem.titleView = switcher
         }
@@ -92,6 +90,11 @@ class FavListViewController: BaseTableViewController {
         fetchDataDirectly(showHUD: true)
     }
     
+    @objc private func showStarThreadVC(_ sender: UIBarButtonItem) {
+        let vc = StarThreadViewController(style: .plain)
+        vc.hidesBottomBarWhenPushed = true
+        show(vc, sender: self)
+    }
     
     @objc private func addFavorite(_ sender: UIBarButtonItem) {
         let title = "请选择要\(self.index == 0 ? "收藏" : "关注")的版面"

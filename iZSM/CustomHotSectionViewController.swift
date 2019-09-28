@@ -40,9 +40,13 @@ class CustomHotSectionViewController: NTTableViewController {
         NotificationCenter.default.post(name: HotTableViewController.kUpdateHotSectionNotification, object: nil)
     }
     
-    @objc private func switchChanged(_ sender: UISwitch) {
+    @objc private func customSwitchChanged(_ sender: UISwitch) {
         setting.customHotSection = sender.isOn
         tableView.reloadData()
+    }
+    
+    @objc private func autoSortSwitchChanged(_ sender: UISwitch) {
+        setting.autoSortHotSection = sender.isOn
     }
 
     // MARK: - Table view data source
@@ -57,7 +61,11 @@ class CustomHotSectionViewController: NTTableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 1
+            if setting.customHotSection {
+                return 2
+            } else {
+                return 1
+            }
         } else if section == 1 {
             return availableIndex.count
         } else {
@@ -71,10 +79,17 @@ class CustomHotSectionViewController: NTTableViewController {
             let cell = UITableViewCell(style: .default, reuseIdentifier: kSwitchLabelIdentifier)
             let customSwitch = UISwitch()
             customSwitch.isOn = setting.customHotSection
-            customSwitch.onTintColor = UIColor(named: "SmthColor")
-            customSwitch.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
+            customSwitch.addTarget(self, action: #selector(customSwitchChanged(_:)), for: .valueChanged)
             cell.accessoryView = customSwitch
             cell.textLabel?.text = "自定义热门分区"
+            return cell
+        case IndexPath(row: 1, section: 0):
+            let cell = UITableViewCell(style: .default, reuseIdentifier: kSwitchLabelIdentifier)
+            let autoSortSwitch = UISwitch()
+            autoSortSwitch.isOn = setting.autoSortHotSection
+            autoSortSwitch.addTarget(self, action: #selector(autoSortSwitchChanged(_:)), for: .valueChanged)
+            cell.accessoryView = autoSortSwitch
+            cell.textLabel?.text = "按热度排序"
             return cell
         default:
             let cell: UITableViewCell

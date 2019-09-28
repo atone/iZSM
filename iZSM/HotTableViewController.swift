@@ -62,6 +62,17 @@ class HotTableViewController: BaseTableViewController {
                     let hotThread = self.api.getHotThreadListInSection(section: sec.id + 1)
                     content.append(SMHotSection(id: sec.id + 1, name: sec.name, hotThreads: hotThread ?? [SMHotThread]()))
                 }
+                if self.setting.autoSortHotSection {
+                    content.sort { (leftSections, rightSections) -> Bool in
+                        let leftTotalCount = leftSections.hotThreads.reduce(0) { (partialCount, hotThread) -> Int in
+                            partialCount + hotThread.count
+                        }
+                        let rightTotalCount = rightSections.hotThreads.reduce(0) { (partialCount, hotThread) -> Int in
+                            partialCount + hotThread.count
+                        }
+                        return leftTotalCount > rightTotalCount
+                    }
+                }
             }
             content.insert(SMHotSection(id: 0, name: "本日十大热门话题", hotThreads: topTen), at: 0)
             DispatchQueue.main.async {

@@ -41,6 +41,7 @@ class AppSetting {
         static let NoPicModeKey = "SmthAPI.noPicModeKey"
         static let AddDeviceSignatureKey = "SmthAPI.deviceSignatureKey"
         static let CustomHotSectionKey = "SmthAPI.customHotSectionKey"
+        static let AutoSortHotSectionKey = "SmthAPI.autoSortHotSectionKey"
         static let AvailableHotSectionsKey = "SmthAPI.availableHotSectionsKey"
         static let DisabledHotSectionsKey = "SmthAPI.disabledHotSectionsKey"
         static let CustomFontScaleIndexKey = "SmthAPI.customFontScaleIndexKey"
@@ -70,6 +71,7 @@ class AppSetting {
             Static.NoPicModeKey : false,
             Static.AddDeviceSignatureKey : true,
             Static.CustomHotSectionKey : false,
+            Static.AutoSortHotSectionKey : false,
             Static.AvailableHotSectionsKey : [1, 2, 3, 4, 5, 6, 7, 8, 9],
             Static.DisabledHotSectionsKey : [0],
             Static.CustomFontScaleIndexKey: 2
@@ -261,6 +263,13 @@ class AppSetting {
         get { return defaults.bool(forKey: Static.CustomHotSectionKey) }
         set {
             defaults.set(newValue, forKey: Static.CustomHotSectionKey)
+        }
+    }
+    
+    var autoSortHotSection: Bool {
+        get { return defaults.bool(forKey: Static.AutoSortHotSectionKey) }
+        set {
+            defaults.set(newValue, forKey: Static.AutoSortHotSectionKey)
         }
     }
     

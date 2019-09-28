@@ -100,7 +100,7 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     @objc private func clickUserButton(_ button: UIButton) {
         if let userID = button.titleLabel?.text {
             networkActivityIndicatorStart()
-            SMUserInfoUtil.querySMUser(for: userID) { (user) in
+            SMUserInfo.querySMUser(for: userID) { (user) in
                 networkActivityIndicatorStop()
                 let userInfoVC = UserInfoViewController()
                 userInfoVC.modalPresentationStyle = .popover
@@ -237,7 +237,7 @@ extension ReferContentViewController: UserInfoViewControllerDelegate {
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem) {
         if let userID = reference?.userID, let boardID = reference?.boardID {
             dismiss(animated: true)
-            SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (board) in
+            SMBoardInfo.querySMBoardInfo(for: boardID) { (board) in
                 let searchResultController = ArticleListSearchResultViewController()
                 searchResultController.boardID = boardID
                 searchResultController.boardName = board?.name

@@ -107,7 +107,7 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     @objc private func clickUserButton(_ button: UIButton) {
         if let userID = button.titleLabel?.text {
             networkActivityIndicatorStart()
-            SMUserInfoUtil.querySMUser(for: userID) { (user) in
+            SMUserInfo.querySMUser(for: userID) { (user) in
                 networkActivityIndicatorStop()
                 let userInfoVC = UserInfoViewController()
                 userInfoVC.modalPresentationStyle = .popover

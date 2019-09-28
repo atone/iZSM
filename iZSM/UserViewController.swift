@@ -8,7 +8,6 @@
 
 import UIKit
 import MobileCoreServices
-import RealmSwift
 import SVProgressHUD
 import TZImagePickerController
 
@@ -67,7 +66,7 @@ class UserViewController: NTTableViewController {
     
     func updateUserInfoView() {
         if let username = setting.username {
-            SMUserInfoUtil.querySMUser(for: username) { (user) in
+            SMUserInfo.querySMUser(for: username) { (user) in
                 self.userInfoVC.updateUserInfoView(with: user)
             }
         }
@@ -213,11 +212,6 @@ class UserViewController: NTTableViewController {
         networkActivityIndicatorStart()
         DispatchQueue.global().async {
             self.api.logoutBBS()
-            let realm = try! Realm()
-            let readStatus = realm.objects(ArticleReadStatus.self)
-            try! realm.write {
-                realm.delete(readStatus)
-            }
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
                 SVProgressHUD.showSuccess(withStatus: "注销成功")
@@ -244,13 +238,13 @@ extension UserViewController: TZImagePickerControllerDelegate {
                 if let user = self.api.modifyFaceImage(image: selectedImage) {
                     networkActivityIndicatorStop()
                     dPrint("server response with new user info")
-                    SMUserInfoUtil.updateSMUser(with: user) {
+                    SMUserInfo.updateSMUserInfo(with: user) {
                         self.updateUserInfoView()
                     }
                 } else {
                     dPrint("server did not response with new user info, try getting in 2 sec.")
                     sleep(2) // 等待2s
-                    SMUserInfoUtil.querySMUser(for: self.setting.username!, forceUpdate: true) { (user) in
+                    SMUserInfo.querySMUser(for: self.setting.username!, forceUpdate: true) { (user) in
                         networkActivityIndicatorStop()
                         self.updateUserInfoView()
                     }

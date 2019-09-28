@@ -82,7 +82,7 @@ class FavListViewController: BaseTableViewController {
                 self.favorites += favBoards
                 self.tableView?.reloadData()
                 self.api.displayErrorIfNeeded()
-                SMBoardInfoUtil.save(boardList: favBoards)
+                SMBoardInfo.save(boardList: favBoards)
             }
         }
     }

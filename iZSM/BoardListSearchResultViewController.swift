@@ -26,7 +26,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let currentSearchString = searchController.searchBar.text else { return }
-        if currentSearchString.isEmpty, let topSearchResult = SMBoardInfoUtil.topSearchResult() {
+        if currentSearchString.isEmpty, let topSearchResult = SMBoardInfo.topSearchResult() {
             searchString = currentSearchString
             boards = topSearchResult
             tableView.reloadData()
@@ -46,7 +46,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
                 if let result = result {
                     let filteredResult = result.filter { ($0.flag != -1) && ($0.flag & 0x400 == 0) }
                     self.boards += filteredResult
-                    SMBoardInfoUtil.save(boardList: filteredResult)
+                    SMBoardInfo.save(boardList: filteredResult)
                 }
                 self.tableView.reloadData()
                 self.api.displayErrorIfNeeded()
@@ -80,7 +80,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let board = boards[indexPath.row]
         if (board.flag != -1) && (board.flag & 0x400 == 0) && (completionHandler != nil) {
-            SMBoardInfoUtil.hitSearch(for: board)
+            SMBoardInfo.hitSearch(for: board)
             completionHandler!(self, board)
         }
     }
@@ -95,7 +95,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let board = boards.remove(at: indexPath.row)
-            SMBoardInfoUtil.clearSearchCount(for: board)
+            SMBoardInfo.clearSearchCount(for: board)
             tableView.beginUpdates()
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()

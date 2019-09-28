@@ -26,7 +26,9 @@
 		9C25D5AB1DE56BAE005CB55C /* MailBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5AA1DE56BAE005CB55C /* MailBoxViewController.swift */; };
 		9C25D5AD1DE56BC8005CB55C /* ReminderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5AC1DE56BC8005CB55C /* ReminderViewController.swift */; };
 		9C25D5AF1DE56FC9005CB55C /* MailListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5AE1DE56FC9005CB55C /* MailListCell.swift */; };
-		9C4728F31F0FC80100C289FC /* ArticleReadStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */; };
+		9C3A3EFE233E5970006223AA /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3A3EFD233E5970006223AA /* CoreDataHelper.swift */; };
+		9C3A3F00233E5AE6006223AA /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C3A3EFF233E5AE6006223AA /* CloudKit.framework */; };
+		9C3A3F03233E5CCF006223AA /* iZSM.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9C3A3F01233E5CCF006223AA /* iZSM.xcdatamodeld */; };
 		9C4D0B091F1A6F91007B4D83 /* NTTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */; };
 		9C4E6AB11F1158EB00ABAEFA /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */; };
 		9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */; };
@@ -36,8 +38,9 @@
 		9C5E17121F0F77F100AA5368 /* PageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5E17111F0F77F100AA5368 /* PageListViewController.swift */; };
 		9C642E231F40242800B13794 /* BoardListSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */; };
 		9C6EB72A1F1776E200129EA3 /* NTNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6EB7291F1776E200129EA3 /* NTNavigationController.swift */; };
+		9C6FA0BF233E81BD004267EA /* ArticleReadStatus+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6FA0BD233E81BD004267EA /* ArticleReadStatus+CoreDataClass.swift */; };
+		9C6FA0C3233E88E9004267EA /* SMUserInfo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6FA0C1233E88E9004267EA /* SMUserInfo+CoreDataClass.swift */; };
 		9C767B5A1F1C4F3000EC7A06 /* FullscreenContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C767B591F1C4F3000EC7A06 /* FullscreenContentViewController.swift */; };
-		9C7C6B131F1364E800940300 /* SMBoardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7C6B121F1364E800940300 /* SMBoardInfo.swift */; };
 		9C7C6B151F13BD9D00940300 /* ArticleListSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */; };
 		9C889FB41DE3E24B00C33A8D /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */; };
 		9C889FB71DE3EEEF00C33A8D /* ArticleListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FB61DE3EEEF00C33A8D /* ArticleListViewCell.swift */; };
@@ -58,10 +61,8 @@
 		9CA3B1A81DE35A2300E9B121 /* BoardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */; };
 		9CA70D39233266E200F575C7 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D38233266E200F575C7 /* KeychainSwift */; };
 		9CA70D3C23326A4900F575C7 /* DeviceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D3B23326A4900F575C7 /* DeviceKit */; };
-		9CA70D3F233272FE00F575C7 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D3E233272FE00F575C7 /* RealmSwift */; };
 		9CA70D422332749600F575C7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D412332749600F575C7 /* SnapKit */; };
 		9CA70D5A2332952D00F575C7 /* PullToRefreshKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */; };
-		9CAD5A2F1F10A2950008E62C /* SMUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CAD5A2E1F10A2950008E62C /* SMUserInfo.swift */; };
 		9CB5708F1F2B87E000974BC0 /* AttachImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */; };
 		9CB573B71DE588EC00CD6F3E /* ReminderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */; };
 		9CB573B91DE58E8800CD6F3E /* MailContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573B81DE58E8800CD6F3E /* MailContentViewController.swift */; };
@@ -71,6 +72,7 @@
 		9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */; };
 		9CB573C41DE5B61800CD6F3E /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C31DE5B61800CD6F3E /* LogoView.swift */; };
 		9CC1FD5B232F5C02006CFE33 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */; };
+		9CCE887C233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCE887A233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift */; };
 		9CD4ABFD1F34362400C3D9BF /* em1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB331F34362400C3D9BF /* em1.gif */; };
 		9CD4ABFE1F34362400C3D9BF /* em10.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB341F34362400C3D9BF /* em10.gif */; };
 		9CD4ABFF1F34362400C3D9BF /* em11.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB351F34362400C3D9BF /* em11.gif */; };
@@ -300,7 +302,9 @@
 		9C25D5AA1DE56BAE005CB55C /* MailBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailBoxViewController.swift; sourceTree = "<group>"; };
 		9C25D5AC1DE56BC8005CB55C /* ReminderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderViewController.swift; sourceTree = "<group>"; };
 		9C25D5AE1DE56FC9005CB55C /* MailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailListCell.swift; sourceTree = "<group>"; };
-		9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleReadStatus.swift; sourceTree = "<group>"; };
+		9C3A3EFD233E5970006223AA /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
+		9C3A3EFF233E5AE6006223AA /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		9C3A3F02233E5CCF006223AA /* iZSM.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iZSM.xcdatamodel; sourceTree = "<group>"; };
 		9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTTableViewController.swift; sourceTree = "<group>"; };
 		9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
 		9C56E1CC1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDIndexPathHeightCache.h"; sourceTree = "<group>"; };
@@ -314,8 +318,9 @@
 		9C5E17111F0F77F100AA5368 /* PageListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageListViewController.swift; sourceTree = "<group>"; };
 		9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardListSearchResultViewController.swift; sourceTree = "<group>"; };
 		9C6EB7291F1776E200129EA3 /* NTNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTNavigationController.swift; sourceTree = "<group>"; };
+		9C6FA0BD233E81BD004267EA /* ArticleReadStatus+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ArticleReadStatus+CoreDataClass.swift"; path = "CoreData/ArticleReadStatus+CoreDataClass.swift"; sourceTree = "<group>"; };
+		9C6FA0C1233E88E9004267EA /* SMUserInfo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SMUserInfo+CoreDataClass.swift"; path = "CoreData/SMUserInfo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		9C767B591F1C4F3000EC7A06 /* FullscreenContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenContentViewController.swift; sourceTree = "<group>"; };
-		9C7C6B121F1364E800940300 /* SMBoardInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBoardInfo.swift; sourceTree = "<group>"; };
 		9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListSearchResultViewController.swift; sourceTree = "<group>"; };
 		9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListViewController.swift; sourceTree = "<group>"; };
 		9C889FB61DE3EEEF00C33A8D /* ArticleListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListViewCell.swift; sourceTree = "<group>"; };
@@ -337,7 +342,6 @@
 		9CA3B1A51DE33E8D00E9B121 /* HotTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotTableViewCell.swift; sourceTree = "<group>"; };
 		9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardListViewController.swift; sourceTree = "<group>"; };
 		9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PullToRefreshKit.framework; path = Carthage/Build/iOS/PullToRefreshKit.framework; sourceTree = "<group>"; };
-		9CAD5A2E1F10A2950008E62C /* SMUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMUserInfo.swift; sourceTree = "<group>"; };
 		9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachImageView.swift; sourceTree = "<group>"; };
 		9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderListCell.swift; sourceTree = "<group>"; };
 		9CB573B81DE58E8800CD6F3E /* MailContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailContentViewController.swift; sourceTree = "<group>"; };
@@ -347,6 +351,7 @@
 		9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		9CB573C31DE5B61800CD6F3E /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
+		9CCE887A233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SMBoardInfo+CoreDataClass.swift"; path = "CoreData/SMBoardInfo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		9CD4AB331F34362400C3D9BF /* em1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = em1.gif; sourceTree = "<group>"; };
 		9CD4AB341F34362400C3D9BF /* em10.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = em10.gif; sourceTree = "<group>"; };
 		9CD4AB351F34362400C3D9BF /* em11.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = em11.gif; sourceTree = "<group>"; };
@@ -556,7 +561,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9CA70D3F233272FE00F575C7 /* RealmSwift in Frameworks */,
 				9C1A3BE01DE2E5AD00CF4A43 /* libSMTH_0.2.3.a in Frameworks */,
 				9C889FC71DE4733A00C33A8D /* OnePasswordExtension.framework in Frameworks */,
 				9CA70D3C23326A4900F575C7 /* DeviceKit in Frameworks */,
@@ -565,6 +569,7 @@
 				9C086E011F1E3BE300023788 /* StoreKit.framework in Frameworks */,
 				9C889FB91DE409B100C33A8D /* YYKit.framework in Frameworks */,
 				9CA70D422332749600F575C7 /* SnapKit in Frameworks */,
+				9C3A3F00233E5AE6006223AA /* CloudKit.framework in Frameworks */,
 				9CA70D5A2332952D00F575C7 /* PullToRefreshKit.framework in Frameworks */,
 				9C8DEB31233313F500E5CE4A /* TZImagePickerController.framework in Frameworks */,
 			);
@@ -615,6 +620,7 @@
 				9C1A3BCB1DE2C0ED00CF4A43 /* Info.plist */,
 				9C1A3BDC1DE2E28500CF4A43 /* iZSM-Bridging-Header.h */,
 				9C8DC6262329F48800DDE69F /* iZSM.entitlements */,
+				9C3A3F01233E5CCF006223AA /* iZSM.xcdatamodeld */,
 			);
 			name = "Support Files";
 			sourceTree = "<group>";
@@ -622,6 +628,7 @@
 		9C1A3BD21DE2C5E100CF4A43 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9C3A3EFF233E5AE6006223AA /* CloudKit.framework */,
 				9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */,
 				9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */,
 				9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */,
@@ -728,9 +735,10 @@
 		9CAD5A301F10A2AA0008E62C /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
-				9C4728F21F0FC80100C289FC /* ArticleReadStatus.swift */,
-				9CAD5A2E1F10A2950008E62C /* SMUserInfo.swift */,
-				9C7C6B121F1364E800940300 /* SMBoardInfo.swift */,
+				9C3A3EFD233E5970006223AA /* CoreDataHelper.swift */,
+				9C6FA0BD233E81BD004267EA /* ArticleReadStatus+CoreDataClass.swift */,
+				9C6FA0C1233E88E9004267EA /* SMUserInfo+CoreDataClass.swift */,
+				9CCE887A233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift */,
 			);
 			name = Persistence;
 			sourceTree = "<group>";
@@ -1034,7 +1042,6 @@
 			packageProductDependencies = (
 				9CA70D38233266E200F575C7 /* KeychainSwift */,
 				9CA70D3B23326A4900F575C7 /* DeviceKit */,
-				9CA70D3E233272FE00F575C7 /* RealmSwift */,
 				9CA70D412332749600F575C7 /* SnapKit */,
 			);
 			productName = iZSM;
@@ -1079,7 +1086,6 @@
 			packageReferences = (
 				9CA70D37233266E200F575C7 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				9CA70D3A23326A4900F575C7 /* XCRemoteSwiftPackageReference "DeviceKit" */,
-				9CA70D3D233272FE00F575C7 /* XCRemoteSwiftPackageReference "realm-cocoa" */,
 				9CA70D402332749600F575C7 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 9C1A3BBD1DE2C0ED00CF4A43 /* Products */;
@@ -1359,7 +1365,6 @@
 				9CD9E6451F1DB10E00713853 /* IAPHelper.swift in Sources */,
 				9CA3B1A31DE33C0800E9B121 /* HotTableViewController.swift in Sources */,
 				9CB573C11DE5B46D00CD6F3E /* SettingsViewController.swift in Sources */,
-				9C7C6B131F1364E800940300 /* SMBoardInfo.swift in Sources */,
 				9C889FD11DE4B66E00C33A8D /* ComposeArticleController.swift in Sources */,
 				9C25D5AF1DE56FC9005CB55C /* MailListCell.swift in Sources */,
 				9C56E1D61F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m in Sources */,
@@ -1368,11 +1373,14 @@
 				9CB5708F1F2B87E000974BC0 /* AttachImageView.swift in Sources */,
 				9C07EC982330D85300EAEC8E /* NTLabel.swift in Sources */,
 				9C5E17121F0F77F100AA5368 /* PageListViewController.swift in Sources */,
+				9C6FA0BF233E81BD004267EA /* ArticleReadStatus+CoreDataClass.swift in Sources */,
 				9C118CF01F3BFFC700D6F405 /* NTSafariViewController.swift in Sources */,
+				9CCE887C233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift in Sources */,
 				9CB573B91DE58E8800CD6F3E /* MailContentViewController.swift in Sources */,
+				9C3A3EFE233E5970006223AA /* CoreDataHelper.swift in Sources */,
 				9C1A3BC01DE2C0ED00CF4A43 /* AppDelegate.swift in Sources */,
 				9C889FB41DE3E24B00C33A8D /* ArticleListViewController.swift in Sources */,
-				9CAD5A2F1F10A2950008E62C /* SMUserInfo.swift in Sources */,
+				9C6FA0C3233E88E9004267EA /* SMUserInfo+CoreDataClass.swift in Sources */,
 				9C4E6AB11F1158EB00ABAEFA /* UserInfoViewController.swift in Sources */,
 				9C1A3BF31DE2EA9900CF4A43 /* SmthAPI.swift in Sources */,
 				9CA3B1A81DE35A2300E9B121 /* BoardListViewController.swift in Sources */,
@@ -1383,7 +1391,7 @@
 				9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */,
 				9C56E1D51F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m in Sources */,
 				9C6EB72A1F1776E200129EA3 /* NTNavigationController.swift in Sources */,
-				9C4728F31F0FC80100C289FC /* ArticleReadStatus.swift in Sources */,
+				9C3A3F03233E5CCF006223AA /* iZSM.xcdatamodeld in Sources */,
 				9C767B5A1F1C4F3000EC7A06 /* FullscreenContentViewController.swift in Sources */,
 				9C889FBF1DE4271200C33A8D /* ArticleContentCell.swift in Sources */,
 				9C4D0B091F1A6F91007B4D83 /* NTTableViewController.swift in Sources */,
@@ -1629,14 +1637,6 @@
 				minimumVersion = 2.1.0;
 			};
 		};
-		9CA70D3D233272FE00F575C7 /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/realm/realm-cocoa.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.18.0;
-			};
-		};
 		9CA70D402332749600F575C7 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -1658,17 +1658,25 @@
 			package = 9CA70D3A23326A4900F575C7 /* XCRemoteSwiftPackageReference "DeviceKit" */;
 			productName = DeviceKit;
 		};
-		9CA70D3E233272FE00F575C7 /* RealmSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9CA70D3D233272FE00F575C7 /* XCRemoteSwiftPackageReference "realm-cocoa" */;
-			productName = RealmSwift;
-		};
 		9CA70D412332749600F575C7 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9CA70D402332749600F575C7 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		9C3A3F01233E5CCF006223AA /* iZSM.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9C3A3F02233E5CCF006223AA /* iZSM.xcdatamodel */,
+			);
+			currentVersion = 9C3A3F02233E5CCF006223AA /* iZSM.xcdatamodel */;
+			path = iZSM.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 9C1A3BB41DE2C0ED00CF4A43 /* Project object */;
 }

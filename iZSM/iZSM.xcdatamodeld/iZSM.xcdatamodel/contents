@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14903" systemVersion="19A573a" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ArticleReadStatus" representedClassName="ArticleReadStatus" syncable="YES" codeGenerationType="category">
+        <attribute name="articleID" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="boardID" attributeType="String" defaultValueString=""/>
+        <attribute name="row" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="section" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="sortMode" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="userID" attributeType="String" defaultValueString=""/>
+    </entity>
+    <entity name="SMBoardInfo" representedClassName="SMBoardInfo" syncable="YES" codeGenerationType="category">
+        <attribute name="bid" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="boardID" attributeType="String" defaultValueString=""/>
+        <attribute name="currentUsers" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="flag" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="group" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lastPost" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lastUpdateTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="level" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="manager" attributeType="String" defaultValueString=""/>
+        <attribute name="maxOnline" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="maxTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String" defaultValueString=""/>
+        <attribute name="position" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="score" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="scoreLevel" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="searchCount" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="section" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="total" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="type" attributeType="String" defaultValueString=""/>
+        <attribute name="unread" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="SMUserInfo" representedClassName="SMUserInfo" syncable="YES" codeGenerationType="category">
+        <attribute name="age" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="faceURL" attributeType="String" defaultValueString=""/>
+        <attribute name="firstLoginTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="gender" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="String" defaultValueString=""/>
+        <attribute name="lastLoginTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastUpdateTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="level" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="life" attributeType="String" defaultValueString=""/>
+        <attribute name="loginCount" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="nick" attributeType="String" defaultValueString=""/>
+        <attribute name="posts" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="score" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title" attributeType="String" defaultValueString=""/>
+        <attribute name="uid" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <configuration name="Cloud" usedWithCloudKit="YES">
+        <memberEntity name="ArticleReadStatus"/>
+    </configuration>
+    <configuration name="Local">
+        <memberEntity name="SMBoardInfo"/>
+        <memberEntity name="SMUserInfo"/>
+    </configuration>
+    <elements>
+        <element name="ArticleReadStatus" positionX="-329.8828125" positionY="35.9609375" width="128" height="133"/>
+        <element name="SMBoardInfo" positionX="-54" positionY="27" width="128" height="343"/>
+        <element name="SMUserInfo" positionX="220.4375" positionY="27.72265625" width="128" height="268"/>
+    </elements>
+</model>

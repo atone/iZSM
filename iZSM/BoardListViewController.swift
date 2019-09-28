@@ -47,7 +47,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let currentSearchString = searchController.searchBar.text else { return }
-        if currentSearchString.isEmpty, let topSearchResult = SMBoardInfoUtil.topSearchResult() {
+        if currentSearchString.isEmpty, let topSearchResult = SMBoardInfo.topSearchResult() {
             searchString = currentSearchString
             boards = topSearchResult
             tableView.reloadData()
@@ -68,7 +68,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                 if let result = result {
                     self.boards += result
                     let filteredResult = result.filter { ($0.flag != -1) && ($0.flag & 0x400 == 0) }
-                    SMBoardInfoUtil.save(boardList: filteredResult)
+                    SMBoardInfo.save(boardList: filteredResult)
                 }
                 self.tableView.reloadData()
                 self.api.displayErrorIfNeeded()
@@ -143,7 +143,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                 self.boards += boardList
                 self.tableView.reloadData()
                 self.api.displayErrorIfNeeded()
-                SMBoardInfoUtil.save(boardList: boardList)
+                SMBoardInfo.save(boardList: boardList)
             }
         }
     }
@@ -168,7 +168,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             alvc.hidesBottomBarWhenPushed = true
             show(alvc, sender: self)
             if searchMode {
-                SMBoardInfoUtil.hitSearch(for: board)
+                SMBoardInfo.hitSearch(for: board)
             }
         }
         
@@ -184,7 +184,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let board = boards.remove(at: indexPath.row)
-            SMBoardInfoUtil.clearSearchCount(for: board)
+            SMBoardInfo.clearSearchCount(for: board)
             tableView.beginUpdates()
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()

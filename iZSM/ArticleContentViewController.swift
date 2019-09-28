@@ -132,7 +132,7 @@ class ArticleContentViewController: NTTableViewController {
     
     private func restorePosition() {
         if let boardID = self.boardID, let articleID = self.articleID,
-            let result = ArticleReadStatusUtil.getStatus(boardID: boardID, articleID: articleID)
+            let result = ArticleReadStatus.getStatus(boardID: boardID, articleID: articleID)
         {
             self.section = result.section
             self.row = result.row
@@ -141,14 +141,14 @@ class ArticleContentViewController: NTTableViewController {
     
     private func savePosition(currentRow :Int? = nil) {
         if let currentRow = currentRow {
-            ArticleReadStatusUtil.saveStatus(section: currentSection,
+            ArticleReadStatus.saveStatus(section: currentSection,
                                              row: currentRow,
                                              boardID: boardID!,
                                              articleID: articleID!)
         } else {
             let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + view.safeAreaInsets.top)
             if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
-                ArticleReadStatusUtil.saveStatus(section: currentSection,
+                ArticleReadStatus.saveStatus(section: currentSection,
                                                  row: indexPath.row,
                                                  boardID: boardID!,
                                                  articleID: articleID!)
@@ -194,7 +194,7 @@ class ArticleContentViewController: NTTableViewController {
                 }
                 
                 if self.fromTopTen && self.boardName == nil { // get boardName
-                    SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (board) in
+                    SMBoardInfo.querySMBoardInfo(for: boardID) { (board) in
                         self.boardName = board?.name
                     }
                 }
@@ -537,7 +537,7 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
         if let userID = controller.user?.id, let boardID = controller.article?.boardID {
             dismiss(animated: true)
             SVProgressHUD.show()
-            SMBoardInfoUtil.querySMBoardInfo(for: boardID) { (board) in
+            SMBoardInfo.querySMBoardInfo(for: boardID) { (board) in
                 let searchResultController = ArticleListSearchResultViewController()
                 searchResultController.boardID = boardID
                 searchResultController.boardName = board?.name
@@ -606,7 +606,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     func cell(_ cell: ArticleContentCell, didClickUser sender: UIView?) {
         if let userID = cell.article?.authorID {
             networkActivityIndicatorStart()
-            SMUserInfoUtil.querySMUser(for: userID) { (user) in
+            SMUserInfo.querySMUser(for: userID) { (user) in
                 networkActivityIndicatorStop()
                 let userInfoVC = UserInfoViewController()
                 userInfoVC.modalPresentationStyle = .popover

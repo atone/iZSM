@@ -9,7 +9,7 @@
 import UIKit
 import YYKit
 import SVProgressHUD
-import RealmSwift
+import CoreData
 
 class SettingsViewController: NTTableViewController {
     @IBOutlet weak var hideTopLabel: UILabel!
@@ -23,6 +23,7 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var showAvatarLabel: UILabel!
     @IBOutlet weak var noPicModeLabel: UILabel!
     @IBOutlet weak var backgroundTaskLabel: UILabel!
+    @IBOutlet weak var clearReadingStatusLabel: UILabel!
     @IBOutlet weak var clearCacheLabel: UILabel!
     @IBOutlet weak var cacheSizeLabel: UILabel!
     @IBOutlet weak var logoutLabel: UILabel!
@@ -95,13 +96,6 @@ class SettingsViewController: NTTableViewController {
     
     @IBAction func rememberLastChanged(_ sender: UISwitch) {
         setting.rememberLast = sender.isOn
-        if !sender.isOn {
-            let realm = try! Realm()
-            let readStatus = realm.objects(ArticleReadStatus.self)
-            try! realm.write {
-                realm.delete(readStatus)
-            }
-        }
     }
     
     @IBAction func portraitLockChanged(_ sender: UISwitch) {
@@ -167,6 +161,8 @@ class SettingsViewController: NTTableViewController {
         noPicModeLabel.textColor = UIColor(named: "MainText")
         backgroundTaskLabel.font = font
         backgroundTaskLabel.textColor = UIColor(named: "MainText")
+        clearReadingStatusLabel.font = font
+        clearReadingStatusLabel.textColor = UIColor(named: "MainText")
         clearCacheLabel.font = font
         clearCacheLabel.textColor = UIColor(named: "MainText")
         cacheSizeLabel.font = font
@@ -210,15 +206,38 @@ class SettingsViewController: NTTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath == IndexPath(row: 0, section: 4) {
             tableView.deselectRow(at: indexPath, animated: true)
+            let alert = UIAlertController(title: "提示", message: "通过iCloud同步到其他设备上的阅读进度也将会被清理，是否确认？", preferredStyle: .alert)
+            let confirm = UIAlertAction(title: "确认", style: .default) { action in
+                SVProgressHUD.show()
+                let container = CoreDataHelper.shared.persistentContainer
+                container.performBackgroundTask { context in
+                    let deleteUserInfoRequest = NSBatchDeleteRequest(fetchRequest: SMUserInfo.fetchRequest())
+                    let deleteBoardInfoRequest = NSBatchDeleteRequest(fetchRequest: SMBoardInfo.fetchRequest())
+                    let deleteReadStatusRequest = NSBatchDeleteRequest(fetchRequest: ArticleReadStatus.fetchRequest())
+                    do {
+                        try context.execute(deleteUserInfoRequest)
+                        try context.execute(deleteBoardInfoRequest)
+                        try context.execute(deleteReadStatusRequest)
+                    } catch {
+                        dPrint(error.localizedDescription)
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        SVProgressHUD.dismiss()
+                        SVProgressHUD.showSuccess(withStatus: "清除成功")
+                        self.updateUI()
+                    }
+                }
+            }
+            alert.addAction(confirm)
+            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+            present(alert, animated: true)
+        } else if indexPath == IndexPath(row: 1, section: 4) {
+            tableView.deselectRow(at: indexPath, animated: true)
             SVProgressHUD.show()
             DispatchQueue.global().async {
                 self.cache?.memoryCache.removeAllObjects()
                 self.cache?.diskCache.removeAllObjects()
-                let realm = try! Realm()
-                try! realm.write {
-                    realm.deleteAll()
-                }
-                DispatchQueue.main.async {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     SVProgressHUD.dismiss()
                     SVProgressHUD.showSuccess(withStatus: "清除成功")
                     self.updateUI()

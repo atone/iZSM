@@ -9,7 +9,6 @@
 import UIKit
 import UserNotifications
 import BackgroundTasks
-import RealmSwift
 import SVProgressHUD
 
 @UIApplicationMain
@@ -73,16 +72,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        // realm migration
-        Realm.Configuration.defaultConfiguration = Realm.Configuration(
-            schemaVersion: 1,
-            migrationBlock: { migration, oldSchemaVersion in
-                if oldSchemaVersion < 1 {
-                    migration.enumerateObjects(ofType: SMBoardInfo.className()) { (oldObject, newObject) in
-                        newObject!["lastUpdateTime"] = Date(timeIntervalSince1970: 0)
-                    }
-                }
-        })
+        // Initialize CoreData and CloudKit
+        _ = CoreDataHelper.shared.persistentContainer
         
         var shouldPerformAdditionalDelegateHandling = true
         

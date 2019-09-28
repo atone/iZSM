@@ -121,7 +121,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         navigationItem.searchController = searchController
         navigationItem.scrollEdgeAppearance = UINavigationBarAppearance() // fix transparent search bar
         
-        let composeButton = UIBarButtonItem(barButtonSystemItem: .add,
+        let composeButton = UIBarButtonItem(barButtonSystemItem: .compose,
                                             target: self,
                                             action: #selector(composeArticle(_:)))
         navigationItem.rightBarButtonItem =  composeButton

@@ -181,9 +181,13 @@ extension ArticleListSearchResultViewController {
                             comment = text
                         }
                         networkActivityIndicatorStart(withHUD: true)
-                        StarThread.updateInfo(articleID: thread.id, articleTitle: thread.subject, authorID: thread.authorID, boardID: thread.boardID, comment: comment) {
+                        StarThread.updateInfo(articleID: thread.id, boardID: thread.boardID, comment: comment) { success in
                             networkActivityIndicatorStop(withHUD: true)
-                            SVProgressHUD.showSuccess(withStatus: "收藏成功")
+                            if success {
+                                SVProgressHUD.showSuccess(withStatus: "收藏成功")
+                            } else {
+                                SVProgressHUD.showInfo(withStatus: "收藏失败")
+                            }
                         }
                     }
                 }

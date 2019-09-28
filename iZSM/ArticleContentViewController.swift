@@ -425,7 +425,7 @@ class ArticleContentViewController: NTTableViewController {
                 self.present(activityViewController, animated: true)
             }
             actionSheet.addAction(shareAction)
-            if !fromStar, let authorID = smarticles.first?.first?.authorID, let title = self.title {
+            if !fromStar {
                 let starAction = UIAlertAction(title: "收藏本帖", style: .default) { [unowned self] _ in
                     let alertController = UIAlertController(title: "备注", message: nil, preferredStyle: .alert)
                     alertController.addTextField { textField in
@@ -439,9 +439,13 @@ class ArticleContentViewController: NTTableViewController {
                                 comment = text
                             }
                             networkActivityIndicatorStart(withHUD: true)
-                            StarThread.updateInfo(articleID: articleID, articleTitle: title, authorID: authorID, boardID: boardID, comment: comment) {
+                            StarThread.updateInfo(articleID: articleID, boardID: boardID, comment: comment) { success in
                                 networkActivityIndicatorStop(withHUD: true)
-                                SVProgressHUD.showSuccess(withStatus: "收藏成功")
+                                if success {
+                                    SVProgressHUD.showSuccess(withStatus: "收藏成功")
+                                } else {
+                                    SVProgressHUD.showInfo(withStatus: "收藏失败")
+                                }
                             }
                         }
                     }

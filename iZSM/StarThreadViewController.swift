@@ -14,6 +14,8 @@ class StarThreadViewController: NTTableViewController {
     let kCellIdentifier = "StarThreadViewCell"
     let container = CoreDataHelper.shared.persistentContainer
     
+    private var indexMap = [String : IndexPath]()
+    
     var fetchedResultsController: NSFetchedResultsController<StarThread>?
 
     override func viewDidLoad() {
@@ -147,5 +149,68 @@ extension StarThreadViewController: NSFetchedResultsControllerDelegate {
         @unknown default:
             break
         }
+    }
+}
+
+extension StarThreadViewController {
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let cell = tableView.cellForRow(at: indexPath) else { return nil }
+        guard let frc = self.fetchedResultsController else { return nil }
+        let thread = frc.object(at: indexPath)
+        guard let boardID = thread.boardID, let articleTitle = thread.articleTitle else { return nil }
+        let identifier = NSUUID().uuidString
+        indexMap[identifier] = indexPath
+        let urlString: String
+        switch AppSetting.shared.displayMode {
+        case .nForum:
+            urlString = "https://www.newsmth.net/nForum/#!article/\(boardID)/\(thread.articleID)"
+        case .www2:
+            urlString = "https://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(thread.articleID)"
+        case .mobile:
+            urlString = "https://m.newsmth.net/article/\(boardID)/\(thread.articleID)"
+        }
+        let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
+            self.getViewController(with: thread)
+        }
+        let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
+            let openAction = UIAction(title: "浏览网页版", image: UIImage(systemName: "safari")) { [unowned self] action in
+                let webViewController = NTSafariViewController(url: URL(string: urlString)!)
+                self.present(webViewController, animated: true)
+            }
+            let shareAction = UIAction(title: "分享本帖", image: UIImage(systemName: "square.and.arrow.up")) { [unowned self] action in
+                let title = "水木\(boardID)版：【\(articleTitle)】"
+                let url = URL(string: urlString)!
+                let activityViewController = UIActivityViewController(activityItems: [title, url],
+                                                                      applicationActivities: nil)
+                activityViewController.popoverPresentationController?.sourceView = cell
+                activityViewController.popoverPresentationController?.sourceRect = cell.bounds
+                self.present(activityViewController, animated: true)
+            }
+            return UIMenu(title: "", children: [openAction, shareAction])
+        }
+        return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)
+    }
+    
+    override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        animator.addCompletion { [unowned self] in
+            guard let identifier = configuration.identifier as? String else { return }
+            guard let indexPath = self.indexMap[identifier] else { return }
+            guard let frc = self.fetchedResultsController else { return }
+            let thread = frc.object(at: indexPath)
+            thread.accessTime = Date()
+            try? frc.managedObjectContext.save()
+            let acvc = self.getViewController(with: thread)
+            self.show(acvc, sender: self)
+        }
+    }
+    
+    private func getViewController(with thread: StarThread) -> ArticleContentViewController {
+        let acvc = ArticleContentViewController()
+        acvc.articleID = Int(thread.articleID)
+        acvc.boardID = thread.boardID
+        acvc.fromStar = true
+        acvc.title = thread.articleTitle
+        acvc.hidesBottomBarWhenPushed = true
+        return acvc
     }
 }

@@ -41,11 +41,13 @@ extension StarThread {
                         thread.userID = userID
                     }
                     try context.save()
+                    callback?(true)
                 } catch {
                     let error = error as NSError
                     dPrint(error.userInfo)
+                    callback?(false)
                 }
-                callback?(true)
+                
             } else {
                 callback?(false)
             }

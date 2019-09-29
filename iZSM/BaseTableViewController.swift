@@ -161,7 +161,7 @@ class BaseTableViewController: NTTableViewController {
 extension BaseTableViewController: LoginViewControllerDelegate {
     func loginDidSuccessful() {
         dPrint("login successful")
-        dismiss(animated: false)
+        dismiss(animated: true)
         fetchDataDirectly(showHUD: true)
     }
 }

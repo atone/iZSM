@@ -26,8 +26,8 @@ extension StarThread {
                 request.fetchLimit = 1
                 do {
                     if let thread = try context.fetch(request).first {
+                        // only update title and comment
                         thread.articleTitle = article.subject
-                        thread.authorID = article.authorID
                         thread.comment = comment
                     } else {
                         let thread = StarThread(context: context)
@@ -38,6 +38,7 @@ extension StarThread {
                         thread.boardID = boardID
                         thread.comment = comment
                         thread.createTime = Date()
+                        thread.postTime = article.time
                         thread.userID = userID
                     }
                     try context.save()

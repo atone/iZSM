@@ -56,17 +56,4 @@ class CoreDataHelper {
 //        }
         return container
     }()
-
-    // MARK: - Core Data Saving support
-
-    func saveContext () {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                dPrint("ERROR: Unable to save context: \(error.localizedDescription)")
-            }
-        }
-    }
 }

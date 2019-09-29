@@ -92,8 +92,9 @@ class StarThreadViewCell: UITableViewCell {
             let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
             let normalAttributes: [NSAttributedString.Key : Any] = [.font: normalInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let userIDAttributes: [NSAttributedString.Key : Any] = [.font: boldInfoFont, .foregroundColor: UIColor.secondaryLabel]
-            let attributedText = NSMutableAttributedString(string: " • \(postTime.shortDateString) • ", attributes: normalAttributes)
+            let attributedText = NSMutableAttributedString(string: " • ", attributes: normalAttributes)
             attributedText.append(NSAttributedString(string: authorID, attributes: userIDAttributes))
+            attributedText.append(NSAttributedString(string: " • \(postTime.relativeDateString)", attributes: normalAttributes))
             userIDLabel.attributedText = attributedText
             if let comment = comment {
                 commentLabel.attributedText = NSAttributedString(string: comment, attributes: normalAttributes)

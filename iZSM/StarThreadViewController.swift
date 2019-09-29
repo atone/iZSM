@@ -67,11 +67,8 @@ class StarThreadViewController: NTTableViewController {
     
     func configure(_ cell: UITableViewCell, at indexPath: IndexPath) {
         let cell = cell as! StarThreadViewCell
-        if let object = fetchedResultsController?.object(at: indexPath) {
-            cell.set(title: object.articleTitle, boardID: object.boardID, authorID: object.authorID, comment: object.comment, tableView: tableView)
-        } else {
-            cell.set(title: nil, boardID: nil, authorID: nil, comment: nil, tableView: nil)
-        }
+        let object = fetchedResultsController?.object(at: indexPath)
+        cell.configure(with: object, tableView: tableView)
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

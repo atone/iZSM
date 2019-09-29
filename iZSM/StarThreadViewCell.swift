@@ -14,6 +14,7 @@ class StarThreadViewCell: UITableViewCell {
     var title: String?
     var boardID: String?
     var authorID: String?
+    var postTime: Date?
     var comment: String?
 
     private let setting = AppSetting.shared
@@ -26,11 +27,12 @@ class StarThreadViewCell: UITableViewCell {
     
     var offset: Constraint?
     
-    func set(title: String?, boardID: String?, authorID: String?, comment: String?, tableView: UITableView?) {
-        self.title = title
-        self.boardID = boardID
-        self.authorID = authorID
-        self.comment = comment
+    func configure(with thread: StarThread?, tableView: UITableView?) {
+        self.title = thread?.articleTitle
+        self.boardID = thread?.boardID
+        self.authorID = thread?.authorID
+        self.postTime = thread?.postTime
+        self.comment = thread?.comment
         self.tableView = tableView
         updateUI()
     }
@@ -80,7 +82,7 @@ class StarThreadViewCell: UITableViewCell {
     
     /// Update font size and color
     private func updateUI() {
-        if let title = title, let boardID = boardID, let authorID = authorID {
+        if let title = title, let boardID = boardID, let authorID = authorID, let postTime = postTime {
             titleLabel.text = title
             boardLabel.text = boardID
             let titleDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
@@ -90,7 +92,7 @@ class StarThreadViewCell: UITableViewCell {
             let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
             let normalAttributes: [NSAttributedString.Key : Any] = [.font: normalInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let userIDAttributes: [NSAttributedString.Key : Any] = [.font: boldInfoFont, .foregroundColor: UIColor.secondaryLabel]
-            let attributedText = NSMutableAttributedString(string: " • ", attributes: normalAttributes)
+            let attributedText = NSMutableAttributedString(string: " • \(postTime.shortDateString) • ", attributes: normalAttributes)
             attributedText.append(NSAttributedString(string: authorID, attributes: userIDAttributes))
             userIDLabel.attributedText = attributedText
             if let comment = comment {

@@ -49,6 +49,7 @@ class CoreDataHelper {
                 dPrint("ERROR: Unresolved error \(error), \(error.userInfo)")
             }
         }
+        container.viewContext.automaticallyMergesChangesFromParent = true
 //        do {
 //            try container.initializeCloudKitSchema(options: [])
 //        } catch {

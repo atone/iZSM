@@ -10,6 +10,7 @@ import UIKit
 import MobileCoreServices
 import SVProgressHUD
 import TZImagePickerController
+import DeviceKit
 
 class UserViewController: NTTableViewController {
     
@@ -49,7 +50,16 @@ class UserViewController: NTTableViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let newHeight = CGFloat.minimum(view.bounds.width * 0.75, view.bounds.height * 0.4)
+        let newHeight: CGFloat
+        if Device.current.diagonal > 5.5 || Device.current.diagonal == -1 {
+            // for thin iPhones and iPads and future devices
+            newHeight = view.bounds.height * 0.4
+        } else if Device.current.diagonal > 4 {
+            newHeight = view.bounds.width * 0.8
+        } else {
+            // for iPhone SE
+            newHeight = view.bounds.width * 0.9
+        }
         let newSize = CGSize(width: view.bounds.width, height: newHeight)
         if userInfoVC.view.frame.size != newSize {
             userInfoVC.view.frame.size = newSize

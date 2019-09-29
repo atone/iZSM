@@ -27,6 +27,8 @@ class StarThreadViewController: NTTableViewController {
         title = "文章收藏"
         
         let request: NSFetchRequest<StarThread> = StarThread.fetchRequest()
+        let userID = AppSetting.shared.username!.lowercased()
+        request.predicate = NSPredicate(format: "userID == '\(userID)'")
         request.sortDescriptors = [NSSortDescriptor(key: "createTime", ascending: false)]
         fetchedResultsController = NSFetchedResultsController<StarThread>(fetchRequest: request, managedObjectContext: container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultsController?.delegate = self

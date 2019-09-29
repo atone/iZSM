@@ -17,7 +17,7 @@ public class StarThread: NSManagedObject {
 
 extension StarThread {
     class func updateInfo(articleID: Int, boardID: String, comment: String? = nil, callback: ((_ success: Bool) -> Void)? = nil) {
-        guard let userID = AppSetting.shared.username else { return }
+        guard let userID = AppSetting.shared.username?.lowercased() else { return }
         let container = CoreDataHelper.shared.persistentContainer
         container.performBackgroundTask { context in
             if let article = SmthAPI().getArticleInBoard(boardID: boardID, articleID: articleID) {

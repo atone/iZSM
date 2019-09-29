@@ -198,7 +198,6 @@ class UserViewController: NTTableViewController {
     func updateUI() {
         let count = msgCenter.mailCount + msgCenter.replyCount + msgCenter.referCount
         DispatchQueue.main.async {
-            UIApplication.shared.applicationIconBadgeNumber = count
             if count > 0 {
                 self.tabBarItem.badgeValue = "\(count)"
             } else {

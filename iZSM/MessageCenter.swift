@@ -48,6 +48,7 @@ class MessageCenter {
                 let newMailCount = self.api.getMailStatus()?.newCount ?? 0
                 let newReplyCount = self.api.getReferCount(mode: .ReplyToMe)?.newCount ?? 0
                 let newReferCount = self.api.getReferCount(mode: .AtMe)?.newCount ?? 0
+                UIApplication.shared.applicationIconBadgeNumber = newMailCount + newReplyCount + newReferCount
                 dPrint("mail \(self.mailCount) -> \(newMailCount), reply \(self.replyCount) -> \(newReplyCount), refer \(self.referCount) -> \(newReferCount)")
                 
                 if post && newMailCount > self.mailCount {

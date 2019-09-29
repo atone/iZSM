@@ -15,7 +15,7 @@ class FavListViewController: BaseTableViewController {
     private let kDirectoryIdentifier = "Directory"
     
     private lazy var switcher: UISegmentedControl = {
-        let switcher = UISegmentedControl(items: ["收藏夹", "驻版"])
+        let switcher = UISegmentedControl(items: ["版面收藏", "驻版"])
         switcher.selectedSegmentIndex = 0
         switcher.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         switcher.addTarget(self, action: #selector(indexChanged(_:)), for: .valueChanged)
@@ -47,7 +47,7 @@ class FavListViewController: BaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if boardID == 0 { //不能在子目录下进行收藏删除和添加，驻版没有子版面
-            navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addFavorite(_:))), UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(showStarThreadVC(_:)))]
+            navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addFavorite(_:))), UIBarButtonItem(image: UIImage(systemName: "text.badge.star"), style: .plain, target: self, action: #selector(showStarThreadVC(_:)))]
             navigationItem.leftBarButtonItem = editButtonItem
             navigationItem.titleView = switcher
         }

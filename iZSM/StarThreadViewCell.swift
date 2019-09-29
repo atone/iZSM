@@ -22,13 +22,16 @@ class StarThreadViewCell: UITableViewCell {
     private let userIDLabel = UILabel()
     private let commentLabel = UILabel()
     
+    private weak var tableView: UITableView?
+    
     var offset: Constraint?
     
-    func set(title: String?, boardID: String?, authorID: String?, comment: String?) {
+    func set(title: String?, boardID: String?, authorID: String?, comment: String?, tableView: UITableView?) {
         self.title = title
         self.boardID = boardID
         self.authorID = authorID
         self.comment = comment
+        self.tableView = tableView
         updateUI()
     }
     
@@ -112,5 +115,11 @@ class StarThreadViewCell: UITableViewCell {
             userIDLabel.text = nil
             commentLabel.text = nil
         }
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView?.beginUpdates()
+        tableView?.endUpdates()
     }
 }

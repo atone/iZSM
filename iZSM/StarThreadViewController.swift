@@ -35,6 +35,9 @@ class StarThreadViewController: NTTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let object = fetchedResultsController?.object(at: indexPath) else { return }
+        guard let context = fetchedResultsController?.managedObjectContext else { return }
+        object.accessTime = Date()
+        try? context.save()
         let acvc = ArticleContentViewController()
         acvc.articleID = Int(object.articleID)
         acvc.boardID = object.boardID

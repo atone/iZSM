@@ -183,6 +183,10 @@ class FavListViewController: BaseTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let board = favorites[indexPath.row]
+        if board.bid < 0 || board.position < 0 {
+            tableView.deselectRow(at: indexPath, animated: true)
+            return
+        }
         if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
             let flvc = FavListViewController()
             flvc.title = board.name

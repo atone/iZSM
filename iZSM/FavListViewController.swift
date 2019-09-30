@@ -239,6 +239,9 @@ class FavListViewController: BaseTableViewController {
 extension FavListViewController {
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let board = favorites[indexPath.row]
+        if board.bid < 0 || board.position < 0 {
+            return nil
+        }
         let identifier = NSUUID().uuidString
         indexMap[identifier] = indexPath
         let preview: UIContextMenuContentPreviewProvider = { [unowned self] in

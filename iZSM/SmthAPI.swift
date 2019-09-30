@@ -360,15 +360,15 @@ class SmthAPI {
     }
 
     // add favorite board
-    func addFavorite(boardID: String) {
+    func addFavorite(boardID: String, group: Int) {
         api.reset_status()
-        api.net_AddFav(boardID)
+        api.net_AddFav(boardID, group)
     }
 
     // del favorite board
-    func deleteFavorite(boardID: String) {
+    func delFavorite(boardID: String, group: Int) {
         api.reset_status()
-        api.net_DelFav(boardID)
+        api.net_DelFav(boardID, group)
     }
 
     // MARK: - Board

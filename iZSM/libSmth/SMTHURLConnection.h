@@ -59,8 +59,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *_Nullable)net_LoadSectionHot:(long)section;
 // favorite
 - (NSArray *_Nullable)net_LoadFavorites:(long)group;
-- (void)net_AddFav:(NSString *)board_id;
-- (void)net_DelFav:(NSString *)board_id;
+- (void)net_AddFav:(NSString *)board_id :(long)group;
+- (void)net_DelFav:(NSString *)board_id :(long)group;
 // board
 - (NSArray *_Nullable)net_LoadBoards:(long)group;
 - (NSArray *_Nullable)net_QueryBoard:(NSString *)search;

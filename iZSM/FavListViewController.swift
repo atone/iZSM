@@ -32,7 +32,7 @@ class FavListViewController: BaseTableViewController {
     
     private var indexMap = [String : IndexPath]()
     
-    var boardID: Int = 0
+    var groupID: Int = 0
     private var favorites = [SMBoard]()
     
     override func clearContent() {
@@ -46,11 +46,13 @@ class FavListViewController: BaseTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if boardID == 0 { //不能在子目录下进行收藏删除和添加，驻版没有子版面
-            navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addFavorite(_:))), UIBarButtonItem(image: UIImage(systemName: "text.badge.star"), style: .plain, target: self, action: #selector(showStarThreadVC(_:)))]
-            navigationItem.leftBarButtonItem = editButtonItem
+        var barButtonItems = [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addFavorite(_:)))]
+        if groupID == 0 { //只有根目录下有进入文章收藏的入口，以及切换收藏夹和驻版的Switcher
+            barButtonItems.append(UIBarButtonItem(image: UIImage(systemName: "text.badge.star"), style: .plain, target: self, action: #selector(showStarThreadVC(_:))))
             navigationItem.titleView = switcher
+            navigationItem.leftBarButtonItem = editButtonItem
         }
+        navigationItem.rightBarButtonItems = barButtonItems
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(setUpdateFavList(_:)),
                                                name: FavListViewController.kUpdateFavListNotification,
@@ -66,7 +68,7 @@ class FavListViewController: BaseTableViewController {
         DispatchQueue.global().async {
             var favBoards = [SMBoard]()
             if self.index == 0 {
-                let ret = self.api.getFavBoardList(group: self.boardID) ?? [SMBoard]()
+                let ret = self.api.getFavBoardList(group: self.groupID) ?? [SMBoard]()
                 favBoards += ret
             } else {
                 let ret = self.api.getUserMemberList(userID: userID) ?? [SMMember]()
@@ -117,7 +119,7 @@ class FavListViewController: BaseTableViewController {
         DispatchQueue.global().async {
             var joinResult = 0
             if self.index == 0 {
-                self.api.addFavorite(boardID: boardID)
+                self.api.addFavorite(boardID: boardID, group: self.groupID)
             } else {
                 joinResult = self.api.joinMemberOfBoard(boardID: boardID)
             }
@@ -182,7 +184,7 @@ class FavListViewController: BaseTableViewController {
         if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
             let flvc = FavListViewController()
             flvc.title = board.name
-            flvc.boardID = board.bid
+            flvc.groupID = board.bid
             show(flvc, sender: self)
         } else {
             let alvc = ArticleListViewController()
@@ -194,9 +196,6 @@ class FavListViewController: BaseTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if boardID != 0 {
-            return false //不能在子目录下进行收藏删除
-        }
         let boardFlag = favorites[indexPath.row].flag
         if (boardFlag != -1) && (boardFlag & 0x400 == 0) { //版面
             return true
@@ -211,7 +210,7 @@ class FavListViewController: BaseTableViewController {
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
                 if self.index == 0 {
-                    self.api.deleteFavorite(boardID: boardID)
+                    self.api.delFavorite(boardID: boardID, group: self.groupID)
                 } else {
                     let _ = self.api.quitMemberOfBoard(boardID: boardID)
                 }
@@ -256,7 +255,7 @@ extension FavListViewController {
         if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
             let flvc = FavListViewController()
             flvc.title = board.name
-            flvc.boardID = board.bid
+            flvc.groupID = board.bid
             return flvc
         } else {
             let alvc = ArticleListViewController()

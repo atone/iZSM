@@ -242,7 +242,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     func addFavoriteWithBoardID(boardID: String) {
         networkActivityIndicatorStart(withHUD: true)
         DispatchQueue.global().async {
-            self.api.addFavorite(boardID: boardID)
+            self.api.addFavorite(boardID: boardID, group: 0)
             DispatchQueue.main.async {
                 networkActivityIndicatorStop(withHUD: true)
                 if self.api.errorCode == 0 {

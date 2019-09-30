@@ -165,6 +165,8 @@ class FavListViewController: BaseTableViewController {
                 cell = newCell
             } else {
                 cell = UITableViewCell(style: .default, reuseIdentifier: kDirectoryIdentifier)
+                cell.accessoryView = UIImageView(image: UIImage(systemName: "folder"))
+                cell.accessoryView?.tintColor = UIColor.secondaryLabel
             }
         }
         // Configure the cell...

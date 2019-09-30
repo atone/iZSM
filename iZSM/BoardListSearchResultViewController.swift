@@ -57,7 +57,6 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshHeaderEnabled = false
-        definesPresentationContext = true
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.delegate = self
         searchController.searchBar.delegate = self

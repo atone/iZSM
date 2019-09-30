@@ -111,7 +111,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         tableView.register(ArticleListViewCell.self, forCellReuseIdentifier: kArticleListCellIdentifier)
         
         // search related
-        definesPresentationContext = true
         searchController = UISearchController(searchResultsController: nil)
         searchController?.obscuresBackgroundDuringPresentation = false
         searchController?.delegate = self

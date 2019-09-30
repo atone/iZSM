@@ -80,12 +80,10 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         
         if boardID == 0 { //只在根目录下显示搜索
             // search related
-            definesPresentationContext = true
             searchController = UISearchController(searchResultsController: nil)
             searchController?.obscuresBackgroundDuringPresentation = false
             searchController?.delegate = self
             searchController?.searchResultsUpdater = self
-            searchController?.hidesNavigationBarDuringPresentation = false
             searchController?.searchBar.placeholder = "版面名称/关键字搜索"
             navigationItem.searchController = searchController
             navigationItem.scrollEdgeAppearance = UINavigationBarAppearance() // fix transparent search bar

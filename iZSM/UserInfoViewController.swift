@@ -106,9 +106,7 @@ class UserInfoViewController: UIViewController {
             make.bottom.equalTo(toolbar.snp.top)
         }
         backgroundView.addSubview(idLabel)
-        idLabel.textColor = UIColor.label
-        idLabel.font = UIFont.boldSystemFont(ofSize: idLabelFontSize)
-        idLabel.textAlignment = .center
+        configure(idLabel, color: .label, size: idLabelFontSize)
         idLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         idLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         idLabel.snp.makeConstraints { (make) in
@@ -139,43 +137,23 @@ class UserInfoViewController: UIViewController {
             make.trailing.equalTo(backgroundView).offset(-margin)
             make.bottom.equalTo(backgroundView).offset(-margin)
         }
-        titleLabel.textColor = UIColor.secondaryLabel
-        titleLabel.textAlignment = .center
-        titleLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
-        levelLabel.textColor = UIColor.secondaryLabel
-        levelLabel.textAlignment = .center
-        levelLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
-        postsLabel.textColor = UIColor.secondaryLabel
-        postsLabel.textAlignment = .center
-        postsLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
-        scoreLabel.textColor = UIColor.secondaryLabel
-        scoreLabel.textAlignment = .center
-        scoreLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
-        loginLabel.textColor = UIColor.secondaryLabel
-        loginLabel.textAlignment = .center
-        loginLabel.font = UIFont.systemFont(ofSize: otherLabelFontSize)
+        configure(titleLabel, color: .secondaryLabel, size: otherLabelFontSize)
+        configure(levelLabel, color: .secondaryLabel, size: otherLabelFontSize)
+        configure(postsLabel, color: .secondaryLabel, size: otherLabelFontSize)
+        configure(scoreLabel, color: .secondaryLabel, size: otherLabelFontSize)
+        configure(loginLabel, color: .secondaryLabel, size: otherLabelFontSize)
         backgroundView.addSubview(titleContentLabel)
         backgroundView.addSubview(levelContentLabel)
         backgroundView.addSubview(postsContentLabel)
         backgroundView.addSubview(scoreContentLabel)
         backgroundView.addSubview(loginContentLabel)
-        titleContentLabel.textColor = UIColor.label
-        titleContentLabel.textAlignment = .center
-        titleContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
-        levelContentLabel.textColor = UIColor.label
-        levelContentLabel.textAlignment = .center
-        levelContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
-        postsContentLabel.textColor = UIColor.label
-        postsContentLabel.textAlignment = .center
-        postsContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
+        configure(titleContentLabel, color: .label, size: otherContentLabelFontSize)
+        configure(levelContentLabel, color: .label, size: otherContentLabelFontSize)
+        configure(postsContentLabel, color: .label, size: otherContentLabelFontSize)
+        configure(scoreContentLabel, color: .label, size: otherContentLabelFontSize)
+        configure(loginContentLabel, color: .label, size: otherContentLabelFontSize)
         postsContentLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         postsContentLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        scoreContentLabel.textColor = UIColor.label
-        scoreContentLabel.textAlignment = .center
-        scoreContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
-        loginContentLabel.textColor = UIColor.label
-        loginContentLabel.textAlignment = .center
-        loginContentLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
         titleContentLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(titleLabel)
             make.bottom.equalTo(titleLabel.snp.top).offset(-margin2)
@@ -198,9 +176,7 @@ class UserInfoViewController: UIViewController {
         }
         
         backgroundView.addSubview(nickLabel)
-        nickLabel.textColor = UIColor.label
-        nickLabel.font = UIFont.systemFont(ofSize: nickLabelFontSize)
-        nickLabel.textAlignment = .center
+        configure(nickLabel, color: .label, size: nickLabelFontSize)
         nickLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
         nickLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         nickLabel.snp.makeConstraints { (make) in
@@ -209,6 +185,16 @@ class UserInfoViewController: UIViewController {
             make.bottom.equalTo(postsContentLabel.snp.top)
             make.width.lessThanOrEqualToSuperview()
         }
+    }
+    
+    private func configure(_ label: UILabel, color: UIColor, size: CGFloat, bold: Bool = false) {
+        label.textColor = color
+        if bold {
+            label.font = .boldSystemFont(ofSize: size)
+        } else {
+            label.font = .systemFont(ofSize: size)
+        }
+        label.textAlignment = .center
     }
     
     private func setupContent() {

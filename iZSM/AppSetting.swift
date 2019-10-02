@@ -45,6 +45,7 @@ class AppSetting {
         static let AvailableHotSectionsKey = "SmthAPI.availableHotSectionsKey"
         static let DisabledHotSectionsKey = "SmthAPI.disabledHotSectionsKey"
         static let CustomFontScaleIndexKey = "SmthAPI.customFontScaleIndexKey"
+        static let ThreadSortModeKey = "SmthAPI.threadSortModeKey"
     }
 
     private let defaults = UserDefaults.standard
@@ -74,7 +75,8 @@ class AppSetting {
             Static.AutoSortHotSectionKey : false,
             Static.AvailableHotSectionsKey : [1, 2, 3, 4, 5, 6, 7, 8, 9],
             Static.DisabledHotSectionsKey : [0],
-            Static.CustomFontScaleIndexKey: 2
+            Static.CustomFontScaleIndexKey: 2,
+            Static.ThreadSortModeKey : 0
         ]
         defaults.register(defaults: initialSettings)
     }
@@ -315,5 +317,18 @@ class AppSetting {
     
     var largeFontScale: CGFloat {
         return fontScale * 1.1
+    }
+    
+    enum ThreadSortMode: Int {
+        case byReplyNewFirst = 0, byReplyOldFirst, byPostNewFirst, byPostOldFirst
+    }
+    
+    var threadSortMode: ThreadSortMode {
+        get {
+            return ThreadSortMode(rawValue: defaults.integer(forKey: Static.ThreadSortModeKey)) ?? .byReplyNewFirst
+        }
+        set {
+            defaults.set(newValue.rawValue, forKey: Static.ThreadSortModeKey)
+        }
     }
 }

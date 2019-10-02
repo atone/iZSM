@@ -79,6 +79,40 @@ class SmthAPI {
         return api.net_GetThreadCnt(boardID)
     }
 
+    // get thread list in origin mode
+    func getOriginThreadList(for boardID: String, page: Int? = nil) -> (page: Int, threads: [SMThread])? {
+        var url = "https://www.newsmth.net/bbsdoc.php?board=\(boardID)&ftype=6"
+        if let page = page {
+            url.append(contentsOf: "&page=\(page)")
+        }
+        guard let data = try? Data(contentsOf: URL(string: url)!) else { return nil }
+        let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
+        guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return nil }
+        let lines = result.components(separatedBy: .newlines)
+        guard let writerLine = lines.filter({ $0.hasPrefix("var c = new docWriter(")}).first else { return nil }
+        let writerComponents = writerLine.split(separator: ",")
+        guard writerComponents.count == 10 else { return nil }
+        guard let page = Int(writerComponents[5]) else { return nil }
+        
+        let threads: [SMThread] = lines.filter({ $0.hasPrefix("c.o(") }).map { (line) -> SMThread in
+            let start = line.index(line.startIndex, offsetBy: 4)
+            let end = line.index(line.endIndex, offsetBy: -2)
+            let cleanLine = line[start..<end]
+            let components = cleanLine.split(separator: ",")
+            let id = Int(components[1]) ?? 0
+            let author = String(components[2]).trimmingCharacters(in: CharacterSet(charactersIn: "'"))
+            let flag = String(components[3]).trimmingCharacters(in: CharacterSet(charactersIn: "'"))
+            let time = Date(timeIntervalSince1970: TimeInterval(components[4]) ?? 0)
+            let title = String(components[5]).trimmingCharacters(in: CharacterSet(charactersIn: "'").union(.whitespaces))
+            return SMThread(id: id, time: time, subject: title, authorID: author, lastReplyAuthorID: "", lastReplyThreadID: 0, boardID: "", boardName: "", flags: flag, count: 0, lastReplyTime: Date(timeIntervalSince1970: 0))
+        }
+        
+        if threads.count > 0 {
+            return (page, threads)
+        }
+        return nil
+    }
+    
     enum ClearUnreadMode: Int32 {
         case ClearAll = 0, ClearLast, NotClear
     }

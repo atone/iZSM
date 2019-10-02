@@ -136,21 +136,27 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             let currentMode = self.searchMode
             networkActivityIndicatorStart(withHUD: showHUD)
             DispatchQueue.global().async {
-                var threadSection = self.api.getThreadListForBoard(boardID: boardID,
-                                                                   inRange: self.threadRange,
-                                                                   brcmode: .NotClear)
-                if self.setting.hideAlwaysOnTopThread {
-                    threadSection = threadSection?.filter {
-                        !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                var threadSection = [SMThread]()
+                while threadSection.count == 0,
+                    let thread = self.api.getThreadListForBoard(boardID: boardID,
+                                                                inRange: self.threadRange,
+                                                                brcmode: .NotClear) {
+                    // self.threadLoaded存储的是已经加载的主题数（包括被过滤掉的）
+                    self.threadLoaded += thread.count
+                    if self.setting.hideAlwaysOnTopThread {
+                        threadSection.append(contentsOf: thread.filter({
+                            !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                        }))
+                    } else {
+                        threadSection.append(contentsOf: thread)
                     }
                 }
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop(withHUD: showHUD)
                     completion?()
                     if currentMode != self.searchMode { return } //如果模式已经被切换，则数据丢弃
-                    if let threadSection = threadSection {
-                        self.threads.removeAll()
-                        self.threadLoaded += threadSection.count
+                    self.threads.removeAll()
+                    if threadSection.count > 0 {
                         self.threads.append(threadSection)
                     }
                     self.api.displayErrorIfNeeded()
@@ -198,12 +204,8 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                                                                    inRange: self.threadRange,
                                                                    brcmode: .NotClear)
                 }
-                // 过滤掉置顶帖
-                if self.setting.hideAlwaysOnTopThread && !self.searchMode {
-                    threadSection = threadSection?.filter {
-                        !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                    }
-                }
+                // self.threadLoaded存储的是已经加载的主题数（包括被过滤掉的）
+                self.threadLoaded += threadSection?.count ?? 0
                 // 过滤掉重复的帖子
                 let loadedThreadIds = self.threads.reduce(Set<Int>()) {
                     $0.union(Set($1.map { $0.id }))
@@ -218,7 +220,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                         return //如果模式已经改变，则此数据需要丢弃
                     }
                     if let threadSection = threadSection, threadSection.count > 0 {
-                        self.threadLoaded += threadSection.count
                         self.threads.append(threadSection)
                     }
                     self.api.displayErrorIfNeeded()

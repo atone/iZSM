@@ -213,7 +213,7 @@ struct SMArticle {
     }
     
     func attachmentURL(at pos: Int) -> URL {
-        let string = "http://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(pos)"
+        let string = "https://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(pos)"
         return URL(string: string)!
     }
 
@@ -225,13 +225,12 @@ struct SMArticle {
             if fileName.hasSuffix(".jpg") || fileName.hasSuffix(".jpeg")
                 || fileName.hasSuffix(".gif") || fileName.hasSuffix(".bmp")
                 || fileName.hasSuffix(".png") {
-                    let baseURLString = "http://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
-                    let thumbnailURL = URL(string: baseURLString)!
-                    let fullImageURL = URL(string: baseURLString)!
-                    let imageName = attachment.name
-                    let imageSize = attachment.size
-                    let imageInfo = ImageInfo(thumbnailURL: thumbnailURL, fullImageURL: fullImageURL, imageName: imageName, imageSize: imageSize)
-                    imageAtt.append(imageInfo)
+                let thumbnailURL = attachmentURL(at: attachment.pos)
+                let fullImageURL = attachmentURL(at: attachment.pos)
+                let imageName = attachment.name
+                let imageSize = attachment.size
+                let imageInfo = ImageInfo(thumbnailURL: thumbnailURL, fullImageURL: fullImageURL, imageName: imageName, imageSize: imageSize)
+                imageAtt.append(imageInfo)
             }
         }
         return imageAtt

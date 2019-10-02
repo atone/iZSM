@@ -34,11 +34,12 @@ class ArticleListViewCell: UITableViewCell {
                 } else {
                     titleLabel.textColor = UIColor(named: "MainText")
                 }
-                replyLabel.text = "\(thread.count - 1)"
-                if thread.count == 1 {
+                if thread.count <= 1 {
                     replyLabel.isHidden = true
+                    replyLabel.text = nil
                 } else {
                     replyLabel.isHidden = false
+                    replyLabel.text = "\(thread.count - 1)"
                 }
                 if thread.flags.hasPrefix("*") {
                     replyLabel.backgroundColor = UIColor.systemGray
@@ -92,7 +93,11 @@ class ArticleListViewCell: UITableViewCell {
             let normalAttributes: [NSAttributedString.Key : Any] = [.font: normalInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let userIDAttributes: [NSAttributedString.Key : Any] = [.font: boldInfoFont, .foregroundColor: UIColor.secondaryLabel]
             let attributedText = NSMutableAttributedString(string: thread.authorID, attributes: userIDAttributes)
-            attributedText.append(NSAttributedString(string: " • \(thread.lastReplyTime.relativeDateString)", attributes: normalAttributes))
+            if thread.count > 0 {
+                attributedText.append(NSAttributedString(string: " • \(thread.lastReplyTime.relativeDateString)", attributes: normalAttributes))
+            } else { // origin mode
+                attributedText.append(NSAttributedString(string: " • \(thread.time.relativeDateString)", attributes: normalAttributes))
+            }
             if thread.count > 1 {
                 attributedText.append(NSAttributedString(string: " • 最后回复", attributes: normalAttributes))
                 attributedText.append(NSAttributedString(string: thread.lastReplyAuthorID, attributes: userIDAttributes))
@@ -118,7 +123,9 @@ class ArticleListViewCell: UITableViewCell {
     
     private var hasAttachment: Bool {
         if let flags = thread?.flags {
-            if flags[flags.index(flags.startIndex, offsetBy: 3)] == "@" {
+            if flags.count <= 2, flags[flags.index(after: flags.startIndex)] == "@" {
+                return true
+            } else if flags.count >= 4, flags[flags.index(flags.startIndex, offsetBy: 3)] == "@" {
                 return true
             }
         }

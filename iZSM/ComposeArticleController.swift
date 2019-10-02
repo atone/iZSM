@@ -122,7 +122,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
         contentTextView.font = UIFont.systemFont(ofSize: descriptor.pointSize * setting.fontScale)
         contentTextView.autocapitalizationType = .sentences
-        contentTextView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
+        contentTextView.backgroundColor = UIColor.systemGray6
         contentTextView.layer.cornerRadius = cornerRadius
         contentTextView.layer.masksToBounds = true
         countLabel.text = "0"

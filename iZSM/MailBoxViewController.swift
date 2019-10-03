@@ -42,7 +42,7 @@ class MailBoxViewController: BaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(MailListCell.self, forCellReuseIdentifier: kMailListCellIdentifier)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose,
                                                             target: self,
                                                             action: #selector(composeEmail(_:)))
     }

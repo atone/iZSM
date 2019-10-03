@@ -626,7 +626,7 @@ class ArticleListActionViewController: UITableViewController {
                 cell.detailTextLabel?.text = nil
             }
         } else {
-            cell.textLabel?.text = boardManagers[indexPath.row]
+            cell.textLabel?.text = "寄信给 \(boardManagers[indexPath.row])"
             cell.detailTextLabel?.text = nil
         }
         return cell

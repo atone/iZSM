@@ -19,15 +19,32 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     private var indexMap = [String : IndexPath]()
     
-    var threadLoaded = 0
+    var threadSortMode = AppSetting.shared.threadSortMode {
+        didSet {
+            AppSetting.shared.threadSortMode = threadSortMode
+        }
+    }
+    
+    var currentPage = 0 // for origin mode
+    
+    var totalThreads = 0
+    var threadCursor = 0
     private var threadRange: NSRange {
-        return NSMakeRange(threadLoaded, setting.threadCountPerSection)
+        switch threadSortMode {
+        case .byPostNewFirst, .byReplyNewFirst:
+            return NSMakeRange(threadCursor, setting.threadCountPerSection)
+        case .byPostOldFirst, .byReplyOldFirst:
+            return NSMakeRange(threadCursor - setting.threadCountPerSection, setting.threadCountPerSection)
+        }
+    }
+    private var searchRange: NSRange {
+        return NSMakeRange(threadCursor, setting.threadCountPerSection)
     }
     var threads: [[SMThread]] = [[SMThread]]() {
         didSet { tableView?.reloadData() }
     }
     
-    var originalThreadLoaded: Int? = nil
+    var originalThreadCursor: Int? = nil
     var originalThread: [[SMThread]]?
     var searchMode = false {
         didSet {
@@ -47,7 +64,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         api.cancel()
         refreshHeaderEnabled = true
         threads = originalThread!
-        threadLoaded = originalThreadLoaded!
+        threadCursor = originalThreadCursor!
         originalThread = nil
     }
     
@@ -56,9 +73,9 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         api.cancel()
         refreshHeaderEnabled = false
         originalThread = threads
-        originalThreadLoaded = threadLoaded
+        originalThreadCursor = threadCursor
         threads = [[SMThread]]()
-        threadLoaded = 0
+        threadCursor = 0
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -74,7 +91,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     func search(forText searchString: String?, scope: Int) {
         if let boardID = self.boardID, let searchString = searchString, !searchString.isEmpty {
-            self.threadLoaded = 0
+            self.threadCursor = 0
             let currentMode = searchMode
             networkActivityIndicatorStart(withHUD: true)
             var result: [SMThread]?
@@ -83,12 +100,12 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                     result = self.api.searchArticleInBoard(boardID: boardID,
                                                            title: searchString,
                                                            user: nil,
-                                                           inRange: self.threadRange)
+                                                           inRange: self.searchRange)
                 } else if scope == 1 {
                     result = self.api.searchArticleInBoard(boardID: boardID,
                                                            title: nil,
                                                            user: searchString,
-                                                           inRange: self.threadRange)
+                                                           inRange: self.searchRange)
                 }
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop(withHUD: true)
@@ -96,7 +113,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                     self.threads.removeAll()
                     if let result = result {
                         self.threads.append(result)
-                        self.threadLoaded += result.count
+                        self.threadCursor += result.count
                     }
                     self.api.displayErrorIfNeeded()
                 }
@@ -123,7 +140,10 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         let composeButton = UIBarButtonItem(barButtonSystemItem: .compose,
                                             target: self,
                                             action: #selector(composeArticle(_:)))
-        navigationItem.rightBarButtonItem =  composeButton
+        let sortModButton = UIBarButtonItem(barButtonSystemItem: .action,
+                                            target: self,
+                                            action: #selector(tapSortModeButton(_:)))
+        navigationItem.rightBarButtonItems =  [composeButton, sortModButton]
     }
     
     override func clearContent() {
@@ -131,30 +151,98 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
-        threadLoaded = 0
         if let boardID = self.boardID {
             let currentMode = self.searchMode
+            let currentThreadSortMode = self.threadSortMode
             networkActivityIndicatorStart(withHUD: showHUD)
             DispatchQueue.global().async {
                 var threadSection = [SMThread]()
-                while threadSection.count == 0,
-                    let thread = self.api.getThreadListForBoard(boardID: boardID,
-                                                                inRange: self.threadRange,
-                                                                brcmode: .NotClear) {
-                    // self.threadLoaded存储的是已经加载的主题数（包括被过滤掉的）
-                    self.threadLoaded += thread.count
-                    if self.setting.hideAlwaysOnTopThread {
-                        threadSection.append(contentsOf: thread.filter({
-                            !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                        }))
-                    } else {
-                        threadSection.append(contentsOf: thread)
+                switch self.threadSortMode {
+                case .byReplyNewFirst:
+                    self.threadCursor = 0
+                    while threadSection.count == 0,
+                        let threads = self.api.getThreadListForBoard(boardID: boardID,
+                                                                     inRange: self.threadRange,
+                                                                     brcmode: .NotClear)
+                    {
+                        // self.threadCursor存储的是已经加载的主题数（包括被过滤掉的）
+                        self.threadCursor += threads.count
+                        if self.setting.hideAlwaysOnTopThread {
+                            // 过滤置顶帖
+                            threadSection.append(contentsOf: threads.filter({
+                                !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                            }))
+                        } else {
+                            threadSection.append(contentsOf: threads)
+                        }
+                    }
+                case .byReplyOldFirst:
+                    self.totalThreads = self.api.getThreadCountForBoard(boardID: boardID)
+                    guard self.totalThreads > 0 else { break }
+                    self.threadCursor = self.totalThreads
+                    while threadSection.count == 0,
+                        let threads = self.api.getThreadListForBoard(boardID: boardID,
+                                                                     inRange: self.threadRange,
+                                                                     brcmode: .NotClear)
+                    {
+                        // self.threadCursor存储的是已经加载的主题数（包括被过滤掉的）
+                        self.threadCursor -= threads.count
+                        if self.setting.hideAlwaysOnTopThread {
+                            // 过滤置顶帖
+                            threadSection.append(contentsOf: threads.filter({
+                                !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                            }).reversed())
+                        } else {
+                            threadSection.append(contentsOf: threads.reversed())
+                        }
+                    }
+                case .byPostNewFirst:
+                    self.currentPage = -1
+                    while threadSection.count == 0,
+                        let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
+                    {
+                        if result.page == -1 {
+                            if self.currentPage == -1 {
+                                break // cannot recover from error since page is unknown
+                            } else {
+                                self.currentPage -= 1
+                                continue // try to load next page
+                            }
+                        }
+                        self.currentPage = result.page - 1
+                        if self.setting.hideAlwaysOnTopThread {
+                            // 过滤置顶帖
+                            threadSection.append(contentsOf: result.threads.filter({
+                                !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                            }).reversed())
+                        } else {
+                            threadSection.append(contentsOf: result.threads.reversed())
+                        }
+                    }
+                case .byPostOldFirst:
+                    self.currentPage = 1
+                    while threadSection.count == 0,
+                        let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
+                    {
+                        if result.page == -1 {
+                            self.currentPage += 1
+                            continue // try to load next page
+                        }
+                        self.currentPage = result.page + 1
+                        if self.setting.hideAlwaysOnTopThread {
+                            // 过滤置顶帖
+                            threadSection.append(contentsOf: result.threads.filter({
+                                !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                            }))
+                        } else {
+                            threadSection.append(contentsOf: result.threads)
+                        }
                     }
                 }
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop(withHUD: showHUD)
                     completion?()
-                    if currentMode != self.searchMode { return } //如果模式已经被切换，则数据丢弃
+                    if currentMode != self.searchMode || currentThreadSortMode != self.threadSortMode { return } //如果模式已经被切换，则数据丢弃
                     self.threads.removeAll()
                     if threadSection.count > 0 {
                         self.threads.append(threadSection)
@@ -183,43 +271,88 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             }
             
             let currentMode = self.searchMode
+            let currentThreadSortMode = self.threadSortMode
             let searchString = self.searchString
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
-                var threadSection: [SMThread]?
+                var threadSection = [SMThread]()
                 if self.searchMode {
                     if self.selectedIndex == 0 {
-                        threadSection = self.api.searchArticleInBoard(boardID: boardID,
-                                                                      title: searchString,
-                                                                      user: nil,
-                                                                      inRange: self.threadRange)
+                        if let threads = self.api.searchArticleInBoard(boardID: boardID,
+                                                                       title: searchString,
+                                                                       user: nil,
+                                                                       inRange: self.searchRange)
+                        {
+                            threadSection.append(contentsOf: threads)
+                        }
                     } else if self.selectedIndex == 1 {
-                        threadSection = self.api.searchArticleInBoard(boardID: boardID,
-                                                                      title: nil,
-                                                                      user: searchString,
-                                                                      inRange: self.threadRange)
+                        if let threads = self.api.searchArticleInBoard(boardID: boardID,
+                                                                       title: nil,
+                                                                       user: searchString,
+                                                                       inRange: self.searchRange)
+                        {
+                            threadSection.append(contentsOf: threads)
+                        }
                     }
+                    self.threadCursor += threadSection.count
                 } else {
-                    threadSection = self.api.getThreadListForBoard(boardID: boardID,
-                                                                   inRange: self.threadRange,
-                                                                   brcmode: .NotClear)
+                    switch self.threadSortMode {
+                    case .byReplyNewFirst:
+                        if let threads = self.api.getThreadListForBoard(boardID: boardID,
+                                                                        inRange: self.threadRange,
+                                                                        brcmode: .NotClear)
+                        {
+                            threadSection.append(contentsOf: threads)
+                            self.threadCursor += threadSection.count
+                        }
+                    case .byReplyOldFirst:
+                        if let threads = self.api.getThreadListForBoard(boardID: boardID,
+                                                                        inRange: self.threadRange,
+                                                                        brcmode: .NotClear)
+                        {
+                            threadSection.append(contentsOf: threads.reversed())
+                            self.threadCursor -= threadSection.count
+                        }
+                    case .byPostNewFirst:
+                        var lastPage = -1 // decode error
+                        while lastPage == -1, threadSection.count == 0,
+                            let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
+                        {
+                            threadSection.append(contentsOf: result.threads.reversed())
+                            lastPage = result.page
+                            self.currentPage -= 1
+                        }
+                    case .byPostOldFirst:
+                        var lastPage = -1
+                        while lastPage == -1, threadSection.count == 0,
+                            let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
+                        {
+                            threadSection.append(contentsOf: result.threads)
+                            lastPage = result.page
+                            self.currentPage += 1
+                        }
+                    }
                 }
-                // self.threadLoaded存储的是已经加载的主题数（包括被过滤掉的）
-                self.threadLoaded += threadSection?.count ?? 0
+                // 过滤置顶帖
+                if self.setting.hideAlwaysOnTopThread {
+                    threadSection = threadSection.filter {
+                        !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                    }
+                }
                 // 过滤掉重复的帖子
                 let loadedThreadIds = self.threads.reduce(Set<Int>()) {
                     $0.union(Set($1.map { $0.id }))
                 }
-                threadSection = threadSection?.filter {
+                threadSection = threadSection.filter {
                     !loadedThreadIds.contains($0.id)
                 }
                 DispatchQueue.main.async {
                     self._isFetchingMoreData = false
                     networkActivityIndicatorStop()
-                    if self.searchMode != currentMode {
+                    if self.searchMode != currentMode || self.threadSortMode != currentThreadSortMode {
                         return //如果模式已经改变，则此数据需要丢弃
                     }
-                    if let threadSection = threadSection, threadSection.count > 0 {
+                    if threadSection.count > 0 {
                         self.threads.append(threadSection)
                     }
                     self.api.displayErrorIfNeeded()
@@ -256,8 +389,8 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         let acvc = ArticleContentViewController()
         let thread = threads[indexPath.section][indexPath.row]
         acvc.articleID = thread.id
-        acvc.boardID = thread.boardID
-        acvc.boardName = thread.boardName
+        acvc.boardID = boardID
+        acvc.boardName = boardName
         acvc.title = thread.subject
         acvc.hidesBottomBarWhenPushed = true
         if thread.flags.hasPrefix("*") {
@@ -279,6 +412,24 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         let nvc = NTNavigationController(rootViewController: cavc)
         nvc.modalPresentationStyle = .formSheet
         present(nvc, animated: true)
+    }
+    
+    @objc private func tapSortModeButton(_ sender: UIBarButtonItem) {
+        let threadSortModeVC = ThreadSortModeViewController()
+        threadSortModeVC.preferredContentSize = CGSize(width: 240, height: 44 * 4)
+        threadSortModeVC.modalPresentationStyle = .popover
+        threadSortModeVC.threadSortMode = threadSortMode
+        threadSortModeVC.completionHandler = { [unowned self] newThreadSortMode in
+            if self.threadSortMode != newThreadSortMode {
+                self.threadSortMode = newThreadSortMode
+                self.fetchData(showHUD: true)
+            }
+            self.dismiss(animated: true)
+        }
+        let presentationCtr = threadSortModeVC.presentationController as! UIPopoverPresentationController
+        presentationCtr.barButtonItem = navigationItem.rightBarButtonItems?.last
+        presentationCtr.delegate = self
+        present(threadSortModeVC, animated: true)
     }
 }
 
@@ -365,10 +516,76 @@ extension ArticleListViewController {
     private func getViewController(with thread: SMThread) -> ArticleContentViewController {
         let acvc = ArticleContentViewController()
         acvc.articleID = thread.id
-        acvc.boardID = thread.boardID
-        acvc.boardName = thread.boardName
+        acvc.boardID = boardID
+        acvc.boardName = boardName
         acvc.title = thread.subject
         acvc.hidesBottomBarWhenPushed = true
         return acvc
     }
+}
+
+extension ArticleListViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        return .none
+    }
+}
+
+class ThreadSortModeViewController: UITableViewController {
+    var threadSortMode = AppSetting.shared.threadSortMode
+    var completionHandler: ((AppSetting.ThreadSortMode) -> Void)?
+    
+    private let kCellIdentifier = "ThreadSortModeCell"
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.reloadData()
+    }
+    
+    // MARK: - Table view data source
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 4
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell: UITableViewCell
+        if let newCell = tableView.dequeueReusableCell(withIdentifier: kCellIdentifier) {
+            cell = newCell
+        } else {
+            cell = UITableViewCell(style: .value1, reuseIdentifier: kCellIdentifier)
+        }
+        switch indexPath.row {
+        case 0:
+            cell.textLabel?.text = "回复时间，最新在前"
+        case 1:
+            cell.textLabel?.text = "回复时间，最早在前"
+        case 2:
+            cell.textLabel?.text = "发帖时间，最新在前"
+        case 3:
+            cell.textLabel?.text = "发帖时间，最早在前"
+        default:
+            cell.textLabel?.text = nil
+        }
+        if indexPath.row == threadSortMode.rawValue {
+            cell.detailTextLabel?.text = "✓"
+            cell.detailTextLabel?.textColor = UIColor(named: "SmthColor")
+        } else {
+            cell.detailTextLabel?.text = nil
+        }
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let newSortMode = AppSetting.ThreadSortMode(rawValue: indexPath.row) {
+            threadSortMode = newSortMode
+            tableView.reloadData()
+            completionHandler?(newSortMode)
+        } else {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+    }
+    
 }

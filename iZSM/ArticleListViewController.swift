@@ -257,6 +257,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                     self.threads.removeAll()
                     if threadSection.count > 0 {
                         self.threads.append(threadSection)
+                        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
                     }
                     self.api.displayErrorIfNeeded()
                 }

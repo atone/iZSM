@@ -80,14 +80,14 @@ class SmthAPI {
     }
 
     // get thread list in origin mode
-    func getOriginThreadList(for boardID: String, page: Int? = nil) -> (page: Int, threads: [SMThread])? {
+    func getOriginThreadList(for boardID: String, page: Int) -> (page: Int, threads: [SMThread])? {
         var url = "https://www.newsmth.net/bbsdoc.php?board=\(boardID)&ftype=6"
-        if let page = page {
+        if page > 0 {
             url.append(contentsOf: "&page=\(page)")
         }
         guard let data = try? Data(contentsOf: URL(string: url)!) else { return nil }
         let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
-        guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return nil }
+        guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return (-1, []) } // 解码错误
         let lines = result.components(separatedBy: .newlines)
         guard let writerLine = lines.filter({ $0.hasPrefix("var c = new docWriter(")}).first else { return nil }
         let writerComponents = writerLine.split(separator: ",")

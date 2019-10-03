@@ -163,6 +163,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             let alvc = ArticleListViewController()
             alvc.boardID = board.boardID
             alvc.boardName = board.name
+            alvc.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
             alvc.hidesBottomBarWhenPushed = true
             show(alvc, sender: self)
             if searchMode {
@@ -331,6 +332,7 @@ extension BoardListViewController {
             let alvc = ArticleListViewController()
             alvc.boardID = board.boardID
             alvc.boardName = board.name
+            alvc.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
             alvc.hidesBottomBarWhenPushed = true
             return alvc
         }

@@ -16,6 +16,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     var boardName: String? {
         didSet { title = boardName }
     }
+    var boardManagers: [String]?
     
     private var indexMap = [String : IndexPath]()
     
@@ -156,6 +157,16 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             let currentThreadSortMode = self.threadSortMode
             networkActivityIndicatorStart(withHUD: showHUD)
             DispatchQueue.global().async {
+                
+                if self.boardManagers == nil, let boards = self.api.queryBoard(query: boardID) {
+                    for board in boards {
+                        if board.boardID == boardID {
+                            self.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+                            break
+                        }
+                    }
+                }
+                
                 var threadSection = [SMThread]()
                 switch self.threadSortMode {
                 case .byReplyNewFirst:
@@ -415,21 +426,37 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
     
     @objc private func tapSortModeButton(_ sender: UIBarButtonItem) {
-        let threadSortModeVC = ThreadSortModeViewController()
-        threadSortModeVC.preferredContentSize = CGSize(width: 240, height: 44 * 4)
-        threadSortModeVC.modalPresentationStyle = .popover
-        threadSortModeVC.threadSortMode = threadSortMode
-        threadSortModeVC.completionHandler = { [unowned self] newThreadSortMode in
+        let articleListActionVC = ArticleListActionViewController()
+        let height: CGFloat
+        if let bms = boardManagers, bms.count > 0 {
+            height = min(30 + 44 * 4 + 30 + 44 * CGFloat(bms.count), view.bounds.height / 2)
+        } else {
+            height = 30 + 44 * 4
+        }
+        articleListActionVC.preferredContentSize = CGSize(width: 240, height: height)
+        articleListActionVC.modalPresentationStyle = .popover
+        articleListActionVC.threadSortMode = threadSortMode
+        articleListActionVC.threadSortModeHandler = { [unowned self] newThreadSortMode in
             if self.threadSortMode != newThreadSortMode {
                 self.threadSortMode = newThreadSortMode
                 self.fetchData(showHUD: true)
             }
             self.dismiss(animated: true)
         }
-        let presentationCtr = threadSortModeVC.presentationController as! UIPopoverPresentationController
+        articleListActionVC.boardManagers = self.boardManagers ?? []
+        articleListActionVC.sendMessageHandler = { [unowned self] manager in
+            self.dismiss(animated: true)
+            let cevc = ComposeEmailController()
+            cevc.email = SMMail(subject: "", body: "", authorID: manager, position: 0, time: Date(), flags: "", attachments: [])
+            cevc.mode = .post
+            let navigationController = NTNavigationController(rootViewController: cevc)
+            navigationController.modalPresentationStyle = .formSheet
+            self.present(navigationController, animated: true)
+        }
+        let presentationCtr = articleListActionVC.presentationController as! UIPopoverPresentationController
         presentationCtr.barButtonItem = navigationItem.rightBarButtonItems?.last
         presentationCtr.delegate = self
-        present(threadSortModeVC, animated: true)
+        present(articleListActionVC, animated: true)
     }
 }
 
@@ -530,24 +557,46 @@ extension ArticleListViewController: UIPopoverPresentationControllerDelegate {
     }
 }
 
-class ThreadSortModeViewController: UITableViewController {
+class ArticleListActionViewController: UITableViewController {
     var threadSortMode = AppSetting.shared.threadSortMode
-    var completionHandler: ((AppSetting.ThreadSortMode) -> Void)?
+    var threadSortModeHandler: ((AppSetting.ThreadSortMode) -> Void)?
+    var boardManagers = [String]()
+    var sendMessageHandler: ((String) -> Void)?
     
     private let kCellIdentifier = "ThreadSortModeCell"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.reloadData()
+        
     }
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        if boardManagers.count > 0 {
+            return 2
+        } else {
+            return 1
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        if section == 0 {
+            return 4
+        } else {
+            return boardManagers.count
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return "帖子排序"
+        case 1:
+            return "联系版主"
+        default:
+            return nil
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -557,35 +606,43 @@ class ThreadSortModeViewController: UITableViewController {
         } else {
             cell = UITableViewCell(style: .value1, reuseIdentifier: kCellIdentifier)
         }
-        switch indexPath.row {
-        case 0:
-            cell.textLabel?.text = "回复时间，最新在前"
-        case 1:
-            cell.textLabel?.text = "回复时间，最早在前"
-        case 2:
-            cell.textLabel?.text = "发帖时间，最新在前"
-        case 3:
-            cell.textLabel?.text = "发帖时间，最早在前"
-        default:
-            cell.textLabel?.text = nil
-        }
-        if indexPath.row == threadSortMode.rawValue {
-            cell.detailTextLabel?.text = "✓"
-            cell.detailTextLabel?.textColor = UIColor(named: "SmthColor")
+        if indexPath.section == 0 {
+            switch indexPath.row {
+            case 0:
+                cell.textLabel?.text = "回复时间，最新在前"
+            case 1:
+                cell.textLabel?.text = "回复时间，最早在前"
+            case 2:
+                cell.textLabel?.text = "发帖时间，最新在前"
+            case 3:
+                cell.textLabel?.text = "发帖时间，最早在前"
+            default:
+                cell.textLabel?.text = nil
+            }
+            if indexPath.row == threadSortMode.rawValue {
+                cell.detailTextLabel?.text = "✓"
+                cell.detailTextLabel?.textColor = UIColor(named: "SmthColor")
+            } else {
+                cell.detailTextLabel?.text = nil
+            }
         } else {
+            cell.textLabel?.text = boardManagers[indexPath.row]
             cell.detailTextLabel?.text = nil
         }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let newSortMode = AppSetting.ThreadSortMode(rawValue: indexPath.row) {
-            threadSortMode = newSortMode
-            tableView.reloadData()
-            completionHandler?(newSortMode)
+        if indexPath.section == 0 {
+            if let newSortMode = AppSetting.ThreadSortMode(rawValue: indexPath.row) {
+                threadSortMode = newSortMode
+                tableView.reloadData()
+                threadSortModeHandler?(newSortMode)
+            } else {
+                tableView.deselectRow(at: indexPath, animated: true)
+            }
         } else {
-            tableView.deselectRow(at: indexPath, animated: true)
+            sendMessageHandler?(boardManagers[indexPath.row])
         }
     }
-    
 }

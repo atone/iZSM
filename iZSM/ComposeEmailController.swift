@@ -17,10 +17,13 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         case reply
         case feedback
     }
+    
+    private let margin: CGFloat = 8
+    private let cornerRadius: CGFloat = 4
 
-    private let sendToLabel = UILabel()
+    private let sendToLabel = NTLabel()
     private let receiverTextField = UITextField()
-    private let titleHintLabel = UILabel()
+    private let titleHintLabel = NTLabel()
     private let titleTextField = UITextField()
     private let contentTextView = UITextView()
     private let countLabel = UILabel()
@@ -69,45 +72,60 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     }
     
     private func setupUI() {
-        let cornerRadius: CGFloat = 4
+        view.backgroundColor = .systemBackground
         sendToLabel.text = "寄给"
-        sendToLabel.font = UIFont.systemFont(ofSize: 14)
+        sendToLabel.font = .preferredFont(forTextStyle: .subheadline)
         sendToLabel.textAlignment = .center
+        sendToLabel.textColor = .systemBackground
+        sendToLabel.backgroundColor = .secondaryLabel
+        let m = cornerRadius / 2
+        sendToLabel.contentInsets = UIEdgeInsets(top: m, left: m, bottom: m, right: m)
+        sendToLabel.lineBreakMode = .byClipping
         sendToLabel.layer.cornerRadius = cornerRadius
         sendToLabel.layer.masksToBounds = true
         sendToLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         sendToLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         titleHintLabel.text = "标题"
-        titleHintLabel.font = UIFont.systemFont(ofSize: 14)
+        titleHintLabel.font = .preferredFont(forTextStyle: .subheadline)
         titleHintLabel.textAlignment = .center
+        titleHintLabel.textColor = .systemBackground
+        titleHintLabel.backgroundColor = .secondaryLabel
+        titleHintLabel.contentInsets = UIEdgeInsets(top: m, left: m, bottom: m, right: m)
+        titleHintLabel.lineBreakMode = .byClipping
         titleHintLabel.layer.cornerRadius = cornerRadius
         titleHintLabel.layer.masksToBounds = true
         titleHintLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         titleHintLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        titleTextField.font = .preferredFont(forTextStyle: .body)
+        titleTextField.textColor = .secondaryLabel
+        titleTextField.placeholder = "添加标题"
         titleTextField.delegate = self
         titleTextField.addTarget(self, action: #selector(changeDoneButton(_:)), for: .editingChanged)
         titleTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
         titleTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        titleTextField.font = UIFont.systemFont(ofSize: 16)
         titleTextField.autocapitalizationType = .none
         titleTextField.returnKeyType = .next
+        receiverTextField.font = .preferredFont(forTextStyle: .body)
+        receiverTextField.textColor = .secondaryLabel
+        receiverTextField.placeholder = "收信人"
         receiverTextField.delegate = self
         receiverTextField.addTarget(self, action: #selector(changeDoneButton(_:)), for: .editingChanged)
         receiverTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
         receiverTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        receiverTextField.font = UIFont.systemFont(ofSize: 16)
         receiverTextField.autocapitalizationType = .none
         receiverTextField.returnKeyType = .next
         contentTextView.setContentHuggingPriority(.defaultLow, for: .vertical)
         contentTextView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
-        contentTextView.font = UIFont.systemFont(ofSize: descriptor.pointSize * setting.fontScale)
+        contentTextView.font = .systemFont(ofSize: descriptor.pointSize * setting.fontScale)
         contentTextView.autocapitalizationType = .sentences
-        contentTextView.backgroundColor = UIColor.systemGray6
+        contentTextView.backgroundColor = .systemGroupedBackground
+        contentTextView.textColor = UIColor(named: "MainText")
         contentTextView.layer.cornerRadius = cornerRadius
         contentTextView.layer.masksToBounds = true
         countLabel.text = "0"
-        countLabel.font = UIFont.systemFont(ofSize: 16)
+        countLabel.font = .preferredFont(forTextStyle: .body)
+        countLabel.textColor = .secondaryLabel
         countLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         countLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         
@@ -124,42 +142,34 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         
         sendToLabel.snp.makeConstraints { (make) in
             make.leading.equalTo(view.snp.leadingMargin)
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(5)
-            make.width.equalTo(38)
-            make.height.equalTo(20)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(margin)
         }
         
         receiverTextField.snp.makeConstraints { (make) in
-            make.height.equalTo(sendToLabel.snp.height)
-            make.leading.equalTo(sendToLabel.snp.trailing).offset(5)
-            make.lastBaseline.equalTo(sendToLabel.snp.lastBaseline)
+            make.leading.equalTo(sendToLabel.snp.trailing).offset(margin)
+            make.lastBaseline.equalTo(sendToLabel)
             make.trailing.equalTo(view.snp.trailingMargin)
         }
         
         titleHintLabel.snp.makeConstraints { (make) in
             make.leading.equalTo(sendToLabel)
-            make.top.equalTo(sendToLabel.snp.bottom).offset(5)
-            make.width.equalTo(38)
-            make.height.equalTo(20)
+            make.top.equalTo(sendToLabel.snp.bottom).offset(margin)
         }
         titleTextField.snp.makeConstraints { (make) in
-            make.height.equalTo(titleHintLabel.snp.height)
-            make.leading.equalTo(titleHintLabel.snp.trailing).offset(5)
-            make.lastBaseline.equalTo(titleHintLabel.snp.lastBaseline)
+            make.leading.equalTo(titleHintLabel.snp.trailing).offset(margin)
+            make.lastBaseline.equalTo(titleHintLabel)
         }
         countLabel.snp.makeConstraints { (make) in
-            make.height.equalTo(titleTextField.snp.height)
-            make.lastBaseline.equalTo(titleTextField.snp.lastBaseline)
-            make.trailing.equalTo(receiverTextField.snp.trailing)
-            make.leading.equalTo(titleTextField.snp.trailing).offset(5)
+            make.lastBaseline.equalTo(titleTextField)
+            make.trailing.equalTo(receiverTextField)
+            make.leading.equalTo(titleTextField.snp.trailing).offset(margin)
         }
         contentTextView.snp.makeConstraints { (make) in
             make.leading.equalTo(titleHintLabel)
             make.trailing.equalTo(countLabel)
-            self.keyboardHeight = make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-5).constraint
-            make.top.equalTo(countLabel.snp.bottom).offset(5)
+            self.keyboardHeight = make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-margin).constraint
+            make.top.equalTo(countLabel.snp.bottom).offset(margin)
         }
-        updateColor()
     }
     
     private func setupMode() {
@@ -212,22 +222,6 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             }
             countLabel.text = "\(emailTitle?.count ?? 0)"
         }
-    }
-    
-    private func updateColor() {
-        view.backgroundColor = UIColor.systemBackground
-        sendToLabel.textColor = UIColor.systemBackground
-        sendToLabel.backgroundColor = UIColor.secondaryLabel
-        titleHintLabel.textColor = UIColor.systemBackground
-        titleHintLabel.backgroundColor = UIColor.secondaryLabel
-        countLabel.textColor = UIColor.secondaryLabel
-        receiverTextField.textColor = UIColor.secondaryLabel
-        receiverTextField.attributedPlaceholder = NSAttributedString(string: "收信人",
-                                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.secondaryLabel.withAlphaComponent(0.6)])
-        titleTextField.textColor = UIColor.secondaryLabel
-        titleTextField.attributedPlaceholder = NSAttributedString(string: "添加标题",
-                                                                  attributes: [NSAttributedString.Key.foregroundColor: UIColor.secondaryLabel.withAlphaComponent(0.6)])
-        contentTextView.textColor = UIColor(named: "MainText")
     }
     
     @objc private func cancel(_ sender: UIBarButtonItem) {
@@ -302,7 +296,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         var keyboardFrame = info?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
         keyboardFrame = view.convert(keyboardFrame, from: view.window)
         let height = max(view.bounds.height - keyboardFrame.origin.y, 0)
-        keyboardHeight?.update(offset: -height - 5)
+        keyboardHeight?.update(offset: -height - margin)
         UIView.animate(withDuration: animationDuration) {
             self.view.layoutIfNeeded()
         }

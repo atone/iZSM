@@ -22,7 +22,10 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         case modify
     }
     
-    private let titleHintLabel = UILabel()
+    private let margin: CGFloat = 8
+    private let cornerRadius: CGFloat = 4
+    
+    private let titleHintLabel = NTLabel()
     private let titleTextField = UITextField()
     private let countLabel = UILabel()
     private let contentTextView = UITextView()
@@ -102,31 +105,40 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     }
     
     private func setupUI() {
-        let cornerRadius: CGFloat = 4
+        view.backgroundColor = .systemBackground
         titleHintLabel.text = "标题"
-        titleHintLabel.font = UIFont.systemFont(ofSize: 14)
+        titleHintLabel.font = .preferredFont(forTextStyle: .subheadline)
         titleHintLabel.textAlignment = .center
+        titleHintLabel.textColor = .systemBackground
+        titleHintLabel.backgroundColor = .secondaryLabel
+        let m = cornerRadius / 2
+        titleHintLabel.contentInsets = UIEdgeInsets(top: m, left: m, bottom: m, right: m)
+        titleHintLabel.lineBreakMode = .byClipping
         titleHintLabel.layer.cornerRadius = cornerRadius
         titleHintLabel.layer.masksToBounds = true
         titleHintLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         titleHintLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        titleTextField.font = .preferredFont(forTextStyle: .body)
+        titleTextField.textColor = .secondaryLabel
+        titleTextField.placeholder = "添加标题"
         titleTextField.delegate = self
         titleTextField.addTarget(self, action: #selector(changeDoneButton(_:)), for: .editingChanged)
         titleTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
         titleTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        titleTextField.font = UIFont.systemFont(ofSize: 16)
         titleTextField.autocapitalizationType = .none
         titleTextField.returnKeyType = .next
         contentTextView.setContentHuggingPriority(.defaultLow, for: .vertical)
         contentTextView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
-        contentTextView.font = UIFont.systemFont(ofSize: descriptor.pointSize * setting.fontScale)
+        contentTextView.font = .systemFont(ofSize: descriptor.pointSize * setting.fontScale)
         contentTextView.autocapitalizationType = .sentences
-        contentTextView.backgroundColor = UIColor.systemGray6
+        contentTextView.backgroundColor = .systemGroupedBackground
+        contentTextView.textColor = UIColor(named: "MainText")
         contentTextView.layer.cornerRadius = cornerRadius
         contentTextView.layer.masksToBounds = true
         countLabel.text = "0"
-        countLabel.font = UIFont.systemFont(ofSize: 16)
+        countLabel.font = .preferredFont(forTextStyle: .body)
+        countLabel.textColor = .secondaryLabel
         countLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         countLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         
@@ -150,33 +162,29 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         
         titleHintLabel.snp.makeConstraints { (make) in
             make.leading.equalTo(view.snp.leadingMargin)
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(5)
-            make.width.equalTo(38)
-            make.height.equalTo(20)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(margin)
         }
         titleTextField.snp.makeConstraints { (make) in
-            make.height.equalTo(titleHintLabel.snp.height)
-            make.leading.equalTo(titleHintLabel.snp.trailing).offset(5)
-            make.lastBaseline.equalTo(titleHintLabel.snp.lastBaseline)
+            make.leading.equalTo(titleHintLabel.snp.trailing).offset(margin)
+            make.lastBaseline.equalTo(titleHintLabel)
         }
         countLabel.snp.makeConstraints { (make) in
-            make.height.equalTo(titleTextField.snp.height)
-            make.lastBaseline.equalTo(titleTextField.snp.lastBaseline)
+            make.lastBaseline.equalTo(titleTextField)
             make.trailing.equalTo(view.snp.trailingMargin)
-            make.leading.equalTo(titleTextField.snp.trailing).offset(5)
+            make.leading.equalTo(titleTextField.snp.trailing).offset(margin)
         }
         contentTextView.snp.makeConstraints { (make) in
             make.leading.equalTo(titleHintLabel)
             make.trailing.equalTo(countLabel)
-            self.contentViewOffset = make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-5).constraint
-            make.top.equalTo(countLabel.snp.bottom).offset(5)
+            self.contentViewOffset = make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-margin).constraint
+            make.top.equalTo(countLabel.snp.bottom).offset(margin)
         }
         
         if mode == .post || mode == .reply {
             attachScrollView.snp.makeConstraints { (make) in
                 make.leading.equalToSuperview()
                 make.trailing.equalToSuperview()
-                make.top.equalTo(contentTextView.snp.bottom).offset(5)
+                make.top.equalTo(contentTextView.snp.bottom).offset(margin)
                 make.height.equalTo(100)
             }
             attachStack.snp.makeConstraints { (make) in
@@ -184,19 +192,6 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
                 make.height.equalTo(100)
             }
         }
-        
-        updateColor()
-    }
-    
-    private func updateColor() {
-        view.backgroundColor = UIColor.systemBackground
-        titleHintLabel.textColor = UIColor.systemBackground
-        titleHintLabel.backgroundColor = UIColor.secondaryLabel
-        countLabel.textColor = UIColor.secondaryLabel
-        titleTextField.textColor = UIColor.secondaryLabel
-        titleTextField.attributedPlaceholder = NSAttributedString(string: "添加标题",
-                                                                  attributes: [NSAttributedString.Key.foregroundColor: UIColor.secondaryLabel.withAlphaComponent(0.6)])
-        contentTextView.textColor = UIColor(named: "MainText")
     }
     
     private func setupMode() {
@@ -358,9 +353,9 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     
     private func updateContentLayout() {
         if attachedImages.count > 0 {
-            contentViewOffset?.update(offset: -keyboardHeight - 5 - 100)
+            contentViewOffset?.update(offset: -keyboardHeight - margin - 100)
         } else {
-            contentViewOffset?.update(offset: -keyboardHeight - 5)
+            contentViewOffset?.update(offset: -keyboardHeight - margin)
         }
         self.view.layoutIfNeeded()
     }

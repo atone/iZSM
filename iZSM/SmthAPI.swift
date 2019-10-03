@@ -451,7 +451,9 @@ class SmthAPI {
                     boardList.append(board)
                 }
             }
-            return boardList
+            if boardList.count > 0 {
+                return boardList
+            }
         }
         return nil
     }

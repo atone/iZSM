@@ -86,7 +86,7 @@ class SmthAPI {
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         let encodedId = id.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed)!
         let encodedPass = pass.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed)!
-        request.httpBody = "id=\(encodedId)&passwd=\(encodedPass)".data(using: .utf8)
+        request.httpBody = "id=\(encodedId)&passwd=\(encodedPass)&kick_multi=1".data(using: .utf8)
         let semaphore = DispatchSemaphore(value: 0)
         URLSession.shared.dataTask(with: request) {
             _,_,_ in

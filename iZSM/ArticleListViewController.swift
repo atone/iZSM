@@ -213,7 +213,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                         let result = self.api.getOriginThreadList(for: boardID,
                                                                   page: self.currentPage,
                                                                   user: user, pass: pass)
-                        if result.page == 0 {
+                        if result.page == 0 || result.page == -2 {
                             break // unrecoverable error
                         } else if result.page == -1 { // decode error
                             if self.currentPage == -1 {
@@ -237,7 +237,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                     self.currentPage = 1
                     while threadSection.count == 0 {
                         let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage, user: user, pass: pass)
-                        if result.page == 0 {
+                        if result.page == 0 || result.page == -2 {
                             break // unrecoverable error
                         } else if result.page == -1 { // decode error
                             self.currentPage += 1
@@ -333,7 +333,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                         var lastPage = -1 // decode error
                         while lastPage == -1, threadSection.count == 0 {
                             let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
-                            if result.page == 0 { break } // unrecoverable error
+                            if result.page == 0 || result.page == -2 { break } // unrecoverable error
                             threadSection.append(contentsOf: result.threads.reversed())
                             lastPage = result.page
                             self.currentPage -= 1
@@ -342,7 +342,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                         var lastPage = -1
                         while lastPage == -1, threadSection.count == 0 {
                             let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
-                            if result.page == 0 { break } // unrecoverable error
+                            if result.page == 0 || result.page == -2 { break } // unrecoverable error
                             threadSection.append(contentsOf: result.threads)
                             lastPage = result.page
                             self.currentPage += 1

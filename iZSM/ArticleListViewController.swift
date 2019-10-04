@@ -152,7 +152,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
-        if let boardID = self.boardID {
+        if let boardID = self.boardID, let user = setting.username, let pass = setting.password {
             let currentMode = self.searchMode
             let currentThreadSortMode = self.threadSortMode
             networkActivityIndicatorStart(withHUD: showHUD)
@@ -209,10 +209,13 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                     }
                 case .byPostNewFirst:
                     self.currentPage = -1
-                    while threadSection.count == 0,
-                        let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
-                    {
-                        if result.page == -1 {
+                    while threadSection.count == 0 {
+                        let result = self.api.getOriginThreadList(for: boardID,
+                                                                  page: self.currentPage,
+                                                                  user: user, pass: pass)
+                        if result.page == 0 {
+                            break // unrecoverable error
+                        } else if result.page == -1 { // decode error
                             if self.currentPage == -1 {
                                 break // cannot recover from error since page is unknown
                             } else {
@@ -232,10 +235,11 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                     }
                 case .byPostOldFirst:
                     self.currentPage = 1
-                    while threadSection.count == 0,
-                        let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
-                    {
-                        if result.page == -1 {
+                    while threadSection.count == 0 {
+                        let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage, user: user, pass: pass)
+                        if result.page == 0 {
+                            break // unrecoverable error
+                        } else if result.page == -1 { // decode error
                             self.currentPage += 1
                             continue // try to load next page
                         }
@@ -327,18 +331,18 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                         }
                     case .byPostNewFirst:
                         var lastPage = -1 // decode error
-                        while lastPage == -1, threadSection.count == 0,
+                        while lastPage == -1, threadSection.count == 0 {
                             let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
-                        {
+                            if result.page == 0 { break } // unrecoverable error
                             threadSection.append(contentsOf: result.threads.reversed())
                             lastPage = result.page
                             self.currentPage -= 1
                         }
                     case .byPostOldFirst:
                         var lastPage = -1
-                        while lastPage == -1, threadSection.count == 0,
+                        while lastPage == -1, threadSection.count == 0 {
                             let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
-                        {
+                            if result.page == 0 { break } // unrecoverable error
                             threadSection.append(contentsOf: result.threads)
                             lastPage = result.page
                             self.currentPage += 1

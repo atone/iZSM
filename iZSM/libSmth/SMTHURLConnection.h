@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *_Nullable)net_LoadThreadList:(NSString *)board_id :(long)from :(long)size :(int)brcmode;
 - (NSArray *_Nullable)net_SearchArticle:(NSString *)board_id :(NSString *_Nullable)title :(NSString *_Nullable)user :(long)from :(long)size;
 - (NSArray *_Nullable)net_GetThread:(NSString *)board_id :(long)article_id :(long)from :(long)size :(int)sort;
+- (long)net_ForwardThread:(NSString *)board_id :(long)thread_id :(NSString *)user;
 - (long)net_GetLastThreadCnt;
 - (long)net_GetArticleCnt:(NSString *)board_id;
 - (NSDictionary *_Nullable)net_GetArticle:(NSString *)board_id :(long)article_id;

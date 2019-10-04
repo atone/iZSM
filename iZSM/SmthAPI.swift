@@ -78,21 +78,38 @@ class SmthAPI {
         api.reset_status()
         return api.net_GetThreadCnt(boardID)
     }
+    
+    private func bbsSilentLogin(id: String, pass: String) {
+        let url = URL(string: "https://www.newsmth.net/bbslogin.php")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        let encodedId = id.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed)!
+        let encodedPass = pass.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed)!
+        request.httpBody = "id=\(encodedId)&passwd=\(encodedPass)".data(using: .utf8)
+        let semaphore = DispatchSemaphore(value: 0)
+        URLSession.shared.dataTask(with: request) {
+            _,_,_ in
+            semaphore.signal()
+        }.resume()
+        semaphore.wait()
+    }
 
     // get thread list in origin mode
-    func getOriginThreadList(for boardID: String, page: Int) -> (page: Int, threads: [SMThread])? {
+    func getOriginThreadList(for boardID: String, page: Int) -> (page: Int, threads: [SMThread]) {
         var url = "https://www.newsmth.net/bbsdoc.php?board=\(boardID)&ftype=6"
         if page > 0 {
             url.append(contentsOf: "&page=\(page)")
         }
-        guard let data = try? Data(contentsOf: URL(string: url)!) else { return nil }
+        guard let data = try? Data(contentsOf: URL(string: url)!) else { return (0, []) } // 无法加载数据，直接返回空
         let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
         guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return (-1, []) } // 解码错误
+        if result.contains("<tr><td>错误的讨论区</td></tr>") { return (-2, []) } // 没有权限？
         let lines = result.components(separatedBy: .newlines)
-        guard let writerLine = lines.filter({ $0.hasPrefix("var c = new docWriter(")}).first else { return nil }
+        guard let writerLine = lines.filter({ $0.hasPrefix("var c = new docWriter(")}).first else { return (0, []) }
         let writerComponents = writerLine.split(separator: ",")
-        guard writerComponents.count == 10 else { return nil }
-        guard let page = Int(writerComponents[5]) else { return nil }
+        guard writerComponents.count == 10 else { return (0, []) }
+        guard let page = Int(writerComponents[5]) else { return (0, []) }
         
         let threads: [SMThread] = lines.filter({ $0.hasPrefix("c.o(") }).map { (line) -> SMThread in
             let start = line.index(line.startIndex, offsetBy: 4)
@@ -111,7 +128,16 @@ class SmthAPI {
         if threads.count > 0 {
             return (page, threads)
         }
-        return nil
+        return (0, [])
+    }
+    
+    func getOriginThreadList(for boardID: String, page: Int, user: String, pass: String) -> (page: Int, threads: [SMThread]) {
+        let result = getOriginThreadList(for: boardID, page: page)
+        if result.page == -2 { // 可能是因为权限导致无法获取数据，登录后再试一次
+            bbsSilentLogin(id: user, pass: pass)
+            return getOriginThreadList(for: boardID, page: page)
+        }
+        return result
     }
     
     enum ClearUnreadMode: Int32 {
@@ -909,4 +935,24 @@ class SmthAPI {
         }
         return data
     }
+}
+
+extension CharacterSet {
+    /// Creates a CharacterSet from RFC 3986 allowed characters.
+    ///
+    /// RFC 3986 states that the following characters are "reserved" characters.
+    ///
+    /// - General Delimiters: ":", "#", "[", "]", "@", "?", "/"
+    /// - Sub-Delimiters: "!", "$", "&", "'", "(", ")", "*", "+", ",", ";", "="
+    ///
+    /// In RFC 3986 - Section 3.4, it states that the "?" and "/" characters should not be escaped to allow
+    /// query strings to include a URL. Therefore, all "reserved" characters with the exception of "?" and "/"
+    /// should be percent-escaped in the query string.
+    public static let afURLQueryAllowed: CharacterSet = {
+        let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
+        let subDelimitersToEncode = "!$&'()*+,;="
+        let encodableDelimiters = CharacterSet(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
+
+        return CharacterSet.urlQueryAllowed.subtracting(encodableDelimiters)
+    }()
 }

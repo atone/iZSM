@@ -456,7 +456,7 @@ class SmthAPI {
     }
     
     private func addFavoriteDirectory(_ name: String, in group: Int) -> Int {
-        let url = URL(string: "https://www.newsmth.net/bbsfav.php?bname=\(name.percentEncodingWithGBK)&select=\(group)")!
+        let url = URL(string: "https://www.newsmth.net/bbsfav.php?dname=\(name.percentEncodingWithGBK)&select=\(group)")!
         guard let data = try? Data(contentsOf: url) else { return -1 } // 无法加载数据
         let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
         guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return -2 } // 解码错误

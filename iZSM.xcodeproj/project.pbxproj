@@ -74,6 +74,8 @@
 		9CB573C11DE5B46D00CD6F3E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */; };
 		9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */; };
 		9CB573C41DE5B61800CD6F3E /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C31DE5B61800CD6F3E /* LogoView.swift */; };
+		9CBFD79B23486F5100A16194 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBFD79923486F5100A16194 /* NSString+HTML.m */; };
+		9CBFD79C23486F5100A16194 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBFD79A23486F5100A16194 /* GTMNSString+HTML.m */; };
 		9CC1FD5B232F5C02006CFE33 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */; };
 		9CCE887C233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCE887A233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift */; };
 		9CD4ABFD1F34362400C3D9BF /* em1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB331F34362400C3D9BF /* em1.gif */; };
@@ -356,6 +358,10 @@
 		9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		9CB573C31DE5B61800CD6F3E /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
+		9CBFD79723486F5100A16194 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
+		9CBFD79823486F5100A16194 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+HTML.h"; sourceTree = "<group>"; };
+		9CBFD79923486F5100A16194 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
+		9CBFD79A23486F5100A16194 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
 		9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
 		9CCE887A233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SMBoardInfo+CoreDataClass.swift"; path = "CoreData/SMBoardInfo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		9CD4AB331F34362400C3D9BF /* em1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = em1.gif; sourceTree = "<group>"; };
@@ -752,6 +758,17 @@
 			name = Persistence;
 			sourceTree = "<group>";
 		};
+		9CBFD79623486F5100A16194 /* GTMNSString */ = {
+			isa = PBXGroup;
+			children = (
+				9CBFD79723486F5100A16194 /* NSString+HTML.h */,
+				9CBFD79823486F5100A16194 /* GTMNSString+HTML.h */,
+				9CBFD79923486F5100A16194 /* NSString+HTML.m */,
+				9CBFD79A23486F5100A16194 /* GTMNSString+HTML.m */,
+			);
+			path = GTMNSString;
+			sourceTree = "<group>";
+		};
 		9CD4AB311F34362400C3D9BF /* emoticons */ = {
 			isa = PBXGroup;
 			children = (
@@ -1003,6 +1020,7 @@
 		9CEBD0761F24F98900E4E29E /* Third Parties */ = {
 			isa = PBXGroup;
 			children = (
+				9CBFD79623486F5100A16194 /* GTMNSString */,
 				9C889FCA1DE4832E00C33A8D /* YYPhotoGroupView */,
 				9C1A3BE41DE2E6EB00CF4A43 /* libSmth */,
 				9C56E1CB1F0E0DF00093E504 /* FDTemplateLayoutCell */,
@@ -1372,6 +1390,7 @@
 				9CC1FD5B232F5C02006CFE33 /* MessageCenter.swift in Sources */,
 				9C57261B233F7389003FE851 /* StarThread+CoreDataClass.swift in Sources */,
 				9C25D5AB1DE56BAE005CB55C /* MailBoxViewController.swift in Sources */,
+				9CBFD79C23486F5100A16194 /* GTMNSString+HTML.m in Sources */,
 				9C1A3BEB1DE2E6EB00CF4A43 /* client_signature.m in Sources */,
 				9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */,
 				9CD9E6451F1DB10E00713853 /* IAPHelper.swift in Sources */,
@@ -1403,6 +1422,7 @@
 				9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */,
 				9C56E1D51F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m in Sources */,
 				9C6EB72A1F1776E200129EA3 /* NTNavigationController.swift in Sources */,
+				9CBFD79B23486F5100A16194 /* NSString+HTML.m in Sources */,
 				9C3A3F03233E5CCF006223AA /* iZSM.xcdatamodeld in Sources */,
 				9C767B5A1F1C4F3000EC7A06 /* FullscreenContentViewController.swift in Sources */,
 				9C889FBF1DE4271200C33A8D /* ArticleContentCell.swift in Sources */,
@@ -1439,7 +1459,6 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1498,7 +1517,6 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1548,7 +1566,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = iZSM/iZSM.entitlements;
 				CURRENT_PROJECT_VERSION = 524;
 				DEVELOPMENT_TEAM = 9TXRXPVXCE;
@@ -1581,7 +1598,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = iZSM/iZSM.entitlements;
 				CURRENT_PROJECT_VERSION = 524;
 				DEVELOPMENT_TEAM = 9TXRXPVXCE;

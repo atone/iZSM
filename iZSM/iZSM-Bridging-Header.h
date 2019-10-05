@@ -6,3 +6,4 @@
 #import "YYPhotoGroupView.h"
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "UINavigationController+FDFullscreenPopGesture.h"
+#import "NSString+HTML.h"

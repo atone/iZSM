@@ -5,8 +5,8 @@
 //  Copyright (C) 2014 ibireme. All rights reserved.
 //
 
+#import <YYKit/YYKit.h>
 #import "YYPhotoGroupView.h"
-@import YYKit;
 
 #define kPadding 20
 #define kHiColor [UIColor colorWithRGBHex:0x2dd6b8]

@@ -120,8 +120,7 @@ class SmthAPI {
             let author = String(components[2]).trimmingCharacters(in: CharacterSet(charactersIn: "'"))
             let flag = String(components[3]).trimmingCharacters(in: CharacterSet(charactersIn: "'"))
             let time = Date(timeIntervalSince1970: TimeInterval(components[4]) ?? 0)
-            var title = String(components[5]).trimmingCharacters(in: CharacterSet(charactersIn: "'").union(.whitespaces))
-            title = self.htmlEntityDecode(string: title)
+            let title = String(components[5]).trimmingCharacters(in: CharacterSet(charactersIn: "'").union(.whitespaces)).decodingHTMLEntities()
             return SMThread(id: id, time: time, subject: title, authorID: author, lastReplyAuthorID: "", lastReplyThreadID: 0, boardID: "", boardName: "", flags: flag, count: 0, lastReplyTime: Date(timeIntervalSince1970: 0))
         }
         
@@ -747,7 +746,7 @@ class SmthAPI {
             let count = (dict["count"] as? NSString)?.integerValue,
             let id = (dict["id"] as? NSString)?.integerValue
         {
-            let subject = htmlEntityDecode(string: rawSubject)
+            let subject = rawSubject.decodingHTMLEntities()
             let board_id = htmlDotDecode(string: rawBoard_id)
             let time = Date(timeIntervalSince1970: timeInterval)
             return SMHotThread(subject: subject, authorID: author_id, id: id, time: time, boardID: board_id, count: count)
@@ -757,14 +756,6 @@ class SmthAPI {
 
     private func htmlDotDecode(string: String) -> String {
         return string.replacingOccurrences(of: "%2E", with: ".")
-    }
-
-    private func htmlEntityDecode(string: String) -> String {
-        return string.replacingOccurrences(of: "&quot;", with: "\"")
-            .replacingOccurrences(of: "&apos;", with: "'")
-            .replacingOccurrences(of: "&amp;", with: "&")
-            .replacingOccurrences(of: "&lt;", with: "<")
-            .replacingOccurrences(of: "&gt;", with: ">")
     }
 
     private func boardFromDictionary(dict: [String:Any]) -> SMBoard? {

@@ -84,6 +84,8 @@ class SmthAPI {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.setValue("https://www.newsmth.net", forHTTPHeaderField: "Origin")
+        request.setValue("https://www.newsmth.net/bbslogin.php", forHTTPHeaderField: "Referer")
         let encodedId = id.addingPercentEncoding(withAllowedCharacters: .smURLQueryAllowed)!
         let encodedPass = pass.addingPercentEncoding(withAllowedCharacters: .smURLQueryAllowed)!
         request.httpBody = "id=\(encodedId)&passwd=\(encodedPass)&kick_multi=1".data(using: .utf8)

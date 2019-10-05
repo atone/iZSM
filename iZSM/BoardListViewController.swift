@@ -247,7 +247,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                 if self.api.errorCode == 0 {
                     SVProgressHUD.showSuccess(withStatus: "添加成功")
                     NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                                                    object: nil)
+                                                    object: nil, userInfo: ["group_id": 0])
                 } else if self.api.errorCode == 10319 {
                     SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")
                 } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
@@ -272,7 +272,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
                         SVProgressHUD.showSuccess(withStatus: "关注成功，尚需管理员审核成为正式驻版用户")
                     }
                     NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                                                    object: nil)
+                                                    object: nil, userInfo: ["group_id": 0])
                 } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
                     SVProgressHUD.showError(withStatus: self.api.errorDescription)
                 } else {

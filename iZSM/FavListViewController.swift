@@ -41,7 +41,10 @@ class FavListViewController: BaseTableViewController {
     }
     
     @objc private func setUpdateFavList(_ notification: Notification) {
-        fetchData(showHUD: false)
+        if let userInfo = notification.userInfo,
+            let groupID = userInfo["group_id"] as? Int, groupID == self.groupID {
+            fetchData(showHUD: false)
+        }
     }
     
     override func viewDidLoad() {
@@ -155,7 +158,7 @@ class FavListViewController: BaseTableViewController {
                 if success {
                     SVProgressHUD.showSuccess(withStatus: "添加成功")
                     NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                    object: nil)
+                                                    object: nil, userInfo: ["group_id": self.groupID])
                 } else {
                     SVProgressHUD.showError(withStatus: "出错了")
                 }
@@ -183,7 +186,7 @@ class FavListViewController: BaseTableViewController {
                         SVProgressHUD.showSuccess(withStatus: "关注成功，尚需管理员审核成为正式驻版用户")
                     }
                     NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                                                    object: nil)
+                                                    object: nil, userInfo: ["group_id": self.groupID])
                 } else if self.api.errorCode == 10319 && self.index == 0 {
                     SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")
                 } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
@@ -275,7 +278,7 @@ class FavListViewController: BaseTableViewController {
                     networkActivityIndicatorStop()
                     if self.api.errorCode == 0 {
                         NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                        object: nil)
+                                                        object: nil, userInfo: ["group_id": self.groupID])
                     } else {
                         SVProgressHUD.showInfo(withStatus: self.api.errorDescription)
                     }
@@ -286,7 +289,7 @@ class FavListViewController: BaseTableViewController {
                     networkActivityIndicatorStop()
                     if success {
                         NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                        object: nil)
+                                                        object: nil, userInfo: ["group_id": self.groupID])
                     }
                 }
             }

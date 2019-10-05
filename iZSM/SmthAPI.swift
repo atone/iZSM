@@ -430,6 +430,52 @@ class SmthAPI {
         api.reset_status()
         api.net_DelFav(boardID, group)
     }
+    
+    // add favorite directory
+    func addFavoriteDirectory(_ name: String, in group: Int, user: String, pass: String) -> Bool {
+        let error = addFavoriteDirectory(name, in: group)
+        if error == 0 {
+            return true
+        } else if error == -3 {
+            bbsSilentLogin(id: user, pass: pass)
+            return addFavoriteDirectory(name, in: group) == 0
+        }
+        return false
+    }
+    
+    // del favorite directory
+    func delFavoriteDirectory(_ index: Int, in group: Int, user: String, pass: String) -> Bool {
+        let error = delFavoriteDirectory(index, in: group)
+        if error == 0 {
+            return true
+        } else if error == -3 {
+            bbsSilentLogin(id: user, pass: pass)
+            return delFavoriteDirectory(index, in: group) == 0
+        }
+        return false
+    }
+    
+    private func addFavoriteDirectory(_ name: String, in group: Int) -> Int {
+        let url = URL(string: "https://www.newsmth.net/bbsfav.php?bname=\(name.percentEncodingWithGBK)&select=\(group)")!
+        guard let data = try? Data(contentsOf: url) else { return -1 } // 无法加载数据
+        let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
+        guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return -2 } // 解码错误
+        if result.contains("您还没有登录，或者长时间没有动作，请您重新登录。") {
+            return -3 // 未登录
+        }
+        return 0 // 正确
+    }
+    
+    private func delFavoriteDirectory(_ index: Int, in group: Int) -> Int {
+        let url = URL(string: "https://www.newsmth.net/bbsfav.php?select=\(group)&deldir=\(index)")!
+        guard let data = try? Data(contentsOf: url) else { return -1 } // 无法加载数据
+        let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
+        guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return -2 } // 解码错误
+        if result.contains("您还没有登录，或者长时间没有动作，请您重新登录。") {
+            return -3 // 未登录
+        }
+        return 0 // 正确
+    }
 
     // MARK: - Board
     // get board list
@@ -946,4 +992,28 @@ extension CharacterSet {
 
         return CharacterSet.urlQueryAllowed.subtracting(encodableDelimiters)
     }()
+}
+
+extension String {
+    var percentEncodingWithGBK: String {
+        var result = self
+        while let range = result.range(of: #"[\u4e00-\u9fa5]+"#, options: .regularExpression) {
+            if let encoded = gbkEncode(result[range]) {
+                result.replaceSubrange(range, with: encoded)
+            } else {
+                result.replaceSubrange(range, with: "")
+            }
+        }
+        return result
+    }
+    
+    func gbkEncode(_ str: Substring) -> String? {
+        let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
+        if let gbkData = str.data(using: String.Encoding(rawValue: enc)) {
+            return gbkData.reduce("") { (substring, uint) -> String in
+                substring + String(format: "%%%X", uint)
+            }
+        }
+        return nil
+    }
 }

@@ -46,7 +46,7 @@ class FavListViewController: BaseTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        var barButtonItems = [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addFavorite(_:)))]
+        var barButtonItems = [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addFavoriteAction(_:)))]
         if groupID == 0 { //只有根目录下有进入文章收藏的入口，以及切换收藏夹和驻版的Switcher
             barButtonItems.append(UIBarButtonItem(image: UIImage(systemName: "text.badge.star"), style: .plain, target: self, action: #selector(showStarThreadVC(_:))))
             navigationItem.titleView = switcher
@@ -98,13 +98,44 @@ class FavListViewController: BaseTableViewController {
         show(vc, sender: self)
     }
     
-    @objc private func addFavorite(_ sender: UIBarButtonItem) {
+    @objc private func addFavoriteAction(_ sender: UIBarButtonItem) {
+        if index == 0 {
+            let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            let addBoardAction = UIAlertAction(title: "收藏版面", style: .default) { [unowned self] _ in
+                self.addFavorite()
+            }
+            sheet.addAction(addBoardAction)
+            let addDirectoryAction = UIAlertAction(title: "新建目录", style: .default) { [unowned self] _ in
+                self.addFavoriteDirectory()
+            }
+            sheet.addAction(addDirectoryAction)
+            sheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+            present(sheet, animated: true)
+        } else {
+            addFavorite()
+        }
+    }
+    
+    func addFavoriteDirectory() {
+        let alert = UIAlertController(title: "目录名称", message: nil, preferredStyle: .alert)
+        alert.addTextField(configurationHandler: nil)
+        let okAction = UIAlertAction(title: "确定", style: .default) { [unowned self] _ in
+            if let name = alert.textFields?.first?.text, name.count > 0 {
+                self.addFavoriteDirectoryWithName(name)
+            }
+        }
+        alert.addAction(okAction)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        present(alert, animated: true)
+    }
+    
+    func addFavorite() {
         let title = "请选择要\(self.index == 0 ? "收藏" : "关注")的版面"
         let searchResultController = BoardListSearchResultViewController.searchResultController(title: title) { [unowned self] (controller, board) in
             let confirmAlert = UIAlertController(title: "确认\(self.index == 0 ? "收藏" : "关注")?", message: nil, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "确认", style: .default) { [unowned self] _ in
                 self.dismiss(animated: true)
-                self.addFavoriteWithBoardID(boardID: board.boardID)
+                self.addFavoriteWithBoardID(board.boardID)
             }
             confirmAlert.addAction(okAction)
             confirmAlert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
@@ -114,7 +145,25 @@ class FavListViewController: BaseTableViewController {
         present(searchResultController, animated: true)
     }
     
-    func addFavoriteWithBoardID(boardID: String) {
+    func addFavoriteDirectoryWithName(_ name: String) {
+        guard let user = setting.username, let pass = setting.password else { return }
+        networkActivityIndicatorStart(withHUD: true)
+        DispatchQueue.global().async {
+            let success = self.api.addFavoriteDirectory(name, in: self.groupID, user: user, pass: pass)
+            DispatchQueue.main.async {
+                networkActivityIndicatorStop(withHUD: true)
+                if success {
+                    SVProgressHUD.showSuccess(withStatus: "添加成功")
+                    NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
+                    object: nil)
+                } else {
+                    SVProgressHUD.showError(withStatus: "出错了")
+                }
+            }
+        }
+    }
+    
+    func addFavoriteWithBoardID(_ boardID: String) {
         networkActivityIndicatorStart(withHUD: true)
         DispatchQueue.global().async {
             var joinResult = 0
@@ -203,33 +252,41 @@ class FavListViewController: BaseTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        let boardFlag = favorites[indexPath.row].flag
-        if (boardFlag != -1) && (boardFlag & 0x400 == 0) { //版面
-            return true
-        } else { //目录
+        let board = favorites[indexPath.row]
+        if board.bid < 0 || board.position < 0 {
             return false
         }
+        return true
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            let boardID = favorites[indexPath.row].boardID
-            networkActivityIndicatorStart()
-            DispatchQueue.global().async {
+        guard editingStyle == .delete else { return }
+        guard let user = setting.username, let pass = setting.password else { return }
+        let fav = favorites[indexPath.row]
+        networkActivityIndicatorStart()
+        DispatchQueue.global().async {
+            if (fav.flag != -1) && (fav.flag & 0x400 == 0) { //版面
                 if self.index == 0 {
-                    self.api.delFavorite(boardID: boardID, group: self.groupID)
+                    self.api.delFavorite(boardID: fav.boardID, group: self.groupID)
                 } else {
-                    let _ = self.api.quitMemberOfBoard(boardID: boardID)
+                    let _ = self.api.quitMemberOfBoard(boardID: fav.boardID)
                 }
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
                     if self.api.errorCode == 0 {
-                        self.favorites.remove(at: indexPath.row)
-                        self.tableView.beginUpdates()
-                        self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                        self.tableView.endUpdates()
+                        NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
+                        object: nil)
                     } else {
                         SVProgressHUD.showInfo(withStatus: self.api.errorDescription)
+                    }
+                }
+            } else { //目录
+                let success = self.api.delFavoriteDirectory(fav.position, in: self.groupID, user: user, pass: pass)
+                DispatchQueue.main.async {
+                    networkActivityIndicatorStop()
+                    if success {
+                        NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
+                        object: nil)
                     }
                 }
             }

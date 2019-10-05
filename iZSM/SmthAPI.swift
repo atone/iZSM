@@ -84,8 +84,8 @@ class SmthAPI {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        let encodedId = id.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed)!
-        let encodedPass = pass.addingPercentEncoding(withAllowedCharacters: .afURLQueryAllowed)!
+        let encodedId = id.addingPercentEncoding(withAllowedCharacters: .smURLQueryAllowed)!
+        let encodedPass = pass.addingPercentEncoding(withAllowedCharacters: .smURLQueryAllowed)!
         request.httpBody = "id=\(encodedId)&passwd=\(encodedPass)&kick_multi=1".data(using: .utf8)
         let semaphore = DispatchSemaphore(value: 0)
         URLSession.shared.dataTask(with: request) {
@@ -975,39 +975,28 @@ class SmthAPI {
 }
 
 extension CharacterSet {
-    /// Creates a CharacterSet from RFC 3986 allowed characters.
-    ///
-    /// RFC 3986 states that the following characters are "reserved" characters.
-    ///
-    /// - General Delimiters: ":", "#", "[", "]", "@", "?", "/"
-    /// - Sub-Delimiters: "!", "$", "&", "'", "(", ")", "*", "+", ",", ";", "="
-    ///
-    /// In RFC 3986 - Section 3.4, it states that the "?" and "/" characters should not be escaped to allow
-    /// query strings to include a URL. Therefore, all "reserved" characters with the exception of "?" and "/"
-    /// should be percent-escaped in the query string.
-    public static let afURLQueryAllowed: CharacterSet = {
-        let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
-        let subDelimitersToEncode = "!$&'()*+,;="
-        let encodableDelimiters = CharacterSet(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
-
+    public static let smURLQueryAllowed: CharacterSet = {
+        let encodableDelimiters = CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]")
         return CharacterSet.urlQueryAllowed.subtracting(encodableDelimiters)
     }()
 }
 
 extension String {
     var percentEncodingWithGBK: String {
-        var result = self
-        while let range = result.range(of: #"[\u4e00-\u9fa5]+"#, options: .regularExpression) {
-            if let encoded = gbkEncode(result[range]) {
-                result.replaceSubrange(range, with: encoded)
+        var result = String()
+        for char in self.unicodeScalars {
+            if CharacterSet.smURLQueryAllowed.contains(char) {
+                result.unicodeScalars.append(char)
             } else {
-                result.replaceSubrange(range, with: "")
+                if let encoded = gbkEncode(String(char)) {
+                    result.append(encoded)
+                }
             }
         }
         return result
     }
     
-    func gbkEncode(_ str: Substring) -> String? {
+    func gbkEncode(_ str: String) -> String? {
         let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
         if let gbkData = str.data(using: String.Encoding(rawValue: enc)) {
             return gbkData.reduce("") { (substring, uint) -> String in

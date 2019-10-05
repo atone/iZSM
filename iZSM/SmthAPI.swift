@@ -120,7 +120,7 @@ class SmthAPI {
             let author = String(components[2]).trimmingCharacters(in: CharacterSet(charactersIn: "'"))
             let flag = String(components[3]).trimmingCharacters(in: CharacterSet(charactersIn: "'"))
             let time = Date(timeIntervalSince1970: TimeInterval(components[4]) ?? 0)
-            let title = String(components[5]).trimmingCharacters(in: CharacterSet(charactersIn: "'").union(.whitespaces)).decodingHTMLEntities()
+            let title = String(components[5]).trimmingCharacters(in: CharacterSet(charactersIn: "'").union(.whitespaces)).unescapingFromHTML()
             return SMThread(id: id, time: time, subject: title, authorID: author, lastReplyAuthorID: "", lastReplyThreadID: 0, boardID: "", boardName: "", flags: flag, count: 0, lastReplyTime: Date(timeIntervalSince1970: 0))
         }
         
@@ -746,7 +746,7 @@ class SmthAPI {
             let count = (dict["count"] as? NSString)?.integerValue,
             let id = (dict["id"] as? NSString)?.integerValue
         {
-            let subject = rawSubject.decodingHTMLEntities()
+            let subject = rawSubject.unescapingFromHTML()
             let board_id = htmlDotDecode(string: rawBoard_id)
             let time = Date(timeIntervalSince1970: timeInterval)
             return SMHotThread(subject: subject, authorID: author_id, id: id, time: time, boardID: board_id, count: count)

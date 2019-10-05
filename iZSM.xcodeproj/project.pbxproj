@@ -74,7 +74,6 @@
 		9CB573C11DE5B46D00CD6F3E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */; };
 		9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */; };
 		9CB573C41DE5B61800CD6F3E /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573C31DE5B61800CD6F3E /* LogoView.swift */; };
-		9CBFD79B23486F5100A16194 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBFD79923486F5100A16194 /* NSString+HTML.m */; };
 		9CBFD79C23486F5100A16194 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBFD79A23486F5100A16194 /* GTMNSString+HTML.m */; };
 		9CC1FD5B232F5C02006CFE33 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */; };
 		9CCE887C233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCE887A233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift */; };
@@ -358,9 +357,7 @@
 		9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		9CB573C31DE5B61800CD6F3E /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
-		9CBFD79723486F5100A16194 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
 		9CBFD79823486F5100A16194 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+HTML.h"; sourceTree = "<group>"; };
-		9CBFD79923486F5100A16194 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
 		9CBFD79A23486F5100A16194 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
 		9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
 		9CCE887A233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SMBoardInfo+CoreDataClass.swift"; path = "CoreData/SMBoardInfo+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -761,9 +758,7 @@
 		9CBFD79623486F5100A16194 /* GTMNSString */ = {
 			isa = PBXGroup;
 			children = (
-				9CBFD79723486F5100A16194 /* NSString+HTML.h */,
 				9CBFD79823486F5100A16194 /* GTMNSString+HTML.h */,
-				9CBFD79923486F5100A16194 /* NSString+HTML.m */,
 				9CBFD79A23486F5100A16194 /* GTMNSString+HTML.m */,
 			);
 			path = GTMNSString;
@@ -1422,7 +1417,6 @@
 				9CB573C21DE5B46D00CD6F3E /* AboutViewController.swift in Sources */,
 				9C56E1D51F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m in Sources */,
 				9C6EB72A1F1776E200129EA3 /* NTNavigationController.swift in Sources */,
-				9CBFD79B23486F5100A16194 /* NSString+HTML.m in Sources */,
 				9C3A3F03233E5CCF006223AA /* iZSM.xcdatamodeld in Sources */,
 				9C767B5A1F1C4F3000EC7A06 /* FullscreenContentViewController.swift in Sources */,
 				9C889FBF1DE4271200C33A8D /* ArticleContentCell.swift in Sources */,

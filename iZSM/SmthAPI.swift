@@ -79,22 +79,40 @@ class SmthAPI {
         return api.net_GetThreadCnt(boardID)
     }
     
-    private func bbsSilentLogin(id: String, pass: String) {
-        let url = URL(string: "https://www.newsmth.net/bbslogin.php")!
+    enum HTTPMethod {
+        case get
+        case post
+    }
+    
+    private func httpRequest(url: URL, method: HTTPMethod = .get, params: String? = nil, referer: String? = nil) -> Data? {
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.setValue("https://www.newsmth.net", forHTTPHeaderField: "Origin")
-        request.setValue("https://www.newsmth.net/bbslogin.php", forHTTPHeaderField: "Referer")
-        let encodedId = id.addingPercentEncoding(withAllowedCharacters: .smURLQueryAllowed)!
-        let encodedPass = pass.addingPercentEncoding(withAllowedCharacters: .smURLQueryAllowed)!
-        request.httpBody = "id=\(encodedId)&passwd=\(encodedPass)&kick_multi=1".data(using: .utf8)
+        switch method {
+        case .post:
+            request.httpMethod = "POST"
+            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            request.setValue("https://www.newsmth.net", forHTTPHeaderField: "Origin")
+            request.httpBody = params?.data(using: .utf8)
+        case .get:
+            request.httpMethod = "GET"
+        }
+        if let referer = referer {
+            request.setValue(referer, forHTTPHeaderField: "Referer")
+        } else {
+            request.setValue(url.absoluteString, forHTTPHeaderField: "Referer")
+        }
         let semaphore = DispatchSemaphore(value: 0)
-        URLSession.shared.dataTask(with: request) {
-            _,_,_ in
+        var returnData: Data?
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            returnData = data
             semaphore.signal()
         }.resume()
         semaphore.wait()
+        return returnData
+    }
+    
+    private func bbsSilentLogin(id: String, pass: String) {
+        let url = URL(string: "https://www.newsmth.net/bbslogin.php")!
+        _ = httpRequest(url: url, method: .post, params: "id=\(id.percent)&passwd=\(pass.percent)&kick_multi=1")
     }
 
     // get thread list in origin mode
@@ -103,7 +121,7 @@ class SmthAPI {
         if page > 0 {
             url.append(contentsOf: "&page=\(page)")
         }
-        guard let data = try? Data(contentsOf: URL(string: url)!) else { return (0, []) } // 无法加载数据，直接返回空
+        guard let data = httpRequest(url: URL(string: url)!) else { return (0, []) } // 无法加载数据，直接返回空
         let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
         guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return (-1, []) } // 解码错误
         if result.contains("<tr><td>错误的讨论区</td></tr>") { return (-2, []) } // 没有权限？
@@ -459,7 +477,8 @@ class SmthAPI {
     
     private func addFavoriteDirectory(_ name: String, in group: Int) -> Int {
         let url = URL(string: "https://www.newsmth.net/bbsfav.php?dname=\(name.percentEncodingWithGBK)&select=\(group)")!
-        guard let data = try? Data(contentsOf: url) else { return -1 } // 无法加载数据
+        let referer = "https://www.newsmth.net/bbsfav.php?select=\(group)"
+        guard let data = httpRequest(url: url, referer: referer) else { return -1 } // 无法加载数据
         let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
         guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return -2 } // 解码错误
         if result.contains("您还没有登录，或者长时间没有动作，请您重新登录。") {
@@ -470,7 +489,8 @@ class SmthAPI {
     
     private func delFavoriteDirectory(_ index: Int, in group: Int) -> Int {
         let url = URL(string: "https://www.newsmth.net/bbsfav.php?select=\(group)&deldir=\(index)")!
-        guard let data = try? Data(contentsOf: url) else { return -1 } // 无法加载数据
+        let referer = "https://www.newsmth.net/bbsfav.php?select=\(group)"
+        guard let data = httpRequest(url: url, referer: referer) else { return -1 } // 无法加载数据
         let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
         guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return -2 } // 解码错误
         if result.contains("您还没有登录，或者长时间没有动作，请您重新登录。") {
@@ -984,6 +1004,10 @@ extension CharacterSet {
 }
 
 extension String {
+    var percent: String {
+        return self.addingPercentEncoding(withAllowedCharacters: .smURLQueryAllowed)!
+    }
+    
     var percentEncodingWithGBK: String {
         var result = String()
         for char in self.unicodeScalars {

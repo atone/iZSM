@@ -102,47 +102,44 @@ struct SMArticle {
         let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
         let textFont = UIFont.systemFont(ofSize: fontDescriptor.pointSize * AppSetting.shared.fontScale)
         let boldTextFont = UIFont.boldSystemFont(ofSize: fontDescriptor.pointSize * AppSetting.shared.fontScale)
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = .natural
-        paragraphStyle.lineBreakMode = .byWordWrapping
+        let paragraphStyle = NSParagraphStyle.default
         
         let quotedParagraphStyle = NSMutableParagraphStyle()
-        quotedParagraphStyle.alignment = .natural
-        quotedParagraphStyle.lineBreakMode = .byWordWrapping
+        quotedParagraphStyle.setParagraphStyle(paragraphStyle)
         quotedParagraphStyle.firstLineHeadIndent = 12
         quotedParagraphStyle.headIndent = 12
         
         let normal : [NSAttributedString.Key : Any] = [.font: textFont,
-                                                      .paragraphStyle: paragraphStyle,
-                                                      .foregroundColor: UIColor(named: "MainText")!]
+                                                       .paragraphStyle: paragraphStyle,
+                                                       .foregroundColor: UIColor(named: "MainText")!]
         let quoted : [NSAttributedString.Key : Any] = [.font: textFont,
-                                                      .paragraphStyle: quotedParagraphStyle,
-                                                      .foregroundColor: UIColor.secondaryLabel]
+                                                       .paragraphStyle: quotedParagraphStyle,
+                                                       .foregroundColor: UIColor.secondaryLabel]
         let quotedTitle : [NSAttributedString.Key : Any] = [.font: boldTextFont,
-                                                           .paragraphStyle: quotedParagraphStyle,
-                                                           .foregroundColor: UIColor.secondaryLabel]
+                                                            .paragraphStyle: quotedParagraphStyle,
+                                                            .foregroundColor: UIColor.secondaryLabel]
         
         let regex = try! NSRegularExpression(pattern: "在.*的(?:大作|邮件)中提到")
         
         self.body.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(":") {
-                var stripLine = String(line[line.index(after: line.startIndex)...])
-                stripLine = stripLine.trimmingCharacters(in: .whitespaces)
+                let stripLine = line.dropFirst().trimmingCharacters(in: .whitespaces)
                 attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: quoted))
             } else if regex.numberOfMatches(in: line, range: NSMakeRange(0, line.count)) > 0 {
                 var stripLine = line.trimmingCharacters(in: .whitespaces)
                 if stripLine[stripLine.startIndex] != "【" {
                     if let idx = stripLine.firstIndex(of: "【") {
-                        let text = String(stripLine[..<idx]).trimmingCharacters(in: .whitespaces)
+                        let text = stripLine[..<idx].trimmingCharacters(in: .whitespaces)
                         attributeText.append(NSAttributedString(string: "\(text)\n", attributes: normal))
-                        stripLine = String(stripLine[idx...])
+                        stripLine = stripLine[idx...].trimmingCharacters(in: .whitespaces)
                     }
                 }
                 if stripLine[stripLine.startIndex] == "【" && stripLine[stripLine.index(before: stripLine.endIndex)] == "】" {
-                    stripLine = String(stripLine[stripLine.index(after: stripLine.startIndex)..<stripLine.index(before: stripLine.endIndex)])
-                    stripLine = stripLine.trimmingCharacters(in: .whitespaces)
+                    stripLine = stripLine.dropFirst().dropLast().trimmingCharacters(in: .whitespaces)
+                    attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: quotedTitle))
+                } else {
+                    attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: normal))
                 }
-                attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: quotedTitle))
             } else {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: normal))
             }

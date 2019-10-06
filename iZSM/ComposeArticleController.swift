@@ -347,7 +347,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         let info = notification.userInfo
         var keyboardFrame = info?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
         keyboardFrame = view.convert(keyboardFrame, from: view.window)
-        keyboardHeight = max(view.bounds.height - keyboardFrame.origin.y, 0)
+        keyboardHeight = max(view.bounds.height - view.safeAreaInsets.bottom - keyboardFrame.origin.y, 0)
         updateContentLayout()
     }
     

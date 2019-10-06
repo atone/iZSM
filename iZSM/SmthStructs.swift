@@ -179,7 +179,7 @@ struct SMArticle {
             if !(fileName.hasSuffix(".jpg") || fileName.hasSuffix(".jpeg")
                 || fileName.hasSuffix(".gif") || fileName.hasSuffix(".bmp")
                 || fileName.hasSuffix(".png")) {
-                let urlString = "http://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
+                let urlString = "https://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
                 let mutable = NSMutableAttributedString(string: fileName)
                 mutable.setLink(urlString, range: NSMakeRange(0, mutable.length))
                 mutable.setTextHighlight(highlight, range: NSMakeRange(0, mutable.length))

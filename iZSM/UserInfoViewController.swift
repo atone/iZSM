@@ -215,6 +215,7 @@ class UserInfoViewController: UIViewController {
         postsContentLabel.isHidden = hidden
         scoreContentLabel.isHidden = hidden
         loginContentLabel.isHidden = hidden
+        lastLoginLabel.isHidden = hidden
     }
     
     @objc private func clickLastLogin(_ sender: UIGestureRecognizer) {

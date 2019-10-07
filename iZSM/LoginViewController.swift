@@ -75,7 +75,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         containerView.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
-            make.width.equalTo(150)
+            make.width.equalToSuperview().dividedBy(2)
             make.height.equalTo(60)
         }
         

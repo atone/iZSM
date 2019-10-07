@@ -118,6 +118,7 @@ class UserInfoViewController: UIViewController {
         
         configure(idLabel, color: .label, size: idLabelFontSize)
         configure(nickLabel, color: .label, size: nickLabelFontSize)
+        nickLabel.numberOfLines = 2
         let upperStackView = makeStackView(axis: .vertical, subViews: [idLabel, nickLabel])
         
         configure(titleLabel, color: .secondaryLabel, size: otherLabelFontSize)

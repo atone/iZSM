@@ -40,7 +40,6 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     var mode: Mode = .post
     
     private let signature = AppSetting.shared.signature
-    private let regx = AppSetting.shared.signatureRegularExpression
     private let addDeviceSignature = AppSetting.shared.addDeviceSignature
     
     private var emailTitle: String? {
@@ -233,9 +232,8 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             networkActivityIndicatorStart(withHUD: true)
             setEditable(false)
             DispatchQueue.global().async {
-                var lines = content.components(separatedBy: .newlines)
-                lines = lines.filter {
-                    self.regx.numberOfMatches(in: $0, range: NSMakeRange(0, $0.count)) == 0
+                let lines = content.components(separatedBy: .newlines).map {
+                    $0.trimmingCharacters(in: .whitespaces)
                 }
                 content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
                 if self.addDeviceSignature {

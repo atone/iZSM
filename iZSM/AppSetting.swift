@@ -92,11 +92,6 @@ class AppSetting {
         return "- 来自「最水木 for \(deviceName)」"
     }
     
-    var signatureRegularExpression : NSRegularExpression {
-        let regx = try! NSRegularExpression(pattern: "- 来自「最水木 for .*」")
-        return regx
-    }
-    
     var addDeviceSignature: Bool {
         get { return defaults.bool(forKey: Static.AddDeviceSignatureKey) }
         set {

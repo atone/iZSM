@@ -904,7 +904,7 @@ class SmthAPI {
     private func cleanedString(from string: String) -> String {
         // 去除头尾多余的空格和回车
         var lines = string.trimmingCharacters(in: .whitespacesAndNewlines)
-            .split(omittingEmptySubsequences: false) { $0.isNewline }
+            .components(separatedBy: .newlines)
             .map { $0.trimmingCharacters(in: .whitespaces) }
         // 去除末尾的--
         // 以及多余的空格和回车

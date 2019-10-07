@@ -55,7 +55,11 @@ struct SMArticle {
     }
     
     var quotBody: String {
-        let lines = body.components(separatedBy: .newlines)
+        let lines = body.components(separatedBy: .newlines).map {
+            $0.trimmingCharacters(in: .whitespaces)
+        }.filter {
+            !$0.isEmpty && $0.range(of: "- 来自「最水木 for .*」", options: .regularExpression) == nil
+        }
         var tmpBody = "\n【 在 \(authorID) 的大作中提到: 】\n"
         for idx in 0..<min(lines.count, 3) {
             tmpBody.append(": \(lines[idx])\n")

@@ -22,10 +22,7 @@ class FullscreenContentViewController: UIViewController {
         contentTextView.isEditable = false
         contentTextView.dataDetectorTypes = [.link, .phoneNumber]
         contentTextView.snp.makeConstraints { (make) in
-            make.leading.equalTo(view)
-            make.trailing.equalTo(view)
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin)
-            make.bottom.equalTo(view)
+            make.edges.equalToSuperview()
         }
         updateContent()
     }

@@ -191,13 +191,13 @@ class UserViewController: NTTableViewController {
     func attrTextFromString(string: String, withNewFlag flag: Bool) -> NSAttributedString {
         let normalColor = UIColor(named: "MainText")!
         let redColor = UIColor.systemRed
-        let result = NSMutableAttributedString(string: string, attributes: [NSAttributedString.Key.foregroundColor: normalColor])
+        let result = NSMutableAttributedString(string: string, attributes: [.foregroundColor: normalColor])
         if flag {
-            result.append(NSAttributedString(string: " [新]", attributes: [NSAttributedString.Key.foregroundColor: redColor]))
+            result.append(NSAttributedString(string: " [新]", attributes: [.foregroundColor: redColor]))
         }
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
         let font = UIFont.systemFont(ofSize: descriptor.pointSize * setting.fontScale)
-        result.addAttribute(NSAttributedString.Key.font, value: font, range: NSMakeRange(0, result.length))
+        result.addAttribute(.font, value: font, range: NSMakeRange(0, result.length))
         return result
     }
     

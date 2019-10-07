@@ -38,9 +38,9 @@ class FullscreenContentViewController: UIViewController {
             titleParagraphStyle.lineBreakMode = .byWordWrapping
             titleParagraphStyle.lineSpacing = titleFont.pointSize / 4
             let title = NSAttributedString(string: article.subject,
-                                           attributes: [NSAttributedString.Key.paragraphStyle: titleParagraphStyle,
-                                                        NSAttributedString.Key.font: titleFont,
-                                                        NSAttributedString.Key.foregroundColor: titleColor])
+                                           attributes: [.paragraphStyle: titleParagraphStyle,
+                                                        .font: titleFont,
+                                                        .foregroundColor: titleColor])
             fullArticle.append(title)
             fullArticle.appendString("\n")
             
@@ -54,9 +54,9 @@ class FullscreenContentViewController: UIViewController {
             subtitleParagraphStyle.paragraphSpacing = titleFont.pointSize
             subtitleParagraphStyle.paragraphSpacingBefore = titleFont.pointSize / 4
             let subtitle = NSAttributedString(string: subtitleText,
-                                              attributes: [NSAttributedString.Key.paragraphStyle: subtitleParagraphStyle,
-                                                           NSAttributedString.Key.font: subtitleFont,
-                                                           NSAttributedString.Key.foregroundColor: subtitleColor])
+                                              attributes: [.paragraphStyle: subtitleParagraphStyle,
+                                                           .font: subtitleFont,
+                                                           .foregroundColor: subtitleColor])
             fullArticle.append(subtitle)
             fullArticle.appendString("\n")
             
@@ -68,7 +68,7 @@ class FullscreenContentViewController: UIViewController {
             paragraphStyle.lineBreakMode = .byWordWrapping
             let attributedBody = attributedStringFromContent(article.body)
             let mutableAttributedBody = NSMutableAttributedString(attributedString: attributedBody)
-            mutableAttributedBody.addAttributes([NSAttributedString.Key.paragraphStyle: paragraphStyle, NSAttributedString.Key.font: bodyFont],
+            mutableAttributedBody.addAttributes([.paragraphStyle: paragraphStyle, .font: bodyFont],
                                                 range: NSMakeRange(0, mutableAttributedBody.string.count))
             fullArticle.append(mutableAttributedBody)
             contentTextView.attributedText = fullArticle

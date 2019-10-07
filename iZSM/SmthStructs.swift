@@ -199,7 +199,7 @@ struct SMArticle {
         emoticonParser.parseText(attributeText, selectedRange: nil)
         
         self.quotedAttributedRange.removeAll()
-        attributeText.enumerateAttribute(NSAttributedString.Key.paragraphStyle, in: NSMakeRange(0, attributeText.length)) { (value, range, stop) in
+        attributeText.enumerateAttribute(.paragraphStyle, in: NSMakeRange(0, attributeText.length)) { (value, range, stop) in
             if let value = value as? NSMutableParagraphStyle, value == quotedParagraphStyle {
                 var trimRange = range
                 while trimRange.length > 0

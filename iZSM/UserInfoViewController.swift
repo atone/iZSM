@@ -43,7 +43,6 @@ class UserInfoViewController: UIViewController {
     private let postsContentLabel = UILabel()
     private let scoreContentLabel = UILabel()
     private let loginContentLabel = UILabel()
-    private let infoStackView = UIStackView()
     
     private let toolbar = UIToolbar()
     private let lastLoginLabel = UILabel()
@@ -91,8 +90,7 @@ class UserInfoViewController: UIViewController {
             toolbar.items?.append(compose)
         }
         view.addSubview(lastLoginLabel)
-        lastLoginLabel.textColor = UIColor.secondaryLabel
-        lastLoginLabel.font = UIFont.systemFont(ofSize: otherContentLabelFontSize)
+        configure(lastLoginLabel, color: .secondaryLabel, size: otherContentLabelFontSize)
         lastLoginLabel.isUserInteractionEnabled = true
         lastLoginLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(clickLastLogin(_:))))
         lastLoginLabel.snp.makeConstraints { (make) in
@@ -104,13 +102,6 @@ class UserInfoViewController: UIViewController {
         backgroundView.snp.makeConstraints { (make) in
             make.leading.trailing.top.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalTo(toolbar.snp.top)
-        }
-        backgroundView.addSubview(idLabel)
-        configure(idLabel, color: .label, size: idLabelFontSize)
-        idLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        idLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        idLabel.snp.makeConstraints { (make) in
-            make.center.equalTo(backgroundView)
         }
         backgroundView.addSubview(avatarImageView)
         avatarImageView.clipsToBounds = true
@@ -124,70 +115,42 @@ class UserInfoViewController: UIViewController {
             make.centerX.equalTo(backgroundView)
             make.centerY.equalTo(backgroundView).dividedBy(2)
         }
-        backgroundView.addSubview(infoStackView)
-        infoStackView.axis = .horizontal
-        infoStackView.distribution = .equalSpacing
-        infoStackView.addArrangedSubview(titleLabel)
-        infoStackView.addArrangedSubview(levelLabel)
-        infoStackView.addArrangedSubview(postsLabel)
-        infoStackView.addArrangedSubview(scoreLabel)
-        infoStackView.addArrangedSubview(loginLabel)
-        infoStackView.snp.makeConstraints { (make) in
-            make.leading.equalTo(backgroundView).offset(margin)
-            make.trailing.equalTo(backgroundView).offset(-margin)
-            make.bottom.equalTo(backgroundView).offset(-margin)
-        }
+        
+        configure(idLabel, color: .label, size: idLabelFontSize)
+        configure(nickLabel, color: .label, size: nickLabelFontSize)
+        let upperStackView = makeStackView(axis: .vertical, subViews: [idLabel, nickLabel])
+        
         configure(titleLabel, color: .secondaryLabel, size: otherLabelFontSize)
         configure(levelLabel, color: .secondaryLabel, size: otherLabelFontSize)
         configure(postsLabel, color: .secondaryLabel, size: otherLabelFontSize)
         configure(scoreLabel, color: .secondaryLabel, size: otherLabelFontSize)
         configure(loginLabel, color: .secondaryLabel, size: otherLabelFontSize)
-        backgroundView.addSubview(titleContentLabel)
-        backgroundView.addSubview(levelContentLabel)
-        backgroundView.addSubview(postsContentLabel)
-        backgroundView.addSubview(scoreContentLabel)
-        backgroundView.addSubview(loginContentLabel)
         configure(titleContentLabel, color: .label, size: otherContentLabelFontSize)
         configure(levelContentLabel, color: .label, size: otherContentLabelFontSize)
         configure(postsContentLabel, color: .label, size: otherContentLabelFontSize)
         configure(scoreContentLabel, color: .label, size: otherContentLabelFontSize)
         configure(loginContentLabel, color: .label, size: otherContentLabelFontSize)
-        postsContentLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        postsContentLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        titleContentLabel.snp.makeConstraints { (make) in
-            make.centerX.equalTo(titleLabel)
-            make.bottom.equalTo(titleLabel.snp.top).offset(-margin2)
-        }
-        levelContentLabel.snp.makeConstraints { (make) in
-            make.centerX.equalTo(levelLabel)
-            make.bottom.equalTo(levelLabel.snp.top).offset(-margin2)
-        }
-        postsContentLabel.snp.makeConstraints { (make) in
-            make.centerX.equalTo(postsLabel)
-            make.bottom.equalTo(postsLabel.snp.top).offset(-margin2)
-        }
-        scoreContentLabel.snp.makeConstraints { (make) in
-            make.centerX.equalTo(scoreLabel)
-            make.bottom.equalTo(scoreLabel.snp.top).offset(-margin2)
-        }
-        loginContentLabel.snp.makeConstraints { (make) in
-            make.centerX.equalTo(loginLabel)
-            make.bottom.equalTo(loginLabel.snp.top).offset(-margin2)
-        }
+        let titleStackView = makeStackView(axis: .vertical, subViews: [titleContentLabel, titleLabel])
+        let levelStackView = makeStackView(axis: .vertical, subViews: [levelContentLabel, levelLabel])
+        let postsStackView = makeStackView(axis: .vertical, subViews: [postsContentLabel, postsLabel])
+        let scoreStackView = makeStackView(axis: .vertical, subViews: [scoreContentLabel, scoreLabel])
+        let loginStackView = makeStackView(axis: .vertical, subViews: [loginContentLabel, loginLabel])
+        let lowerStackView = makeStackView(axis: .horizontal, subViews: [titleStackView, levelStackView, postsStackView, scoreStackView, loginStackView])
         
-        backgroundView.addSubview(nickLabel)
-        configure(nickLabel, color: .label, size: nickLabelFontSize)
-        nickLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
-        nickLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-        nickLabel.snp.makeConstraints { (make) in
-            make.centerX.equalTo(idLabel)
-            make.top.equalTo(idLabel.snp.bottom)
-            make.bottom.equalTo(postsContentLabel.snp.top)
-            make.width.lessThanOrEqualToSuperview()
+        let infoStackView = makeStackView(axis: .vertical, subViews: [upperStackView, lowerStackView])
+        infoStackView.alignment = .fill
+        
+        backgroundView.addSubview(infoStackView)
+        infoStackView.snp.makeConstraints { (make) in
+            make.leading.equalTo(backgroundView).offset(margin)
+            make.trailing.equalTo(backgroundView).offset(-margin)
+            make.bottom.equalTo(backgroundView).offset(-margin)
+            make.top.equalTo(backgroundView.snp.centerY)
         }
     }
     
     private func configure(_ label: UILabel, color: UIColor, size: CGFloat, bold: Bool = false) {
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = color
         if bold {
             label.font = .boldSystemFont(ofSize: size)
@@ -195,6 +158,16 @@ class UserInfoViewController: UIViewController {
             label.font = .systemFont(ofSize: size)
         }
         label.textAlignment = .center
+    }
+    
+    private func makeStackView(axis: NSLayoutConstraint.Axis, subViews: [UIView]) -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: subViews)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution = .equalCentering
+        stackView.alignment = .center
+        stackView.spacing = margin2
+        stackView.axis = axis
+        return stackView
     }
     
     private func setupContent() {
@@ -208,8 +181,8 @@ class UserInfoViewController: UIViewController {
                                          placeholder: defaultImage,
                                          options: [.progressiveBlur, .setImageWithFadeAnimation])
             backgroundImageView?.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
-                                             placeholder: defaultImage,
-                                             options: [.progressiveBlur, .setImageWithFadeAnimation])
+                                              placeholder: defaultImage,
+                                              options: [.progressiveBlur, .setImageWithFadeAnimation])
             titleLabel.text = "身份"
             levelLabel.text = "等级"
             postsLabel.text = "发帖"

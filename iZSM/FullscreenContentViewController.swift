@@ -17,7 +17,6 @@ class FullscreenContentViewController: UIViewController {
     
     private func setupUI() {
         view.addSubview(contentTextView)
-        contentTextView.backgroundColor = UIColor.clear
         contentTextView.alwaysBounceVertical = true
         contentTextView.isEditable = false
         contentTextView.dataDetectorTypes = [.link, .phoneNumber]
@@ -28,7 +27,6 @@ class FullscreenContentViewController: UIViewController {
     }
     
     private func updateContent() {
-        view.backgroundColor = UIColor.systemBackground
         if let article = article {
             let fullArticle = NSMutableAttributedString()
             

@@ -203,6 +203,7 @@ extension HotTableViewController {
                 alvc.boardName = thread.boardID
                 alvc.hidesBottomBarWhenPushed = true
                 self.show(alvc, sender: self)
+                SMBoardInfo.hit(for: thread.boardID)
             }
             return UIMenu(title: "", children: [shareAction, starAction, openAction, gotoBoardAction])
         }

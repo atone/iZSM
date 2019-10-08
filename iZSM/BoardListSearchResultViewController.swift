@@ -79,7 +79,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let board = boards[indexPath.row]
         if (board.flag != -1) && (board.flag & 0x400 == 0) && (completionHandler != nil) {
-            SMBoardInfo.hitSearch(for: board)
+            SMBoardInfo.hit(for: board.boardID)
             completionHandler!(self, board)
         }
     }
@@ -94,7 +94,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let board = boards.remove(at: indexPath.row)
-            SMBoardInfo.clearSearchCount(for: board)
+            SMBoardInfo.clearHitCount(for: board.boardID)
             tableView.beginUpdates()
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()
@@ -127,7 +127,7 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 && searchString.isEmpty && !boards.isEmpty {
-            return "搜索历史"
+            return "常去版面"
         }
         return nil
     }

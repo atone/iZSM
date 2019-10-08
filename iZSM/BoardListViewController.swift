@@ -166,9 +166,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             alvc.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
             alvc.hidesBottomBarWhenPushed = true
             show(alvc, sender: self)
-            if searchMode {
-                SMBoardInfo.hitSearch(for: board)
-            }
+            SMBoardInfo.hit(for: board.boardID)
         }
         
     }
@@ -183,7 +181,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let board = boards.remove(at: indexPath.row)
-            SMBoardInfo.clearSearchCount(for: board)
+            SMBoardInfo.clearHitCount(for: board.boardID)
             tableView.beginUpdates()
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()
@@ -233,7 +231,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 && searchMode && searchString.isEmpty && !boards.isEmpty {
-            return "搜索历史"
+            return "常去版面"
         }
         return nil
     }
@@ -313,6 +311,7 @@ extension BoardListViewController {
             let board = self.boards[indexPath.row]
             let vc = self.getViewController(with: board)
             self.show(vc, sender: self)
+            SMBoardInfo.hit(for: board.boardID)
         }
     }
     

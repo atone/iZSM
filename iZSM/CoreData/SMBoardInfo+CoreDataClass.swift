@@ -111,19 +111,19 @@ extension SMBoardInfo {
         }
     }
     
-    class func hitSearch(for board: SMBoard) {
+    class func hit(for boardID: String) {
         let container = CoreDataHelper.shared.persistentContainer
         container.performBackgroundTask { context in
             let request: NSFetchRequest<SMBoardInfo> = SMBoardInfo.fetchRequest()
-            request.predicate = NSPredicate(format: "boardID == '\(board.boardID)'")
+            request.predicate = NSPredicate(format: "boardID == '\(boardID)'")
             request.fetchLimit = 1
             do {
                 if let boardInfo = try context.fetch(request).first {
                     boardInfo.searchCount += 1
                     try context.save()
-                    dPrint("search count added for \(board.boardID)")
+                    dPrint("search count added for \(boardID)")
                 } else {
-                    dPrint("Error: \(board.boardID) not found!")
+                    dPrint("Error: \(boardID) not found!")
                 }
             } catch {
                 dPrint("ERROR in hitSearch(for:) - \(error.localizedDescription)")
@@ -131,19 +131,19 @@ extension SMBoardInfo {
         }
     }
     
-    class func clearSearchCount(for board: SMBoard) {
+    class func clearHitCount(for boardID: String) {
         let container = CoreDataHelper.shared.persistentContainer
         container.performBackgroundTask { context in
             let request: NSFetchRequest<SMBoardInfo> = SMBoardInfo.fetchRequest()
-            request.predicate = NSPredicate(format: "boardID == '\(board.boardID)'")
+            request.predicate = NSPredicate(format: "boardID == '\(boardID)'")
             request.fetchLimit = 1
             do {
                 if let boardInfo = try context.fetch(request).first {
                     boardInfo.searchCount = 0
                     try context.save()
-                    dPrint("search count set zero for \(board.boardID)")
+                    dPrint("search count set zero for \(boardID)")
                 } else {
-                    dPrint("Error: \(board.boardID) not found!")
+                    dPrint("Error: \(boardID) not found!")
                 }
             } catch {
                 dPrint("ERROR in hitSearch(for:) - \(error.localizedDescription)")

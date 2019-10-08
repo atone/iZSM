@@ -469,6 +469,7 @@ class ArticleContentViewController: NTTableViewController {
                     alvc.boardName = boardName
                     alvc.hidesBottomBarWhenPushed = true
                     self.show(alvc, sender: self)
+                    SMBoardInfo.hit(for: boardID)
                 }
                 actionSheet.addAction(gotoBoardAction)
             }

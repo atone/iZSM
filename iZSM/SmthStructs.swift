@@ -439,7 +439,7 @@ struct SMUser {
         } else {
             faceString = "\(userID).jpg"
         }
-        faceString = faceString.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+        faceString = faceString.addingPercentEncoding(withAllowedCharacters: .smURLQueryAllowed)!
         return URL(string: "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(faceString)")!
     }
 }

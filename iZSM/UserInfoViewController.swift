@@ -80,7 +80,8 @@ class UserInfoViewController: UIViewController {
         }
         view.addSubview(toolbar)
         toolbar.snp.makeConstraints { (make) in
-            make.leading.trailing.bottom.equalTo(view)
+            make.leading.trailing.equalTo(view)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         toolbar.items = [padding]
         if delegate?.shouldEnableSearch() ?? true {

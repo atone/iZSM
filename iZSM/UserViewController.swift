@@ -156,7 +156,7 @@ class UserViewController: NTTableViewController {
         case IndexPath(row: 1, section: 1):
             let storyBoard = UIStoryboard(name: "Settings", bundle: nil)
             let supportVC = storyBoard.instantiateViewController(withIdentifier: "AboutViewController")
-            show(supportVC, sender: self)
+            showDetailViewController(supportVC, sender: self)
         default:
             break
         }

@@ -166,7 +166,6 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
             alvc.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
             alvc.hidesBottomBarWhenPushed = true
             show(alvc, sender: self)
-            SMBoardInfo.hit(for: board.boardID)
         }
         
     }
@@ -311,7 +310,6 @@ extension BoardListViewController {
             let board = self.boards[indexPath.row]
             let vc = self.getViewController(with: board)
             self.show(vc, sender: self)
-            SMBoardInfo.hit(for: board.boardID)
         }
     }
     

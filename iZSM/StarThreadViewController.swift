@@ -48,7 +48,7 @@ class StarThreadViewController: NTTableViewController {
         acvc.fromStar = true
         acvc.title = object.articleTitle
         acvc.hidesBottomBarWhenPushed = true
-        show(acvc, sender: self)
+        showDetailViewController(acvc, sender: self)
     }
 
     // MARK: - Table view data source
@@ -200,7 +200,7 @@ extension StarThreadViewController {
             thread.accessTime = Date()
             try? frc.managedObjectContext.save()
             let acvc = self.getViewController(with: thread)
-            self.show(acvc, sender: self)
+            self.showDetailViewController(acvc, sender: self)
         }
     }
     

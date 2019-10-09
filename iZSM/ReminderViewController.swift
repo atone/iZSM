@@ -134,6 +134,6 @@ class ReminderViewController: BaseTableViewController {
             
             MessageCenter.shared.checkUnreadMessage()
         }
-        show(rcvc, sender: self)
+        showDetailViewController(rcvc, sender: self)
     }
 }

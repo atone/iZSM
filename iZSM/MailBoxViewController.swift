@@ -162,6 +162,6 @@ class MailBoxViewController: BaseTableViewController {
                 MessageCenter.shared.checkUnreadMessage()
             }
         }
-        show(mcvc, sender: self)
+        showDetailViewController(mcvc, sender: self)
     }
 }

@@ -251,7 +251,6 @@ class FavListViewController: BaseTableViewController {
             alvc.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
             alvc.hidesBottomBarWhenPushed = true
             show(alvc, sender: self)
-            SMBoardInfo.hit(for: board.boardID)
         }
     }
     
@@ -319,7 +318,6 @@ extension FavListViewController {
             let board = self.favorites[indexPath.row]
             let vc = self.getViewController(with: board)
             self.show(vc, sender: self)
-            SMBoardInfo.hit(for: board.boardID)
         }
     }
     

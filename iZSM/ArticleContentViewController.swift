@@ -114,7 +114,6 @@ class ArticleContentViewController: NTTableViewController {
             savePosition()
         }
         api.cancel()
-        networkActivityIndicatorStop(withHUD: true)
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -147,12 +146,14 @@ class ArticleContentViewController: NTTableViewController {
                                              boardID: boardID!,
                                              articleID: articleID!)
         } else {
-            let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + view.safeAreaInsets.top)
-            if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
-                ArticleReadStatus.saveStatus(section: currentSection,
+            if let tableView = tableView {
+                let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + view.safeAreaInsets.top)
+                if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
+                    ArticleReadStatus.saveStatus(section: currentSection,
                                                  row: indexPath.row,
                                                  boardID: boardID!,
                                                  articleID: articleID!)
+                }
             }
         }
     }
@@ -468,8 +469,7 @@ class ArticleContentViewController: NTTableViewController {
                     alvc.boardID = boardID
                     alvc.boardName = boardName
                     alvc.hidesBottomBarWhenPushed = true
-                    self.show(alvc, sender: self)
-                    SMBoardInfo.hit(for: boardID)
+                    self.showDetailViewController(alvc, sender: self)
                 }
                 actionSheet.addAction(gotoBoardAction)
             }
@@ -1035,3 +1035,13 @@ extension ArticleContentViewController {
         return fullscreen
     }
 }
+
+extension ArticleContentViewController: SmthContentEqutable {
+    override func isEqual(_ object: Any?) -> Bool {
+        if let other = object as? ArticleContentViewController {
+            return boardID == other.boardID && articleID == other.articleID && soloUser == other.soloUser
+        }
+        return false
+    }
+}
+

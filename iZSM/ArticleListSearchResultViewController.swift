@@ -141,7 +141,7 @@ class ArticleListSearchResultViewController: BaseTableViewController {
             threads[indexPath.section][indexPath.row] = readThread
         }
         
-        show(acvc, sender: self)
+        showDetailViewController(acvc, sender: self)
     }
 }
 
@@ -221,7 +221,7 @@ extension ArticleListSearchResultViewController {
                 self.threads[indexPath.section][indexPath.row] = readThread
             }
             let acvc = self.getViewController(with: thread)
-            self.show(acvc, sender: self)
+            self.showDetailViewController(acvc, sender: self)
         }
     }
     

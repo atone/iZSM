@@ -20,7 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var messageTimer: Timer?
     
-    let mainController = NTTabBarController()
+    let splitViewController = UISplitViewController()
+    let tabBarViewController = NTTabBarController()
     let setting = AppSetting.shared
     
     func handle(shortcutItem: UIApplicationShortcutItem) -> Bool {
@@ -28,16 +29,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard let shortType = shortcutItem.type.components(separatedBy: ".").last else { return false }
         switch shortType {
         case "hot":
-            mainController.selectedIndex = 0
+            tabBarViewController.selectedIndex = 0
             handled = true
         case "board":
-            mainController.selectedIndex = 1
+            tabBarViewController.selectedIndex = 1
             handled = true
         case "favorite":
-            mainController.selectedIndex = 2
+            tabBarViewController.selectedIndex = 2
             handled = true
         case "user":
-            mainController.selectedIndex = 3
+            tabBarViewController.selectedIndex = 3
             handled = true
         default:
             break
@@ -49,9 +50,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.tintColor = UIColor(named: "SmthColor")
-        mainController.viewControllers = rootViewControllers()
+        tabBarViewController.viewControllers = rootViewControllers()
+        splitViewController.viewControllers = [tabBarViewController, placeHolderViewController()]
+        splitViewController.delegate = self
         
-        window?.rootViewController = mainController
+        window?.rootViewController = splitViewController
         window?.makeKeyAndVisible()
         
         // set the SVProgressHUD setting
@@ -82,6 +85,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         return shouldPerformAdditionalDelegateHandling
+    }
+    
+    func placeHolderViewController() -> UIViewController {
+        return NTNavigationController(rootViewController: PlaceholderViewController())
     }
     
     func rootViewControllers() -> [UIViewController] {
@@ -175,8 +182,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func navigateToNewMessagePage(with identifier: String) {
-        mainController.selectedIndex = 3
-        if let nvc = mainController.selectedViewController as? NTNavigationController,
+        tabBarViewController.selectedIndex = 3
+        if let nvc = tabBarViewController.selectedViewController as? NTNavigationController,
             let userVC = nvc.viewControllers.first as? UserViewController,
             let showVC = nvc.viewControllers.last {
             userVC.tabBarItem.badgeValue = "\(UIApplication.shared.applicationIconBadgeNumber)"
@@ -303,3 +310,56 @@ extension SmthAPI {
     }
 }
 
+extension AppDelegate: UISplitViewControllerDelegate {
+    
+    func splitViewController(_ splitViewController: UISplitViewController, showDetail vc: UIViewController, sender: Any?) -> Bool {
+        if let tabBarController = splitViewController.viewControllers.first as? NTTabBarController,
+            let firstNaviCtr = tabBarController.selectedViewController as? NTNavigationController {
+            if splitViewController.isCollapsed || !(vc is SmthContentEqutable) {
+                firstNaviCtr.pushViewController(vc, animated: true)
+            } else if let secondNaviCtr = splitViewController.viewControllers.last as? NTNavigationController {
+                if secondNaviCtr.topViewController != vc {
+                    secondNaviCtr.setViewControllers([vc], animated: false)
+                }
+            }
+        }
+        return true
+    }
+    
+    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
+        if let tabBarController = primaryViewController as? NTTabBarController,
+            let firstNaviCtr = tabBarController.selectedViewController as? NTNavigationController,
+            let secondNaviCtr = secondaryViewController as? NTNavigationController {
+            for viewController in secondNaviCtr.viewControllers {
+                if viewController is SmthContentEqutable {
+                    firstNaviCtr.pushViewController(viewController, animated: false)
+                }
+            }
+            secondNaviCtr.viewControllers = []
+        }
+        return true
+    }
+    
+    func splitViewController(_ splitViewController: UISplitViewController, separateSecondaryFrom primaryViewController: UIViewController) -> UIViewController? {
+        if let tabBarController = primaryViewController as? NTTabBarController,
+            let firstNaviCtr = tabBarController.selectedViewController as? NTNavigationController {
+            let secondNaviCtr = NTNavigationController()
+            var tmpArray = [UIViewController]()
+            while firstNaviCtr.viewControllers.last is SmthContentEqutable {
+                let viewController = firstNaviCtr.popViewController(animated: false)!
+                tmpArray.append(viewController)
+            }
+            for viewController in tmpArray.reversed() {
+                secondNaviCtr.pushViewController(viewController, animated: false)
+            }
+            if secondNaviCtr.viewControllers.count > 0 {
+                return secondNaviCtr
+            }
+        }
+        return placeHolderViewController()
+    }
+}
+
+protocol SmthContentEqutable: class {
+    func isEqual(_ object: Any?) -> Bool
+}

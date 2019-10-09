@@ -134,7 +134,7 @@ class HotTableViewController: BaseTableViewController {
         acvc.fromTopTen = true
         acvc.hidesBottomBarWhenPushed = true
         
-        show(acvc, sender: self)
+        showDetailViewController(acvc, sender: self)
     }
 }
 
@@ -203,7 +203,6 @@ extension HotTableViewController {
                 alvc.boardName = thread.boardID
                 alvc.hidesBottomBarWhenPushed = true
                 self.show(alvc, sender: self)
-                SMBoardInfo.hit(for: thread.boardID)
             }
             return UIMenu(title: "", children: [shareAction, starAction, openAction, gotoBoardAction])
         }
@@ -216,7 +215,7 @@ extension HotTableViewController {
             guard let indexPath = self.indexMap[identifier] else { return }
             let thread = self.content[indexPath.section].hotThreads[indexPath.row]
             let acvc = self.getViewController(with: thread)
-            self.show(acvc, sender: self)
+            self.showDetailViewController(acvc, sender: self)
         }
     }
     

@@ -285,3 +285,5 @@ extension ReferContentViewController: UIPopoverPresentationControllerDelegate {
         return .none
     }
 }
+
+extension ReferContentViewController: SmthContentEqutable {}

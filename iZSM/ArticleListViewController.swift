@@ -145,6 +145,9 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                                             target: self,
                                             action: #selector(tapSortModeButton(_:)))
         navigationItem.rightBarButtonItems =  [composeButton, sortModButton]
+        if let boardID = boardID {
+            SMBoardInfo.hit(for: boardID)
+        }
     }
     
     override func clearContent() {
@@ -416,7 +419,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             threads[indexPath.section][indexPath.row] = readThread
         }
         
-        show(acvc, sender: self)
+        showDetailViewController(acvc, sender: self)
     }
     
     @objc private func composeArticle(_ sender: UIBarButtonItem) {
@@ -541,7 +544,7 @@ extension ArticleListViewController {
                 self.threads[indexPath.section][indexPath.row] = readThread
             }
             let acvc = self.getViewController(with: thread)
-            self.show(acvc, sender: self)
+            self.showDetailViewController(acvc, sender: self)
         }
     }
     

@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var messageTimer: Timer?
     
-    let splitViewController = UISplitViewController()
+    let splitViewController = NTSplitViewController()
     let tabBarViewController = NTTabBarController()
     let setting = AppSetting.shared
     
@@ -311,6 +311,14 @@ extension SmthAPI {
 }
 
 extension AppDelegate: UISplitViewControllerDelegate {
+    
+    func splitViewControllerSupportedInterfaceOrientations(_ splitViewController: UISplitViewController) -> UIInterfaceOrientationMask {
+        if globalLockPortrait {
+            return [.portrait, .portraitUpsideDown]
+        } else {
+            return .all
+        }
+    }
     
     func splitViewController(_ splitViewController: UISplitViewController, showDetail vc: UIViewController, sender: Any?) -> Bool {
         if let tabBarController = splitViewController.viewControllers.first as? NTTabBarController,

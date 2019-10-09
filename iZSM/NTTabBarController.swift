@@ -10,15 +10,13 @@ import UIKit
 import SVProgressHUD
 
 class NTTabBarController: UITabBarController {
-
-    private let setting = AppSetting.shared
     
     override var shouldAutorotate: Bool {
         return globalShouldRotate
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if setting.portraitLock || globalLockPortrait {
+        if globalLockPortrait {
             return [.portrait, .portraitUpsideDown]
         } else {
             return .all

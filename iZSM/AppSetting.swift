@@ -36,7 +36,6 @@ class AppSetting {
         static let ReferCountKey = "SmthAPI.referCountKey"
         static let RememberLastKey = "SmthAPI.rememberLastKey"
         static let DisplayModeKey = "SmthAPI.displayModeKey"
-        static let PortraitLockKey = "SmthAPI.portraitLockKey"
         static let ShowAvatarKey = "SmthAPI.showAvatarKey"
         static let NoPicModeKey = "SmthAPI.noPicModeKey"
         static let AddDeviceSignatureKey = "SmthAPI.deviceSignatureKey"
@@ -67,7 +66,6 @@ class AppSetting {
             Static.ReferCountKey : 0,
             Static.RememberLastKey : true,
             Static.DisplayModeKey : DisplayMode.mobile.rawValue,
-            Static.PortraitLockKey : true,
             Static.ShowAvatarKey : true,
             Static.NoPicModeKey : false,
             Static.AddDeviceSignatureKey : true,
@@ -232,13 +230,6 @@ class AppSetting {
         get { return DisplayMode(rawValue: defaults.integer(forKey: Static.DisplayModeKey))! }
         set {
             defaults.set(newValue.rawValue, forKey: Static.DisplayModeKey)
-        }
-    }
-    
-    var portraitLock: Bool {
-        get { return defaults.bool(forKey: Static.PortraitLockKey) }
-        set {
-            defaults.set(newValue, forKey: Static.PortraitLockKey)
         }
     }
     

@@ -1,14 +1,14 @@
 //
-//  NTNavigationController.swift
+//  NTSplitViewController.swift
 //  iZSM
 //
-//  Created by Naitong Yu on 2017/7/13.
-//  Copyright © 2017年 Naitong Yu. All rights reserved.
+//  Created by Naitong Yu on 2019/10/9.
+//  Copyright © 2019 Naitong Yu. All rights reserved.
 //
 
 import UIKit
 
-class NTNavigationController: UINavigationController {
+class NTSplitViewController: UISplitViewController {
     
     override var shouldAutorotate: Bool {
         return globalShouldRotate
@@ -23,6 +23,10 @@ class NTNavigationController: UINavigationController {
     }
     
     override var childForStatusBarHidden: UIViewController? {
-        return topViewController
+        if isCollapsed {
+            return viewControllers.first
+        } else {
+            return viewControllers.last
+        }
     }
 }

@@ -16,7 +16,6 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var showSignatureLabel: UILabel!
     @IBOutlet weak var newReplyFirstLabel: UILabel!
     @IBOutlet weak var rememberLastLabel: UILabel!
-    @IBOutlet weak var portraitLockLabel: UILabel!
     @IBOutlet weak var addDeviceSignatureLabel: UILabel!
     @IBOutlet weak var displayModeLabel: UILabel!
     @IBOutlet weak var customHotSectionLabel: UILabel!
@@ -32,7 +31,6 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var showSignatureSwitch: UISwitch!
     @IBOutlet weak var newReplyFirstSwitch: UISwitch!
     @IBOutlet weak var rememberLastSwitch: UISwitch!
-    @IBOutlet weak var portraitLockSwitch: UISwitch!
     @IBOutlet weak var addDeviceSignatureSwitch: UISwitch!
     @IBOutlet weak var showAvatarSwitch: UISwitch!
     @IBOutlet weak var noPicModeSwitch: UISwitch!
@@ -98,10 +96,6 @@ class SettingsViewController: NTTableViewController {
         setting.rememberLast = sender.isOn
     }
     
-    @IBAction func portraitLockChanged(_ sender: UISwitch) {
-        setting.portraitLock = sender.isOn
-    }
-    
     @IBAction func addDeviceSignatureChanged(_ sender: UISwitch) {
         setting.addDeviceSignature = sender.isOn
     }
@@ -147,8 +141,6 @@ class SettingsViewController: NTTableViewController {
         newReplyFirstLabel.textColor = UIColor(named: "MainText")
         rememberLastLabel.font = font
         rememberLastLabel.textColor = UIColor(named: "MainText")
-        portraitLockLabel.font = font
-        portraitLockLabel.textColor = UIColor(named: "MainText")
         addDeviceSignatureLabel.font = font
         addDeviceSignatureLabel.textColor = UIColor(named: "MainText")
         displayModeLabel.font = font
@@ -180,7 +172,6 @@ class SettingsViewController: NTTableViewController {
         showSignatureSwitch.isOn = setting.showSignature
         newReplyFirstSwitch.isOn = (setting.sortMode == .LaterPostFirst)
         rememberLastSwitch.isOn = setting.rememberLast
-        portraitLockSwitch.isOn = setting.portraitLock
         addDeviceSignatureSwitch.isOn = setting.addDeviceSignature
         displayModeSegmentedControl.selectedSegmentIndex = setting.displayMode.rawValue
         fontSizeSlider.value = Float(fontScaleIndex)

@@ -32,6 +32,7 @@
 		9C4D0B091F1A6F91007B4D83 /* NTTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */; };
 		9C4E6AB11F1158EB00ABAEFA /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */; };
 		9C4FB42C234E121E008F88FC /* PlaceholderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4FB42B234E121E008F88FC /* PlaceholderViewController.swift */; };
+		9C4FB42E234E3B41008F88FC /* NTSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4FB42D234E3B41008F88FC /* NTSplitViewController.swift */; };
 		9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */; };
 		9C56E1D51F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CF1F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m */; };
 		9C56E1D61F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1D11F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m */; };
@@ -313,6 +314,7 @@
 		9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTTableViewController.swift; sourceTree = "<group>"; };
 		9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
 		9C4FB42B234E121E008F88FC /* PlaceholderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderViewController.swift; sourceTree = "<group>"; };
+		9C4FB42D234E3B41008F88FC /* NTSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTSplitViewController.swift; sourceTree = "<group>"; };
 		9C56E1CC1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDIndexPathHeightCache.h"; sourceTree = "<group>"; };
 		9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDIndexPathHeightCache.m"; sourceTree = "<group>"; };
 		9C56E1CE1F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDKeyedHeightCache.h"; sourceTree = "<group>"; };
@@ -700,6 +702,7 @@
 		9CA3B15C1DE331F800E9B121 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				9C4FB42D234E3B41008F88FC /* NTSplitViewController.swift */,
 				9C9C3901232E04E40079AC71 /* NTTabBarController.swift */,
 				9C6EB7291F1776E200129EA3 /* NTNavigationController.swift */,
 				9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */,
@@ -1410,6 +1413,7 @@
 				9C3A3EFE233E5970006223AA /* CoreDataHelper.swift in Sources */,
 				9C1A3BC01DE2C0ED00CF4A43 /* AppDelegate.swift in Sources */,
 				9C889FB41DE3E24B00C33A8D /* ArticleListViewController.swift in Sources */,
+				9C4FB42E234E3B41008F88FC /* NTSplitViewController.swift in Sources */,
 				9C6FA0C3233E88E9004267EA /* SMUserInfo+CoreDataClass.swift in Sources */,
 				9C4E6AB11F1158EB00ABAEFA /* UserInfoViewController.swift in Sources */,
 				9C1A3BF31DE2EA9900CF4A43 /* SmthAPI.swift in Sources */,

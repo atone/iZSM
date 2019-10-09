@@ -282,11 +282,14 @@ class ArticleContentCell: UITableViewCell {
         } else {
             // Calculate text layout
             let container = fixedLineHeightContainer(boundingSize: boundingSize)
-            let layout = YYTextLayout(container: container, text: article.attributedBody)!
-            // Store in dictionary
-            controller.articleContentLayout["\(article.id)_\(Int(boundingSize.width))"] = layout
-            // Set size with calculated text layout
-            textBoundingSize = layout.textBoundingSize
+            if let layout = YYTextLayout(container: container, text: article.attributedBody) {
+                // Store in dictionary
+                controller.articleContentLayout["\(article.id)_\(Int(boundingSize.width))"] = layout
+                // Set size with calculated text layout
+                textBoundingSize = layout.textBoundingSize
+            } else {
+                textBoundingSize = .zero
+            }
         }
         
         let imageHeight = heightForImages(count: article.imageAtt.count, boundingWidth: boundingSize.width)

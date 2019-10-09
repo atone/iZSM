@@ -275,6 +275,10 @@ class ArticleContentCell: UITableViewCell {
         
         let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: CGFloat.greatestFiniteMagnitude)
         
+        if boundingSize.width <= 0 {
+            return .zero
+        }
+        
         let textBoundingSize: CGSize
         if let layout = controller.articleContentLayout["\(article.id)_\(Int(boundingSize.width))"] {
             // Set size with stored text layout

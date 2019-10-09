@@ -212,10 +212,13 @@ class ArticleContentCell: UITableViewCell {
                 // Calculate layout
                 let attributedText: NSAttributedString = article.attributedBody
                 let container = fixedLineHeightContainer(boundingSize: CGSize(width: boundingWidth, height: CGFloat.greatestFiniteMagnitude))
-                let layout = YYTextLayout(container: container, text: attributedText)!
-                // Store it in dictionary
-                controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))"] = layout
-                contentLabel.textLayout = layout
+                if let layout = YYTextLayout(container: container, text: attributedText) {
+                    // Store it in dictionary
+                    controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))"] = layout
+                    contentLabel.textLayout = layout
+                } else {
+                    dPrint("ERROR: Can't generate YYTextLayout!")
+                }
             }
             
             if article.quotedAttributedRange.count == quotBars.count {

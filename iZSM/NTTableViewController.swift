@@ -55,4 +55,9 @@ class NTTableViewController: UITableViewController {
             }
         }
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
 }

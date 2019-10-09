@@ -126,7 +126,8 @@ class ArticleContentViewController: NTTableViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if traitCollection != previousTraitCollection {
-            tableView.reloadData()
+            tableView.beginUpdates()
+            tableView.endUpdates()
         }
     }
     

@@ -58,7 +58,9 @@ class NTTableViewController: UITableViewController {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        tableView.beginUpdates()
-        tableView.endUpdates()
+        if traitCollection != previousTraitCollection {
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        }
     }
 }

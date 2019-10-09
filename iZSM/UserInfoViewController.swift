@@ -80,7 +80,7 @@ class UserInfoViewController: UIViewController {
         }
         view.addSubview(toolbar)
         toolbar.snp.makeConstraints { (make) in
-            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.bottom.equalTo(view)
         }
         toolbar.items = [padding]
         if delegate?.shouldEnableSearch() ?? true {
@@ -95,8 +95,8 @@ class UserInfoViewController: UIViewController {
         lastLoginLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(clickLastLogin(_:))))
         lastLoginLabel.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(toolbar)
-            make.leading.equalTo(toolbar).offset(margin)
-            make.trailing.lessThanOrEqualTo(toolbar).offset(-margin)
+            make.leading.equalTo(toolbar.safeAreaLayoutGuide).offset(margin)
+            make.trailing.lessThanOrEqualTo(toolbar.safeAreaLayoutGuide).offset(-margin)
         }
         view.addSubview(backgroundView)
         backgroundView.snp.makeConstraints { (make) in

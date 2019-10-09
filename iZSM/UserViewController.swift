@@ -10,7 +10,6 @@ import UIKit
 import MobileCoreServices
 import SVProgressHUD
 import TZImagePickerController
-import DeviceKit
 
 class UserViewController: NTTableViewController {
     
@@ -50,17 +49,8 @@ class UserViewController: NTTableViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let newHeight: CGFloat
-        if Device.current.diagonal > 5.5 || Device.current.diagonal == -1 {
-            // for thin iPhones and iPads and future devices
-            newHeight = view.bounds.height * 0.4
-        } else if Device.current.diagonal > 4 {
-            newHeight = view.bounds.width * 0.8
-        } else {
-            // for iPhone SE
-            newHeight = view.bounds.width * 0.9
-        }
-        let newSize = CGSize(width: view.bounds.width, height: newHeight)
+        let scale: CGFloat = view.bounds.width < 350 ? 1 : 0.75
+        let newSize = CGSize(width: view.bounds.width, height: view.bounds.width * scale)
         if userInfoVC.view.frame.size != newSize {
             userInfoVC.view.frame.size = newSize
             tableView.tableHeaderView = userInfoVC.view
@@ -91,18 +81,6 @@ class UserViewController: NTTableViewController {
         }
         updateUserInfoView()
         msgCenter.checkUnreadMessage()
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            globalLockPortrait = true
-            UIDevice.current.setValue(UIDeviceOrientation.portrait.rawValue, forKey: "orientation")
-            UIViewController.attemptRotationToDeviceOrientation()
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            globalLockPortrait = false
-        }
     }
     
     // handle font size change

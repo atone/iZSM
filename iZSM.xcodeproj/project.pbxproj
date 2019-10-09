@@ -31,6 +31,7 @@
 		9C3A3F03233E5CCF006223AA /* iZSM.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9C3A3F01233E5CCF006223AA /* iZSM.xcdatamodeld */; };
 		9C4D0B091F1A6F91007B4D83 /* NTTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */; };
 		9C4E6AB11F1158EB00ABAEFA /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */; };
+		9C4FB42C234E121E008F88FC /* PlaceholderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4FB42B234E121E008F88FC /* PlaceholderViewController.swift */; };
 		9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */; };
 		9C56E1D51F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CF1F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m */; };
 		9C56E1D61F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1D11F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m */; };
@@ -311,6 +312,7 @@
 		9C3A3F02233E5CCF006223AA /* iZSM.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iZSM.xcdatamodel; sourceTree = "<group>"; };
 		9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTTableViewController.swift; sourceTree = "<group>"; };
 		9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
+		9C4FB42B234E121E008F88FC /* PlaceholderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderViewController.swift; sourceTree = "<group>"; };
 		9C56E1CC1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDIndexPathHeightCache.h"; sourceTree = "<group>"; };
 		9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDIndexPathHeightCache.m"; sourceTree = "<group>"; };
 		9C56E1CE1F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDKeyedHeightCache.h"; sourceTree = "<group>"; };
@@ -726,6 +728,7 @@
 				9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */,
 				9C8DEB34233334E600E5CE4A /* CustomHotSectionViewController.swift */,
 				9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */,
+				9C4FB42B234E121E008F88FC /* PlaceholderViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -1370,6 +1373,7 @@
 				9C25D5AD1DE56BC8005CB55C /* ReminderViewController.swift in Sources */,
 				9C9C3902232E04E40079AC71 /* NTTabBarController.swift in Sources */,
 				9C57261E233F8CD1003FE851 /* StarThreadViewController.swift in Sources */,
+				9C4FB42C234E121E008F88FC /* PlaceholderViewController.swift in Sources */,
 				9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */,
 				9C1A3BF41DE2EA9900CF4A43 /* SmthStructs.swift in Sources */,
 				9C572620233F901F003FE851 /* StarThreadViewCell.swift in Sources */,

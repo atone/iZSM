@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.tintColor = UIColor(named: "SmthColor")
         tabBarViewController.viewControllers = rootViewControllers()
-        splitViewController.viewControllers = [tabBarViewController, placeHolderViewController()]
+        splitViewController.viewControllers = [tabBarViewController, placeholderViewController()]
         splitViewController.delegate = self
         
         window?.rootViewController = splitViewController
@@ -87,8 +87,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return shouldPerformAdditionalDelegateHandling
     }
     
-    func placeHolderViewController() -> UIViewController {
-        return NTNavigationController(rootViewController: PlaceholderViewController())
+    func placeholderViewController() -> UIViewController {
+        let placeholderVC = PlaceholderViewController()
+        placeholderVC.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
+        return NTNavigationController(rootViewController: placeholderVC)
     }
     
     func rootViewControllers() -> [UIViewController] {
@@ -327,6 +329,7 @@ extension AppDelegate: UISplitViewControllerDelegate {
                 firstNaviCtr.pushViewController(vc, animated: true)
             } else if let secondNaviCtr = splitViewController.viewControllers.last as? NTNavigationController {
                 if secondNaviCtr.topViewController != vc {
+                    vc.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
                     secondNaviCtr.setViewControllers([vc], animated: false)
                 }
             }
@@ -340,6 +343,10 @@ extension AppDelegate: UISplitViewControllerDelegate {
             let secondNaviCtr = secondaryViewController as? NTNavigationController {
             for viewController in secondNaviCtr.viewControllers {
                 if viewController is SmthContentEqutable {
+                    // remove the display mode button
+                    if viewController === secondNaviCtr.viewControllers.first {
+                        viewController.navigationItem.leftBarButtonItem = nil
+                    }
                     firstNaviCtr.pushViewController(viewController, animated: false)
                 }
             }
@@ -352,19 +359,27 @@ extension AppDelegate: UISplitViewControllerDelegate {
         if let tabBarController = primaryViewController as? NTTabBarController,
             let firstNaviCtr = tabBarController.selectedViewController as? NTNavigationController {
             let secondNaviCtr = NTNavigationController()
-            var tmpArray = [UIViewController]()
-            while firstNaviCtr.viewControllers.last is SmthContentEqutable {
-                let viewController = firstNaviCtr.popViewController(animated: false)!
-                tmpArray.append(viewController)
+            let viewControllers = firstNaviCtr.popToRootViewController(animated: false)
+            
+            var displayModeButtonAdded = false
+            for viewController in viewControllers ?? [] {
+                if viewController is SmthContentEqutable {
+                    // add the display mode button on first SmthContentEqutable
+                    if !displayModeButtonAdded {
+                        displayModeButtonAdded = true
+                        viewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
+                    }
+                    secondNaviCtr.pushViewController(viewController, animated: false)
+                } else {
+                    firstNaviCtr.pushViewController(viewController, animated: false)
+                }
             }
-            for viewController in tmpArray.reversed() {
-                secondNaviCtr.pushViewController(viewController, animated: false)
-            }
+            
             if secondNaviCtr.viewControllers.count > 0 {
                 return secondNaviCtr
             }
         }
-        return placeHolderViewController()
+        return placeholderViewController()
     }
 }
 

@@ -326,7 +326,9 @@ extension AppDelegate: UISplitViewControllerDelegate {
         if let tabBarController = splitViewController.viewControllers.first as? NTTabBarController,
             let firstNaviCtr = tabBarController.selectedViewController as? NTNavigationController {
             if splitViewController.isCollapsed || !(vc is SmthContentEqutable) {
-                firstNaviCtr.pushViewController(vc, animated: true)
+                if vc != firstNaviCtr.topViewController {
+                    firstNaviCtr.pushViewController(vc, animated: true)
+                }
             } else if let secondNaviCtr = splitViewController.viewControllers.last as? NTNavigationController {
                 if secondNaviCtr.topViewController != vc {
                     vc.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem

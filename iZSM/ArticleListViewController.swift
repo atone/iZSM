@@ -122,6 +122,12 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         }
     }
     
+    override func isEqual(_ object: Any?) -> Bool {
+        if let other = object as? ArticleListViewController {
+            return boardID == other.boardID
+        }
+        return false
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

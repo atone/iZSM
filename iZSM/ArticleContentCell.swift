@@ -106,8 +106,8 @@ class ArticleContentCell: UITableViewCell {
         moreButton.addTarget(self, action: #selector(action(_:)), for: .touchUpInside)
         self.contentView.addSubview(moreButton)
         
-        contentLabel.displaysAsynchronously = true
-        contentLabel.fadeOnAsynchronouslyDisplay = false
+        //contentLabel.displaysAsynchronously = true
+        //contentLabel.fadeOnAsynchronouslyDisplay = false
         contentLabel.ignoreCommonProperties = true
         contentLabel.highlightTapAction = { [unowned self] (containerView, text, range, rect) in
             let attributes = text.attributedSubstring(from: range).attributes!

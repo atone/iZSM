@@ -9,7 +9,7 @@
 import UIKit
 import SVProgressHUD
 
-class FavListViewController: BaseTableViewController {
+class FavListViewController: BaseTableViewController, FavoriteAddable {
     static let kUpdateFavListNotification = Notification.Name("UpdateFavListNotification")
     private let kBoardIdentifier = "Board"
     private let kDirectoryIdentifier = "Directory"
@@ -125,7 +125,7 @@ class FavListViewController: BaseTableViewController {
         alert.addTextField(configurationHandler: nil)
         let okAction = UIAlertAction(title: "确定", style: .default) { [unowned self] _ in
             if let name = alert.textFields?.first?.text, name.count > 0 {
-                self.addFavoriteDirectoryWithName(name)
+                self.addFavoriteDirectoryWithName(name, in: self.groupID)
             }
         }
         alert.addAction(okAction)
@@ -139,7 +139,7 @@ class FavListViewController: BaseTableViewController {
             let confirmAlert = UIAlertController(title: "确认\(self.index == 0 ? "收藏" : "关注")?", message: nil, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "确认", style: .default) { [unowned self] _ in
                 self.dismiss(animated: true)
-                self.addFavoriteWithBoardID(board.boardID)
+                self.addFavoriteWithBoardID(board.boardID, in: self.groupID, isMember: self.index != 0)
             }
             confirmAlert.addAction(okAction)
             confirmAlert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
@@ -147,56 +147,6 @@ class FavListViewController: BaseTableViewController {
         }
         searchResultController.modalPresentationStyle = .formSheet
         present(searchResultController, animated: true)
-    }
-    
-    func addFavoriteDirectoryWithName(_ name: String) {
-        guard let user = setting.username, let pass = setting.password else { return }
-        networkActivityIndicatorStart(withHUD: true)
-        DispatchQueue.global().async {
-            let success = self.api.addFavoriteDirectory(name, in: self.groupID, user: user, pass: pass)
-            DispatchQueue.main.async {
-                networkActivityIndicatorStop(withHUD: true)
-                if success {
-                    SVProgressHUD.showSuccess(withStatus: "添加成功")
-                    NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                                                    object: nil, userInfo: ["group_id": self.groupID])
-                } else {
-                    SVProgressHUD.showError(withStatus: "出错了")
-                }
-            }
-        }
-    }
-    
-    func addFavoriteWithBoardID(_ boardID: String) {
-        networkActivityIndicatorStart(withHUD: true)
-        DispatchQueue.global().async {
-            var joinResult = 0
-            if self.index == 0 {
-                self.api.addFavorite(boardID: boardID, group: self.groupID)
-            } else {
-                joinResult = self.api.joinMemberOfBoard(boardID: boardID)
-            }
-            DispatchQueue.main.async {
-                networkActivityIndicatorStop(withHUD: true)
-                if self.api.errorCode == 0 {
-                    if self.index == 0 {
-                        SVProgressHUD.showSuccess(withStatus: "添加成功")
-                    } else if joinResult == 0 {
-                        SVProgressHUD.showSuccess(withStatus: "关注成功，您已是正式驻版用户")
-                    } else {
-                        SVProgressHUD.showSuccess(withStatus: "关注成功，尚需管理员审核成为正式驻版用户")
-                    }
-                    NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                                                    object: nil, userInfo: ["group_id": self.groupID])
-                } else if self.api.errorCode == 10319 && self.index == 0 {
-                    SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")
-                } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
-                    SVProgressHUD.showInfo(withStatus: self.api.errorDescription)
-                } else {
-                    SVProgressHUD.showError(withStatus: "出错了")
-                }
-            }
-        }
     }
     
     // MARK: - Table view data source
@@ -335,6 +285,66 @@ extension FavListViewController {
             alvc.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
             alvc.hidesBottomBarWhenPushed = true
             return alvc
+        }
+    }
+}
+
+protocol FavoriteAddable {
+    var api: SmthAPI { get }
+    var setting: AppSetting { get }
+    
+    func addFavoriteWithBoardID(_ boardID: String, in group: Int, isMember: Bool) -> Void
+    func addFavoriteDirectoryWithName(_ name: String, in group: Int) -> Void
+}
+
+extension FavoriteAddable {
+    func addFavoriteDirectoryWithName(_ name: String, in group: Int) {
+        guard let user = setting.username, let pass = setting.password else { return }
+        networkActivityIndicatorStart(withHUD: true)
+        DispatchQueue.global().async {
+            let success = self.api.addFavoriteDirectory(name, in: group, user: user, pass: pass)
+            DispatchQueue.main.async {
+                networkActivityIndicatorStop(withHUD: true)
+                if success {
+                    SVProgressHUD.showSuccess(withStatus: "添加成功")
+                    NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
+                                                    object: nil, userInfo: ["group_id": group])
+                } else {
+                    SVProgressHUD.showError(withStatus: "出错了")
+                }
+            }
+        }
+    }
+    
+    func addFavoriteWithBoardID(_ boardID: String, in group: Int, isMember: Bool) {
+        networkActivityIndicatorStart(withHUD: true)
+        DispatchQueue.global().async {
+            var joinResult = 0
+            if !isMember {
+                self.api.addFavorite(boardID: boardID, group: group)
+            } else {
+                joinResult = self.api.joinMemberOfBoard(boardID: boardID)
+            }
+            DispatchQueue.main.async {
+                networkActivityIndicatorStop(withHUD: true)
+                if self.api.errorCode == 0 {
+                    if !isMember {
+                        SVProgressHUD.showSuccess(withStatus: "添加成功")
+                    } else if joinResult == 0 {
+                        SVProgressHUD.showSuccess(withStatus: "关注成功，您已是正式驻版用户")
+                    } else {
+                        SVProgressHUD.showSuccess(withStatus: "关注成功，尚需管理员审核成为正式驻版用户")
+                    }
+                    NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
+                                                    object: nil, userInfo: ["group_id": group])
+                } else if self.api.errorCode == 10319 && !isMember {
+                    SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")
+                } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
+                    SVProgressHUD.showInfo(withStatus: self.api.errorDescription)
+                } else {
+                    SVProgressHUD.showError(withStatus: "出错了")
+                }
+            }
         }
     }
 }

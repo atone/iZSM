@@ -234,53 +234,9 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         }
         return nil
     }
-    
-    func addFavoriteWithBoardID(boardID: String) {
-        networkActivityIndicatorStart(withHUD: true)
-        DispatchQueue.global().async {
-            self.api.addFavorite(boardID: boardID, group: 0)
-            DispatchQueue.main.async {
-                networkActivityIndicatorStop(withHUD: true)
-                if self.api.errorCode == 0 {
-                    SVProgressHUD.showSuccess(withStatus: "添加成功")
-                    NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                                                    object: nil, userInfo: ["group_id": 0])
-                } else if self.api.errorCode == 10319 {
-                    SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")
-                } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
-                    SVProgressHUD.showError(withStatus: self.api.errorDescription)
-                } else {
-                    SVProgressHUD.showError(withStatus: "出错了")
-                }
-            }
-        }
-    }
-    
-    func addMemberWithBoardID(boardID: String) {
-        networkActivityIndicatorStart(withHUD: true)
-        DispatchQueue.global().async {
-            let joinResult = self.api.joinMemberOfBoard(boardID: boardID)
-            DispatchQueue.main.async {
-                networkActivityIndicatorStop(withHUD: true)
-                if self.api.errorCode == 0 {
-                    if joinResult == 0 {
-                        SVProgressHUD.showSuccess(withStatus: "关注成功，您已是正式驻版用户")
-                    } else {
-                        SVProgressHUD.showSuccess(withStatus: "关注成功，尚需管理员审核成为正式驻版用户")
-                    }
-                    NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                                                    object: nil, userInfo: ["group_id": 0])
-                } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
-                    SVProgressHUD.showError(withStatus: self.api.errorDescription)
-                } else {
-                    SVProgressHUD.showError(withStatus: "出错了")
-                }
-            }
-        }
-    }
 }
 
-extension BoardListViewController {
+extension BoardListViewController: FavoriteAddable {
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let board = boards[indexPath.row]
         let identifier = NSUUID().uuidString
@@ -291,10 +247,10 @@ extension BoardListViewController {
         let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
             if (board.flag != -1) && (board.flag & 0x400 == 0) {
                 let addFavAction = UIAction(title: "收藏 \(board.name) 版", image: UIImage(systemName: "star")) { [unowned self] action in
-                    self.addFavoriteWithBoardID(boardID: board.boardID)
+                    self.addFavoriteWithBoardID(board.boardID, in: 0, isMember: false)
                 }
                 let addMemAction = UIAction(title: "关注 \(board.name) 版 (驻版)", image: UIImage(systemName: "heart")) { [unowned self] action in
-                    self.addMemberWithBoardID(boardID: board.boardID)
+                    self.addFavoriteWithBoardID(board.boardID, in: 0, isMember: true)
                 }
                 return UIMenu(title: "", children: [addFavAction, addMemAction])
             }

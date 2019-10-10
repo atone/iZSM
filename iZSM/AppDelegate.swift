@@ -329,6 +329,9 @@ extension AppDelegate: UISplitViewControllerDelegate {
                 if vc != firstNaviCtr.topViewController {
                     firstNaviCtr.pushViewController(vc, animated: true)
                 }
+                if splitViewController.displayMode == .primaryHidden {
+                    SVProgressHUD.showSuccess(withStatus: "请右滑屏幕查看")
+                }
             } else if let secondNaviCtr = splitViewController.viewControllers.last as? NTNavigationController {
                 if secondNaviCtr.topViewController != vc {
                     vc.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem

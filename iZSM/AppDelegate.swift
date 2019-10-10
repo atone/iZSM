@@ -88,9 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func placeholderViewController() -> UIViewController {
-        let placeholderVC = PlaceholderViewController()
-        placeholderVC.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
-        return NTNavigationController(rootViewController: placeholderVC)
+        return NTNavigationController(rootViewController: PlaceholderViewController())
     }
     
     func rootViewControllers() -> [UIViewController] {
@@ -334,7 +332,6 @@ extension AppDelegate: UISplitViewControllerDelegate {
                 }
             } else if let secondNaviCtr = splitViewController.viewControllers.last as? NTNavigationController {
                 if secondNaviCtr.topViewController != vc {
-                    vc.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
                     secondNaviCtr.setViewControllers([vc], animated: false)
                 }
             }
@@ -348,10 +345,6 @@ extension AppDelegate: UISplitViewControllerDelegate {
             let secondNaviCtr = secondaryViewController as? NTNavigationController {
             for viewController in secondNaviCtr.viewControllers {
                 if viewController is SmthContentEqutable {
-                    // remove the display mode button
-                    if viewController === secondNaviCtr.viewControllers.first {
-                        viewController.navigationItem.leftBarButtonItem = nil
-                    }
                     firstNaviCtr.pushViewController(viewController, animated: false)
                 }
             }
@@ -366,14 +359,8 @@ extension AppDelegate: UISplitViewControllerDelegate {
             let secondNaviCtr = NTNavigationController()
             let viewControllers = firstNaviCtr.popToRootViewController(animated: false)
             
-            var displayModeButtonAdded = false
             for viewController in viewControllers ?? [] {
                 if viewController is SmthContentEqutable {
-                    // add the display mode button on first SmthContentEqutable
-                    if !displayModeButtonAdded {
-                        displayModeButtonAdded = true
-                        viewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
-                    }
                     secondNaviCtr.pushViewController(viewController, animated: false)
                 } else {
                     firstNaviCtr.pushViewController(viewController, animated: false)

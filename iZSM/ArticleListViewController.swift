@@ -9,7 +9,7 @@
 import UIKit
 import SVProgressHUD
 
-class ArticleListViewController: BaseTableViewController, UISearchControllerDelegate, UISearchBarDelegate {
+class ArticleListViewController: BaseTableViewController, UISearchControllerDelegate, UISearchBarDelegate, FavoriteAddable {
     
     private let kArticleListCellIdentifier = "ArticleListCell"
     var boardID: String?
@@ -143,7 +143,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                                             action: #selector(composeArticle(_:)))
         let sortModButton = UIBarButtonItem(barButtonSystemItem: .action,
                                             target: self,
-                                            action: #selector(tapSortModeButton(_:)))
+                                            action: #selector(tapActionButton(_:)))
         navigationItem.rightBarButtonItems =  [composeButton, sortModButton]
         if let boardID = boardID {
             SMBoardInfo.hit(for: boardID)
@@ -433,16 +433,17 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         present(nvc, animated: true)
     }
     
-    @objc private func tapSortModeButton(_ sender: UIBarButtonItem) {
+    @objc private func tapActionButton(_ sender: UIBarButtonItem) {
         let articleListActionVC = ArticleListActionViewController()
         let height: CGFloat
         if let bms = boardManagers, bms.count > 0 {
-            height = min(30 + 44 * 4 + 30 + 44 * CGFloat(bms.count), view.bounds.height / 2)
+            height = min(357 + 44.5 * CGFloat(bms.count), view.bounds.height / 2)
         } else {
-            height = 30 + 44 * 4
+            height = min(327, view.bounds.height / 2) // 327 = 30 * 2 + 44.5 * 6
         }
         articleListActionVC.preferredContentSize = CGSize(width: 240, height: height)
         articleListActionVC.modalPresentationStyle = .popover
+        
         articleListActionVC.threadSortMode = threadSortMode
         articleListActionVC.threadSortModeHandler = { [unowned self] newThreadSortMode in
             if self.threadSortMode != newThreadSortMode {
@@ -451,6 +452,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             }
             self.dismiss(animated: true)
         }
+        
         articleListActionVC.boardManagers = self.boardManagers ?? []
         articleListActionVC.sendMessageHandler = { [unowned self] manager in
             self.dismiss(animated: true)
@@ -461,6 +463,13 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             navigationController.modalPresentationStyle = .formSheet
             self.present(navigationController, animated: true)
         }
+        
+        articleListActionVC.favoriteHandler = { [unowned self] index in
+            self.dismiss(animated: true)
+            guard let boardID = self.boardID else { return }
+            self.addFavoriteWithBoardID(boardID, in: 0, isMember: index != 0)
+        }
+        
         let presentationCtr = articleListActionVC.presentationController as! UIPopoverPresentationController
         presentationCtr.barButtonItem = navigationItem.rightBarButtonItems?.last
         presentationCtr.delegate = self
@@ -570,8 +579,9 @@ class ArticleListActionViewController: UITableViewController {
     var threadSortModeHandler: ((AppSetting.ThreadSortMode) -> Void)?
     var boardManagers = [String]()
     var sendMessageHandler: ((String) -> Void)?
+    var favoriteHandler: ((Int) -> Void)?
     
-    private let kCellIdentifier = "ThreadSortModeCell"
+    private let kCellIdentifier = "ArticleListActionCell"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -581,18 +591,23 @@ class ArticleListActionViewController: UITableViewController {
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
+        var number = 1
         if boardManagers.count > 0 {
-            return 2
-        } else {
-            return 1
+            number += 1
         }
+        if favoriteHandler != nil {
+            number += 1
+        }
+        return number
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 4
+            return 4 // sort mode
+        } else if section == 1 {
+            return boardManagers.count // send message to board managers
         } else {
-            return boardManagers.count
+            return 2 // favorite actions
         }
     }
     
@@ -602,6 +617,8 @@ class ArticleListActionViewController: UITableViewController {
             return "帖子排序"
         case 1:
             return "联系版主"
+        case 2:
+            return "收藏操作"
         default:
             return nil
         }
@@ -633,8 +650,15 @@ class ArticleListActionViewController: UITableViewController {
             } else {
                 cell.detailTextLabel?.text = nil
             }
-        } else {
+        } else if indexPath.section == 1 {
             cell.textLabel?.text = "寄信给 \(boardManagers[indexPath.row])"
+            cell.detailTextLabel?.text = nil
+        } else {
+            if indexPath.row == 0 {
+                cell.textLabel?.text = "收藏本版"
+            } else if indexPath.row == 1 {
+                cell.textLabel?.text = "关注本版 (驻版)"
+            }
             cell.detailTextLabel?.text = nil
         }
         return cell
@@ -649,8 +673,10 @@ class ArticleListActionViewController: UITableViewController {
             } else {
                 tableView.deselectRow(at: indexPath, animated: true)
             }
-        } else {
+        } else if indexPath.section == 1 {
             sendMessageHandler?(boardManagers[indexPath.row])
+        } else {
+            favoriteHandler?(indexPath.row)
         }
     }
 }

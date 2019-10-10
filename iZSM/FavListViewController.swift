@@ -113,6 +113,7 @@ class FavListViewController: BaseTableViewController {
             }
             sheet.addAction(addDirectoryAction)
             sheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+            sheet.popoverPresentationController?.barButtonItem = sender
             present(sheet, animated: true)
         } else {
             addFavorite()

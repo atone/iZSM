@@ -49,8 +49,8 @@ class UserViewController: NTTableViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let scale: CGFloat = view.bounds.width < 350 ? 1 : 0.75
-        let newSize = CGSize(width: view.bounds.width, height: view.bounds.width * scale)
+        let height = max(view.bounds.width * 0.75, 320)
+        let newSize = CGSize(width: view.bounds.width, height: height)
         if userInfoVC.view.frame.size != newSize {
             userInfoVC.view.frame.size = newSize
             tableView.tableHeaderView = userInfoVC.view

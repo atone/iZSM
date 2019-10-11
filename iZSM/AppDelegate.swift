@@ -24,6 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let tabBarViewController = NTTabBarController()
     let setting = AppSetting.shared
     
+    var displayModeItem: UIBarButtonItem?
+    
     func handle(shortcutItem: UIApplicationShortcutItem) -> Bool {
         var handled = false
         guard let shortType = shortcutItem.type.components(separatedBy: ".").last else { return false }
@@ -53,6 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabBarViewController.viewControllers = rootViewControllers()
         splitViewController.viewControllers = [tabBarViewController, placeholderViewController()]
         splitViewController.delegate = self
+        displayModeItem = splitViewController.displayModeButtonItem
         
         window?.rootViewController = splitViewController
         window?.makeKeyAndVisible()
@@ -327,8 +330,13 @@ extension AppDelegate: UISplitViewControllerDelegate {
                 if vc != firstNaviCtr.topViewController {
                     firstNaviCtr.pushViewController(vc, animated: true)
                 }
-                if splitViewController.displayMode == .primaryHidden {
-                    SVProgressHUD.showSuccess(withStatus: "请右滑屏幕查看")
+                // if primary viewController is hidden, unhide it to avoid confusion
+                if !splitViewController.isCollapsed && splitViewController.displayMode == .primaryHidden {
+                    if let displayModeItem = displayModeItem,
+                        let target = displayModeItem.target,
+                        let action = displayModeItem.action {
+                        _ = target.perform(action, with: displayModeItem)
+                    }
                 }
             } else if let secondNaviCtr = splitViewController.viewControllers.last as? NTNavigationController {
                 if secondNaviCtr.topViewController != vc {

@@ -574,7 +574,7 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
                 searchResultController.boardID = boardID
                 searchResultController.boardName = board?.name
                 searchResultController.userID = userID
-                self.show(searchResultController, sender: button)
+                self.showDetailViewController(searchResultController, sender: button)
             }
         }
     }

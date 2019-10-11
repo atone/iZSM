@@ -352,7 +352,7 @@ extension AppDelegate: UISplitViewControllerDelegate {
             let firstNaviCtr = tabBarController.selectedViewController as? NTNavigationController,
             let secondNaviCtr = secondaryViewController as? NTNavigationController {
             for viewController in secondNaviCtr.viewControllers {
-                if viewController is SmthContentEqutable {
+                if !(viewController is PlaceholderViewController) {
                     firstNaviCtr.pushViewController(viewController, animated: false)
                 }
             }

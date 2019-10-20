@@ -12,8 +12,7 @@ import YYKit
 class BoxImageView: UIView {
     
     private static let blankWidth: CGFloat = 4
-    private static let picNumPerLine: CGFloat = 3
-
+    
     let imageViews: [YYAnimatedImageView]
     
     init(imageURLs: [URL], target: Any?, action: Selector) {
@@ -45,7 +44,7 @@ class BoxImageView: UIView {
         var Y: CGFloat = 0
         let headImageHeight = (bounds.width - Self.blankWidth) / 2
         
-        switch imageViews.count % Int(Self.picNumPerLine) {
+        switch imageViews.count % 3 {
         case 1:
             let first = imageViews.remove(at: 0)
             first.frame = CGRect(x: 0, y: Y, width: bounds.width, height: headImageHeight)
@@ -61,9 +60,9 @@ class BoxImageView: UIView {
         }
         
         for (index, imageView) in imageViews.enumerated() {
-            let length = (bounds.width - (Self.picNumPerLine - 1) * Self.blankWidth) / Self.picNumPerLine
-            let offset = (length + Self.blankWidth) * CGFloat(index / Int(Self.picNumPerLine))
-            let X = CGFloat(index % Int(Self.picNumPerLine)) * (length + Self.blankWidth)
+            let length = (bounds.width - 2 * Self.blankWidth) / 3
+            let offset = (length + Self.blankWidth) * CGFloat(index / 3)
+            let X = CGFloat(index % 3) * (length + Self.blankWidth)
             imageView.frame = CGRect(x: X, y: Y + offset, width: length, height: length)
         }
     }
@@ -75,9 +74,9 @@ class BoxImageView: UIView {
     static func imageHeight(count: Int, boundingWidth: CGFloat) -> CGFloat {
         var totalHeight: CGFloat = 0
         if count > 0 {
-            let oneImageHeight = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-            totalHeight = (oneImageHeight + blankWidth) * CGFloat(count / Int(picNumPerLine)) - blankWidth
-            switch count % Int(picNumPerLine) {
+            let oneImageHeight = (boundingWidth - 2 * blankWidth) / 3
+            totalHeight = (oneImageHeight + blankWidth) * CGFloat(count / 3) - blankWidth
+            switch count % 3 {
             case 1, 2:
                 let headImageHeight = (boundingWidth - blankWidth) / 2
                 totalHeight += (headImageHeight + blankWidth)

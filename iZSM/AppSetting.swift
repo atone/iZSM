@@ -317,4 +317,8 @@ class AppSetting {
             defaults.set(newValue.rawValue, forKey: Static.ThreadSortModeKey)
         }
     }
+    
+    var isSmallScreen: Bool {
+        return Device.current.diagonal <= 4
+    }
 }

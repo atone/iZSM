@@ -78,6 +78,7 @@ class ArticleContentViewController: NTTableViewController {
     // MARK: - ViewController Related
     override func viewDidLoad() {
         tableView.register(ArticleContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)
+        tableView.separatorStyle = .none
         // no use self-sizing cell
         tableView.estimatedRowHeight = 0
         tableView.estimatedSectionHeaderHeight = 0

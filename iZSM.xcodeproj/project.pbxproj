@@ -68,6 +68,7 @@
 		9CA70D3C23326A4900F575C7 /* DeviceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D3B23326A4900F575C7 /* DeviceKit */; };
 		9CA70D422332749600F575C7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D412332749600F575C7 /* SnapKit */; };
 		9CA70D5A2332952D00F575C7 /* PullToRefreshKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */; };
+		9CAA1F67235C8A6F00180F71 /* BoxImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CAA1F66235C8A6F00180F71 /* BoxImageView.swift */; };
 		9CB5708F1F2B87E000974BC0 /* AttachImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */; };
 		9CB573B71DE588EC00CD6F3E /* ReminderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */; };
 		9CB573B91DE58E8800CD6F3E /* MailContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573B81DE58E8800CD6F3E /* MailContentViewController.swift */; };
@@ -353,6 +354,7 @@
 		9CA3B1A51DE33E8D00E9B121 /* HotTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotTableViewCell.swift; sourceTree = "<group>"; };
 		9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardListViewController.swift; sourceTree = "<group>"; };
 		9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PullToRefreshKit.framework; path = Carthage/Build/iOS/PullToRefreshKit.framework; sourceTree = "<group>"; };
+		9CAA1F66235C8A6F00180F71 /* BoxImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxImageView.swift; sourceTree = "<group>"; };
 		9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachImageView.swift; sourceTree = "<group>"; };
 		9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderListCell.swift; sourceTree = "<group>"; };
 		9CB573B81DE58E8800CD6F3E /* MailContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailContentViewController.swift; sourceTree = "<group>"; };
@@ -1034,6 +1036,7 @@
 			isa = PBXGroup;
 			children = (
 				9C07EC972330D85300EAEC8E /* NTLabel.swift */,
+				9CAA1F66235C8A6F00180F71 /* BoxImageView.swift */,
 				9CB573C31DE5B61800CD6F3E /* LogoView.swift */,
 				9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */,
 				9CD9E6441F1DB10E00713853 /* IAPHelper.swift */,
@@ -1386,6 +1389,7 @@
 				9CA3B15E1DE3323B00E9B121 /* BaseTableViewController.swift in Sources */,
 				9C1A3BD91DE2CBAF00CF4A43 /* EulaViewController.swift in Sources */,
 				9C8DEB35233334E600E5CE4A /* CustomHotSectionViewController.swift in Sources */,
+				9CAA1F67235C8A6F00180F71 /* BoxImageView.swift in Sources */,
 				9CF349301F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m in Sources */,
 				9CB573B71DE588EC00CD6F3E /* ReminderListCell.swift in Sources */,
 				9C25D5A71DE55452005CB55C /* ComposeEmailController.swift in Sources */,

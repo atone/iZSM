@@ -616,10 +616,11 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int) {
         guard let imageInfos = cell.article?.imageAtt else { return }
+        guard let imageViews = cell.boxImageView?.imageViews else { return }
         var items = [YYPhotoGroupItem]()
         var fromView: UIView?
         for i in 0..<imageInfos.count {
-            let imgView = cell.imageViews[i]
+            let imgView = imageViews[i]
             let item = YYPhotoGroupItem()
             item.thumbView = imgView
             item.largeImageURL = imageInfos[i].fullImageURL

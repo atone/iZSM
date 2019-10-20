@@ -21,7 +21,7 @@ class ArticleContentCell: UITableViewCell {
     private let avatarTapRecognizer = UITapGestureRecognizer()
     private let authorTapRecognizer = UITapGestureRecognizer()
     
-    var imageViews = [YYAnimatedImageView]()
+    var boxImageView: BoxImageView?
     
     private var contentLabel = YYLabel()
     
@@ -34,9 +34,6 @@ class ArticleContentCell: UITableViewCell {
     
     var article: SMArticle?
     private var displayFloor: Int = 0
-    
-    private let blankWidth: CGFloat = 4
-    private let picNumPerLine: CGFloat = 3
     
     private let replyButtonWidth: CGFloat = 40
     private let moreButtonWidth: CGFloat = 36
@@ -199,7 +196,7 @@ class ArticleContentCell: UITableViewCell {
         moreButton.frame = CGRect(x: size.width - rightMargin - moreButtonWidth, y: margin1 - buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
         
         let boundingWidth = size.width - leftMargin - rightMargin
-        let imageHeight = heightForImages(count: self.imageViews.count, boundingWidth: boundingWidth)
+        let imageHeight = boxImageView != nil ? boxImageView!.imageHeight(boundingWidth: boundingWidth) : 0
         
         contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: boundingWidth, height: size.height - margin1 * 2 - margin3 - imageHeight)
         
@@ -231,30 +228,8 @@ class ArticleContentCell: UITableViewCell {
             }
         }
         
-        var imageViews = self.imageViews
-        var startY = size.height - imageHeight
-        let headImageHeight = (boundingWidth - blankWidth) / 2
-        
-        switch imageViews.count % Int(picNumPerLine) {
-        case 1:
-            let first = imageViews.remove(at: 0)
-            first.frame = CGRect(x: leftMargin, y: startY, width: boundingWidth, height: headImageHeight)
-            startY += (headImageHeight + blankWidth)
-        case 2:
-            let first = imageViews.remove(at: 0)
-            first.frame = CGRect(x: leftMargin, y: startY, width: headImageHeight, height: headImageHeight)
-            let second = imageViews.remove(at: 0)
-            second.frame = CGRect(x: leftMargin + headImageHeight + blankWidth, y: startY, width: headImageHeight, height: headImageHeight)
-            startY += (headImageHeight + blankWidth)
-        default:
-            break
-        }
-        
-        for (index, imageView) in imageViews.enumerated() {
-            let length = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-            let offsetY = (length + blankWidth) * CGFloat(index / Int(picNumPerLine))
-            let X = leftMargin + CGFloat(index % Int(picNumPerLine)) * (length + blankWidth)
-            imageView.frame = CGRect(x: X, y: startY + offsetY, width: length, height: length)
+        if let boxImageView = boxImageView {
+            boxImageView.frame = CGRect(x: leftMargin, y: size.height - imageHeight, width: boundingWidth, height: imageHeight)
         }
     }
     
@@ -271,16 +246,13 @@ class ArticleContentCell: UITableViewCell {
     //MARK: - Calculate Fitting Size
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         
-        guard let article = self.article, let controller = self.controller else { return CGSize.zero }
+        guard let article = self.article, let controller = self.controller else { return .zero }
         
         let leftMargin = controller.view.layoutMargins.left
         let rightMargin = controller.view.layoutMargins.right
         
         let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: CGFloat.greatestFiniteMagnitude)
-        
-        if boundingSize.width <= 0 {
-            return .zero
-        }
+        guard boundingSize.width > 0 else { return .zero }
         
         let textBoundingSize: CGSize
         if let layout = controller.articleContentLayout["\(article.id)_\(Int(boundingSize.width))"] {
@@ -299,56 +271,29 @@ class ArticleContentCell: UITableViewCell {
             }
         }
         
-        let imageHeight = heightForImages(count: article.imageAtt.count, boundingWidth: boundingSize.width)
+        let imageHeight = setting.noPicMode ? 0 : BoxImageView.imageHeight(count: article.imageAtt.count, boundingWidth: boundingSize.width)
         
         return CGSize(width: size.width, height: margin1 * 2 + ceil(textBoundingSize.height) + margin3 + imageHeight)
-    }
-    
-    private func heightForImages(count: Int, boundingWidth: CGFloat) -> CGFloat {
-        var totalHeight: CGFloat = 0
-        if !setting.noPicMode && count > 0 {
-            let oneImageHeight = (boundingWidth - (picNumPerLine - 1) * blankWidth) / picNumPerLine
-            totalHeight = (oneImageHeight + blankWidth) * CGFloat(count / Int(picNumPerLine)) - blankWidth
-            switch count % Int(picNumPerLine) {
-            case 1, 2:
-                let headImageHeight = (boundingWidth - blankWidth) / 2
-                totalHeight += (headImageHeight + blankWidth)
-            default:
-                break
-            }
-        }
-        return totalHeight
     }
     
     private func drawImagesWithInfo(imageAtt: [ImageInfo]?) {
         if setting.showAvatar, let article = self.article {
             avatarImageView.setImageWith(SMUser.faceURL(for: article.authorID, withFaceURL: nil),
-                                         placeholder: UIImage(named: "face_default"),
-                                         options: [.progressiveBlur, .setImageWithFadeAnimation])
+                                         placeholder: UIImage(named: "face_default"))
         }
         
         // remove old image views
-        for imageView in imageViews {
-            imageView.removeFromSuperview()
+        if let boxImageView = self.boxImageView {
+            boxImageView.removeFromSuperview()
+            self.boxImageView = nil
         }
-        imageViews.removeAll()
-
+        
         // add new image views
         if let imageAtt = imageAtt {
-            for imageInfo in imageAtt {
-                let imageView = YYAnimatedImageView()
-                imageView.contentMode = .scaleAspectFill
-                imageView.clipsToBounds = true
-                imageView.setImageWith(imageInfo.thumbnailURL,
-                                       placeholder: UIImage(named: "loading"),
-                                       options: [.progressiveBlur, .showNetworkActivity, .setImageWithFadeAnimation])
-                imageView.isUserInteractionEnabled = true
-                let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapOnImage(_:)))
-                singleTap.numberOfTapsRequired = 1
-                imageView.addGestureRecognizer(singleTap)
-                contentView.addSubview(imageView)
-                imageViews.append(imageView)
-            }
+            let imageURLs = imageAtt.map { $0.thumbnailURL }
+            let boxImageView = BoxImageView(imageURLs: imageURLs, target: self, action: #selector(singleTapOnImage(_:)))
+            contentView.addSubview(boxImageView)
+            self.boxImageView = boxImageView
         }
     }
     
@@ -375,7 +320,7 @@ class ArticleContentCell: UITableViewCell {
     @objc private func singleTapOnImage(_ recognizer: UIGestureRecognizer) {
         if
             let imageView = recognizer.view as? YYAnimatedImageView,
-            let index = imageViews.firstIndex(of: imageView)
+            let index = boxImageView?.imageViews.firstIndex(of: imageView)
         {
             delegate?.cell(self, didClickImageAt: index)
         }

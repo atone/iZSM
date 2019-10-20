@@ -180,11 +180,9 @@ class UserInfoViewController: UIViewController {
             nickLabel.text = user.nick
             let defaultImage = user.gender == 0 ? UIImage(named: "face_default_m") : UIImage(named: "face_default_f")
             avatarImageView.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
-                                         placeholder: defaultImage,
-                                         options: [.progressiveBlur, .setImageWithFadeAnimation])
+                                         placeholder: defaultImage)
             backgroundImageView?.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
-                                              placeholder: defaultImage,
-                                              options: [.progressiveBlur, .setImageWithFadeAnimation])
+                                              placeholder: defaultImage)
             titleLabel.text = "身份"
             levelLabel.text = "等级"
             postsLabel.text = "发帖"

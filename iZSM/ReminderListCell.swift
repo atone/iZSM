@@ -80,7 +80,7 @@ class ReminderListCell: UITableViewCell {
         
         let attributedTitle = NSMutableAttributedString(string: reference.subject, attributes: titleAttributes)
         if reference.flag == 0 {
-            attributedTitle.insert(NSAttributedString(string: "⦁ ", attributes: unreadAttributes), at: 0)
+            attributedTitle.append(NSAttributedString(string: " ⦁", attributes: unreadAttributes))
         }
         titleLabel.attributedText = attributedTitle
     }

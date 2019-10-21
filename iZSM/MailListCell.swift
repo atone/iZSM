@@ -62,7 +62,7 @@ class MailListCell: UITableViewCell {
         
         let attributedTitle = NSMutableAttributedString(string: mail.subject, attributes: titleAttributes)
         if mail.flags.hasPrefix("N") {
-            attributedTitle.insert(NSAttributedString(string: "⦁ ", attributes: unreadAttributes), at: 0)
+            attributedTitle.append(NSAttributedString(string: " ⦁", attributes: unreadAttributes))
         }
         titleLabel.attributedText = attributedTitle
     }

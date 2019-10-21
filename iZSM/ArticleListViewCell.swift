@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SnapKit
 
 class ArticleListViewCell: UITableViewCell {
     let setting = AppSetting.shared
@@ -56,27 +55,30 @@ class ArticleListViewCell: UITableViewCell {
         titleLabel.numberOfLines = 0
         replyLabel.lineBreakMode = .byClipping
         
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(replyLabel)
-        contentView.addSubview(infoLabel)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        infoLabel.translatesAutoresizingMaskIntoConstraints = false
+        replyLabel.translatesAutoresizingMaskIntoConstraints = false
         
         replyLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         
-        titleLabel.snp.makeConstraints { (make) in
-            make.leading.equalTo(contentView.snp.leadingMargin)
-            make.trailing.lessThanOrEqualTo(replyLabel.snp.leading).offset(-5)
-            make.top.equalTo(contentView.snp.topMargin)
-        }
-        infoLabel.snp.makeConstraints { (make) in
-            make.leading.equalTo(titleLabel)
-            make.trailing.lessThanOrEqualTo(replyLabel.snp.leading).offset(-5)
-            make.top.equalTo(titleLabel.snp.bottom).offset(5)
-            make.bottom.equalTo(contentView.snp.bottomMargin)
-        }
-        replyLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(contentView)
-            make.trailing.equalTo(contentView.snp.trailingMargin)
-        }
+        let leftVerticalStack = UIStackView(arrangedSubviews: [titleLabel, infoLabel])
+        leftVerticalStack.translatesAutoresizingMaskIntoConstraints = false
+        leftVerticalStack.axis = .vertical
+        leftVerticalStack.alignment = .leading
+        leftVerticalStack.spacing = 5
+        
+        let horizontalStack = UIStackView(arrangedSubviews: [leftVerticalStack, replyLabel])
+        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        horizontalStack.axis = .horizontal
+        horizontalStack.alignment = .center
+        horizontalStack.spacing = 5
+        
+        contentView.addSubview(horizontalStack)
+        
+        horizontalStack.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor).isActive = true
+        horizontalStack.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor).isActive = true
+        horizontalStack.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor).isActive = true
+        horizontalStack.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor).isActive = true
     }
     
     func updateUI() {

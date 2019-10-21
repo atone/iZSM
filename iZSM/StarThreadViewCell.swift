@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SnapKit
 
 class StarThreadViewCell: UITableViewCell {
     
@@ -24,8 +23,6 @@ class StarThreadViewCell: UITableViewCell {
     private let commentLabel = UILabel()
     
     private weak var tableView: UITableView?
-    
-    var offset: Constraint?
     
     func configure(with thread: StarThread?, tableView: UITableView?) {
         self.title = thread?.articleTitle
@@ -51,33 +48,31 @@ class StarThreadViewCell: UITableViewCell {
     private func setupUI() {
         titleLabel.numberOfLines = 0
         boardLabel.lineBreakMode = .byClipping
+        commentLabel.numberOfLines = 0
         
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(boardLabel)
-        contentView.addSubview(userIDLabel)
-        contentView.addSubview(commentLabel)
-                
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        boardLabel.translatesAutoresizingMaskIntoConstraints = false
+        userIDLabel.translatesAutoresizingMaskIntoConstraints = false
+        commentLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        boardLabel.snp.makeConstraints { (make) in
-            make.leading.equalTo(contentView.snp.leadingMargin)
-            make.top.equalTo(contentView.snp.topMargin)
-            make.trailing.equalTo(userIDLabel.snp.leading)
-        }
-        userIDLabel.snp.makeConstraints { (make) in
-            make.lastBaseline.equalTo(boardLabel)
-            make.trailing.lessThanOrEqualTo(contentView.snp.trailingMargin)
-        }
-        titleLabel.snp.makeConstraints { (make) in
-            make.leading.equalTo(boardLabel)
-            make.trailing.lessThanOrEqualTo(contentView.snp.trailingMargin)
-            make.top.equalTo(boardLabel.snp.bottom).offset(5)
-        }
-        commentLabel.snp.makeConstraints { (make) in
-            self.offset = make.top.equalTo(titleLabel.snp.bottom).offset(5).constraint
-            make.leading.equalTo(boardLabel)
-            make.trailing.lessThanOrEqualTo(contentView.snp.trailingMargin)
-            make.bottom.equalTo(contentView.snp.bottomMargin)
-        }
+        let upperHorizontalStack = UIStackView(arrangedSubviews: [boardLabel, userIDLabel])
+        upperHorizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        upperHorizontalStack.axis = .horizontal
+        upperHorizontalStack.alignment = .lastBaseline
+        
+        let verticalStack = UIStackView(arrangedSubviews: [upperHorizontalStack, titleLabel, commentLabel])
+        verticalStack.translatesAutoresizingMaskIntoConstraints = false
+        verticalStack.axis = .vertical
+        verticalStack.alignment = .leading
+        verticalStack.spacing = 5
+        verticalStack.distribution = .equalSpacing
+        
+        contentView.addSubview(verticalStack)
+        
+        verticalStack.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor).isActive = true
+        verticalStack.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor).isActive = true
+        verticalStack.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor).isActive = true
+        verticalStack.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor).isActive = true
     }
     
     /// Update font size and color
@@ -98,10 +93,10 @@ class StarThreadViewCell: UITableViewCell {
             userIDLabel.attributedText = attributedText
             if let comment = comment {
                 commentLabel.attributedText = NSAttributedString(string: comment, attributes: normalAttributes)
-                offset?.update(offset: 5)
+                commentLabel.isHidden = false
             } else {
                 commentLabel.text = nil
-                offset?.update(offset: 0)
+                commentLabel.isHidden = true
             }
             
             let paddingWidth = infoDescriptor.pointSize * setting.smallFontScale / 2

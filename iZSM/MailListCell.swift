@@ -7,14 +7,11 @@
 //
 
 import UIKit
-import SnapKit
 
 class MailListCell: UITableViewCell {
     let setting = AppSetting.shared
     let titleLabel = UILabel()
-    let authorLabel = UILabel()
-    let timeLabel = UILabel()
-    let unreadLabel = UILabel()
+    let infoLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -28,62 +25,51 @@ class MailListCell: UITableViewCell {
     
     func setupUI() {
         titleLabel.numberOfLines = 0
-        unreadLabel.text = "⦁"
-        unreadLabel.font = UIFont.systemFont(ofSize: 12)
-        updateUI()
         
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(timeLabel)
-        contentView.addSubview(authorLabel)
-        contentView.addSubview(unreadLabel)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        infoLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        titleLabel.snp.makeConstraints { (make) in
-            make.leading.equalTo(contentView.snp.leadingMargin)
-            make.top.equalTo(contentView.snp.topMargin)
-            make.trailing.equalTo(contentView.snp.trailingMargin)
-        }
-        authorLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(titleLabel.snp.bottom).offset(5)
-            make.leading.equalTo(titleLabel.snp.leading)
-            make.bottom.equalTo(contentView.snp.bottomMargin)
-        }
-        timeLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(authorLabel.snp.centerY)
-            make.trailing.equalTo(titleLabel.snp.trailing)
-        }
-        unreadLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(titleLabel.snp.centerY)
-            make.trailing.equalTo(titleLabel.snp.leading).offset(-1)
-        }
+        let verticalStack = UIStackView(arrangedSubviews: [titleLabel, infoLabel])
+        verticalStack.translatesAutoresizingMaskIntoConstraints = false
+        verticalStack.axis = .vertical
+        verticalStack.alignment = .leading
+        verticalStack.spacing = 5
+        
+        contentView.addSubview(verticalStack)
+        
+        verticalStack.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor).isActive = true
+        verticalStack.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor).isActive = true
+        verticalStack.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor).isActive = true
+        verticalStack.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor).isActive = true
     }
     
     func updateUI() {
-        let titleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
-        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescr.pointSize * setting.smallFontScale)
-        let otherDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
-        timeLabel.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.smallFontScale)
-        authorLabel.font = UIFont.systemFont(ofSize: otherDescr.pointSize * setting.smallFontScale)
+        guard let mail = mail else { return }
+        let titleDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
+        let infoDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
         
-        titleLabel.textColor = UIColor(named: "MainText")
-        authorLabel.textColor = UIColor(named: "SmthColor")
-        unreadLabel.textColor = UIColor(named: "SmthColor")
-        timeLabel.textColor = UIColor.secondaryLabel
+        let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
+        let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
+        let normalAttributes: [NSAttributedString.Key : Any] = [.font: normalInfoFont, .foregroundColor: UIColor.secondaryLabel]
+        let userIDAttributes: [NSAttributedString.Key : Any] = [.font: boldInfoFont, .foregroundColor: UIColor.secondaryLabel]
+        let attributedText = NSMutableAttributedString(string: mail.authorID, attributes: userIDAttributes)
+        attributedText.append(NSAttributedString(string: " • \(mail.time.relativeDateString)", attributes: normalAttributes))
+        infoLabel.attributedText = attributedText
+        
+        let titleFont = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+        let unreadAttributes : [NSAttributedString.Key : Any] = [.font: titleFont, .foregroundColor: UIColor.red]
+        let titleAttributes : [NSAttributedString.Key : Any] = [.font: titleFont, .foregroundColor: UIColor(named: "MainText")!]
+        
+        let attributedTitle = NSMutableAttributedString(string: mail.subject, attributes: titleAttributes)
+        if mail.flags.hasPrefix("N") {
+            attributedTitle.insert(NSAttributedString(string: "⦁ ", attributes: unreadAttributes), at: 0)
+        }
+        titleLabel.attributedText = attributedTitle
     }
-    
 
     var mail: SMMail? {
         didSet {
-            if let mail = self.mail {
-                titleLabel.text = mail.subject
-                authorLabel.text = mail.authorID
-                timeLabel.text = mail.time.relativeDateString
-                if mail.flags.hasPrefix("N") {
-                    unreadLabel.isHidden = false
-                } else {
-                    unreadLabel.isHidden = true
-                }
-                updateUI()
-            }
+            updateUI()
         }
     }
 }

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SnapKit
 
 class HotTableViewCell: UITableViewCell {
     let setting = AppSetting.shared
@@ -32,32 +31,36 @@ class HotTableViewCell: UITableViewCell {
         boardLabel.lineBreakMode = .byClipping
         replyLabel.lineBreakMode = .byClipping
         
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(boardLabel)
-        contentView.addSubview(userIDLabel)
-        contentView.addSubview(replyLabel)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        boardLabel.translatesAutoresizingMaskIntoConstraints = false
+        userIDLabel.translatesAutoresizingMaskIntoConstraints = false
+        replyLabel.translatesAutoresizingMaskIntoConstraints = false
         
         replyLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         
-        titleLabel.snp.makeConstraints { (make) in
-            make.leading.equalTo(contentView.snp.leadingMargin)
-            make.trailing.lessThanOrEqualTo(replyLabel.snp.leading).offset(-5)
-            make.top.equalTo(contentView.snp.topMargin)
-        }
-        boardLabel.snp.makeConstraints { (make) in
-            make.leading.equalTo(titleLabel)
-            make.top.equalTo(titleLabel.snp.bottom).offset(5)
-            make.bottom.equalTo(contentView.snp.bottomMargin)
-        }
-        userIDLabel.snp.makeConstraints { (make) in
-            make.leading.equalTo(boardLabel.snp.trailing)
-            make.lastBaseline.equalTo(boardLabel)
-            make.trailing.lessThanOrEqualTo(replyLabel.snp.leading).offset(-5)
-        }
-        replyLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(contentView)
-            make.trailing.equalTo(contentView.snp.trailingMargin)
-        }
+        let lowerHorizontalStack = UIStackView(arrangedSubviews: [boardLabel, userIDLabel])
+        lowerHorizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        lowerHorizontalStack.axis = .horizontal
+        lowerHorizontalStack.alignment = .lastBaseline
+        
+        let leftVerticalStack = UIStackView(arrangedSubviews: [titleLabel, lowerHorizontalStack])
+        leftVerticalStack.translatesAutoresizingMaskIntoConstraints = false
+        leftVerticalStack.axis = .vertical
+        leftVerticalStack.alignment = .leading
+        leftVerticalStack.spacing = 5
+        
+        let horizontalStack = UIStackView(arrangedSubviews: [leftVerticalStack, replyLabel])
+        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        horizontalStack.axis = .horizontal
+        horizontalStack.alignment = .center
+        horizontalStack.spacing = 5
+        
+        contentView.addSubview(horizontalStack)
+        
+        horizontalStack.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor).isActive = true
+        horizontalStack.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor).isActive = true
+        horizontalStack.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor).isActive = true
+        horizontalStack.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor).isActive = true
     }
     
     /// Update font size and color

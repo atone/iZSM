@@ -8,7 +8,6 @@
 
 import UIKit
 import SVProgressHUD
-import SnapKit
 import YYKit
 import PullToRefreshKit
 

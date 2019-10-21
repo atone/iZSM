@@ -102,7 +102,7 @@ class ArticleContentCell: UITableViewCell {
         
         replyButton.setTitle("回复", for: .normal)
         replyButton.titleLabel?.font = .systemFont(ofSize: replyMoreFontSize)
-        replyButton.backgroundColor = .secondarySystemFill
+        replyButton.backgroundColor = .quaternarySystemFill
         replyButton.layer.cornerRadius = 4
         replyButton.clipsToBounds = true
         replyButton.addTarget(self, action: #selector(reply(_:)), for: .touchUpInside)
@@ -112,7 +112,7 @@ class ArticleContentCell: UITableViewCell {
         
         moreButton.setTitle("•••", for: .normal)
         moreButton.titleLabel?.font = .systemFont(ofSize: replyMoreFontSize)
-        moreButton.backgroundColor = .secondarySystemFill
+        moreButton.backgroundColor = .quaternarySystemFill
         moreButton.layer.cornerRadius = 4
         moreButton.clipsToBounds = true
         moreButton.addTarget(self, action: #selector(action(_:)), for: .touchUpInside)

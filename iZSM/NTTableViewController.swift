@@ -55,12 +55,4 @@ class NTTableViewController: UITableViewController {
             }
         }
     }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection != previousTraitCollection {
-            tableView.beginUpdates()
-            tableView.endUpdates()
-        }
-    }
 }

@@ -773,13 +773,9 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     }
     
     private func forceUpdateLayout(with article: SMArticle) {
-        let contentWidth = view.bounds.size.width - view.layoutMargins.left - view.layoutMargins.right
-        let boundingSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
-        // Calculate text layout
-        let layout = YYTextLayout(containerSize: boundingSize, text: article.attributedBody)!
-        // Store in dictionary
-        articleContentLayout["\(article.id)_\(Int(contentWidth))"] = layout
-        let cacheKey = "\(article.id)_\(Int(contentWidth))" as NSString
+        let containerWidth = view.bounds.size.width - view.layoutMargins.left - view.layoutMargins.right
+        articleContentLayout["\(article.id)_\(Int(containerWidth))"] = nil
+        let cacheKey = "\(article.id)_\(Int(containerWidth))" as NSString
         tableView.fd_keyedHeightCache.invalidateHeight(forKey: cacheKey)
     }
     

@@ -69,6 +69,14 @@ struct SMArticle {
         }
         return tmpBody
     }
+    
+    var filterSignatureBody: String {
+        return body.components(separatedBy: .newlines).map {
+            $0.trimmingCharacters(in: .whitespaces)
+        }.filter {
+            $0.range(of: "- 来自「最水木 for .*」", options: .regularExpression) == nil
+        }.joined(separator: "\n")
+    }
 
     init(id: Int, time: Date, subject: String, authorID: String, body: String, effsize: Int, flags: String, attachments: [SMAttachment]) {
         self.id = id

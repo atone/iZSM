@@ -224,7 +224,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
             doneButton.isEnabled = true
             if let article = article {
                 articleTitle = article.subject
-                articleContent = article.body
+                articleContent = article.filterSignatureBody
                 countLabel.text = "\(articleTitle!.count)"
             }
             contentTextView.becomeFirstResponder()

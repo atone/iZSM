@@ -624,7 +624,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
         let v = YYPhotoGroupView(groupItems: items)
         globalShouldRotate = false
-        v?.present(fromImageView: fromView, toContainer: self.navigationController?.view, in: self, animated: true) {
+        v?.present(fromImageView: fromView, toContainer: self.view.window, in: self, animated: true) {
             globalShouldRotate = true
         }
     }

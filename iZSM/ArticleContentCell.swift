@@ -203,14 +203,14 @@ class ArticleContentCell: UITableViewCell {
         
         let leftMargin = contentView.layoutMargins.left
         let rightMargin = contentView.layoutMargins.right
-        let upDownMargin = min(leftMargin, rightMargin)
+        let upDownMargin = min(leftMargin, rightMargin) * 3 / 4
         let size = contentView.bounds.size
         
         let containerWidth = size.width - leftMargin - rightMargin
-        let containerHeight = size.height - upDownMargin
+        let containerHeight = size.height - 2 * upDownMargin
         let imageHeight = boxImageView != nil ? boxImageView!.imageHeight(boundingWidth: containerWidth) : 0
         
-        containerView.frame = CGRect(x: leftMargin, y: upDownMargin / 2, width: containerWidth, height: containerHeight)
+        containerView.frame = CGRect(x: leftMargin, y: upDownMargin, width: containerWidth, height: containerHeight)
         containerView.clipsToBounds = true
         containerView.layer.cornerRadius = 16
         
@@ -220,9 +220,9 @@ class ArticleContentCell: UITableViewCell {
         bckgroundView.layer.borderWidth = borderWidth
         bckgroundView.layer.cornerRadius = 16
         bckgroundView.layer.shadowColor = UIColor.black.cgColor
-        bckgroundView.layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
+        bckgroundView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         bckgroundView.layer.shadowOpacity = 0.1
-        bckgroundView.layer.shadowRadius = 6.0
+        bckgroundView.layer.shadowRadius = 8.0
         
         let contentWidth = containerWidth - 2 * padding
         let contentHeight = max(0, containerHeight - avatarHeight - 3 * padding - imageHeight)
@@ -278,7 +278,7 @@ class ArticleContentCell: UITableViewCell {
         
         let leftMargin = controller.view.layoutMargins.left
         let rightMargin = controller.view.layoutMargins.right
-        let upDownMargin = min(leftMargin, rightMargin)
+        let upDownMargin = min(leftMargin, rightMargin) * 3 / 4
         
         let containerWidth = size.width - leftMargin - rightMargin
         let contentWidth = containerWidth - 2 * padding
@@ -307,9 +307,9 @@ class ArticleContentCell: UITableViewCell {
         
         let height: CGFloat
         if textBoundingSize.height > 0 {
-            height = upDownMargin + 3 * padding + avatarHeight + textBoundingSize.height + imageHeight
+            height = 2 * upDownMargin + 3 * padding + avatarHeight + textBoundingSize.height + imageHeight
         } else {
-            height = upDownMargin + 2 * padding + avatarHeight + imageHeight
+            height = 2 * upDownMargin + 2 * padding + avatarHeight + imageHeight
         }
         
         return CGSize(width: size.width, height: height)

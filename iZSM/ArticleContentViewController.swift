@@ -124,13 +124,6 @@ class ArticleContentViewController: NTTableViewController {
         return shouldHidesStatusBar
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection != previousTraitCollection {
-            tableView.reloadData()
-        }
-    }
-    
     private func restorePosition() {
         if let boardID = self.boardID, let articleID = self.articleID,
             let result = ArticleReadStatus.getStatus(boardID: boardID, articleID: articleID)

@@ -32,6 +32,8 @@ class ReminderListCell: UITableViewCell {
         boardLabel.translatesAutoresizingMaskIntoConstraints = false
         infoLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        boardLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        
         let horizontalStack = UIStackView(arrangedSubviews: [boardLabel, infoLabel])
         horizontalStack.translatesAutoresizingMaskIntoConstraints = false
         horizontalStack.axis = .horizontal

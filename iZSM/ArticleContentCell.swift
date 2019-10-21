@@ -211,10 +211,13 @@ class ArticleContentCell: UITableViewCell {
         let imageHeight = boxImageView != nil ? boxImageView!.imageHeight(boundingWidth: containerWidth) : 0
         
         containerView.frame = CGRect(x: leftMargin, y: upDownMargin / 2, width: containerWidth, height: containerHeight)
+        containerView.clipsToBounds = true
+        containerView.layer.cornerRadius = 16
         
-        bckgroundView.frame = containerView.frame
+        let borderWidth = 1.0 / UIScreen.main.nativeScale
+        bckgroundView.frame = containerView.frame.insetBy(dx: -borderWidth, dy: -borderWidth)
         bckgroundView.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
-        bckgroundView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
+        bckgroundView.layer.borderWidth = borderWidth
         bckgroundView.layer.cornerRadius = 16
         bckgroundView.layer.shadowColor = UIColor.black.cgColor
         bckgroundView.layer.shadowOffset = CGSize(width: 0.0, height: 1.0)

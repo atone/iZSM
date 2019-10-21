@@ -11,15 +11,15 @@ import YYKit
 
 class ArticleContentCell: UITableViewCell {
     
+    private let containerView = UIView()
+    private let bckgroundView = UIView()
+    
     private let avatarImageView = YYAnimatedImageView()
     
     private let authorLabel = UILabel()
     private let floorAndTimeLabel = UILabel()
     private let replyButton = UIButton(type: .system)
     private let moreButton = UIButton(type: .system)
-    
-    private let avatarTapRecognizer = UITapGestureRecognizer()
-    private let authorTapRecognizer = UITapGestureRecognizer()
     
     var boxImageView: BoxImageView?
     
@@ -35,14 +35,16 @@ class ArticleContentCell: UITableViewCell {
     var article: SMArticle?
     private var displayFloor: Int = 0
     
-    private let replyButtonWidth: CGFloat = 40
-    private let moreButtonWidth: CGFloat = 36
-    private let buttonHeight: CGFloat = 26
-    private let avatarWidth: CGFloat = 40
+    private let replyButtonWidth: CGFloat = AppSetting.shared.isSmallScreen ? 36 : 40
+    private let moreButtonWidth: CGFloat = AppSetting.shared.isSmallScreen ? 32 : 36
+    private let buttonHeight: CGFloat = AppSetting.shared.isSmallScreen ? 24 : 26
+    private let avatarHeight: CGFloat = AppSetting.shared.isSmallScreen ? 36 : 40
     
-    private let margin1: CGFloat = 30
-    private let margin2: CGFloat = 2
-    private let margin3: CGFloat = 8
+    private let authorFontSize: CGFloat = AppSetting.shared.isSmallScreen ? 16 : 18
+    private let floorTimeFontSize: CGFloat = AppSetting.shared.isSmallScreen ? 11 : 13
+    private let replyMoreFontSize: CGFloat = AppSetting.shared.isSmallScreen ? 13 : 15
+    
+    private let padding: CGFloat = AppSetting.shared.isSmallScreen ? 6 : 12
     
     var isDrawed: Bool = false
     var isVisible: Bool = false {
@@ -68,40 +70,91 @@ class ArticleContentCell: UITableViewCell {
     }
     
     func setup() {
-        updateColor()
-        self.clipsToBounds = true
-        self.selectionStyle = .none
+        selectionStyle = .none
+        contentView.addSubview(bckgroundView)
+        contentView.addSubview(containerView)
+        contentView.backgroundColor = .systemBackground
+        bckgroundView.backgroundColor = .systemBackground
         
-        avatarImageView.contentMode = .scaleAspectFill
-        avatarImageView.layer.cornerRadius = avatarWidth / 2
-        avatarImageView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
-        avatarImageView.layer.borderColor = UIColor.black.withAlphaComponent(0.2).cgColor
-        avatarImageView.clipsToBounds = true
-        avatarTapRecognizer.addTarget(self, action: #selector(showUserInfo(_:)))
-        avatarTapRecognizer.numberOfTapsRequired = 1
-        avatarImageView.addGestureRecognizer(avatarTapRecognizer)
-        avatarImageView.isUserInteractionEnabled = true
-        self.contentView.addSubview(avatarImageView)
+        if (!setting.noPicMode) && setting.showAvatar {
+            avatarImageView.contentMode = .scaleAspectFill
+            avatarImageView.layer.cornerRadius = avatarHeight / 2
+            avatarImageView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
+            avatarImageView.layer.borderColor = UIColor.black.withAlphaComponent(0.2).cgColor
+            avatarImageView.clipsToBounds = true
+            avatarImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showUserInfo(_:))))
+            avatarImageView.isUserInteractionEnabled = true
+            avatarImageView.translatesAutoresizingMaskIntoConstraints = false
+            avatarImageView.widthAnchor.constraint(equalToConstant: avatarHeight).isActive = true
+            avatarImageView.heightAnchor.constraint(equalToConstant: avatarHeight).isActive = true
+        } else {
+            avatarImageView.isHidden = true
+        }
         
-        authorTapRecognizer.addTarget(self, action: #selector(showUserInfo(_:)))
-        authorTapRecognizer.numberOfTapsRequired = 1
-        authorLabel.addGestureRecognizer(authorTapRecognizer)
+        authorLabel.textColor = UIColor(named: "MainText")
+        authorLabel.font = .boldSystemFont(ofSize: authorFontSize)
+        authorLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showUserInfo(_:))))
         authorLabel.isUserInteractionEnabled = true
-        self.contentView.addSubview(authorLabel)
-        
-        self.contentView.addSubview(floorAndTimeLabel)
+        authorLabel.translatesAutoresizingMaskIntoConstraints = false
+        floorAndTimeLabel.textColor = UIColor.secondaryLabel
+        floorAndTimeLabel.font = .systemFont(ofSize: floorTimeFontSize)
+        floorAndTimeLabel.translatesAutoresizingMaskIntoConstraints = false
         
         replyButton.setTitle("回复", for: .normal)
+        replyButton.titleLabel?.font = .systemFont(ofSize: replyMoreFontSize)
+        replyButton.backgroundColor = UIColor.secondarySystemBackground
         replyButton.layer.cornerRadius = 4
         replyButton.clipsToBounds = true
         replyButton.addTarget(self, action: #selector(reply(_:)), for: .touchUpInside)
-        self.contentView.addSubview(replyButton)
+        replyButton.translatesAutoresizingMaskIntoConstraints = false
+        replyButton.widthAnchor.constraint(equalToConstant: replyButtonWidth).isActive = true
+        replyButton.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
         
         moreButton.setTitle("•••", for: .normal)
+        moreButton.titleLabel?.font = .systemFont(ofSize: replyMoreFontSize)
+        moreButton.backgroundColor = UIColor.secondarySystemBackground
         moreButton.layer.cornerRadius = 4
         moreButton.clipsToBounds = true
         moreButton.addTarget(self, action: #selector(action(_:)), for: .touchUpInside)
-        self.contentView.addSubview(moreButton)
+        moreButton.translatesAutoresizingMaskIntoConstraints = false
+        moreButton.widthAnchor.constraint(equalToConstant: moreButtonWidth).isActive = true
+        moreButton.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
+        
+        let verticalStack = UIStackView(arrangedSubviews: [authorLabel, floorAndTimeLabel])
+        verticalStack.translatesAutoresizingMaskIntoConstraints = false
+        verticalStack.axis = .vertical
+        verticalStack.alignment = .leading
+        
+        let rightStack = UIStackView(arrangedSubviews: [replyButton, moreButton])
+        rightStack.translatesAutoresizingMaskIntoConstraints = false
+        rightStack.axis = .horizontal
+        rightStack.alignment = .center
+        rightStack.spacing = padding
+        
+        let horizontalStack = UIStackView()
+        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        horizontalStack.axis = .horizontal
+        horizontalStack.alignment = .center
+        horizontalStack.distribution = .equalSpacing
+        
+        if (!setting.noPicMode) && setting.showAvatar {
+            let leftStack = UIStackView(arrangedSubviews: [avatarImageView, verticalStack])
+            leftStack.translatesAutoresizingMaskIntoConstraints = false
+            leftStack.axis = .horizontal
+            leftStack.alignment = .center
+            leftStack.spacing = padding
+            
+            horizontalStack.addArrangedSubview(leftStack)
+        } else {
+            horizontalStack.addArrangedSubview(verticalStack)
+        }
+        horizontalStack.addArrangedSubview(rightStack)
+        
+        containerView.addSubview(horizontalStack)
+        horizontalStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding).isActive = true
+        horizontalStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding).isActive = true
+        horizontalStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: padding).isActive = true
+        horizontalStack.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -padding).isActive = true
         
         //contentLabel.displaysAsynchronously = true
         //contentLabel.fadeOnAsynchronouslyDisplay = false
@@ -122,18 +175,7 @@ class ArticleContentCell: UITableViewCell {
                 dPrint("ERROR: \(urlString) can't be recognized as URL")
             }
         }
-        self.contentView.addSubview(contentLabel)
-    }
-    
-    func updateColor() {
-        authorLabel.textColor = UIColor(named: "MainText")
-        floorAndTimeLabel.textColor = UIColor.secondaryLabel
-        replyButton.backgroundColor = UIColor.secondarySystemBackground
-        moreButton.backgroundColor = UIColor.secondarySystemBackground
-        
-        for quotBar in quotBars {
-            quotBar.backgroundColor = UIColor.secondaryLabel.withAlphaComponent(0.5)
-        }
+        containerView.addSubview(contentLabel)
     }
     
     func setData(displayFloor floor: Int, smarticle: SMArticle, delegate: ArticleContentCellDelegate, controller: ArticleContentViewController) {
@@ -145,8 +187,6 @@ class ArticleContentCell: UITableViewCell {
         authorLabel.text = smarticle.authorID
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
         floorAndTimeLabel.text = "\(floorText) • \(smarticle.timeString)"
-        
-        updateColor()
     }
     
     override func prepareForReuse() {
@@ -157,61 +197,46 @@ class ArticleContentCell: UITableViewCell {
     
     //MARK: - Layout Subviews
     override func layoutSubviews() {
+        super.layoutSubviews()
         
         guard let controller = controller else { return }
         
-        super.layoutSubviews()
-        
         let leftMargin = contentView.layoutMargins.left
         let rightMargin = contentView.layoutMargins.right
+        let upDownMargin = min(leftMargin, rightMargin)
         let size = contentView.bounds.size
         
-        let authorFontSize: CGFloat = size.width < 350 ? 16 : 18
-        let floorTimeFontSize: CGFloat = size.width < 350 ? 11 : 13
-        let replyMoreFontSize: CGFloat = 15
+        let containerWidth = size.width - leftMargin - rightMargin
+        let containerHeight = size.height - upDownMargin
+        let imageHeight = boxImageView != nil ? boxImageView!.imageHeight(boundingWidth: containerWidth) : 0
         
-        if (!setting.noPicMode) && setting.showAvatar {
-            avatarImageView.isHidden = false
-            avatarImageView.frame = CGRect(x: leftMargin, y: margin1 - avatarWidth / 2, width: avatarWidth, height: avatarWidth)
-        } else {
-            avatarImageView.isHidden = true
-        }
+        containerView.frame = CGRect(x: leftMargin, y: upDownMargin / 2, width: containerWidth, height: containerHeight)
         
-        authorLabel.font = UIFont.boldSystemFont(ofSize: authorFontSize)
-        authorLabel.sizeToFit()
-        floorAndTimeLabel.font = UIFont.systemFont(ofSize: floorTimeFontSize)
-        floorAndTimeLabel.sizeToFit()
+        bckgroundView.frame = containerView.frame
+        bckgroundView.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
+        bckgroundView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
+        bckgroundView.layer.cornerRadius = 16
+        bckgroundView.layer.shadowColor = UIColor.black.cgColor
+        bckgroundView.layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
+        bckgroundView.layer.shadowOpacity = 0.1
+        bckgroundView.layer.shadowRadius = 6.0
         
-        if (!setting.noPicMode) && setting.showAvatar {
-            authorLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 - margin2 / 2 - authorLabel.bounds.height), size: authorLabel.bounds.size)
-            floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin + margin3 + avatarWidth, y: margin1 + margin2 / 2), size: floorAndTimeLabel.bounds.size)
-        } else {
-            authorLabel.frame = CGRect(origin: CGPoint(x: leftMargin, y: margin1 - margin2 / 2 - authorLabel.bounds.height), size: authorLabel.bounds.size)
-            floorAndTimeLabel.frame = CGRect(origin: CGPoint(x: leftMargin, y: margin1 + margin2 / 2), size: floorAndTimeLabel.bounds.size)
-        }
-        
-        replyButton.titleLabel?.font = UIFont.systemFont(ofSize: replyMoreFontSize)
-        replyButton.frame = CGRect(x: size.width - rightMargin - margin3 - replyButtonWidth - moreButtonWidth, y: margin1 - buttonHeight / 2, width: replyButtonWidth, height: buttonHeight)
-        moreButton.titleLabel?.font = UIFont.systemFont(ofSize: replyMoreFontSize)
-        moreButton.frame = CGRect(x: size.width - rightMargin - moreButtonWidth, y: margin1 - buttonHeight / 2, width: moreButtonWidth, height: buttonHeight)
-        
-        let boundingWidth = size.width - leftMargin - rightMargin
-        let imageHeight = boxImageView != nil ? boxImageView!.imageHeight(boundingWidth: boundingWidth) : 0
-        
-        contentLabel.frame = CGRect(x: leftMargin, y: margin1 * 2, width: boundingWidth, height: size.height - margin1 * 2 - margin3 - imageHeight)
+        let contentWidth = containerWidth - 2 * padding
+        let contentHeight = max(0, containerHeight - avatarHeight - 3 * padding - imageHeight)
+        contentLabel.frame = CGRect(x: padding, y: padding * 2 + avatarHeight, width: contentWidth, height: contentHeight)
         
         // contentLabel's layout also needs to be updated
         if let article = article {
-            if let layout = controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))"] {
+            if let layout = controller.articleContentLayout["\(article.id)_\(Int(containerWidth))"] {
                 contentLabel.textLayout = layout
             } else {
                 dPrint("ERROR: This should not happen. Calculating layout and updating cache.")
                 // Calculate layout
                 let attributedText: NSAttributedString = article.attributedBody
-                let container = fixedLineHeightContainer(boundingSize: CGSize(width: boundingWidth, height: CGFloat.greatestFiniteMagnitude))
+                let container = fixedLineHeightContainer(boundingSize: CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude))
                 if let layout = YYTextLayout(container: container, text: attributedText) {
                     // Store it in dictionary
-                    controller.articleContentLayout["\(article.id)_\(Int(boundingWidth))"] = layout
+                    controller.articleContentLayout["\(article.id)_\(Int(containerWidth))"] = layout
                     contentLabel.textLayout = layout
                 } else {
                     dPrint("ERROR: Can't generate YYTextLayout!")
@@ -222,14 +247,14 @@ class ArticleContentCell: UITableViewCell {
                 for i in 0..<quotBars.count {
                     let quotedRange = article.quotedAttributedRange[i]
                     let rawRect = contentLabel.textLayout!.rect(for: YYTextRange(range: quotedRange))
-                    let quotedRect = contentView.convert(rawRect, from: contentLabel)
-                    quotBars[i].frame = CGRect(x: leftMargin, y: quotedRect.origin.y, width: 5, height: quotedRect.height)
+                    let quotedRect = containerView.convert(rawRect, from: contentLabel)
+                    quotBars[i].frame = CGRect(x: padding, y: quotedRect.origin.y, width: 5, height: quotedRect.height)
                 }
             }
         }
         
         if let boxImageView = boxImageView {
-            boxImageView.frame = CGRect(x: leftMargin, y: size.height - imageHeight, width: boundingWidth, height: imageHeight)
+            boxImageView.frame = CGRect(x: 0, y: containerHeight - imageHeight, width: containerWidth, height: imageHeight)
         }
     }
     
@@ -250,20 +275,24 @@ class ArticleContentCell: UITableViewCell {
         
         let leftMargin = controller.view.layoutMargins.left
         let rightMargin = controller.view.layoutMargins.right
+        let upDownMargin = min(leftMargin, rightMargin)
         
-        let boundingSize = CGSize(width: size.width - leftMargin - rightMargin, height: CGFloat.greatestFiniteMagnitude)
-        guard boundingSize.width > 0 else { return .zero }
+        let containerWidth = size.width - leftMargin - rightMargin
+        let contentWidth = containerWidth - 2 * padding
+        guard contentWidth > 0 else { return .zero }
+        
         
         let textBoundingSize: CGSize
-        if let layout = controller.articleContentLayout["\(article.id)_\(Int(boundingSize.width))"] {
+        if let layout = controller.articleContentLayout["\(article.id)_\(Int(containerWidth))"] {
             // Set size with stored text layout
             textBoundingSize = layout.textBoundingSize
         } else {
             // Calculate text layout
+            let boundingSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
             let container = fixedLineHeightContainer(boundingSize: boundingSize)
             if let layout = YYTextLayout(container: container, text: article.attributedBody) {
                 // Store in dictionary
-                controller.articleContentLayout["\(article.id)_\(Int(boundingSize.width))"] = layout
+                controller.articleContentLayout["\(article.id)_\(Int(containerWidth))"] = layout
                 // Set size with calculated text layout
                 textBoundingSize = layout.textBoundingSize
             } else {
@@ -271,9 +300,16 @@ class ArticleContentCell: UITableViewCell {
             }
         }
         
-        let imageHeight = setting.noPicMode ? 0 : BoxImageView.imageHeight(count: article.imageAtt.count, boundingWidth: boundingSize.width)
+        let imageHeight = setting.noPicMode ? 0 : BoxImageView.imageHeight(count: article.imageAtt.count, boundingWidth: containerWidth)
         
-        return CGSize(width: size.width, height: margin1 * 2 + ceil(textBoundingSize.height) + margin3 + imageHeight)
+        let height: CGFloat
+        if textBoundingSize.height > 0 {
+            height = upDownMargin + 3 * padding + avatarHeight + textBoundingSize.height + imageHeight
+        } else {
+            height = upDownMargin + 2 * padding + avatarHeight + imageHeight
+        }
+        
+        return CGSize(width: size.width, height: height)
     }
     
     private func drawImagesWithInfo(imageAtt: [ImageInfo]?) {
@@ -292,7 +328,7 @@ class ArticleContentCell: UITableViewCell {
         if let imageAtt = imageAtt {
             let imageURLs = imageAtt.map { $0.thumbnailURL }
             let boxImageView = BoxImageView(imageURLs: imageURLs, target: self, action: #selector(singleTapOnImage(_:)))
-            contentView.addSubview(boxImageView)
+            containerView.addSubview(boxImageView)
             self.boxImageView = boxImageView
         }
     }
@@ -310,7 +346,7 @@ class ArticleContentCell: UITableViewCell {
             for _ in ranges {
                 let quotBar = UIView()
                 quotBar.backgroundColor = UIColor.tertiaryLabel
-                contentView.addSubview(quotBar)
+                containerView.addSubview(quotBar)
                 quotBars.append(quotBar)
             }
         }

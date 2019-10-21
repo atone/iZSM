@@ -74,7 +74,7 @@ class ArticleContentCell: UITableViewCell {
         contentView.addSubview(bckgroundView)
         contentView.addSubview(containerView)
         contentView.backgroundColor = .systemBackground
-        bckgroundView.backgroundColor = .systemBackground
+        bckgroundView.backgroundColor = .secondarySystemGroupedBackground
         
         if (!setting.noPicMode) && setting.showAvatar {
             avatarImageView.contentMode = .scaleAspectFill
@@ -102,7 +102,7 @@ class ArticleContentCell: UITableViewCell {
         
         replyButton.setTitle("回复", for: .normal)
         replyButton.titleLabel?.font = .systemFont(ofSize: replyMoreFontSize)
-        replyButton.backgroundColor = UIColor.secondarySystemBackground
+        replyButton.backgroundColor = .secondarySystemFill
         replyButton.layer.cornerRadius = 4
         replyButton.clipsToBounds = true
         replyButton.addTarget(self, action: #selector(reply(_:)), for: .touchUpInside)
@@ -112,7 +112,7 @@ class ArticleContentCell: UITableViewCell {
         
         moreButton.setTitle("•••", for: .normal)
         moreButton.titleLabel?.font = .systemFont(ofSize: replyMoreFontSize)
-        moreButton.backgroundColor = UIColor.secondarySystemBackground
+        moreButton.backgroundColor = .secondarySystemFill
         moreButton.layer.cornerRadius = 4
         moreButton.clipsToBounds = true
         moreButton.addTarget(self, action: #selector(action(_:)), for: .touchUpInside)
@@ -214,10 +214,7 @@ class ArticleContentCell: UITableViewCell {
         containerView.clipsToBounds = true
         containerView.layer.cornerRadius = 16
         
-        let borderWidth = 1.0 / UIScreen.main.nativeScale
-        bckgroundView.frame = containerView.frame.insetBy(dx: -borderWidth, dy: -borderWidth)
-        bckgroundView.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
-        bckgroundView.layer.borderWidth = borderWidth
+        bckgroundView.frame = containerView.frame
         bckgroundView.layer.cornerRadius = 16
         bckgroundView.layer.shadowColor = UIColor.black.cgColor
         bckgroundView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)

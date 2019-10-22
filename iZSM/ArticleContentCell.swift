@@ -51,9 +51,9 @@ class ArticleContentCell: UITableViewCell {
         didSet {
             if isVisible && !isDrawed {
                 isDrawed = true
-                drawQuotBar(with: self.article?.quotedAttributedRange)
+                drawQuotBar(with: self.article?.quotedRange)
                 if !setting.noPicMode {
-                    drawImagesWithInfo(imageAtt: self.article?.imageAtt)
+                    drawImagesWithInfo(imageAtt: self.article?.imageAttachments)
                 }
             }
         }
@@ -243,9 +243,9 @@ class ArticleContentCell: UITableViewCell {
                 }
             }
             
-            if article.quotedAttributedRange.count == quotBars.count {
+            if article.quotedRange.count == quotBars.count {
                 for i in 0..<quotBars.count {
-                    let quotedRange = article.quotedAttributedRange[i]
+                    let quotedRange = article.quotedRange[i]
                     let rawRect = contentLabel.textLayout!.rect(for: YYTextRange(range: quotedRange))
                     let quotedRect = containerView.convert(rawRect, from: contentLabel)
                     quotBars[i].frame = CGRect(x: padding, y: quotedRect.origin.y, width: 5, height: quotedRect.height)
@@ -300,7 +300,7 @@ class ArticleContentCell: UITableViewCell {
             }
         }
         
-        let imageHeight = setting.noPicMode ? 0 : BoxImageView.imageHeight(count: article.imageAtt.count, boundingWidth: containerWidth)
+        let imageHeight = setting.noPicMode ? 0 : BoxImageView.imageHeight(count: article.imageAttachments.count, boundingWidth: containerWidth)
         
         let height: CGFloat
         if textBoundingSize.height > 0 {

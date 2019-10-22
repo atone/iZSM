@@ -608,7 +608,7 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
 extension ArticleContentViewController: ArticleContentCellDelegate {
     
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int) {
-        guard let imageInfos = cell.article?.imageAtt else { return }
+        guard let imageInfos = cell.article?.imageAttachments else { return }
         guard let imageViews = cell.boxImageView?.imageViews else { return }
         var items = [YYPhotoGroupItem]()
         var fromView: UIView?

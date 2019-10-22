@@ -192,10 +192,7 @@ class SmthAPI {
         let rawResults = api.net_GetThread(boardID, articleID, threadRange.location, threadRange.length, replyMode.rawValue)
         if let results = rawResults as? [[String:Any]] {
             for (index, result) in results.enumerated() {
-                if var article = articleFromDictionary(dict: result) {
-                    article.floor = threadRange.location + index
-                    article.boardID = boardID
-                    article.extraConfigure()
+                if let article = article(from: result, floor: threadRange.location + index, boardID: boardID) {
                     articleList.append(article)
                 }
             }
@@ -240,10 +237,7 @@ class SmthAPI {
     func getArticleInBoard(boardID: String, articleID: Int) -> SMArticle? {
         api.reset_status()
         if let rawValue = api.net_GetArticle(boardID, articleID) as? [String:Any],
-            var article = articleFromDictionary(dict: rawValue)
-        {
-            article.boardID = boardID
-            article.extraConfigure()
+            let article = article(from: rawValue, floor: -1, boardID: boardID) {
             return article
         }
         return nil
@@ -717,7 +711,7 @@ class SmthAPI {
         return nil
     }
 
-    private func articleFromDictionary(dict: [String:Any]) -> SMArticle? {
+    private func article(from dict: [String:Any], floor: Int, boardID: String) -> SMArticle? {
         if
             let id = dict["id"] as? Int,
             let subject = dict["subject"] as? String,
@@ -741,7 +735,7 @@ class SmthAPI {
                     }
                 }
             }
-            return SMArticle(id: id, time: time, subject: subject, authorID: author_id, body: body, effsize: effsize, flags: flags, attachments: attachments)
+            return SMArticle(id: id, time: time, subject: subject, authorID: author_id, body: body, effsize: effsize, flags: flags, attachments: attachments, floor: floor, boardID: boardID)
         }
         return nil
     }

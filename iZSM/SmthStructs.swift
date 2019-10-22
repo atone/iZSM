@@ -41,10 +41,13 @@ struct SMArticle {
     var floor: Int
     var boardID: String
 
-    var imageAtt: [ImageInfo]
-    var timeString: String
+    var imageAttachments: [ImageInfo]
     var attributedBody: NSAttributedString
-    var quotedAttributedRange: [NSRange]
+    var quotedRange: [NSRange]
+    
+    var timeString: String {
+        return time.shortDateString
+    }
     
     var replySubject: String {
         if subject.lowercased().hasPrefix("re:") {
@@ -78,7 +81,7 @@ struct SMArticle {
         }.joined(separator: "\n")
     }
 
-    init(id: Int, time: Date, subject: String, authorID: String, body: String, effsize: Int, flags: String, attachments: [SMAttachment]) {
+    init(id: Int, time: Date, subject: String, authorID: String, body: String, effsize: Int, flags: String, attachments: [SMAttachment], floor: Int, boardID: String) {
         self.id = id
         self.time = time
         self.subject = subject
@@ -87,28 +90,24 @@ struct SMArticle {
         self.effsize = effsize
         self.flags = flags
         self.attachments = attachments
-
-        self.floor = 0
-        self.boardID = ""
-        self.imageAtt = [ImageInfo]()
-        self.timeString = time.shortDateString
+        self.floor = floor
+        self.boardID = boardID
+        
+        self.imageAttachments = []
+        self.quotedRange = []
         self.attributedBody = NSAttributedString()
-        self.quotedAttributedRange = []
-    }
-
-    mutating func extraConfigure() {
-        // configure
+        
         if attachments.count > 0 {
-            imageAtt += generateImageAtt()
+            imageAttachments += generateImageAtt()
         }
         if let extraInfos = imageAttachmentsFromBody() {
-            imageAtt += extraInfos
+            imageAttachments += extraInfos
             removeImageURLsFromBody()
         }
-        self.attributedBody = makeAttributedBody()
+        makeAttributedBody()
     }
 
-    private mutating func makeAttributedBody() -> NSAttributedString {
+    private mutating func makeAttributedBody() {
         let attributeText = NSMutableAttributedString()
         
         let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
@@ -204,7 +203,7 @@ struct SMArticle {
         let emoticonParser = SMEmoticon.shared.parser
         emoticonParser.parseText(attributeText, selectedRange: nil)
         
-        self.quotedAttributedRange.removeAll()
+        self.quotedRange.removeAll()
         attributeText.enumerateAttribute(.paragraphStyle, in: NSMakeRange(0, attributeText.length)) { (value, range, stop) in
             if let value = value as? NSMutableParagraphStyle, value == quotedParagraphStyle {
                 var trimRange = range
@@ -212,14 +211,14 @@ struct SMArticle {
                     && attributeText.attributedSubstring(from: NSMakeRange(trimRange.location + trimRange.length - 1, 1)).string == "\n" {
                     trimRange.length -= 1
                 }
-                self.quotedAttributedRange.append(trimRange)
+                self.quotedRange.append(trimRange)
             }
         }
         attributeText.trimCharactersInSet(charSet: .whitespacesAndNewlines)
-        return attributeText
+        self.attributedBody = attributeText
     }
     
-    func attachmentURL(at pos: Int) -> URL {
+    private func attachmentURL(at pos: Int) -> URL {
         let string = "https://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(pos)"
         return URL(string: string)!
     }

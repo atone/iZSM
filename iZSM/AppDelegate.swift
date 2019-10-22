@@ -187,24 +187,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func navigateToNewMessagePage(with identifier: String) {
         tabBarViewController.selectedIndex = 3
         if let nvc = tabBarViewController.selectedViewController as? NTNavigationController,
-            let userVC = nvc.viewControllers.first as? UserViewController,
             let showVC = nvc.viewControllers.last {
-            userVC.tabBarItem.badgeValue = "\(UIApplication.shared.applicationIconBadgeNumber)"
             switch identifier {
             case "zsmth.newmail":
                 let mbvc = MailBoxViewController()
                 mbvc.inbox = true
-                mbvc.userVC = userVC
                 showVC.show(mbvc, sender: showVC)
             case "zsmth.newreply":
                 let rvc = ReminderViewController()
                 rvc.replyMe = true
-                rvc.userVC = userVC
                 showVC.show(rvc, sender: showVC)
             case "zsmth.newrefer":
                 let rvc = ReminderViewController()
                 rvc.replyMe = false
-                rvc.userVC = userVC
                 showVC.show(rvc, sender: showVC)
             default:
                 dPrint("Invalid identifier: \(identifier)")

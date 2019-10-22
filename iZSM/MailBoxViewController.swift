@@ -18,8 +18,6 @@ class MailBoxViewController: BaseTableViewController {
         }
     }
     
-    weak var userVC: UserViewController?
-    
     private var mailCountLoaded = 0
     private let mailCountPerSection = 20
     

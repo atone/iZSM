@@ -18,8 +18,6 @@ class ReminderViewController: BaseTableViewController {
         }
     }
     
-    weak var userVC: UserViewController?
-    
     private var referCountLoaded: Int = 0
     private var referCountPerSection = 20
     private var referRange: NSRange {

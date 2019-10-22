@@ -135,31 +135,31 @@ struct SMArticle {
         
         self.body.enumerateLines { (line, stop) -> () in
             if line.hasPrefix(":") {
-                let stripLine = line.dropFirst().trimmingCharacters(in: .whitespaces)
-                attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: quoted))
+                let line = line.dropFirst().trimmingCharacters(in: .whitespaces)
+                attributeText.append(NSAttributedString(string: "\(line)\n", attributes: quoted))
             } else if regex.numberOfMatches(in: line, range: NSMakeRange(0, line.count)) > 0 {
-                var stripLine = line.trimmingCharacters(in: .whitespaces)
-                if stripLine[stripLine.startIndex] != "【" {
-                    if let idx = stripLine.firstIndex(of: "【") {
-                        let text = stripLine[..<idx].trimmingCharacters(in: .whitespaces)
+                var line = line.trimmingCharacters(in: .whitespaces)
+                if line.first != "【" {
+                    if let idx = line.firstIndex(of: "【") {
+                        let text = line[..<idx].trimmingCharacters(in: .whitespaces)
                         attributeText.append(NSAttributedString(string: "\(text)\n", attributes: normal))
-                        stripLine = stripLine[idx...].trimmingCharacters(in: .whitespaces)
+                        line = line[idx...].trimmingCharacters(in: .whitespaces)
                     }
                 }
-                if stripLine[stripLine.startIndex] == "【" && stripLine[stripLine.index(before: stripLine.endIndex)] == "】" {
-                    stripLine = stripLine.dropFirst().dropLast().trimmingCharacters(in: .whitespaces)
-                    attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: quotedTitle))
+                if line.first == "【" && line.last == "】" {
+                    line = line.dropFirst().dropLast().trimmingCharacters(in: .whitespaces)
+                    attributeText.append(NSAttributedString(string: "\(line)\n", attributes: quotedTitle))
                 } else {
-                    attributeText.append(NSAttributedString(string: "\(stripLine)\n", attributes: normal))
+                    attributeText.append(NSAttributedString(string: "\(line)\n", attributes: normal))
                 }
             } else {
                 attributeText.append(NSAttributedString(string: "\(line)\n", attributes: normal))
             }
         }
         
-        let backgroundColor: UIColor = UIColor.secondarySystemBackground
-        let urlColor: UIColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
-        let border = YYTextBorder(fill: backgroundColor, cornerRadius: 3)
+        let bgColor = UIColor.secondarySystemBackground
+        let urlColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
+        let border = YYTextBorder(fill: bgColor, cornerRadius: 3)
         let highlight = YYTextHighlight()
         highlight.setColor(urlColor)
         highlight.setBackgroundBorder(border)
@@ -169,7 +169,7 @@ struct SMArticle {
         for match in reMatches.reversed() {
             let url = attributeText.attributedSubstring(from: match.range(at: 1))
             let content = attributeText.attributedSubstring(from: match.range(at: 2))
-            let contentLength = content.string.trimmingCharacters(in: .whitespacesAndNewlines).count
+            let contentLength = content.string.trimmingCharacters(in: .whitespaces).count
             let mutable = NSMutableAttributedString(attributedString: contentLength > 0 ? content : url)
             mutable.setLink(url.string, range: NSMakeRange(0, mutable.length))
             mutable.setTextHighlight(highlight, range: NSMakeRange(0, mutable.length))

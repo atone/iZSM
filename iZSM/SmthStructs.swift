@@ -246,29 +246,29 @@ struct SMArticle {
     }
 
     private func imageAttachmentsFromBody() -> [ImageInfo]? {
-        let pattern = "(?<=\\[img=).*(?=\\].*\\[/img\\])"
-        let regularExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-        let matches = regularExpression.matches(in: self.body, range: NSMakeRange(0, self.body.count))
-        let nsstring = self.body as NSString
-        if matches.count > 0 {
-            var imageInfos = [ImageInfo]()
-            for match in matches {
-                let range = match.range
-                let urlString = nsstring.substring(with: range).trimmingCharacters(in: .whitespaces)
-                let url = URL(string: urlString)!
+        let pattern = "(?<=\\[img=).*(?=\\])"
+        let re = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        let matches = re.matches(in: self.body, range: NSMakeRange(0, self.body.count))
+        let nsbody = self.body as NSString
+        var imageInfos = [ImageInfo]()
+        for match in matches {
+            let range = match.range
+            let urlString = nsbody.substring(with: range).trimmingCharacters(in: .whitespaces)
+            if let url = URL(string: urlString) {
                 let fileName = url.lastPathComponent
                 imageInfos.append(ImageInfo(thumbnailURL: url, fullImageURL: url, imageName: fileName, imageSize: 0))
             }
-            return imageInfos
-        } else {
-            return nil
         }
+        if imageInfos.count > 0 {
+            return imageInfos
+        }
+        return nil
     }
 
     private mutating func removeImageURLsFromBody() {
-        let pattern = "\\[img=.*\\]\\[/img\\]"
-        let regularExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-        self.body = regularExpression.stringByReplacingMatches(in: self.body, range: NSMakeRange(0, self.body.count), withTemplate: "").trimmingCharacters(in: .whitespacesAndNewlines)
+        let pattern = "\\[img=.*\\](\\[/img\\])?"
+        let re = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        self.body = re.stringByReplacingMatches(in: self.body, range: NSMakeRange(0, self.body.count), withTemplate: "").trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 

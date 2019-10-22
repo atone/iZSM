@@ -33,11 +33,13 @@ class SmthAPI {
     
     //MARK: - Attachments
     //if upload succeed, return attachment array, otherwise, nil
-    func uploadAttImage(image: UIImage, index: Int) -> [SMAttachment]? {
+    @discardableResult
+    func uploadAttImage(image: UIImage, baseFileName: String) -> [SMAttachment]? {
         let data = convertedAttData(from: image)
-        return upload(data: data, name: "\(index).jpg")
+        return upload(data: data, name: "\(baseFileName).jpg")
     }
     
+    @discardableResult
     func upload(data: Data, name: String) -> [SMAttachment]? {
         api.reset_status()
         if let rawAttachments = api.net_AddAttachment(data, name) as? [[String:Any]] {

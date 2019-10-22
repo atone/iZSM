@@ -57,8 +57,7 @@ class ReminderListCell: UITableViewCell {
         guard let reference = reference else { return }
         boardLabel.text = reference.boardID
         let titleDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
-        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
-        let infoDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
+        let infoDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote)
         let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
         let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
         let normalAttributes: [NSAttributedString.Key : Any] = [.font: normalInfoFont, .foregroundColor: UIColor.secondaryLabel]

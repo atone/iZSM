@@ -46,7 +46,7 @@ class MailListCell: UITableViewCell {
     func updateUI() {
         guard let mail = mail else { return }
         let titleDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
-        let infoDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
+        let infoDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote)
         
         let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
         let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)

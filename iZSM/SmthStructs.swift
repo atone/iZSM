@@ -207,8 +207,7 @@ struct SMArticle {
         attributeText.enumerateAttribute(.paragraphStyle, in: NSMakeRange(0, attributeText.length)) { (value, range, stop) in
             if let value = value as? NSMutableParagraphStyle, value == quotedParagraphStyle {
                 var trimRange = range
-                while trimRange.length > 0
-                    && attributeText.attributedSubstring(from: NSMakeRange(trimRange.location + trimRange.length - 1, 1)).string == "\n" {
+                while trimRange.length > 0 && attributeText.attributedSubstring(from: trimRange).string.last == "\n" {
                     trimRange.length -= 1
                 }
                 self.quotedRange.append(trimRange)

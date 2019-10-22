@@ -35,8 +35,12 @@ class SmthAPI {
     //if upload succeed, return attachment array, otherwise, nil
     func uploadAttImage(image: UIImage, index: Int) -> [SMAttachment]? {
         let data = convertedAttData(from: image)
+        return upload(data: data, name: "\(index).jpg")
+    }
+    
+    func upload(data: Data, name: String) -> [SMAttachment]? {
         api.reset_status()
-        if let rawAttachments = api.net_AddAttachment(data, "\(index).jpg") as? [[String:Any]] {
+        if let rawAttachments = api.net_AddAttachment(data, name) as? [[String:Any]] {
             var attachments = [SMAttachment]()
             for rawAttachment in rawAttachments {
                 if
@@ -937,7 +941,7 @@ class SmthAPI {
     
     private func image(with image: UIImage, scaledTo newSize: CGSize) -> UIImage {
         UIGraphicsBeginImageContext(newSize)
-        image.draw(in: CGRect(origin: CGPoint.zero, size: newSize))
+        image.draw(in: CGRect(origin: .zero, size: newSize))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return newImage ?? UIImage()

@@ -241,11 +241,41 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
             networkActivityIndicatorStart(withHUD: true)
             setEditable(false)
             DispatchQueue.global().async {
-                for index in 0..<self.attachedImages.count {
+                for (index, asset) in self.attachedAssets.enumerated() {
                     DispatchQueue.main.async {
-                        SVProgressHUD.show(withStatus: "正在上传: \(index + 1) / \(self.attachedImages.count)")
+                        SVProgressHUD.show(withStatus: "正在上传: \(index + 1) / \(self.attachedAssets.count)")
                     }
-                    let _ = self.api.uploadAttImage(image: self.attachedImages[index], index: index + 1)
+                    if let fileName = asset.value(forKey: "filename") as? String {
+//                        // could not support gif due to file size too large (> 1M)
+//                        if fileName.hasSuffix("GIF") {
+//                            print("filename: \(fileName)")
+//                            var photoData: Data?
+//                            let semaphore = DispatchSemaphore(value: 0)
+//                            TZImageManager.default()!.getOriginalPhotoData(with: asset) { (data, info, isDegraded) in
+//                                photoData = data
+//                                semaphore.signal()
+//                            }
+//                            semaphore.wait()
+//                            if let photoData = photoData {
+//                                self.api.upload(data: photoData, name: fileName)
+//                            }
+//                        } else {
+//                            let baseFileName: String
+//                            if let dot = fileName.lastIndex(of: "."), dot != fileName.startIndex {
+//                                baseFileName = String(fileName[fileName.index(after: dot)...])
+//                            } else {
+//                                baseFileName = fileName
+//                            }
+//                            self.api.uploadAttImage(image: self.attachedImages[index], baseFileName: baseFileName)
+//                        }
+                        let baseFileName: String
+                        if let dot = fileName.lastIndex(of: "."), dot != fileName.startIndex {
+                            baseFileName = String(fileName[..<dot])
+                        } else {
+                            baseFileName = fileName
+                        }
+                        self.api.uploadAttImage(image: self.attachedImages[index], baseFileName: baseFileName)
+                    }
                 }
                 
                 let lines = content.components(separatedBy: .newlines).map {
@@ -337,7 +367,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
         imagePicker.selectedAssets = NSMutableArray(array: attachedAssets)
         imagePicker.allowPickingVideo = false
         imagePicker.allowPickingOriginalPhoto = false
-        imagePicker.photoWidth = 1024
+        imagePicker.photoWidth = 1280
         present(imagePicker, animated: true)
     }
     

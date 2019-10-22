@@ -188,9 +188,7 @@ struct SMArticle {
         
         for attachment in self.attachments {
             let fileName = attachment.name.lowercased()
-            if !(fileName.hasSuffix(".jpg") || fileName.hasSuffix(".jpeg")
-                || fileName.hasSuffix(".gif") || fileName.hasSuffix(".bmp")
-                || fileName.hasSuffix(".png")) {
+            if !isPicture(fileName) {
                 let urlString = "https://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
                 let mutable = NSMutableAttributedString(string: fileName)
                 mutable.setLink(urlString, range: NSMakeRange(0, mutable.length))
@@ -231,9 +229,7 @@ struct SMArticle {
 
         for attachment in self.attachments {
             let fileName = attachment.name.lowercased()
-            if fileName.hasSuffix(".jpg") || fileName.hasSuffix(".jpeg")
-                || fileName.hasSuffix(".gif") || fileName.hasSuffix(".bmp")
-                || fileName.hasSuffix(".png") {
+            if isPicture(fileName)  {
                 let thumbnailURL = attachmentURL(at: attachment.pos)
                 let fullImageURL = attachmentURL(at: attachment.pos)
                 let imageName = attachment.name
@@ -243,6 +239,12 @@ struct SMArticle {
             }
         }
         return imageAtt
+    }
+    
+    private func isPicture(_ fileName: String) -> Bool {
+        return fileName.hasSuffix(".jpg") || fileName.hasSuffix(".jpeg")
+            || fileName.hasSuffix(".gif") || fileName.hasSuffix(".bmp")
+            || fileName.hasSuffix(".png")
     }
 
     private func imageAttachmentsFromBody() -> [ImageInfo]? {

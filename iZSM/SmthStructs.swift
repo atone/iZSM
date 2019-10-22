@@ -50,11 +50,11 @@ struct SMArticle {
     }
     
     var replySubject: String {
-        if subject.lowercased().hasPrefix("re:") {
-            return subject
-        } else {
-            return "Re: " + subject
+        var subject = self.subject
+        while subject.lowercased().hasPrefix("re:") {
+            subject = subject.dropFirst(3).trimmingCharacters(in: .whitespaces)
         }
+        return "Re: " + subject
     }
     
     var quotBody: String {
@@ -339,11 +339,11 @@ struct SMMail {
     var attachments: [SMAttachment]
     
     var replySubject: String {
-        if subject.lowercased().hasPrefix("re:") {
-            return subject
-        } else {
-            return "Re: " + subject
+        var subject = self.subject
+        while subject.lowercased().hasPrefix("re:") {
+            subject = subject.dropFirst(3).trimmingCharacters(in: .whitespaces)
         }
+        return "Re: " + subject
     }
     
     var quotBody: String {

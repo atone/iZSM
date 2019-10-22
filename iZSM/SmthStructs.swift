@@ -51,7 +51,7 @@ struct SMArticle {
     
     var replySubject: String {
         var subject = self.subject
-        while subject.lowercased().hasPrefix("re:") {
+        while subject.lowercased().hasPrefix("re:") || subject.hasPrefix("主题:") {
             subject = subject.dropFirst(3).trimmingCharacters(in: .whitespaces)
         }
         return "Re: " + subject
@@ -340,7 +340,7 @@ struct SMMail {
     
     var replySubject: String {
         var subject = self.subject
-        while subject.lowercased().hasPrefix("re:") {
+        while subject.lowercased().hasPrefix("re:") || subject.hasPrefix("主题:") {
             subject = subject.dropFirst(3).trimmingCharacters(in: .whitespaces)
         }
         return "Re: " + subject

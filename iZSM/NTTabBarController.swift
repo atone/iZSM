@@ -11,6 +11,26 @@ import SVProgressHUD
 
 class NTTabBarController: UITabBarController {
     
+    override var title: String? {
+        get {
+            switch selectedIndex {
+            case 0:
+                return "热点话题"
+            case 1:
+                return "版面列表"
+            case 2:
+                return "收藏夹"
+            case 3:
+                return "用户设置"
+            default:
+                return nil
+            }
+        }
+        set {
+            super.title = newValue
+        }
+    }
+    
     override var shouldAutorotate: Bool {
         return globalShouldRotate
     }

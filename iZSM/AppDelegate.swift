@@ -24,8 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let tabBarViewController = NTTabBarController()
     let setting = AppSetting.shared
     
-    var displayModeItem: UIBarButtonItem?
-    
     func handle(shortcutItem: UIApplicationShortcutItem) -> Bool {
         var handled = false
         guard let shortType = shortcutItem.type.components(separatedBy: ".").last else { return false }
@@ -55,7 +53,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabBarViewController.viewControllers = rootViewControllers()
         splitViewController.viewControllers = [tabBarViewController, placeholderViewController()]
         splitViewController.delegate = self
-        displayModeItem = splitViewController.displayModeButtonItem
         
         window?.rootViewController = splitViewController
         window?.makeKeyAndVisible()
@@ -91,7 +88,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func placeholderViewController() -> UIViewController {
-        return NTNavigationController(rootViewController: PlaceholderViewController())
+        let vc = PlaceholderViewController()
+        vc.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
+        return NTNavigationController(rootViewController: vc)
     }
     
     func rootViewControllers() -> [UIViewController] {
@@ -327,14 +326,14 @@ extension AppDelegate: UISplitViewControllerDelegate {
                 }
                 // if primary viewController is hidden, unhide it to avoid confusion
                 if !splitViewController.isCollapsed && splitViewController.displayMode == .primaryHidden {
-                    if let displayModeItem = displayModeItem,
-                        let target = displayModeItem.target,
-                        let action = displayModeItem.action {
-                        _ = target.perform(action, with: displayModeItem)
-                    }
+                    let displayModeItem = splitViewController.displayModeButtonItem
+                    let target = displayModeItem.target
+                    let action = displayModeItem.action
+                    _ = target?.perform(action, with: displayModeItem)
                 }
             } else if let secondNaviCtr = splitViewController.viewControllers.last as? NTNavigationController {
                 if secondNaviCtr.topViewController != vc {
+                    vc.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
                     secondNaviCtr.setViewControllers([vc], animated: false)
                 }
             }
@@ -348,6 +347,7 @@ extension AppDelegate: UISplitViewControllerDelegate {
             let secondNaviCtr = secondaryViewController as? NTNavigationController {
             for viewController in secondNaviCtr.viewControllers {
                 if !(viewController is PlaceholderViewController) {
+                    viewController.navigationItem.leftBarButtonItem = nil
                     firstNaviCtr.pushViewController(viewController, animated: false)
                 }
             }
@@ -362,8 +362,13 @@ extension AppDelegate: UISplitViewControllerDelegate {
             let secondNaviCtr = NTNavigationController()
             let viewControllers = firstNaviCtr.popToRootViewController(animated: false)
             
+            var displayModeButtonItemAdded = false
             for viewController in viewControllers ?? [] {
                 if viewController is SmthContentEqutable {
+                    if !displayModeButtonItemAdded {
+                        displayModeButtonItemAdded = true
+                        viewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
+                    }
                     secondNaviCtr.pushViewController(viewController, animated: false)
                 } else {
                     firstNaviCtr.pushViewController(viewController, animated: false)

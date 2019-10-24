@@ -44,7 +44,7 @@ class ArticleContentCell: UITableViewCell {
     private let floorTimeFontSize: CGFloat = AppSetting.shared.isSmallScreen ? 11 : 13
     private let replyMoreFontSize: CGFloat = AppSetting.shared.isSmallScreen ? 13 : 15
     
-    private let padding: CGFloat = AppSetting.shared.isSmallScreen ? 6 : 12
+    private let padding: CGFloat = AppSetting.shared.isSmallScreen ? 8 : 12
     
     var isDrawed: Bool = false
     var isVisible: Bool = false {

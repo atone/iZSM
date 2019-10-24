@@ -163,7 +163,7 @@ struct SMArticle {
         highlight.setColor(urlColor)
         highlight.setBackgroundBorder(border)
         
-        let re = try! NSRegularExpression(pattern: "\\[url=(.*)\\](.*)\\[/url\\]", options: .caseInsensitive)
+        let re = try! NSRegularExpression(pattern: "\\[url=(.*?)\\](.*?)\\[/url\\]", options: .caseInsensitive)
         let reMatches = re.matches(in: attributeText.string, range: NSMakeRange(0, attributeText.length))
         for match in reMatches.reversed() {
             let url = attributeText.attributedSubstring(from: match.range(at: 1))
@@ -246,7 +246,7 @@ struct SMArticle {
     }
 
     private func imageAttachmentsFromBody() -> [ImageInfo]? {
-        let pattern = "(?<=\\[img=).*(?=\\])"
+        let pattern = "(?<=\\[img=).*?(?=\\])"
         let re = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
         let matches = re.matches(in: self.body, range: NSMakeRange(0, self.body.count))
         let nsbody = self.body as NSString
@@ -266,7 +266,7 @@ struct SMArticle {
     }
 
     private mutating func removeImageURLsFromBody() {
-        let pattern = "\\[img=.*\\](\\[/img\\])?"
+        let pattern = "\\[img=.*?\\](\\[/img\\])?"
         let re = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
         self.body = re.stringByReplacingMatches(in: self.body, range: NSMakeRange(0, self.body.count), withTemplate: "").trimmingCharacters(in: .whitespacesAndNewlines)
     }

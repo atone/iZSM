@@ -13,18 +13,10 @@ class NTTabBarController: UITabBarController {
     
     override var title: String? {
         get {
-            switch selectedIndex {
-            case 0:
-                return "热点话题"
-            case 1:
-                return "版面列表"
-            case 2:
-                return "收藏夹"
-            case 3:
-                return "用户设置"
-            default:
-                return nil
+            if let vc = selectedViewController {
+                return vc.title
             }
+            return nil
         }
         set {
             super.title = newValue

@@ -10,6 +10,18 @@ import UIKit
 
 class NTNavigationController: UINavigationController {
     
+    override var title: String? {
+        get {
+            if let vc = topViewController {
+                return vc.title
+            }
+            return nil
+        }
+        set {
+            super.title = newValue
+        }
+    }
+    
     override var shouldAutorotate: Bool {
         return globalShouldRotate
     }

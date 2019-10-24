@@ -203,7 +203,9 @@ class ArticleContentCell: UITableViewCell {
         
         let leftMargin = contentView.layoutMargins.left
         let rightMargin = contentView.layoutMargins.right
-        let upDownMargin = min(leftMargin, rightMargin) * 3 / 4
+        let leftSafeAreaMargin = contentView.safeAreaInsets.left
+        let rightSafeAreaMargin = contentView.safeAreaInsets.right
+        let upDownMargin = min(leftMargin - leftSafeAreaMargin, rightMargin - rightSafeAreaMargin) * 3 / 4
         let size = contentView.bounds.size
         
         let containerWidth = size.width - leftMargin - rightMargin
@@ -275,7 +277,9 @@ class ArticleContentCell: UITableViewCell {
         
         let leftMargin = controller.view.layoutMargins.left
         let rightMargin = controller.view.layoutMargins.right
-        let upDownMargin = min(leftMargin, rightMargin) * 3 / 4
+        let leftSafeAreaMargin = controller.view.safeAreaInsets.left
+        let rightSafeAreaMargin = controller.view.safeAreaInsets.right
+        let upDownMargin = min(leftMargin - leftSafeAreaMargin, rightMargin - rightSafeAreaMargin) * 3 / 4
         
         let containerWidth = size.width - leftMargin - rightMargin
         let contentWidth = containerWidth - 2 * padding

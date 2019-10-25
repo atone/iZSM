@@ -191,6 +191,23 @@ class SmthAPI {
         case LaterPostFirst = 0, Normal
     }
     
+    // get thread content in board with article id, if assess_token failed, try again
+    func getThreadContent(in boardID: String, articleID: Int, threadRange: NSRange, replyMode: SortMode, user: String, pass: String) -> [SMArticle]? {
+        if let articles = getThreadContentInBoard(boardID: boardID, articleID: articleID, threadRange: threadRange, replyMode: replyMode) {
+            return articles
+        }
+        // invalid access_token or access_token expired, try to silent login and get data again
+        if errorCode == 10010 || errorCode == 10014 {
+            api.reset_status()
+            let loginSuccess = loginBBS(username: user, password: pass) != 0
+            if loginSuccess && errorCode == 0 {
+                setting.accessToken = accessToken
+                return getThreadContentInBoard(boardID: boardID, articleID: articleID, threadRange: threadRange, replyMode: replyMode)
+            }
+        }
+        return nil
+    }
+    
     // get thread content in board with article id
     func getThreadContentInBoard(boardID: String, articleID: Int, threadRange: NSRange, replyMode: SortMode) -> [SMArticle]? {
         api.reset_status()

@@ -156,8 +156,8 @@ class ArticleContentCell: UITableViewCell {
         horizontalStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: padding).isActive = true
         horizontalStack.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -padding).isActive = true
         
-        //contentLabel.displaysAsynchronously = true
-        //contentLabel.fadeOnAsynchronouslyDisplay = false
+        contentLabel.displaysAsynchronously = true
+        contentLabel.fadeOnAsynchronouslyDisplay = false
         contentLabel.ignoreCommonProperties = true
         contentLabel.highlightTapAction = { [unowned self] (containerView, text, range, rect) in
             let attributes = text.attributedSubstring(from: range).attributes!

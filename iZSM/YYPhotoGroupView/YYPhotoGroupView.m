@@ -306,7 +306,7 @@
     [tap requireGestureRecognizerToFail: tap2];
     [self addGestureRecognizer:tap2];
     
-    UILongPressGestureRecognizer *press = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress)];
+    UILongPressGestureRecognizer *press = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     press.delegate = self;
     [self addGestureRecognizer:press];
     
@@ -751,7 +751,7 @@
     }
 }
 
-- (void)longPress {
+- (void)longPress:(UILongPressGestureRecognizer *)g {
     if (!_isPresented) return;
     
     YYPhotoGroupCell *tile = [self cellForPage:self.currentPage];
@@ -770,10 +770,11 @@
     [[UIActivityViewController alloc] initWithActivityItems:@[imageItem] applicationActivities:nil];
     if ([activityViewController respondsToSelector:@selector(popoverPresentationController)]) {
         activityViewController.popoverPresentationController.sourceView = self;
+        CGPoint touchPoint = [g locationInView:self];
+        activityViewController.popoverPresentationController.sourceRect = CGRectMake(touchPoint.x - 10, touchPoint.y - 10, 20, 20);
     }
 
-    UIViewController *toVC = self.toContainerView.viewController;
-    if (!toVC) toVC = self.viewController;
+    UIViewController *toVC = self.inViewController;
     [toVC presentViewController:activityViewController animated:YES completion:nil];
 }
 

@@ -122,7 +122,7 @@ class SmthAPI {
     }
 
     // get thread list in origin mode
-    func getOriginThreadList(for boardID: String, page: Int) -> (page: Int, threads: [SMThread]) {
+    private func _getOriginThreadList(for boardID: String, page: Int) -> (page: Int, threads: [SMThread]) {
         var url = "https://www.newsmth.net/bbsdoc.php?board=\(boardID)&ftype=6"
         if page > 0 {
             url.append(contentsOf: "&page=\(page)")
@@ -156,11 +156,11 @@ class SmthAPI {
         return (0, [])
     }
     
-    func getOriginThreadList(for boardID: String, page: Int, user: String, pass: String) -> (page: Int, threads: [SMThread]) {
-        let result = getOriginThreadList(for: boardID, page: page)
-        if result.page == -2 { // 可能是因为权限导致无法获取数据，登录后再试一次
+    func getOriginThreadList(for boardID: String, page: Int) -> (page: Int, threads: [SMThread]) {
+        let result = _getOriginThreadList(for: boardID, page: page)
+        if result.page == -2, let user = setting.username, let pass = setting.password { // 可能是因为权限导致无法获取数据，登录后再试一次
             bbsSilentLogin(id: user, pass: pass)
-            return getOriginThreadList(for: boardID, page: page)
+            return _getOriginThreadList(for: boardID, page: page)
         }
         return result
     }
@@ -192,24 +192,24 @@ class SmthAPI {
     }
     
     // get thread content in board with article id, if assess_token failed, try again
-    func getThreadContent(in boardID: String, articleID: Int, threadRange: NSRange, replyMode: SortMode, user: String, pass: String) -> [SMArticle]? {
-        if let articles = getThreadContentInBoard(boardID, articleID, threadRange, replyMode) {
+    func getThreadContentInBoard(boardID: String, articleID: Int, threadRange: NSRange, replyMode: SortMode) -> [SMArticle]? {
+        if let articles = _getThreadContentInBoard(boardID, articleID, threadRange, replyMode) {
             return articles
         }
         // invalid access_token or access_token expired, try to silent login and get data again
-        if errorCode == 10010 || errorCode == 10014 {
+        if errorCode == 10010 || errorCode == 10014, let user = setting.username, let pass = setting.password {
             api.reset_status()
             let loginSuccess = loginBBS(username: user, password: pass) != 0
             if loginSuccess && errorCode == 0 {
                 setting.accessToken = accessToken
-                return getThreadContentInBoard(boardID, articleID, threadRange, replyMode)
+                return _getThreadContentInBoard(boardID, articleID, threadRange, replyMode)
             }
         }
         return nil
     }
     
     // get thread content in board with article id
-    private func getThreadContentInBoard(_ boardID: String, _ articleID: Int, _ threadRange: NSRange, _ replyMode: SortMode) -> [SMArticle]? {
+    private func _getThreadContentInBoard(_ boardID: String, _ articleID: Int, _ threadRange: NSRange, _ replyMode: SortMode) -> [SMArticle]? {
         api.reset_status()
         var articleList = [SMArticle]()
         let rawResults = api.net_GetThread(boardID, articleID, threadRange.location, threadRange.length, replyMode.rawValue)

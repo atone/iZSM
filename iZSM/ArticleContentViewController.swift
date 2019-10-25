@@ -767,6 +767,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
     private func forceUpdateLayout(with article: SMArticle) {
         let containerWidth = view.bounds.size.width - view.layoutMargins.left - view.layoutMargins.right
         articleContentLayout["\(article.id)_\(Int(containerWidth))"] = nil
+        articleContentLayout["\(article.id)_\(Int(containerWidth))_dark"] = nil
         let cacheKey = "\(article.id)_\(Int(containerWidth))" as NSString
         tableView.fd_keyedHeightCache.invalidateHeight(forKey: cacheKey)
     }

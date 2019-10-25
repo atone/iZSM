@@ -43,6 +43,7 @@ struct SMArticle {
 
     var imageAttachments: [ImageInfo]
     var attributedBody: NSAttributedString
+    var attributedDarkBody: NSAttributedString
     var quotedRange: [NSRange]
     
     var timeString: String {
@@ -96,6 +97,7 @@ struct SMArticle {
         self.imageAttachments = []
         self.quotedRange = []
         self.attributedBody = NSAttributedString()
+        self.attributedDarkBody = NSAttributedString()
         
         if attachments.count > 0 {
             imageAttachments += generateImageAtt()
@@ -122,13 +124,13 @@ struct SMArticle {
         
         let normal : [NSAttributedString.Key : Any] = [.font: textFont,
                                                        .paragraphStyle: paragraphStyle,
-                                                       .foregroundColor: UIColor(named: "MainText")!]
+                                                       .foregroundColor: UIColor(named: "MainTextLight")!]
         let quoted : [NSAttributedString.Key : Any] = [.font: textFont,
                                                        .paragraphStyle: quotedParagraphStyle,
-                                                       .foregroundColor: UIColor.secondaryLabel]
+                                                       .foregroundColor: UIColor(named: "QuotTextLight")!]
         let quotedTitle : [NSAttributedString.Key : Any] = [.font: boldTextFont,
                                                             .paragraphStyle: quotedParagraphStyle,
-                                                            .foregroundColor: UIColor.secondaryLabel]
+                                                            .foregroundColor: UIColor(named: "QuotTextLight")!]
         
         let regex = try! NSRegularExpression(pattern: "在.*的(?:大作|邮件)中提到")
         
@@ -156,9 +158,8 @@ struct SMArticle {
             }
         }
         
-        let bgColor = UIColor.secondarySystemBackground
-        let urlColor = UIColor(red: 0/255.0, green: 139/255.0, blue: 203/255.0, alpha: 1)
-        let border = YYTextBorder(fill: bgColor, cornerRadius: 3)
+        let urlColor = UIColor(named: "URLColor")!
+        let border = YYTextBorder(fill: nil, cornerRadius: 3)
         let highlight = YYTextHighlight()
         highlight.setColor(urlColor)
         highlight.setBackgroundBorder(border)
@@ -215,6 +216,17 @@ struct SMArticle {
         }
         attributeText.trimCharactersInSet(charSet: .whitespacesAndNewlines)
         self.attributedBody = attributeText
+        let attributeDarkText = NSMutableAttributedString(attributedString: attributeText)
+        attributeDarkText.enumerateAttribute(.foregroundColor, in: NSMakeRange(0, attributeDarkText.length)) { (value, range, stop) in
+            if let foregroundColor = value as? UIColor {
+                if foregroundColor.isEqual(UIColor(named: "MainTextLight")) {
+                    attributeDarkText.addAttribute(.foregroundColor, value: UIColor(named: "MainTextDark")!, range: range)
+                } else if foregroundColor.isEqual(UIColor(named: "QuotTextLight")) {
+                    attributeDarkText.addAttribute(.foregroundColor, value: UIColor(named: "QuotTextDark")!, range: range)
+                }
+            }
+        }
+        self.attributedDarkBody = attributeDarkText
     }
     
     private func attachmentURL(at pos: Int) -> URL {

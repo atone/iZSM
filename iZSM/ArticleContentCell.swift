@@ -229,7 +229,11 @@ class ArticleContentCell: UITableViewCell {
         
         // contentLabel's layout also needs to be updated
         if let article = article {
-            if let layout = controller.articleContentLayout["\(article.id)_\(Int(containerWidth))"] {
+            var layoutKey = "\(article.id)_\(Int(containerWidth))"
+            if controller.traitCollection.userInterfaceStyle == .dark {
+                layoutKey.append("_dark")
+            }
+            if let layout = controller.articleContentLayout[layoutKey] {
                 contentLabel.textLayout = layout
             }
             
@@ -282,9 +286,11 @@ class ArticleContentCell: UITableViewCell {
             // Calculate text layout
             let boundingSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
             let container = fixedLineHeightContainer(boundingSize: boundingSize)
-            if let layout = YYTextLayout(container: container, text: article.attributedBody) {
+            if let layout = YYTextLayout(container: container, text: article.attributedBody),
+                let darkLayout = YYTextLayout(container: container, text: article.attributedDarkBody) {
                 // Store in dictionary
                 controller.articleContentLayout["\(article.id)_\(Int(containerWidth))"] = layout
+                controller.articleContentLayout["\(article.id)_\(Int(containerWidth))_dark"] = darkLayout
                 // Set size with calculated text layout
                 textBoundingSize = layout.textBoundingSize
             } else {

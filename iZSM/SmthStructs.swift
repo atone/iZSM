@@ -104,8 +104,8 @@ struct SMArticle {
         }
         if let extraInfos = imageAttachmentsFromBody() {
             imageAttachments += extraInfos
-            removeImageURLsFromBody()
         }
+        removeImageURLsFromBody()
         makeAttributedBody()
     }
 
@@ -260,15 +260,17 @@ struct SMArticle {
     private func imageAttachmentsFromBody() -> [ImageInfo]? {
         let pattern = "(?<=\\[img=).*?(?=\\])"
         let re = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-        let matches = re.matches(in: self.body, range: NSMakeRange(0, self.body.count))
-        let nsbody = self.body as NSString
         var imageInfos = [ImageInfo]()
-        for match in matches {
-            let range = match.range
-            let urlString = nsbody.substring(with: range).trimmingCharacters(in: .whitespaces)
-            if let url = URL(string: urlString) {
-                let fileName = url.lastPathComponent
-                imageInfos.append(ImageInfo(thumbnailURL: url, fullImageURL: url, imageName: fileName, imageSize: 0))
+        self.body.enumerateLines { (line, stop) in
+            if line.hasPrefix(":") { return }
+            let matches = re.matches(in: line, range: NSMakeRange(0, line.count))
+            for match in matches {
+                let range = match.range
+                let urlString = (line as NSString).substring(with: range).trimmingCharacters(in: .whitespaces)
+                if let url = URL(string: urlString) {
+                    let fileName = url.lastPathComponent
+                    imageInfos.append(ImageInfo(thumbnailURL: url, fullImageURL: url, imageName: fileName, imageSize: 0))
+                }
             }
         }
         if imageInfos.count > 0 {

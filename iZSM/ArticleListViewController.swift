@@ -161,7 +161,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     }
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
-        if let boardID = self.boardID, let user = setting.username, let pass = setting.password {
+        if let boardID = self.boardID {
             let currentMode = self.searchMode
             let currentThreadSortMode = self.threadSortMode
             networkActivityIndicatorStart(withHUD: showHUD)
@@ -219,9 +219,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                 case .byPostNewFirst:
                     self.currentPage = -1
                     while threadSection.count == 0 {
-                        let result = self.api.getOriginThreadList(for: boardID,
-                                                                  page: self.currentPage,
-                                                                  user: user, pass: pass)
+                        let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
                         if result.page == 0 || result.page == -2 {
                             break // unrecoverable error
                         } else if result.page == -1 { // decode error
@@ -245,7 +243,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                 case .byPostOldFirst:
                     self.currentPage = 1
                     while threadSection.count == 0 {
-                        let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage, user: user, pass: pass)
+                        let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
                         if result.page == 0 || result.page == -2 {
                             break // unrecoverable error
                         } else if result.page == -1 { // decode error

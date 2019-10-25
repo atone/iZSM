@@ -158,6 +158,7 @@ class ArticleContentCell: UITableViewCell {
         
         contentLabel.displaysAsynchronously = true
         contentLabel.fadeOnAsynchronouslyDisplay = false
+        contentLabel.clearContentsBeforeAsynchronouslyDisplay = false
         contentLabel.ignoreCommonProperties = true
         contentLabel.highlightTapAction = { [unowned self] (containerView, text, range, rect) in
             let attributes = text.attributedSubstring(from: range).attributes!

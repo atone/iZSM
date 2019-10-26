@@ -159,10 +159,8 @@ struct SMArticle {
         }
         
         let urlColor = UIColor(named: "URLColor")!
-        let border = YYTextBorder(fill: nil, cornerRadius: 3)
         let highlight = YYTextHighlight()
         highlight.setColor(urlColor)
-        highlight.setBackgroundBorder(border)
         
         let re = try! NSRegularExpression(pattern: "\\[url=(.*?)\\](.*?)\\[/url\\]", options: .caseInsensitive)
         let reMatches = re.matches(in: attributeText.string, range: NSMakeRange(0, attributeText.length))

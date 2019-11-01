@@ -158,10 +158,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         if messageTimer == nil {
-            messageTimer = Timer.scheduledTimer(withTimeInterval: 15 * 60, repeats: true) { timer in
+            messageTimer = Timer.scheduledTimer(withTimeInterval: 5 * 60, repeats: true) { timer in
                 MessageCenter.shared.checkUnreadMessage()
             }
-            dPrint("Schedule timer to check unread message every 15 minutes")
+            dPrint("Schedule timer to check unread message every 5 minutes")
         }
     }
     

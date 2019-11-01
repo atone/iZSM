@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SmthConnection
 
 class MailListCell: UITableViewCell {
     let setting = AppSetting.shared

@@ -9,6 +9,7 @@
 import Foundation
 import DeviceKit
 import KeychainSwift
+import SmthConnection
 
 class AppSetting {
 
@@ -23,8 +24,7 @@ class AppSetting {
         static let PasswordKey = "SmthAPI.password"
         static let AccessTokenKey = "SmthAPI.accessToken"
         static let ExpireDateKey = "SmthAPI.expireDate"
-        static let ClearUnreadModeKey = "SmthAPI.ClearUnreadMode"
-        static let SortModeKey = "SmthAPI.SortMode"
+        static let ReplySortModeKey = "SmthAPI.ReplySortMode"
         static let HideAlwaysOnTopThreadKey = "SmthAPI.hideAlwaysOnTopThread"
         static let ShowSignatureKey = "SmthAPI.showSignature"
         static let ArticleCountPerSectionKey = "SmthAPI.articleCountPerSection"
@@ -53,8 +53,7 @@ class AppSetting {
     private init () {
         // if some essential settings not set, then set them as default value
         let initialSettings: [String : Any] = [
-            Static.ClearUnreadModeKey : Int(SmthAPI.ClearUnreadMode.NotClear.rawValue),
-            Static.SortModeKey : Int(SmthAPI.SortMode.Normal.rawValue),
+            Static.ReplySortModeKey : SMThread.ReplySortMode.oldFirst.rawValue,
             Static.HideAlwaysOnTopThreadKey : false,
             Static.ShowSignatureKey : false,
             Static.ArticleCountPerSectionKey : 20,
@@ -170,17 +169,10 @@ class AppSetting {
         }
     }
 
-    var clearUnreadMode: SmthAPI.ClearUnreadMode {
-        get { return SmthAPI.ClearUnreadMode(rawValue: Int32(defaults.integer(forKey: Static.ClearUnreadModeKey)))! }
+    var sortMode: SMThread.ReplySortMode {
+        get { return SMThread.ReplySortMode(rawValue: defaults.integer(forKey: Static.ReplySortModeKey)) ?? .oldFirst }
         set {
-            defaults.set(Int(newValue.rawValue), forKey: Static.ClearUnreadModeKey)
-        }
-    }
-
-    var sortMode: SmthAPI.SortMode {
-        get { return SmthAPI.SortMode(rawValue: Int32(defaults.integer(forKey: Static.SortModeKey)))! }
-        set {
-            defaults.set(Int(newValue.rawValue), forKey: Static.SortModeKey)
+            defaults.set(newValue.rawValue, forKey: Static.ReplySortModeKey)
         }
     }
 

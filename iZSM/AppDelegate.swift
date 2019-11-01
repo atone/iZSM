@@ -60,6 +60,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // set the SVProgressHUD setting
         SVProgressHUD.setMinimumDismissTimeInterval(2)
         
+        // set api config
+        let clientSignature = "d5850ab47445eb757060f4d46ef19ace"
+        let clientSecret = "f55609f59833815513c5c4e55a66b8fc"
+        let clientID = "atone"
+        SmthAPI.setConfig(secret: clientSecret, signature: clientSignature, id: clientID)
+        
         // set the background fetch mode
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "cn.yunaitong.zsmth.refresh", using: nil) { task in
             self.handleAppRefresh(task: task as! BGAppRefreshTask)
@@ -280,30 +286,6 @@ extension Date {
     var shortDateString: String {
         formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
         return formatter.string(from: self)
-    }
-}
-
-extension SmthAPI {
-    func displayErrorIfNeeded() {
-        if errorCode != 0 {
-            var errorMsg: String = "未知错误"
-            if errorCode == -1 {
-                errorMsg = "网络错误"
-            } else if errorCode == 10014 || errorCode == 10010 {
-                errorMsg = "token失效，请刷新"
-                AppSetting.shared.accessToken = nil // clear expired access token
-            } else if errorCode == 10417 {
-                errorMsg = "您还没有驻版"
-            } else if let errorDesc = errorDescription, !errorDesc.isEmpty {
-                errorMsg = errorDesc
-            } else if errorCode < 0 {
-                errorMsg = "服务器错误"
-            } else if errorCode < 11000 {
-                errorMsg = "系统错误"
-            }
-            SVProgressHUD.showInfo(withStatus: errorMsg)
-            dPrint("\(errorMsg), error code \(errorCode)")
-        }
     }
 }
 

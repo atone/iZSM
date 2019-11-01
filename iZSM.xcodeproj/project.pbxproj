@@ -14,8 +14,6 @@
 		9C1A3BCA1DE2C0ED00CF4A43 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C1A3BC81DE2C0ED00CF4A43 /* LaunchScreen.storyboard */; };
 		9C1A3BD91DE2CBAF00CF4A43 /* EulaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BD81DE2CBAF00CF4A43 /* EulaViewController.swift */; };
 		9C1A3BDB1DE2CDB100CF4A43 /* EULA.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 9C1A3BDA1DE2CDB100CF4A43 /* EULA.rtf */; };
-		9C1A3BE01DE2E5AD00CF4A43 /* libSMTH_0.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */; };
-		9C1A3BEB1DE2E6EB00CF4A43 /* client_signature.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BE61DE2E6EB00CF4A43 /* client_signature.m */; };
 		9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BEF1DE2EA9900CF4A43 /* AppSetting.swift */; };
 		9C1A3BF31DE2EA9900CF4A43 /* SmthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BF01DE2EA9900CF4A43 /* SmthAPI.swift */; };
 		9C1A3BF41DE2EA9900CF4A43 /* SmthStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BF11DE2EA9900CF4A43 /* SmthStructs.swift */; };
@@ -80,6 +78,7 @@
 		9CBFD79C23486F5100A16194 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBFD79A23486F5100A16194 /* GTMNSString+HTML.m */; };
 		9CC1FD5B232F5C02006CFE33 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */; };
 		9CCE887C233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCE887A233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift */; };
+		9CD2CD71236B4DAF00418F25 /* SmthConnection in Frameworks */ = {isa = PBXBuildFile; productRef = 9CD2CD70236B4DAF00418F25 /* SmthConnection */; };
 		9CD4ABFD1F34362400C3D9BF /* em1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB331F34362400C3D9BF /* em1.gif */; };
 		9CD4ABFE1F34362400C3D9BF /* em10.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB341F34362400C3D9BF /* em10.gif */; };
 		9CD4ABFF1F34362400C3D9BF /* em11.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB351F34362400C3D9BF /* em11.gif */; };
@@ -294,11 +293,6 @@
 		9C1A3BD81DE2CBAF00CF4A43 /* EulaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EulaViewController.swift; sourceTree = "<group>"; };
 		9C1A3BDA1DE2CDB100CF4A43 /* EULA.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = EULA.rtf; path = Resources/EULA.rtf; sourceTree = "<group>"; };
 		9C1A3BDC1DE2E28500CF4A43 /* iZSM-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iZSM-Bridging-Header.h"; sourceTree = "<group>"; };
-		9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSMTH_0.2.3.a; path = iZSM/Resources/libSMTH_0.2.3.a; sourceTree = "<group>"; };
-		9C1A3BE51DE2E6EB00CF4A43 /* client_signature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client_signature.h; sourceTree = "<group>"; };
-		9C1A3BE61DE2E6EB00CF4A43 /* client_signature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = client_signature.m; sourceTree = "<group>"; };
-		9C1A3BE71DE2E6EB00CF4A43 /* smth_netop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smth_netop.h; sourceTree = "<group>"; };
-		9C1A3BEA1DE2E6EB00CF4A43 /* SMTHURLConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMTHURLConnection.h; sourceTree = "<group>"; };
 		9C1A3BEF1DE2EA9900CF4A43 /* AppSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSetting.swift; sourceTree = "<group>"; };
 		9C1A3BF01DE2EA9900CF4A43 /* SmthAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmthAPI.swift; sourceTree = "<group>"; };
 		9C1A3BF11DE2EA9900CF4A43 /* SmthStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmthStructs.swift; sourceTree = "<group>"; };
@@ -576,7 +570,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C1A3BE01DE2E5AD00CF4A43 /* libSMTH_0.2.3.a in Frameworks */,
 				9C889FC71DE4733A00C33A8D /* OnePasswordExtension.framework in Frameworks */,
 				9CA70D3C23326A4900F575C7 /* DeviceKit in Frameworks */,
 				9CA70D39233266E200F575C7 /* KeychainSwift in Frameworks */,
@@ -587,6 +580,7 @@
 				9C3A3F00233E5AE6006223AA /* CloudKit.framework in Frameworks */,
 				9CA70D5A2332952D00F575C7 /* PullToRefreshKit.framework in Frameworks */,
 				9C8DEB31233313F500E5CE4A /* TZImagePickerController.framework in Frameworks */,
+				9CD2CD71236B4DAF00418F25 /* SmthConnection in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -644,7 +638,6 @@
 			isa = PBXGroup;
 			children = (
 				9C3A3EFF233E5AE6006223AA /* CloudKit.framework */,
-				9C1A3BDF1DE2E5AD00CF4A43 /* libSMTH_0.2.3.a */,
 				9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */,
 				9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */,
 				9C086E001F1E3BE300023788 /* StoreKit.framework */,
@@ -653,17 +646,6 @@
 				9C889FB81DE409B100C33A8D /* YYKit.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		9C1A3BE41DE2E6EB00CF4A43 /* libSmth */ = {
-			isa = PBXGroup;
-			children = (
-				9C1A3BE51DE2E6EB00CF4A43 /* client_signature.h */,
-				9C1A3BE61DE2E6EB00CF4A43 /* client_signature.m */,
-				9C1A3BE71DE2E6EB00CF4A43 /* smth_netop.h */,
-				9C1A3BEA1DE2E6EB00CF4A43 /* SMTHURLConnection.h */,
-			);
-			path = libSmth;
 			sourceTree = "<group>";
 		};
 		9C1A3BEE1DE2EA8B00CF4A43 /* SmthAPI */ = {
@@ -1025,7 +1007,6 @@
 			children = (
 				9CBFD79623486F5100A16194 /* GTMNSString */,
 				9C889FCA1DE4832E00C33A8D /* YYPhotoGroupView */,
-				9C1A3BE41DE2E6EB00CF4A43 /* libSmth */,
 				9C56E1CB1F0E0DF00093E504 /* FDTemplateLayoutCell */,
 				9CF3492D1F2C30CF00C0B236 /* FDFullscreenPopGesture */,
 			);
@@ -1074,6 +1055,7 @@
 				9CA70D38233266E200F575C7 /* KeychainSwift */,
 				9CA70D3B23326A4900F575C7 /* DeviceKit */,
 				9CA70D412332749600F575C7 /* SnapKit */,
+				9CD2CD70236B4DAF00418F25 /* SmthConnection */,
 			);
 			productName = iZSM;
 			productReference = 9C1A3BBC1DE2C0ED00CF4A43 /* iZSM.app */;
@@ -1118,6 +1100,7 @@
 				9CA70D37233266E200F575C7 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				9CA70D3A23326A4900F575C7 /* XCRemoteSwiftPackageReference "DeviceKit" */,
 				9CA70D402332749600F575C7 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				9CD2CD6F236B4DAF00418F25 /* XCRemoteSwiftPackageReference "SmthConnection" */,
 			);
 			productRefGroup = 9C1A3BBD1DE2C0ED00CF4A43 /* Products */;
 			projectDirPath = "";
@@ -1397,7 +1380,6 @@
 				9C57261B233F7389003FE851 /* StarThread+CoreDataClass.swift in Sources */,
 				9C25D5AB1DE56BAE005CB55C /* MailBoxViewController.swift in Sources */,
 				9CBFD79C23486F5100A16194 /* GTMNSString+HTML.m in Sources */,
-				9C1A3BEB1DE2E6EB00CF4A43 /* client_signature.m in Sources */,
 				9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */,
 				9CD9E6451F1DB10E00713853 /* IAPHelper.swift in Sources */,
 				9CA3B1A31DE33C0800E9B121 /* HotTableViewController.swift in Sources */,
@@ -1573,7 +1555,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = iZSM/iZSM.entitlements;
-				CURRENT_PROJECT_VERSION = 545;
+				CURRENT_PROJECT_VERSION = 550;
 				DEVELOPMENT_TEAM = 9TXRXPVXCE;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1590,7 +1572,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/iZSM/Resources",
 				);
-				MARKETING_VERSION = 3.3;
+				MARKETING_VERSION = 3.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = cn.yunaitong.zsmth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -1605,7 +1587,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = iZSM/iZSM.entitlements;
-				CURRENT_PROJECT_VERSION = 545;
+				CURRENT_PROJECT_VERSION = 550;
 				DEVELOPMENT_TEAM = 9TXRXPVXCE;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1622,7 +1604,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/iZSM/Resources",
 				);
-				MARKETING_VERSION = 3.3;
+				MARKETING_VERSION = 3.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = cn.yunaitong.zsmth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -1679,6 +1661,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		9CD2CD6F236B4DAF00418F25 /* XCRemoteSwiftPackageReference "SmthConnection" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:atone/SmthConnection.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1696,6 +1686,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9CA70D402332749600F575C7 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		9CD2CD70236B4DAF00418F25 /* SmthConnection */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9CD2CD6F236B4DAF00418F25 /* XCRemoteSwiftPackageReference "SmthConnection" */;
+			productName = SmthConnection;
 		};
 /* End XCSwiftPackageProductDependency section */
 

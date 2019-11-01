@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import SVProgressHUD
+import SmthConnection
 
 class MailContentViewController: UIViewController, UITextViewDelegate {
     let setting = AppSetting.shared
@@ -19,8 +20,8 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
     
     var mail: SMMail?
     var inbox: Bool = true
-    private let api = SmthAPI()
-    private var detailMail: SMMail?
+    private let api = SmthAPI.shared
+    private var detailMail: Mail?
     
     func setupUI() {
         let titleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
@@ -144,24 +145,18 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
                 textField.returnKeyType = .send
             }
             let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert] _ in
-                if let textField = alert.textFields?.first {
-                    networkActivityIndicatorStart()
-                    DispatchQueue.global().async {
-                        let result = self.api.forwardMailAtPosition(position: originalMail.position, toUser: textField.text!)
-                        dPrint("forward mail status: \(result)")
-                        DispatchQueue.main.async {
-                            networkActivityIndicatorStop()
-                            if self.api.errorCode == 0 {
-                                SVProgressHUD.showSuccess(withStatus: "转寄成功")
-                            } else if let errorDescription = self.api.errorDescription {
-                                if errorDescription != "" {
-                                    SVProgressHUD.showInfo(withStatus: errorDescription)
-                                } else {
-                                    SVProgressHUD.showError(withStatus: "出错了")
-                                }
-                            } else {
-                                SVProgressHUD.showError(withStatus: "出错了")
-                            }
+                guard let textField = alert.textFields?.first else { return }
+                guard let receiver = textField.text else { return }
+                
+                networkActivityIndicatorStart()
+                self.api.forwardMail(at: originalMail.position, toUser: receiver) { (result) in
+                    DispatchQueue.main.async {
+                        networkActivityIndicatorStop()
+                        switch result {
+                        case .success:
+                            SVProgressHUD.showSuccess(withStatus: "转寄成功")
+                        case .failure(let error):
+                            error.display()
                         }
                     }
                 }
@@ -199,29 +194,35 @@ class MailContentViewController: UIViewController, UITextViewDelegate {
         userButton.setTitle(nil, for: .normal)
         timeLabel.text = nil
         contentTextView.text = nil
-        networkActivityIndicatorStart(withHUD: true)
-        DispatchQueue.global().async {
-            if let mail = self.mail {
-                if self.inbox {
-                    self.detailMail = self.api.getMailAtPosition(position: mail.position)
-                } else {
-                    self.detailMail = self.api.getMailSentAtPosition(position: mail.position)
-                }
-            }
+        
+        let completion: SmthCompletion<SMMail> = { (result) in
+            let newResult = result.map({ Mail(from: $0) })
             DispatchQueue.main.async {
                 networkActivityIndicatorStop(withHUD: true)
-                if let detailMail = self.detailMail {
+                switch newResult {
+                case .success(let mail):
+                    self.detailMail = mail
                     if self.inbox {
-                        self.title = "来自 \(detailMail.authorID) 的邮件"
+                        self.title = "来自 \(mail.authorID) 的邮件"
                     } else {
-                        self.title = "发给 \(detailMail.authorID) 的邮件"
+                        self.title = "发给 \(mail.authorID) 的邮件"
                     }
-                    self.titleLabel.text = detailMail.subject
-                    self.userButton.setTitle(detailMail.authorID, for: .normal)
-                    self.timeLabel.text = detailMail.time.shortDateString
-                    self.contentTextView.attributedText = self.attributedStringFromContent(detailMail.body)
+                    self.titleLabel.text = mail.subject
+                    self.userButton.setTitle(mail.authorID, for: .normal)
+                    self.timeLabel.text = mail.time.shortDateString
+                    self.contentTextView.attributedText = self.attributedStringFromContent(mail.body)
+                case .failure(let error):
+                    error.display()
                 }
             }
+        }
+        
+        networkActivityIndicatorStart(withHUD: true)
+        guard let mail = self.mail else { return }
+        if inbox {
+            api.getMail(at: mail.position, completion: completion)
+        } else {
+            api.getMailSent(at: mail.position, completion: completion)
         }
     }
     

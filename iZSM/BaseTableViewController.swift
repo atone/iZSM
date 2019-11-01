@@ -10,7 +10,7 @@ import UIKit
 import PullToRefreshKit
 
 class BaseTableViewController: NTTableViewController {
-    let api = SmthAPI()
+    let api = SmthAPI.shared
     let setting = AppSetting.shared
     
     private var needRefresh = true
@@ -81,8 +81,7 @@ class BaseTableViewController: NTTableViewController {
             let navigationController = NTNavigationController(rootViewController: eulaViewController)
             navigationController.isModalInPresentation = true
             present(navigationController, animated: true)
-        } else if let accessToken = setting.accessToken { // fetch data directly
-            api.accessToken = accessToken
+        } else if setting.accessToken != nil { // fetch data directly
             fetchDataDirectly(showHUD: showHUD) {
                 if headerRefreshing {
                     self.tableView.switchRefreshHeader(to: .normal(.none, 0))
@@ -90,11 +89,10 @@ class BaseTableViewController: NTTableViewController {
             }
         } else if let username = setting.username, let password = setting.password { // silent login
             networkActivityIndicatorStart()
-            DispatchQueue.global().async {
-                let loginSuccess = self.api.loginBBS(username: username, password: password) == 0 ? false : true
+            api.login(username: username, password: password) { (success) in
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
-                    if loginSuccess && self.api.errorCode == 0 {
+                    if success {
                         self.setting.accessToken = self.api.accessToken
                         self.fetchDataDirectly(showHUD: showHUD) {
                             if headerRefreshing {
@@ -105,7 +103,6 @@ class BaseTableViewController: NTTableViewController {
                         if headerRefreshing {
                             self.tableView.switchRefreshHeader(to: .normal(.none, 0))
                         }
-                        self.api.displayErrorIfNeeded()
                     }
                 }
             }
@@ -119,10 +116,8 @@ class BaseTableViewController: NTTableViewController {
     }
     
     // remove observer of notification
-    // cancel unfinished tasks
     deinit {
         NotificationCenter.default.removeObserver(self)
-        api.cancel()
         networkActivityIndicatorStop(withHUD: true)
     }
     

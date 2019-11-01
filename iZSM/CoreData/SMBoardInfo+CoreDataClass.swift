@@ -9,6 +9,7 @@
 
 import Foundation
 import CoreData
+import SmthConnection
 
 @objc(SMBoardInfo)
 public class SMBoardInfo: NSManagedObject {
@@ -41,21 +42,16 @@ extension SMBoardInfo {
                         }
                     }
                     if shouldMakeQuery {
-                        let api = SmthAPI()
+                        let api = SmthAPI.shared
                         dPrint("start querying info for board \(boardID)...")
                         var board: SMBoard?
-                        if let boards = api.queryBoard(query: boardID) {
-                            for b in boards {
-                                if b.boardID == boardID {
-                                    board = b
-                                    let results = try context.fetch(request)
-                                    let boardInfo = results.first ?? SMBoardInfo(context: context)
-                                    update(boardInfo: boardInfo, with: b)
-                                    try context.save()
-                                    dPrint("write board info for \(boardID) success!")
-                                    break
-                                }
-                            }
+                        if let b = try? api.getBoard(id: boardID) {
+                            board = b
+                            let results = try context.fetch(request)
+                            let boardInfo = results.first ?? SMBoardInfo(context: context)
+                            update(boardInfo: boardInfo, with: b)
+                            try context.save()
+                            dPrint("write board info for \(boardID) success!")
                         } else {
                             dPrint("query board info for \(boardID) failure!")
                         }

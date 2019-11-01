@@ -14,7 +14,7 @@ class MessageCenter {
     static let shared = MessageCenter()
     
     private let setting = AppSetting.shared
-    private let api = SmthAPI()
+    private let api = SmthAPI.shared
     
     var mailCount: Int {
         didSet {
@@ -45,9 +45,9 @@ class MessageCenter {
     func checkUnreadMessage(postUserNotification post: Bool, completionHandler: ((Bool) -> Void)?) {
         if self.setting.accessToken != nil {
             DispatchQueue.global().async {
-                let newMailCount = self.api.getMailStatus()?.newCount ?? 0
-                let newReplyCount = self.api.getReferCount(mode: .ReplyToMe)?.newCount ?? 0
-                let newReferCount = self.api.getReferCount(mode: .AtMe)?.newCount ?? 0
+                let newMailCount = (try? self.api.getMailCount().newCount) ?? 0
+                let newReplyCount = (try? self.api.getReferCount(mode: .reply).newCount) ?? 0
+                let newReferCount = (try? self.api.getReferCount(mode: .refer).newCount) ?? 0
                 DispatchQueue.main.async {
                     UIApplication.shared.applicationIconBadgeNumber = newMailCount + newReplyCount + newReferCount
                 }

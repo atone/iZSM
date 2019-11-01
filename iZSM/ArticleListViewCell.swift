@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SmthConnection
 
 class ArticleListViewCell: UITableViewCell {
     let setting = AppSetting.shared

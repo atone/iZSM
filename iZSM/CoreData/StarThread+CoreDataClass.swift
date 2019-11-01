@@ -9,6 +9,7 @@
 
 import Foundation
 import CoreData
+import SmthConnection
 
 @objc(StarThread)
 public class StarThread: NSManagedObject {
@@ -20,7 +21,7 @@ extension StarThread {
         guard let userID = AppSetting.shared.username?.lowercased() else { return }
         let container = CoreDataHelper.shared.persistentContainer
         container.performBackgroundTask { context in
-            if let article = SmthAPI().getArticleInBoard(boardID: boardID, articleID: articleID) {
+            if let article = try? SmthAPI.shared.getArticle(articleID, in: boardID) {
                 let request: NSFetchRequest<StarThread> = StarThread.fetchRequest()
                 request.predicate = NSPredicate(format: "articleID == \(articleID) AND boardID == '\(boardID)' AND userID == '\(userID)'")
                 request.fetchLimit = 1
@@ -52,8 +53,6 @@ extension StarThread {
             } else {
                 callback?(false)
             }
-            
-            
         }
     }
 }

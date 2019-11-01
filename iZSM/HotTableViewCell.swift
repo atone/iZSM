@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SmthConnection
 
 class HotTableViewCell: UITableViewCell {
     let setting = AppSetting.shared

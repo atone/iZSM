@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import SVProgressHUD
+import SmthConnection
 
 class ReferContentViewController: UIViewController, UITextViewDelegate {
     let setting = AppSetting.shared
@@ -19,8 +20,8 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
     
     var reference: SMReference?
     var replyMe: Bool = true
-    private let api = SmthAPI()
-    private var article: SMArticle?
+    private let api = SmthAPI.shared
+    private var article: Article?
     
     func setupUI() {
         let titleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
@@ -174,20 +175,16 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         userButton.setTitle(nil, for: .normal)
         timeLabel.text = nil
         contentTextView.text = nil
+        guard let reference = self.reference else { return }
         networkActivityIndicatorStart(withHUD: true)
-        DispatchQueue.global().async {
-            if let reference = self.reference {
-                self.article = self.api.getArticleInBoard(boardID: reference.boardID, articleID: reference.id)
-                //需要设置提醒已读
-                if self.api.errorCode == 0 || self.api.errorCode == 11011 { //11011:文章不存在，已经被删除
-                    let referMode: SmthAPI.ReferMode = self.replyMe ? .ReplyToMe : .AtMe
-                    let result = self.api.setReferRead(mode: referMode, atPosition: reference.position)
-                    dPrint("set refer status: \(result)")
-                }
-            }
+        api.getArticle(reference.id, in: reference.boardID) { (result) in
+            let newResult = result.map({ Article(from: $0, floor: -1, boardID: reference.boardID) })
             DispatchQueue.main.async {
                 networkActivityIndicatorStop(withHUD: true)
-                if let article = self.article {
+                let mode: SMReference.ReferMode = self.replyMe ? .reply : .refer
+                switch newResult {
+                case .success(let article):
+                    self.article = article
                     if self.replyMe {
                         self.title = "\(article.authorID) 回复了我"
                     } else {
@@ -197,8 +194,14 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
                     self.userButton.setTitle(article.authorID, for: .normal)
                     self.timeLabel.text = article.time.shortDateString
                     self.contentTextView.attributedText = self.attributedStringFromContent(article.body)
-                } else {
+                    //需要设置提醒已读
+                    self.api.setReferRead(at: reference.position, mode: mode, completion: { _ in })
+                case .failure(let error):
                     SVProgressHUD.showError(withStatus: "文章可能已被删除")
+                    if error.code == 11011 { //11011:文章不存在，已经被删除
+                        //需要设置提醒已读
+                        self.api.setReferRead(at: reference.position, mode: mode, completion: { _ in })
+                    }
                 }
             }
         }
@@ -261,7 +264,7 @@ extension ReferContentViewController: UserInfoViewControllerDelegate {
                 present(navigationController, animated: true)
             } else {
                 let cevc = ComposeEmailController()
-                cevc.email = SMMail(subject: "", body: "", authorID: userID, position: 0, time: Date(), flags: "", attachments: [])
+                cevc.email = Mail(subject: "", body: "", authorID: userID)
                 cevc.mode = .post
                 let navigationController = NTNavigationController(rootViewController: cevc)
                 navigationController.modalPresentationStyle = .formSheet

@@ -9,11 +9,12 @@
 import UIKit
 import YYKit
 import SnapKit
+import SmthConnection
 
 class UserInfoViewController: UIViewController {
     
     var user: SMUser?
-    var article: SMArticle?
+    var article: Article?
     weak var delegate: UserInfoViewControllerDelegate?
     
     private let idLabelFontSize: CGFloat = 20
@@ -179,9 +180,9 @@ class UserInfoViewController: UIViewController {
             idLabel.text = "\(user.id) \(genderSymbol)"
             nickLabel.text = user.nick
             let defaultImage = user.gender == 0 ? UIImage(named: "face_default_m") : UIImage(named: "face_default_f")
-            avatarImageView.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
+            avatarImageView.setImageWith(SmthAPI.shared.faceURL(for: user.id, withFaceURL: user.faceURL),
                                          placeholder: defaultImage)
-            backgroundImageView?.setImageWith(SMUser.faceURL(for: user.id, withFaceURL: user.faceURL),
+            backgroundImageView?.setImageWith(SmthAPI.shared.faceURL(for: user.id, withFaceURL: user.faceURL),
                                               placeholder: defaultImage)
             titleLabel.text = "身份"
             levelLabel.text = "等级"

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SmthConnection
 
 class ReminderViewController: BaseTableViewController {
 
@@ -43,50 +44,41 @@ class ReminderViewController: BaseTableViewController {
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         networkActivityIndicatorStart(withHUD: showHUD)
-        DispatchQueue.global().async {
-            var fetchedRefers: [SMReference]?
-            if self.replyMe {
-                if let status = self.api.getReferCount(mode: .ReplyToMe) {
-                    self.referCountLoaded = status.totalCount
-                    fetchedRefers = self.api.getReferList(mode: .ReplyToMe, inRange: self.referRange)
+        let mode: SMReference.ReferMode = replyMe ? .reply : .refer
+        api.getReferCount(mode: mode) { (result) in
+            if let (totalCount, _) = try? result.get() {
+                self.referCountLoaded = totalCount
+                self.api.getRefer(mode: mode, range: self.referRange) { (result) in
+                    DispatchQueue.main.async {
+                        networkActivityIndicatorStop(withHUD: showHUD)
+                        completion?()
+                        switch result {
+                        case .success(let refers):
+                            self.referCountLoaded -= refers.count
+                            self.references.removeAll()
+                            self.references.append(refers.reversed())
+                        case .failure(let error):
+                            error.display()
+                        }
+                    }
                 }
-                
-            } else {
-                if let status = self.api.getReferCount(mode: .AtMe) {
-                    self.referCountLoaded = status.totalCount
-                    fetchedRefers = self.api.getReferList(mode: .AtMe, inRange: self.referRange)
-                }
-            }
-            DispatchQueue.main.async {
-                networkActivityIndicatorStop(withHUD: showHUD)
-                completion?()
-                if let fetchedRefers = fetchedRefers {
-                    self.referCountLoaded -= fetchedRefers.count
-                    self.references.removeAll()
-                    self.references.append(fetchedRefers.reversed())
-                }
-                self.api.displayErrorIfNeeded()
             }
         }
     }
     
     override func fetchMoreData() {
         networkActivityIndicatorStart()
-        DispatchQueue.global().async {
-            var fetchedRefers: [SMReference]?
-            if self.replyMe {
-                fetchedRefers = self.api.getReferList(mode: .ReplyToMe, inRange: self.referRange)
-                
-            } else {
-                fetchedRefers = self.api.getReferList(mode: .AtMe, inRange: self.referRange)
-            }
+        let mode: SMReference.ReferMode = replyMe ? .reply : .refer
+        api.getRefer(mode: mode, range: referRange) { (result) in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
-                if let fetchedRefers = fetchedRefers {
-                    self.referCountLoaded -= fetchedRefers.count
-                    self.references.append(fetchedRefers.reversed())
+                switch result {
+                case .success(let refers):
+                    self.referCountLoaded -= refers.count
+                    self.references.append(refers.reversed())
+                case .failure(let error):
+                    error.display()
                 }
-                self.api.displayErrorIfNeeded()
             }
         }
     }

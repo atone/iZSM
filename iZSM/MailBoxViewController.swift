@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SmthConnection
 
 class MailBoxViewController: BaseTableViewController {
     
@@ -46,50 +47,58 @@ class MailBoxViewController: BaseTableViewController {
     }
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
-        networkActivityIndicatorStart(withHUD: showHUD)
-        DispatchQueue.global().async {
-            var fetchedMails: [SMMail]?
-            if self.inbox {
-                if let status = self.api.getMailStatus() {
-                    self.mailCountLoaded = status.totalCount
-                    fetchedMails = self.api.getMailList(inRange: self.mailRange)
-                }
-            } else {
-                self.mailCountLoaded = self.api.getMailSentCount()
-                fetchedMails = self.api.getMailSentList(inRange: self.mailRange)
-            }
-            
+        let completion: SmthCompletion<[SMMail]> = { (result) in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop(withHUD: showHUD)
                 completion?()
-                if let fetchedMails = fetchedMails {
-                    self.mailCountLoaded -= fetchedMails.count
+                switch result {
+                case .success(let mails):
+                    self.mailCountLoaded -= mails.count
                     self.mails.removeAll()
-                    self.mails.append(fetchedMails.reversed())
+                    self.mails.append(mails.reversed())
+                case .failure(let error):
+                    error.display()
                 }
-                self.api.displayErrorIfNeeded()
+            }
+        }
+        
+        networkActivityIndicatorStart(withHUD: showHUD)
+        if inbox {
+            api.getMailCount { (result) in
+                if let (totalCount, _, _) = try? result.get() {
+                    self.mailCountLoaded = totalCount
+                    self.api.getMailList(in: self.mailRange, completion: completion)
+                }
+            }
+        } else {
+            api.getMailCountSent { (result) in
+                if let totalCount = try? result.get() {
+                    self.mailCountLoaded = totalCount
+                    self.api.getMailSentList(in: self.mailRange, completion: completion)
+                }
             }
         }
     }
     
     override func fetchMoreData() {
-        networkActivityIndicatorStart()
-        DispatchQueue.global().async {
-            var fetchedMails: [SMMail]?
-            if self.inbox {
-                fetchedMails = self.api.getMailList(inRange: self.mailRange)
-            } else {
-                fetchedMails = self.api.getMailSentList(inRange: self.mailRange)
-            }
-            
+        let completion: SmthCompletion<[SMMail]> = { (result) in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
-                if let fetchedMails = fetchedMails {
-                    self.mailCountLoaded -= fetchedMails.count
-                    self.mails.append(fetchedMails.reversed())
+                switch result {
+                case .success(let mails):
+                    self.mailCountLoaded -= mails.count
+                    self.mails.append(mails.reversed())
+                case .failure(let error):
+                    error.display()
                 }
-                self.api.displayErrorIfNeeded()
             }
+        }
+        
+        networkActivityIndicatorStart()
+        if inbox {
+            api.getMailList(in: mailRange, completion: completion)
+        } else {
+            api.getMailSentList(in: mailRange, completion: completion)
         }
     }
     

@@ -11,7 +11,7 @@ import SnapKit
 
 class FullscreenContentViewController: UIViewController {
     let setting = AppSetting.shared
-    var article: SMArticle?
+    var article: Article?
     
     private let contentTextView = UITextView()
     

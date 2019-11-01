@@ -10,6 +10,7 @@ import UIKit
 import YYKit
 import SVProgressHUD
 import CoreData
+import SmthConnection
 
 class SettingsViewController: NTTableViewController {
     @IBOutlet weak var hideTopLabel: UILabel!
@@ -86,9 +87,9 @@ class SettingsViewController: NTTableViewController {
     
     @IBAction func newReplyFirstChanged(_ sender: UISwitch) {
         if sender.isOn {
-            setting.sortMode = .LaterPostFirst
+            setting.sortMode = .newFirst
         } else {
-            setting.sortMode = .Normal
+            setting.sortMode = .oldFirst
         }
     }
     
@@ -170,7 +171,7 @@ class SettingsViewController: NTTableViewController {
         // update switch states
         hideTopSwitch.isOn = setting.hideAlwaysOnTopThread
         showSignatureSwitch.isOn = setting.showSignature
-        newReplyFirstSwitch.isOn = (setting.sortMode == .LaterPostFirst)
+        newReplyFirstSwitch.isOn = (setting.sortMode == .newFirst)
         rememberLastSwitch.isOn = setting.rememberLast
         addDeviceSignatureSwitch.isOn = setting.addDeviceSignature
         displayModeSegmentedControl.selectedSegmentIndex = setting.displayMode.rawValue

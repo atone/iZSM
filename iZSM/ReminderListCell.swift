@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SmthConnection
 
 class ReminderListCell: UITableViewCell {
     let setting = AppSetting.shared

@@ -8,19 +8,20 @@
 
 import UIKit
 import SVProgressHUD
+import SmthConnection
 
 struct SMHotSection {
     static let sections: [SMSection] = [
-        SMSection(code: "", description: "[社区/站务]", name: "社区管理", id: 0),
-        SMSection(code: "", description: "[学校/院系]", name: "国内院校", id: 1),
-        SMSection(code: "", description: "[休闲/影音]", name: "休闲娱乐", id: 2),
-        SMSection(code: "", description: "[地区/省份]", name: "五湖四海", id: 3),
-        SMSection(code: "", description: "[游戏/运动]", name: "游戏运动", id: 4),
-        SMSection(code: "", description: "[财经/信息]", name: "社会信息", id: 5),
-        SMSection(code: "", description: "[谈天/生活]", name: "知性感性", id: 6),
-        SMSection(code: "", description: "[社科/文学]", name: "文化人文", id: 7),
-        SMSection(code: "", description: "[学科/技术]", name: "学术科学", id: 8),
-        SMSection(code: "", description: "[专项/开发]", name: "电脑技术", id: 9)
+        SMSection(id: 0, name: "社区管理", description: "[社区/站务]"),
+        SMSection(id: 1, name: "国内院校", description: "[学校/院系]"),
+        SMSection(id: 2, name: "休闲娱乐", description: "[休闲/影音]"),
+        SMSection(id: 3, name: "五湖四海", description: "[地区/省份]"),
+        SMSection(id: 4, name: "游戏运动", description: "[游戏/运动]"),
+        SMSection(id: 5, name: "社会信息", description: "[财经/信息]"),
+        SMSection(id: 6, name: "知性感性", description: "[谈天/生活]"),
+        SMSection(id: 7, name: "文化人文", description: "[社科/文学]"),
+        SMSection(id: 8, name: "学术科学", description: "[学科/技术]"),
+        SMSection(id: 9, name: "电脑技术", description: "[专项/开发]")
     ]
     var id: Int
     var name: String
@@ -41,47 +42,52 @@ class HotTableViewController: BaseTableViewController {
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         networkActivityIndicatorStart(withHUD: showHUD)
         DispatchQueue.global().async {
-            let topTen = self.api.getHotThreadListInSection(section: 0) ?? [SMHotThread]()
-            var content = [SMHotSection]()
-            if !self.setting.customHotSection {
-                for sec in SMHotSection.sections {
-                    let hotThread = self.api.getHotThreadListInSection(section: sec.id + 1)
-                    content.append(SMHotSection(id: sec.id + 1, name: sec.name, hotThreads: hotThread ?? [SMHotThread]()))
-                }
-                content.sort { (leftSections, rightSections) -> Bool in
-                    let leftTotalCount = leftSections.hotThreads.reduce(0) { (partialCount, hotThread) -> Int in
-                        partialCount + hotThread.count
+            do {
+                let comparator: (SMHotSection, SMHotSection) -> Bool = {
+                    (left, right) -> Bool in
+                    let leftCount = left.hotThreads.reduce(0) { (partial, thread) -> Int in
+                        partial + thread.count
                     }
-                    let rightTotalCount = rightSections.hotThreads.reduce(0) { (partialCount, hotThread) -> Int in
-                        partialCount + hotThread.count
+                    let rightCount = right.hotThreads.reduce(0) { (partial, thread) -> Int in
+                        partial + thread.count
                     }
-                    return leftTotalCount > rightTotalCount
+                    return leftCount > rightCount
                 }
-            } else {
-                for secID in self.setting.availableHotSections {
-                    let sec = SMHotSection.sections[secID]
-                    let hotThread = self.api.getHotThreadListInSection(section: sec.id + 1)
-                    content.append(SMHotSection(id: sec.id + 1, name: sec.name, hotThreads: hotThread ?? [SMHotThread]()))
-                }
-                if self.setting.autoSortHotSection {
-                    content.sort { (leftSections, rightSections) -> Bool in
-                        let leftTotalCount = leftSections.hotThreads.reduce(0) { (partialCount, hotThread) -> Int in
-                            partialCount + hotThread.count
+                let topTen = try self.api.getHotThreadList(in: 0)
+                var content = [SMHotSection]()
+                if !self.setting.customHotSection {
+                    for sec in SMHotSection.sections {
+                        let threads = try self.api.getHotThreadList(in: sec.id + 1)
+                        if threads.count > 0 {
+                            content.append(SMHotSection(id: sec.id + 1, name: sec.name, hotThreads: threads))
                         }
-                        let rightTotalCount = rightSections.hotThreads.reduce(0) { (partialCount, hotThread) -> Int in
-                            partialCount + hotThread.count
+                    }
+                    content.sort(by: comparator)
+                } else {
+                    for secID in self.setting.availableHotSections {
+                        let sec = SMHotSection.sections[secID]
+                        let threads = try self.api.getHotThreadList(in: sec.id + 1)
+                        if threads.count > 0 {
+                            content.append(SMHotSection(id: sec.id + 1, name: sec.name, hotThreads: threads))
                         }
-                        return leftTotalCount > rightTotalCount
+                    }
+                    if self.setting.autoSortHotSection {
+                        content.sort(by: comparator)
                     }
                 }
-            }
-            content.insert(SMHotSection(id: 0, name: "本日十大热门话题", hotThreads: topTen), at: 0)
-            DispatchQueue.main.async {
-                networkActivityIndicatorStop(withHUD: showHUD)
-                completion?()
-                self.content.removeAll()
-                self.content += content
-                self.api.displayErrorIfNeeded()
+                content.insert(SMHotSection(id: 0, name: "本日十大热门话题", hotThreads: topTen), at: 0)
+                DispatchQueue.main.async {
+                    networkActivityIndicatorStop(withHUD: showHUD)
+                    completion?()
+                    self.content = content
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    networkActivityIndicatorStop(withHUD: showHUD)
+                    completion?()
+                    self.content = []
+                    (error as? SMError)?.display()
+                }
             }
         }
     }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SmthConnection
 
 class BoardListSearchResultViewController: BaseTableViewController, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating {
     
@@ -35,21 +36,20 @@ class BoardListSearchResultViewController: BaseTableViewController, UISearchCont
         guard currentSearchString != searchString else { return }
         searchString = currentSearchString
         networkActivityIndicatorStart()
-        var result: [SMBoard]?
-        
-        DispatchQueue.global().async {
-            result = self.api.queryBoard(query: currentSearchString)
+        api.searchBoard(query: currentSearchString) { (result) in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
                 if currentSearchString != self.searchString { return } //模式已经改变，则丢弃数据
                 self.boards.removeAll()
-                if let result = result {
-                    let filteredResult = result.filter { ($0.flag != -1) && ($0.flag & 0x400 == 0) }
-                    self.boards += filteredResult
-                    SMBoardInfo.save(boardList: filteredResult)
+                switch result {
+                case .success(let boards):
+                    let filtered = boards.filter { ($0.flag != -1) && ($0.flag & 0x400 == 0) }
+                    self.boards += filtered
+                    SMBoardInfo.save(boardList: filtered)
+                case .failure(let error):
+                    error.display()
                 }
                 self.tableView.reloadData()
-                self.api.displayErrorIfNeeded()
             }
         }
     }

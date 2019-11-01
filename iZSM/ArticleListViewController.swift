@@ -8,6 +8,7 @@
 
 import UIKit
 import SVProgressHUD
+import SmthConnection
 
 class ArticleListViewController: BaseTableViewController, UISearchControllerDelegate, UISearchBarDelegate, FavoriteAddable {
     
@@ -62,7 +63,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     func didDismissSearchController(_ searchController: UISearchController) {
         searchMode = false
-        api.cancel()
         refreshHeaderEnabled = true
         threads = originalThread!
         threadCursor = originalThreadCursor!
@@ -71,7 +71,6 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
     
     func didPresentSearchController(_ searchController: UISearchController) {
         searchMode = true
-        api.cancel()
         refreshHeaderEnabled = false
         originalThread = threads
         originalThreadCursor = threadCursor
@@ -94,30 +93,27 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         if let boardID = self.boardID, let searchString = searchString, !searchString.isEmpty {
             self.threadCursor = 0
             let currentMode = searchMode
-            networkActivityIndicatorStart(withHUD: true)
-            var result: [SMThread]?
-            DispatchQueue.global().async {
-                if scope == 0 {
-                    result = self.api.searchArticleInBoard(boardID: boardID,
-                                                           title: searchString,
-                                                           user: nil,
-                                                           inRange: self.searchRange)
-                } else if scope == 1 {
-                    result = self.api.searchArticleInBoard(boardID: boardID,
-                                                           title: nil,
-                                                           user: searchString,
-                                                           inRange: self.searchRange)
-                }
+            let completion: SmthCompletion<[SMThread]> = { result in
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop(withHUD: true)
                     if currentMode != self.searchMode { return } //模式已经改变，则丢弃数据
                     self.threads.removeAll()
-                    if let result = result {
-                        self.threads.append(result)
-                        self.threadCursor += result.count
+                    switch result {
+                    case .success(let threads):
+                        if threads.count > 0 {
+                            self.threads.append(threads)
+                            self.threadCursor += threads.count
+                        }
+                    case .failure(let error):
+                        error.display()
                     }
-                    self.api.displayErrorIfNeeded()
                 }
+            }
+            networkActivityIndicatorStart(withHUD: true)
+            if scope == 0 {
+                api.searchArticle(title: searchString, in: boardID, range: searchRange, completion: completion)
+            } else if scope == 1 {
+                api.searchArticle(user: searchString, in: boardID, range: searchRange, completion: completion)
             }
         }
     }
@@ -166,111 +162,108 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             let currentThreadSortMode = self.threadSortMode
             networkActivityIndicatorStart(withHUD: showHUD)
             DispatchQueue.global().async {
-                
-                if self.boardManagers == nil, let boards = self.api.queryBoard(query: boardID) {
-                    for board in boards {
-                        if board.boardID == boardID {
-                            self.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
-                            break
-                        }
+                do {
+                    if self.boardManagers == nil {
+                        let board = try self.api.getBoard(id: boardID)
+                        self.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
                     }
-                }
-                
-                var threadSection = [SMThread]()
-                switch self.threadSortMode {
-                case .byReplyNewFirst:
-                    self.threadCursor = 0
-                    while threadSection.count == 0,
-                        let threads = self.api.getThreadListForBoard(boardID: boardID,
-                                                                     inRange: self.threadRange,
-                                                                     brcmode: .NotClear)
-                    {
-                        // self.threadCursor存储的是已经加载的主题数（包括被过滤掉的）
-                        self.threadCursor += threads.count
-                        if self.setting.hideAlwaysOnTopThread {
-                            // 过滤置顶帖
-                            threadSection.append(contentsOf: threads.filter({
-                                !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                            }))
-                        } else {
-                            threadSection.append(contentsOf: threads)
-                        }
-                    }
-                case .byReplyOldFirst:
-                    self.totalThreads = self.api.getThreadCountForBoard(boardID: boardID)
-                    guard self.totalThreads > 0 else { break }
-                    self.threadCursor = self.totalThreads
-                    while threadSection.count == 0,
-                        let threads = self.api.getThreadListForBoard(boardID: boardID,
-                                                                     inRange: self.threadRange,
-                                                                     brcmode: .NotClear)
-                    {
-                        // self.threadCursor存储的是已经加载的主题数（包括被过滤掉的）
-                        self.threadCursor -= threads.count
-                        if self.setting.hideAlwaysOnTopThread {
-                            // 过滤置顶帖
-                            threadSection.append(contentsOf: threads.filter({
-                                !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                            }).reversed())
-                        } else {
-                            threadSection.append(contentsOf: threads.reversed())
-                        }
-                    }
-                case .byPostNewFirst:
-                    self.currentPage = -1
-                    while threadSection.count == 0 {
-                        let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
-                        if result.page == 0 || result.page == -2 {
-                            break // unrecoverable error
-                        } else if result.page == -1 { // decode error
-                            if self.currentPage == -1 {
-                                break // cannot recover from error since page is unknown
+                    
+                    var threadSection = [SMThread]()
+                    switch self.threadSortMode {
+                    case .byReplyNewFirst:
+                        self.threadCursor = 0
+                        while threadSection.count == 0 {
+                            let threads = try self.api.getThreadList(in: boardID, range: self.threadRange)
+                            // self.threadCursor存储的是已经加载的主题数（包括被过滤掉的）
+                            self.threadCursor += threads.count
+                            if self.setting.hideAlwaysOnTopThread {
+                                // 过滤置顶帖
+                                threadSection.append(contentsOf: threads.filter({
+                                    !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                                }))
                             } else {
-                                self.currentPage -= 1
-                                continue // try to load next page
+                                threadSection.append(contentsOf: threads)
                             }
                         }
-                        self.currentPage = result.page - 1
-                        if self.setting.hideAlwaysOnTopThread {
-                            // 过滤置顶帖
-                            threadSection.append(contentsOf: result.threads.filter({
-                                !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                            }).reversed())
-                        } else {
-                            threadSection.append(contentsOf: result.threads.reversed())
+                    case .byReplyOldFirst:
+                        self.totalThreads = try self.api.getThreadCount(in: boardID)
+                        guard self.totalThreads > 0 else { break }
+                        self.threadCursor = self.totalThreads
+                        while threadSection.count == 0 {
+                            let threads = try self.api.getThreadList(in: boardID, range: self.threadRange)
+                            // self.threadCursor存储的是已经加载的主题数（包括被过滤掉的）
+                            self.threadCursor -= threads.count
+                            if self.setting.hideAlwaysOnTopThread {
+                                // 过滤置顶帖
+                                threadSection.append(contentsOf: threads.filter({
+                                    !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                                }).reversed())
+                            } else {
+                                threadSection.append(contentsOf: threads.reversed())
+                            }
+                        }
+                    case .byPostNewFirst:
+                        self.currentPage = -1
+                        while threadSection.count == 0 {
+                            let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
+                            if result.page == 0 || result.page == -2 {
+                                break // unrecoverable error
+                            } else if result.page == -1 { // decode error
+                                if self.currentPage == -1 {
+                                    break // cannot recover from error since page is unknown
+                                } else {
+                                    self.currentPage -= 1
+                                    continue // try to load next page
+                                }
+                            }
+                            self.currentPage = result.page - 1
+                            if self.setting.hideAlwaysOnTopThread {
+                                // 过滤置顶帖
+                                threadSection.append(contentsOf: result.threads.filter({
+                                    !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                                }).reversed())
+                            } else {
+                                threadSection.append(contentsOf: result.threads.reversed())
+                            }
+                        }
+                    case .byPostOldFirst:
+                        self.currentPage = 1
+                        while threadSection.count == 0 {
+                            let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
+                            if result.page == 0 || result.page == -2 {
+                                break // unrecoverable error
+                            } else if result.page == -1 { // decode error
+                                self.currentPage += 1
+                                continue // try to load next page
+                            }
+                            self.currentPage = result.page + 1
+                            if self.setting.hideAlwaysOnTopThread {
+                                // 过滤置顶帖
+                                threadSection.append(contentsOf: result.threads.filter({
+                                    !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                                }))
+                            } else {
+                                threadSection.append(contentsOf: result.threads)
+                            }
                         }
                     }
-                case .byPostOldFirst:
-                    self.currentPage = 1
-                    while threadSection.count == 0 {
-                        let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
-                        if result.page == 0 || result.page == -2 {
-                            break // unrecoverable error
-                        } else if result.page == -1 { // decode error
-                            self.currentPage += 1
-                            continue // try to load next page
-                        }
-                        self.currentPage = result.page + 1
-                        if self.setting.hideAlwaysOnTopThread {
-                            // 过滤置顶帖
-                            threadSection.append(contentsOf: result.threads.filter({
-                                !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                            }))
-                        } else {
-                            threadSection.append(contentsOf: result.threads)
+                    DispatchQueue.main.async {
+                        networkActivityIndicatorStop(withHUD: showHUD)
+                        completion?()
+                        if currentMode != self.searchMode || currentThreadSortMode != self.threadSortMode { return } //如果模式已经被切换，则数据丢弃
+                        self.threads.removeAll()
+                        if threadSection.count > 0 {
+                            self.threads.append(threadSection)
+                            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
                         }
                     }
-                }
-                DispatchQueue.main.async {
-                    networkActivityIndicatorStop(withHUD: showHUD)
-                    completion?()
-                    if currentMode != self.searchMode || currentThreadSortMode != self.threadSortMode { return } //如果模式已经被切换，则数据丢弃
-                    self.threads.removeAll()
-                    if threadSection.count > 0 {
-                        self.threads.append(threadSection)
-                        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                } catch {
+                    DispatchQueue.main.async {
+                        networkActivityIndicatorStop(withHUD: showHUD)
+                        completion?()
+                        self.threads.removeAll()
+                        (error as? SMError)?.display()
                     }
-                    self.api.displayErrorIfNeeded()
                 }
             }
         } else {
@@ -293,92 +286,81 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                 return
             }
             
+            guard let searchString = self.searchString else { return }
             let currentMode = self.searchMode
             let currentThreadSortMode = self.threadSortMode
-            let searchString = self.searchString
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
-                var threadSection = [SMThread]()
-                if self.searchMode {
-                    if self.selectedIndex == 0 {
-                        if let threads = self.api.searchArticleInBoard(boardID: boardID,
-                                                                       title: searchString,
-                                                                       user: nil,
-                                                                       inRange: self.searchRange)
-                        {
+                do {
+                    var threadSection = [SMThread]()
+                    if self.searchMode {
+                        if self.selectedIndex == 0 {
+                            let threads = try self.api.searchArticle(title: searchString, in: boardID, range: self.searchRange)
+                            threadSection.append(contentsOf: threads)
+                        } else if self.selectedIndex == 1 {
+                            let threads = try self.api.searchArticle(user: searchString, in: boardID, range: self.searchRange)
                             threadSection.append(contentsOf: threads)
                         }
-                    } else if self.selectedIndex == 1 {
-                        if let threads = self.api.searchArticleInBoard(boardID: boardID,
-                                                                       title: nil,
-                                                                       user: searchString,
-                                                                       inRange: self.searchRange)
-                        {
-                            threadSection.append(contentsOf: threads)
-                        }
-                    }
-                    self.threadCursor += threadSection.count
-                } else {
-                    switch self.threadSortMode {
-                    case .byReplyNewFirst:
-                        if let threads = self.api.getThreadListForBoard(boardID: boardID,
-                                                                        inRange: self.threadRange,
-                                                                        brcmode: .NotClear)
-                        {
+                        self.threadCursor += threadSection.count
+                    } else {
+                        switch self.threadSortMode {
+                        case .byReplyNewFirst:
+                            let threads = try self.api.getThreadList(in: boardID, range: self.threadRange)
                             threadSection.append(contentsOf: threads)
                             self.threadCursor += threadSection.count
-                        }
-                    case .byReplyOldFirst:
-                        if let threads = self.api.getThreadListForBoard(boardID: boardID,
-                                                                        inRange: self.threadRange,
-                                                                        brcmode: .NotClear)
-                        {
-                            threadSection.append(contentsOf: threads.reversed())
+                        case .byReplyOldFirst:
+                            let threads = try self.api.getThreadList(in: boardID, range: self.threadRange)
+                            threadSection.append(contentsOf: threads)
                             self.threadCursor -= threadSection.count
-                        }
-                    case .byPostNewFirst:
-                        var lastPage = -1 // decode error
-                        while lastPage == -1, threadSection.count == 0 {
-                            let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
-                            if result.page == 0 || result.page == -2 { break } // unrecoverable error
-                            threadSection.append(contentsOf: result.threads.reversed())
-                            lastPage = result.page
-                            self.currentPage -= 1
-                        }
-                    case .byPostOldFirst:
-                        var lastPage = -1
-                        while lastPage == -1, threadSection.count == 0 {
-                            let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
-                            if result.page == 0 || result.page == -2 { break } // unrecoverable error
-                            threadSection.append(contentsOf: result.threads)
-                            lastPage = result.page
-                            self.currentPage += 1
+                        case .byPostNewFirst:
+                            var lastPage = -1 // decode error
+                            while lastPage == -1, threadSection.count == 0 {
+                                let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
+                                if result.page == 0 || result.page == -2 { break } // unrecoverable error
+                                threadSection.append(contentsOf: result.threads.reversed())
+                                lastPage = result.page
+                                self.currentPage -= 1
+                            }
+                        case .byPostOldFirst:
+                            var lastPage = -1
+                            while lastPage == -1, threadSection.count == 0 {
+                                let result = self.api.getOriginThreadList(for: boardID, page: self.currentPage)
+                                if result.page == 0 || result.page == -2 { break } // unrecoverable error
+                                threadSection.append(contentsOf: result.threads)
+                                lastPage = result.page
+                                self.currentPage += 1
+                            }
                         }
                     }
-                }
-                // 过滤置顶帖
-                if self.setting.hideAlwaysOnTopThread {
+                    // 过滤置顶帖
+                    if self.setting.hideAlwaysOnTopThread {
+                        threadSection = threadSection.filter {
+                            !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                        }
+                    }
+                    // 过滤掉重复的帖子
+                    let loadedThreadIds = self.threads.reduce(Set<Int>()) {
+                        $0.union(Set($1.map { $0.id }))
+                    }
                     threadSection = threadSection.filter {
-                        !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
+                        !loadedThreadIds.contains($0.id)
                     }
-                }
-                // 过滤掉重复的帖子
-                let loadedThreadIds = self.threads.reduce(Set<Int>()) {
-                    $0.union(Set($1.map { $0.id }))
-                }
-                threadSection = threadSection.filter {
-                    !loadedThreadIds.contains($0.id)
-                }
-                DispatchQueue.main.async {
-                    self._isFetchingMoreData = false
-                    networkActivityIndicatorStop()
-                    if self.searchMode != currentMode || self.threadSortMode != currentThreadSortMode {
-                        return //如果模式已经改变，则此数据需要丢弃
+                    DispatchQueue.main.async {
+                        self._isFetchingMoreData = false
+                        networkActivityIndicatorStop()
+                        if self.searchMode != currentMode || self.threadSortMode != currentThreadSortMode {
+                            return //如果模式已经改变，则此数据需要丢弃
+                        }
+                        if threadSection.count > 0 {
+                            self.threads.append(threadSection)
+                        }
                     }
-                    if threadSection.count > 0 {
-                        self.threads.append(threadSection)
+                } catch {
+                    DispatchQueue.main.async {
+                        self._isFetchingMoreData = false
+                        networkActivityIndicatorStop()
+                        (error as? SMError)?.display()
                     }
-                    self.api.displayErrorIfNeeded()
                 }
             }
         }
@@ -461,7 +443,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         articleListActionVC.sendMessageHandler = { [unowned self] manager in
             self.dismiss(animated: true)
             let cevc = ComposeEmailController()
-            cevc.email = SMMail(subject: "", body: "", authorID: manager, position: 0, time: Date(), flags: "", attachments: [])
+            cevc.email = Mail(subject: "", body: "", authorID: manager)
             cevc.mode = .post
             let navigationController = NTNavigationController(rootViewController: cevc)
             navigationController.modalPresentationStyle = .formSheet

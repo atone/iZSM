@@ -32,7 +32,7 @@ class ArticleContentCell: UITableViewCell {
     
     private let setting = AppSetting.shared
     
-    var article: SMArticle?
+    var article: Article?
     private var displayFloor: Int = 0
     
     private let replyButtonWidth: CGFloat = AppSetting.shared.isSmallScreen ? 36 : 40
@@ -179,15 +179,15 @@ class ArticleContentCell: UITableViewCell {
         containerView.addSubview(contentLabel)
     }
     
-    func setData(displayFloor floor: Int, smarticle: SMArticle, delegate: ArticleContentCellDelegate, controller: ArticleContentViewController) {
+    func setData(displayFloor floor: Int, article: Article, delegate: ArticleContentCellDelegate, controller: ArticleContentViewController) {
         self.displayFloor = floor
         self.delegate = delegate
-        self.article = smarticle
+        self.article = article
         self.controller = controller
         
-        authorLabel.text = smarticle.authorID
+        authorLabel.text = article.authorID
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
-        floorAndTimeLabel.text = "\(floorText) • \(smarticle.timeString)"
+        floorAndTimeLabel.text = "\(floorText) • \(article.timeString)"
     }
     
     override func prepareForReuse() {
@@ -313,7 +313,7 @@ class ArticleContentCell: UITableViewCell {
     
     private func drawImagesWithInfo(imageAtt: [ImageInfo]?) {
         if setting.showAvatar, let article = self.article {
-            avatarImageView.setImageWith(SMUser.faceURL(for: article.authorID, withFaceURL: nil),
+            avatarImageView.setImageWith(SmthAPI.shared.faceURL(for: article.authorID, withFaceURL: nil),
                                          placeholder: UIImage(named: "face_default"))
         }
         

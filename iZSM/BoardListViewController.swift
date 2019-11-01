@@ -8,6 +8,7 @@
 
 import UIKit
 import SVProgressHUD
+import SmthConnection
 
 class BoardListViewController: BaseTableViewController, UISearchControllerDelegate, UISearchResultsUpdating {
     
@@ -29,7 +30,6 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     
     func didDismissSearchController(_ searchController: UISearchController) {
         searchMode = false
-        api.cancel()
         refreshHeaderEnabled = true
         boards = originalBoards ?? [SMBoard]()
         originalBoards = nil
@@ -38,7 +38,6 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     
     func willPresentSearchController(_ searchController: UISearchController) {
         searchMode = true
-        api.cancel()
         refreshHeaderEnabled = false
         originalBoards = boards
         boards = [SMBoard]()
@@ -57,21 +56,21 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
         searchString = currentSearchString
         let currentMode = searchMode
         networkActivityIndicatorStart()
-        var result: [SMBoard]?
         
-        DispatchQueue.global().async {
-            result = self.api.queryBoard(query: currentSearchString)
+        api.searchBoard(query: currentSearchString) { (result) in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
                 if currentMode != self.searchMode || currentSearchString != self.searchString { return } //模式已经改变，则丢弃数据
                 self.boards.removeAll()
-                if let result = result {
-                    self.boards += result
-                    let filteredResult = result.filter { ($0.flag != -1) && ($0.flag & 0x400 == 0) }
-                    SMBoardInfo.save(boardList: filteredResult)
+                switch result {
+                case .success(let boards):
+                    self.boards += boards
+                    let filteredBoards = boards.filter { ($0.flag != -1) && ($0.flag & 0x400 == 0) }
+                    SMBoardInfo.save(boardList: filteredBoards)
+                case .failure(let error):
+                    error.display()
                 }
                 self.tableView.reloadData()
-                self.api.displayErrorIfNeeded()
             }
         }
     }
@@ -98,51 +97,48 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     }
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
-        networkActivityIndicatorStart(withHUD: showHUD)
-        DispatchQueue.global().async {
-            var boardList = [SMBoard]()
-            if self.flag > 0  && (self.flag & 0x400 != 0) { //是目录
-                if let boards = self.api.getBoardListInSection(section: self.sectionID, group: self.boardID) {
-                    boardList = boards
-                }
-                
-            } else { //是版面
-                if let boards = self.api.getBoardList(group: self.boardID) {
-                    boardList = boards
-                }
+        let comparator: (SMBoard, SMBoard) -> Bool = { b1, b2 in
+            var flag_a = b1.flag
+            var flag_b = b2.flag
+            if flag_a == -1 || (flag_a & 0x400 != 0) {
+                flag_a = 1
+            } else {
+                flag_a = 0
             }
             
-            boardList.sort { (b1, b2) -> Bool in
-                var flag_a = b1.flag
-                var flag_b = b2.flag
-                if flag_a == -1 || (flag_a & 0x400 != 0) {
-                    flag_a = 1
-                } else {
-                    flag_a = 0
-                }
-                
-                if flag_b == -1 || (flag_b & 0x400 != 0) {
-                    flag_b = 1
-                } else {
-                    flag_b = 0
-                }
-                
-                if flag_a == 0 && flag_b == 0 {
-                    return b1.currentUsers >= b2.currentUsers
-                } else {
-                    return flag_a >= flag_b
-                }
+            if flag_b == -1 || (flag_b & 0x400 != 0) {
+                flag_b = 1
+            } else {
+                flag_b = 0
             }
             
+            if flag_a == 0 && flag_b == 0 {
+                return b1.currentUsers >= b2.currentUsers
+            } else {
+                return flag_a >= flag_b
+            }
+        }
+        
+        let completionHandler: SmthCompletion<[SMBoard]> = { (result) in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop(withHUD: showHUD)
                 completion?()
-                self.boards.removeAll()
-                self.boards += boardList
-                self.tableView.reloadData()
-                self.api.displayErrorIfNeeded()
-                SMBoardInfo.save(boardList: boardList)
+                switch result {
+                case .success(let boards):
+                    self.boards = boards.sorted(by: comparator)
+                    self.tableView.reloadData()
+                    SMBoardInfo.save(boardList: boards)
+                case .failure(let error):
+                    error.display()
+                }
             }
+        }
+        
+        networkActivityIndicatorStart(withHUD: showHUD)
+        if self.flag > 0  && (self.flag & 0x400 != 0) { //是目录
+            api.getBoardList(in: boardID, section: sectionID, completion: completionHandler)
+        } else { //是版面
+            api.getBoardList(in: boardID, completion: completionHandler)
         }
     }
     

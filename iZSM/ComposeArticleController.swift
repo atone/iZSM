@@ -12,6 +12,7 @@ import MobileCoreServices
 import SnapKit
 import SVProgressHUD
 import TZImagePickerController
+import SmthConnection
 
 class ComposeArticleController: UIViewController, UITextFieldDelegate {
     
@@ -55,7 +56,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     var completionHandler: (() -> Void)?
     
     var mode: Mode = .post
-    var article: SMArticle?
+    var article: Article?
     
     private let signature = AppSetting.shared.signature
     private let addDeviceSignature = AppSetting.shared.addDeviceSignature
@@ -73,7 +74,7 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     private var contentViewOffset: Constraint?
     private var keyboardHeight: CGFloat = 0
     
-    private let api = SmthAPI()
+    private let api = SmthAPI.shared
     private let setting = AppSetting.shared
     
     private let maxAttachNumber = 8
@@ -274,7 +275,11 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
                         } else {
                             baseFileName = fileName
                         }
-                        self.api.uploadAttImage(image: self.attachedImages[index], baseFileName: baseFileName)
+                        do {
+                            try self.api.uploadAttachImage(self.attachedImages[index], baseFileName: baseFileName)
+                        } catch {
+                            (error as? SMError)?.display()
+                        }
                     }
                 }
                 
@@ -286,36 +291,9 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
                     content.append("\n\n" + self.signature)
                 }
                 
-                switch self.mode {
-                case .post:
-                    let result = self.api.postArticle(title: title, content: content, inBoard: boardID)
-                    dPrint("post article done. article_id = \(result)")
-                case .reply:
-                    if let article = self.article {
-                        let result = self.api.replyArticle(articleID: article.id, title: title, content: content, inBoard: boardID)
-                        dPrint("reply article done. article_id = \(result)")
-                    } else {
-                        dPrint("error: no article to reply")
-                    }
-                case .replyByMail:
-                    if let article = self.article {
-                        let result = self.api.sendMailTo(user: article.authorID, withTitle: title, content: content)
-                        dPrint("reply by mail done. ret = \(result)")
-                    } else {
-                        dPrint("error: no article to reply")
-                    }
-                case .modify:
-                    if let article = self.article {
-                        let result = self.api.modifyArticle(articleID: article.id, title: title, content: content, inBoard: boardID)
-                        dPrint("modify article done. ret = \(result)")
-                    } else {
-                        dPrint("error: no article to modify")
-                    }
-                }
-                
-                DispatchQueue.main.async {
-                    networkActivityIndicatorStop(withHUD: true)
-                    if self.api.errorCode == 0 {
+                let successHandler: () -> Void = {
+                    DispatchQueue.main.async {
+                        networkActivityIndicatorStop(withHUD: true)
                         switch self.mode {
                         case .post:
                             SVProgressHUD.showSuccess(withStatus: "发表成功")
@@ -328,16 +306,61 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
                             self.completionHandler?()
                             self.dismiss(animated: true)
                         }
-                    } else if let errorDescription = self.api.errorDescription {
-                        if errorDescription != "" {
-                            SVProgressHUD.showInfo(withStatus: errorDescription)
-                        } else {
-                            SVProgressHUD.showError(withStatus: "出错了")
+                    }
+                }
+                let failureHandler: (SMError) -> Void = { error in
+                    DispatchQueue.main.async {
+                        error.display()
+                        self.setEditable(true)
+                    }
+                }
+                
+                switch self.mode {
+                case .post:
+                    self.api.postArticle(title: title, content: content, in: boardID) { (result) in
+                        switch result {
+                        case .success(let articleID):
+                            dPrint("post article done. article_id = \(articleID)")
+                            successHandler()
+                        case .failure(let error):
+                            failureHandler(error)
                         }
-                        self.setEditable(true)
-                    } else {
-                        SVProgressHUD.showError(withStatus: "出错了")
-                        self.setEditable(true)
+                    }
+                    
+                case .reply:
+                    guard let article = self.article else { return }
+                    self.api.replyArticle(article.id, in: boardID, title: title, content: content) { (result) in
+                        switch result {
+                        case .success(let articleID):
+                            dPrint("reply article done. article_id = \(articleID)")
+                            successHandler()
+                        case .failure(let error):
+                            failureHandler(error)
+                        }
+                    }
+                    
+                case .replyByMail:
+                    guard let article = self.article else { return }
+                    self.api.sendMail(to: article.authorID, title: title, content: content) { (result) in
+                        switch result {
+                        case .success:
+                            dPrint("reply by mail done.")
+                            successHandler()
+                        case .failure(let error):
+                            failureHandler(error)
+                        }
+                    }
+                    
+                case .modify:
+                    guard let article = self.article else { return }
+                    self.api.modifyArticle(article.id, in: boardID, title: title, content: content) { (result) in
+                        switch result {
+                        case .success:
+                            dPrint("modify article done.")
+                            successHandler()
+                        case .failure(let error):
+                            failureHandler(error)
+                        }
                     }
                 }
             }

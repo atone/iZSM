@@ -8,26 +8,10 @@
 
 import UIKit
 import YYKit
+import SVProgressHUD
+import SmthConnection
 
-struct SMThread {
-    var id: Int
-    var time: Date
-    var subject: String
-    var authorID: String
-
-    var lastReplyAuthorID: String
-    var lastReplyThreadID: Int
-
-    var boardID: String
-    var boardName: String
-
-    var flags: String
-    
-    var count: Int
-    var lastReplyTime: Date
-}
-
-struct SMArticle {
+struct Article: Cleanable, Replyable {
     var id: Int
     var time: Date
     var subject: String
@@ -50,47 +34,15 @@ struct SMArticle {
         return time.shortDateString
     }
     
-    var replySubject: String {
-        var subject = self.subject
-        while subject.lowercased().hasPrefix("re:") || subject.hasPrefix("主题:") {
-            subject = subject.dropFirst(3).trimmingCharacters(in: .whitespaces)
-        }
-        return "Re: " + subject
-    }
-    
-    var quotBody: String {
-        let lines = body.components(separatedBy: .newlines).map {
-            $0.trimmingCharacters(in: .whitespaces)
-        }.filter {
-            $0.range(of: "- 来自「最水木 for .*」", options: .regularExpression) == nil
-        }
-        var tmpBody = "\n【 在 \(authorID) 的大作中提到: 】\n"
-        for idx in 0..<min(lines.count, 3) {
-            tmpBody.append(": \(lines[idx])\n")
-        }
-        if lines.count > 3 {
-            tmpBody.append(": ....................\n")
-        }
-        return tmpBody
-    }
-    
-    var filterSignatureBody: String {
-        return body.components(separatedBy: .newlines).map {
-            $0.trimmingCharacters(in: .whitespaces)
-        }.filter {
-            $0.range(of: "- 来自「最水木 for .*」", options: .regularExpression) == nil
-        }.joined(separator: "\n")
-    }
-
-    init(id: Int, time: Date, subject: String, authorID: String, body: String, effsize: Int, flags: String, attachments: [SMAttachment], floor: Int, boardID: String) {
-        self.id = id
-        self.time = time
-        self.subject = subject
-        self.authorID = authorID
-        self.body = body
-        self.effsize = effsize
-        self.flags = flags
-        self.attachments = attachments
+    init(from article: SMArticle, floor: Int, boardID: String) {
+        self.id = article.id
+        self.time = article.time
+        self.subject = article.subject
+        self.authorID = article.authorID
+        self.body = article.body
+        self.effsize = article.effsize
+        self.flags = article.flags
+        self.attachments = article.attachments
         self.floor = floor
         self.boardID = boardID
         
@@ -98,6 +50,8 @@ struct SMArticle {
         self.quotedRange = []
         self.attributedBody = NSAttributedString()
         self.attributedDarkBody = NSAttributedString()
+        // make body clean
+        self.body = clean(self.body)
         
         if attachments.count > 0 {
             imageAttachments += generateImageAtt()
@@ -199,7 +153,7 @@ struct SMArticle {
             }
         }
         
-        let emoticonParser = SMEmoticon.shared.parser
+        let emoticonParser = Emoticon.shared.parser
         emoticonParser.parseText(attributeText, selectedRange: nil)
         
         self.quotedRange.removeAll()
@@ -284,9 +238,155 @@ struct SMArticle {
     }
 }
 
-struct SMEmoticon {
+struct Mail: Cleanable, Replyable {
+    var subject: String
+    var body: String
+    var authorID: String
+    var position: Int
+    var time: Date
+    var flags: String
+    var attachments: [SMAttachment]
+    var attachmentCount: Int
     
-    static let shared = SMEmoticon()
+    init(from mail: SMMail) {
+        subject = mail.subject
+        body = mail.body
+        authorID = mail.authorID
+        position = mail.position
+        time = mail.time
+        flags = mail.flags
+        attachments = mail.attachments
+        attachmentCount = mail.attachmentCount
+        // make body clean
+        body = clean(body)
+    }
+    
+    init(subject: String, body: String, authorID: String) {
+        self.subject = subject
+        self.body = body
+        self.authorID = authorID
+        self.position = 0
+        self.time = Date()
+        self.flags = ""
+        self.attachments = []
+        self.attachmentCount = 0
+    }
+}
+
+extension SMError {
+    func display() {
+        if code != 0 {
+            var errorMsg: String = "未知错误"
+            if code == -1 {
+                errorMsg = "网络错误"
+            } else if code == 10014 || code == 10010 {
+                errorMsg = "token失效，请刷新"
+                AppSetting.shared.accessToken = nil // clear expired access token
+            } else if code == 10417 {
+                errorMsg = "您还没有驻版"
+            } else if !desc.isEmpty {
+                errorMsg = desc
+            } else if code < 0 {
+                errorMsg = "服务器错误"
+            } else if code < 11000 {
+                errorMsg = "系统错误"
+            }
+            SVProgressHUD.showInfo(withStatus: errorMsg)
+            dPrint(self)
+        }
+    }
+}
+
+protocol Replyable {
+    var subject: String { get }
+    var authorID: String { get }
+    var body: String { get }
+}
+
+extension Replyable {
+    var replySubject: String {
+        var subject = self.subject
+        while subject.lowercased().hasPrefix("re:") || subject.hasPrefix("主题:") {
+            subject = subject.dropFirst(3).trimmingCharacters(in: .whitespaces)
+        }
+        return "Re: " + subject
+    }
+    
+    var quotBody: String {
+        let lines = body.components(separatedBy: .newlines).map {
+            $0.trimmingCharacters(in: .whitespaces)
+        }.filter {
+            $0.range(of: "- 来自「最水木 for .*」", options: .regularExpression) == nil
+        }
+        let type = (self is Mail) ? "来信" : "大作"
+        var tmpBody = "\n【 在 \(authorID) 的\(type)中提到: 】\n"
+        for idx in 0..<min(lines.count, 3) {
+            tmpBody.append(": \(lines[idx])\n")
+        }
+        if lines.count > 3 {
+            tmpBody.append(": ....................\n")
+        }
+        return tmpBody
+    }
+    
+    var filterSignatureBody: String {
+        return body.components(separatedBy: .newlines).map {
+            $0.trimmingCharacters(in: .whitespaces)
+        }.filter {
+            $0.range(of: "- 来自「最水木 for .*」", options: .regularExpression) == nil
+        }.joined(separator: "\n")
+    }
+}
+
+protocol Cleanable {
+    func clean(_ content: String) -> String
+}
+
+extension Cleanable {
+    func clean(_ content: String) -> String {
+        // 去除头尾多余的空格和回车
+        var lines = content.trimmingCharacters(in: .whitespacesAndNewlines)
+            .components(separatedBy: .newlines)
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+        // 去除末尾的--
+        // 以及多余的空格和回车
+        if lines.last == "--" {
+            lines.removeLast()
+            while lines.last == "" {
+                lines.removeLast()
+            }
+        }
+        // 除去签名档，可选
+        if !AppSetting.shared.showSignature {
+            if let index = lines.firstIndex(of: "--") {
+                var i = lines.count
+                while i > index {
+                    lines.removeLast()
+                    i -= 1
+                }
+                while lines.last == "" {
+                    lines.removeLast()
+                }
+            }
+        }
+        // 去除ANSI控制字符
+        let ansiRE = try! NSRegularExpression(pattern: "\\[(\\d{1,2};?)*m|\\[([ABCDsuKH]|2J)(?![a-zA-Z])|\\[\\d{1,2}[ABCD]|\\[\\d{1,2};\\d{1,2}H")
+        // 去除图片标志[upload=1][/upload]之类
+        let pictRE = try! NSRegularExpression(pattern: "\\[upload(=\\d{1,2})?\\].*?\\[/upload\\]")
+        lines = lines.map { line in
+            var cleaned = ansiRE.stringByReplacingMatches(in: line, range: NSMakeRange(0, line.count), withTemplate: "")
+            cleaned = pictRE.stringByReplacingMatches(in: cleaned, range: NSMakeRange(0, cleaned.count), withTemplate: "")
+            return cleaned
+        }
+        // 过滤掉部分未过滤的来源信息
+        lines = lines.filter { !$0.contains("※ 来源:·") && !$0.contains("※ 修改:·") }
+        return lines.joined(separator: "\n")
+    }
+}
+
+struct Emoticon {
+    
+    static let shared = Emoticon()
     
     public let parser: YYTextSimpleEmoticonParser
     
@@ -325,154 +425,6 @@ struct ImageInfo {
     var fullImageURL: URL
     var imageName: String
     var imageSize: Int
-}
-
-struct SMAttachment {
-    var name: String
-    var pos: Int
-    var size: Int
-}
-
-struct SMMailStatus {
-    var isFull: Bool
-    var totalCount: Int
-    var newCount: Int
-    var error: Int
-    var errorDescription: String
-}
-
-struct SMMail {
-    var subject: String
-    var body: String
-    var authorID: String
-    var position: Int
-    var time: Date
-    var flags: String
-    var attachments: [SMAttachment]
-    
-    var replySubject: String {
-        var subject = self.subject
-        while subject.lowercased().hasPrefix("re:") || subject.hasPrefix("主题:") {
-            subject = subject.dropFirst(3).trimmingCharacters(in: .whitespaces)
-        }
-        return "Re: " + subject
-    }
-    
-    var quotBody: String {
-        let lines = body.components(separatedBy: .newlines).map {
-            $0.trimmingCharacters(in: .whitespaces)
-        }.filter {
-            $0.range(of: "- 来自「最水木 for .*」", options: .regularExpression) == nil
-        }
-        var tmpBody = "\n【 在 \(authorID) 的来信中提到: 】\n"
-        for idx in 0..<min(lines.count, 3) {
-            tmpBody.append(": \(lines[idx])\n")
-        }
-        if lines.count > 3 {
-            tmpBody.append(": ....................\n")
-        }
-        return tmpBody
-    }
-}
-
-struct SMReferenceStatus {
-    var totalCount: Int
-    var newCount: Int
-    var error: Int
-    var errorDescription: String
-}
-
-struct SMReference {
-    var subject: String
-    var flag: Int
-    var replyID: Int
-    var mode: SmthAPI.ReferMode
-    var id: Int
-    var boardID: String
-    var time: Date
-    var userID: String
-    var groupID: Int
-    var position: Int
-}
-
-struct SMHotThread {
-    var subject: String
-    var authorID: String
-    var id: Int
-    var time: Date
-    var boardID: String
-    var count: Int
-
-}
-
-struct SMBoard {
-    var bid: Int
-    var boardID: String
-    var level: Int
-    var unread: Bool
-    var currentUsers: Int
-    var maxOnline: Int
-    var scoreLevel: Int
-    var section: Int
-    var total: Int
-    var position: Int
-    var lastPost: Int
-    var manager: String
-    var type: String
-    var flag: Int
-    var maxTime: Date
-    var name: String
-    var score: Int
-    var group: Int
-}
-
-struct SMSection {
-    var code: String
-    var description: String
-    var name: String
-    var id: Int
-}
-
-struct SMUser {
-    var title: String
-    var level: Int
-    var loginCount: Int
-    var firstLoginTime: Date
-    var age: Int
-    var lastLoginTime: Date
-    var uid: Int
-    var life: String
-    var id: String
-    var gender: Int
-    var score: Int
-    var posts: Int
-    var faceURL: String
-    var nick: String
-    
-    static func faceURL(for userID: String, withFaceURL faceURL: String?) -> URL {
-        let prefix = String(userID[userID.startIndex]).uppercased()
-        var faceString: String
-        if let faceURL = faceURL, faceURL.count > 0 {
-            faceString = faceURL
-        } else if userID.contains(".") {
-            faceString = userID
-        } else {
-            faceString = "\(userID).jpg"
-        }
-        faceString = faceString.addingPercentEncoding(withAllowedCharacters: .smURLQueryAllowed)!
-        return URL(string: "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(faceString)")!
-    }
-}
-
-struct SMMember {
-    var board: SMBoard
-    var boardID: String
-    var flag: Int
-    var score: Int
-    var status: Int
-    var time: Date
-    var title: String
-    var userID: String
 }
 
 extension NSMutableAttributedString {

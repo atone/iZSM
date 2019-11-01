@@ -18,7 +18,7 @@ class UserViewController: NTTableViewController {
     
     private let userInfoVC = UserInfoViewController()
     
-    private let api = SmthAPI()
+    private let api = SmthAPI.shared
     private let setting = AppSetting.shared
     private let msgCenter = MessageCenter.shared
 
@@ -193,20 +193,21 @@ class UserViewController: NTTableViewController {
     
     @IBAction func logout(_ segue: UIStoryboardSegue) {
         networkActivityIndicatorStart()
-        DispatchQueue.global().async {
-            self.api.logoutBBS()
+        api.logout { (success) in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
-                SVProgressHUD.showSuccess(withStatus: "注销成功")
-                self.setting.username = nil
-                self.setting.password = nil
-                self.setting.accessToken = nil
-                self.userInfoVC.updateUserInfoView(with: nil)
-                NotificationCenter.default.post(name: BaseTableViewController.kNeedRefreshNotification,
-                                                object: nil)
+                if success {
+                    SVProgressHUD.showSuccess(withStatus: "注销成功")
+                    self.setting.username = nil
+                    self.setting.password = nil
+                    self.setting.accessToken = nil
+                    self.userInfoVC.updateUserInfoView(with: nil)
+                    NotificationCenter.default.post(name: BaseTableViewController.kNeedRefreshNotification,
+                                                    object: nil)
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    self.tabBarController?.selectedIndex = 0
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.tabBarController?.selectedIndex = 0
+                    }
                 }
             }
         }
@@ -217,14 +218,16 @@ extension UserViewController: TZImagePickerControllerDelegate {
     func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingPhotos photos: [UIImage]!, sourceAssets assets: [Any]!, isSelectOriginalPhoto: Bool) {
         if let selectedImage = photos.first {
             networkActivityIndicatorStart()
-            DispatchQueue.global().async {
-                if let user = self.api.modifyFaceImage(image: selectedImage) {
-                    networkActivityIndicatorStop()
+            api.modifyUserFaceImage(selectedImage) { (result) in
+                networkActivityIndicatorStop()
+                switch result {
+                case .success(let user):
                     dPrint("server response with new user info")
                     SMUserInfo.updateSMUserInfo(with: user) {
                         self.updateUserInfoView()
                     }
-                } else {
+                case .failure(let error):
+                    error.display()
                     dPrint("server did not response with new user info, try getting in 2 sec.")
                     sleep(2) // 等待2s
                     SMUserInfo.querySMUser(for: self.setting.username!, forceUpdate: true) { (user) in

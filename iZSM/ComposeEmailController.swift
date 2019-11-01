@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import SVProgressHUD
+import SmthConnection
 
 class ComposeEmailController: UIViewController, UITextFieldDelegate {
     
@@ -36,7 +37,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     
     var completionHandler: (() -> Void)?
     
-    var email: SMMail?
+    var email: Mail?
     var mode: Mode = .post
     
     private let signature = AppSetting.shared.signature
@@ -59,7 +60,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
     
     private var keyboardHeight: Constraint?
     
-    private let api = SmthAPI()
+    private let api = SmthAPI.shared
     private let setting = AppSetting.shared
     
     private func setEditable(_ editable: Bool) {
@@ -231,20 +232,18 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         if let receiver = self.emailReceiver, let title = self.emailTitle, var content = self.emailContent {
             networkActivityIndicatorStart(withHUD: true)
             setEditable(false)
-            DispatchQueue.global().async {
-                let lines = content.components(separatedBy: .newlines).map {
-                    $0.trimmingCharacters(in: .whitespaces)
-                }
-                content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
-                if self.addDeviceSignature {
-                    content.append("\n\n" + self.signature)
-                }
-                
-                let result = self.api.sendMailTo(user: receiver, withTitle: title, content: content)
-                dPrint("send mail done. ret = \(result)")
+            let lines = content.components(separatedBy: .newlines).map {
+                $0.trimmingCharacters(in: .whitespaces)
+            }
+            content = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+            if addDeviceSignature {
+                content.append("\n\n" + self.signature)
+            }
+            api.sendMail(to: receiver, title: title, content: content) { (result) in
                 DispatchQueue.main.async {
-                    networkActivityIndicatorStop(withHUD: true)
-                    if self.api.errorCode == 0 {
+                    switch result {
+                    case .success:
+                        dPrint("send mail done.")
                         switch self.mode {
                         case .post:
                             SVProgressHUD.showSuccess(withStatus: "寄信成功")
@@ -257,15 +256,8 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                             self.completionHandler?()
                             self.dismiss(animated: true)
                         }
-                    } else if let errorDescription = self.api.errorDescription {
-                        if errorDescription != "" {
-                            SVProgressHUD.showInfo(withStatus: errorDescription)
-                        } else {
-                            SVProgressHUD.showError(withStatus: "出错了")
-                        }
-                        self.setEditable(true)
-                    } else {
-                        SVProgressHUD.showError(withStatus: "出错了")
+                    case .failure(let error):
+                        error.display()
                         self.setEditable(true)
                     }
                 }

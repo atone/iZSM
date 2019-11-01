@@ -9,6 +9,7 @@
 
 import Foundation
 import CoreData
+import SmthConnection
 
 @objc(SMUserInfo)
 public class SMUserInfo: NSManagedObject {
@@ -61,9 +62,9 @@ extension SMUserInfo {
                         }
                     }
                     if shouldMakeQuery {
-                        let api = SmthAPI()
+                        let api = SmthAPI.shared
                         dPrint("start querying info for \(userID)...")
-                        let user = api.getUserInfo(userID: userID)
+                        let user = try? api.queryUser(with: userID)
                         if let user = user {
                             let results = try context.fetch(request)
                             let userInfo = results.first ?? SMUserInfo(context: context)

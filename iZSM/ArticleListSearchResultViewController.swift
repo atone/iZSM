@@ -8,6 +8,7 @@
 
 import UIKit
 import SVProgressHUD
+import SmthConnection
 
 class ArticleListSearchResultViewController: BaseTableViewController {
     
@@ -34,20 +35,20 @@ class ArticleListSearchResultViewController: BaseTableViewController {
         if let boardID = self.boardID, let userID = self.userID {
             self.threadLoaded = 0
             networkActivityIndicatorStart(withHUD: showHUD)
-            DispatchQueue.global().async {
-                let threadSection = self.api.searchArticleInBoard(boardID: boardID,
-                                                                  title: nil,
-                                                                  user: userID,
-                                                                  inRange: self.threadRange)
+            api.searchArticle(user: userID, in: boardID, range: threadRange) { (result) in
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop(withHUD: showHUD)
                     completion?()
                     self.threads.removeAll()
-                    if let threadSection = threadSection {
-                        self.threadLoaded += threadSection.count
-                        self.threads.append(threadSection)
+                    switch result {
+                    case .success(let threadSection):
+                        if threadSection.count > 0 {
+                            self.threadLoaded += threadSection.count
+                            self.threads.append(threadSection)
+                        }
+                    case .failure(let error):
+                        error.display()
                     }
-                    self.api.displayErrorIfNeeded()
                 }
             }
         } else {
@@ -71,19 +72,19 @@ class ArticleListSearchResultViewController: BaseTableViewController {
             }
             
             networkActivityIndicatorStart()
-            DispatchQueue.global().async {
-                let threadSection = self.api.searchArticleInBoard(boardID: boardID,
-                                                                  title: nil,
-                                                                  user: userID,
-                                                                  inRange: self.threadRange)
+            api.searchArticle(user: userID, in: boardID, range: threadRange) { (result) in
                 DispatchQueue.main.async {
                     self._isFetchingMoreData = false
                     networkActivityIndicatorStop()
-                    if let threadSection = threadSection {
-                        self.threadLoaded += threadSection.count
-                        self.threads.append(threadSection)
+                    switch result {
+                    case .success(let threadSection):
+                        if threadSection.count > 0 {
+                            self.threadLoaded += threadSection.count
+                            self.threads.append(threadSection)
+                        }
+                    case .failure(let error):
+                        error.display()
                     }
-                    self.api.displayErrorIfNeeded()
                 }
             }
         }

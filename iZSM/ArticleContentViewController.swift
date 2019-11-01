@@ -10,6 +10,7 @@ import UIKit
 import SVProgressHUD
 import YYKit
 import PullToRefreshKit
+import SmthConnection
 
 class ArticleContentViewController: NTTableViewController {
 
@@ -20,13 +21,13 @@ class ArticleContentViewController: NTTableViewController {
     
     private var indexMap = [String : IndexPath]()
     
-    private var smarticles = [[SMArticle]]()
+    private var articles = [[Article]]()
     
     var articleContentLayout = [String: YYTextLayout]()
     
     @objc dynamic var shouldHidesStatusBar: Bool = false
     
-    private let api = SmthAPI()
+    private let api = SmthAPI.shared
     private let setting = AppSetting.shared
     
     private var totalArticleNumber: Int = 0
@@ -113,7 +114,6 @@ class ArticleContentViewController: NTTableViewController {
         if self.soloUser == nil { // 只看某人模式下，不保存位置
             savePosition()
         }
-        api.cancel()
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -161,71 +161,74 @@ class ArticleContentViewController: NTTableViewController {
             networkActivityIndicatorStart(withHUD: showHUD)
             self.refreshFooterEnabled = false
             DispatchQueue.global().async {
-                var smArticles = [SMArticle]()
-                if let soloUser = self.soloUser { // 只看某人模式
-                    while smArticles.count < self.setting.articleCountPerSection
-                        && (self.totalArticleNumber == 0 || self.currentForwardNumber < self.totalArticleNumber)
-                    {
-                        if let articles = self.api.getThreadContentInBoard(boardID: boardID,
-                                                                           articleID: articleID,
-                                                                           threadRange: self.forwardThreadRange,
-                                                                           replyMode: self.setting.sortMode)
+                do {
+                    var articles = [Article]()
+                    if let soloUser = self.soloUser { // 只看某人模式
+                        while articles.count < self.setting.articleCountPerSection
+                            && (self.totalArticleNumber == 0 || self.currentForwardNumber < self.totalArticleNumber)
                         {
-                            smArticles += articles.filter { $0.authorID == soloUser }
-                            self.currentForwardNumber += articles.count
-                            self.totalArticleNumber = self.api.getLastThreadCount()
+                            let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
+                            articles += result.articles.filter { $0.authorID == soloUser }
+                            self.currentForwardNumber += result.articles.count
+                            self.totalArticleNumber = result.total
+                        }
+                    } else {  // 正常模式
+                        let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
+                        articles += result.articles
+                        self.currentForwardNumber += result.articles.count
+                        self.totalArticleNumber = result.total
+                    }
+                    
+                    if (self.fromTopTen || self.fromStar) && self.boardName == nil { // get boardName
+                        SMBoardInfo.querySMBoardInfo(for: boardID) { (board) in
+                            self.boardName = board?.name
                         }
                     }
-                } else {  // 正常模式
-                    if let articles = self.api.getThreadContentInBoard(boardID: boardID,
-                                                                       articleID: articleID,
-                                                                       threadRange: self.forwardThreadRange,
-                                                                       replyMode: self.setting.sortMode)
-                    {
-                        smArticles += articles
-                        self.currentForwardNumber += articles.count
-                        self.totalArticleNumber = self.api.getLastThreadCount()
-                    }
-                }
-                
-                if (self.fromTopTen || self.fromStar) && self.boardName == nil { // get boardName
-                    SMBoardInfo.querySMBoardInfo(for: boardID) { (board) in
-                        self.boardName = board?.name
-                    }
-                }
-                
-                DispatchQueue.main.async {
-                    self.isFetchingData = false
-                    networkActivityIndicatorStop(withHUD: showHUD)
-                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                    self.tableView.switchRefreshFooter(to: .normal)
-                    self.smarticles.removeAll()
-                    self.articleContentLayout.removeAll()
-                    self.tableView.fd_keyedHeightCache.invalidateAllHeightCache()
-                    if smArticles.count > 0 {
-                        self.refreshFooterEnabled = true
-                        self.smarticles.append(smArticles)
-                        self.tableView.reloadData()
-                        if restorePosition {
-                            if self.row < smArticles.count {
-                                self.tableView.scrollToRow(at: IndexPath(row: self.row, section: 0),
-                                                           at: .top,
-                                                           animated: false)
+                    
+                    DispatchQueue.main.async {
+                        self.isFetchingData = false
+                        networkActivityIndicatorStop(withHUD: showHUD)
+                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                        self.tableView.switchRefreshFooter(to: .normal)
+                        self.articles.removeAll()
+                        self.articleContentLayout.removeAll()
+                        self.tableView.fd_keyedHeightCache.invalidateAllHeightCache()
+                        if articles.count > 0 {
+                            self.refreshFooterEnabled = true
+                            self.articles.append(articles)
+                            self.tableView.reloadData()
+                            if restorePosition {
+                                if self.row < articles.count {
+                                    self.tableView.scrollToRow(at: IndexPath(row: self.row, section: 0),
+                                                               at: .top,
+                                                               animated: false)
+                                } else {
+                                    self.tableView.scrollToRow(at: IndexPath(row: articles.count - 1, section: 0),
+                                                               at: .top,
+                                                               animated: false)
+                                }
                             } else {
-                                self.tableView.scrollToRow(at: IndexPath(row: smArticles.count - 1, section: 0),
+                                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0),
                                                            at: .top,
                                                            animated: false)
                             }
                         } else {
-                            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0),
-                                                       at: .top,
-                                                       animated: false)
+                            self.tableView.reloadData()
+                            SVProgressHUD.showError(withStatus: "指定的文章不存在\n或链接错误")
                         }
-                    } else {
-                        self.tableView.reloadData()
-                        SVProgressHUD.showError(withStatus: "指定的文章不存在\n或链接错误")
                     }
-                    self.api.displayErrorIfNeeded()
+                } catch {
+                    DispatchQueue.main.async {
+                        self.isFetchingData = false
+                        networkActivityIndicatorStop(withHUD: showHUD)
+                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                        self.tableView.switchRefreshFooter(to: .normal)
+                        self.articles.removeAll()
+                        self.articleContentLayout.removeAll()
+                        self.tableView.fd_keyedHeightCache.invalidateAllHeightCache()
+                        self.tableView.reloadData()
+                        (error as? SMError)?.display()
+                    }
                 }
             }
         } else {
@@ -242,30 +245,34 @@ class ArticleContentViewController: NTTableViewController {
             self.isFetchingData = true
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
-                let smArticles = self.api.getThreadContentInBoard(boardID: boardID,
-                                                                  articleID: articleID,
-                                                                  threadRange: self.backwardThreadRange,
-                                                                  replyMode: self.setting.sortMode)
-                let totalArticleNumber = self.api.getLastThreadCount()
-                
-                DispatchQueue.main.async {
-                    self.isFetchingData = false
-                    networkActivityIndicatorStop()
-                    if let smArticles = smArticles {
-                        self.smarticles.insert(smArticles, at: 0)
-                        self.currentBackwardNumber -= smArticles.count
-                        self.totalArticleNumber = totalArticleNumber
-                        self.tableView.reloadData()
-                        var delayOffest = self.tableView.contentOffset
-                        for i in 0..<smArticles.count {
-                            delayOffest.y += self.tableView(self.tableView, heightForRowAt: IndexPath(row: i, section: 0))
+                do {
+                    let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.backwardThreadRange, sort: self.setting.sortMode)
+                    DispatchQueue.main.async {
+                        self.isFetchingData = false
+                        networkActivityIndicatorStop()
+                        if result.articles.count > 0 {
+                            self.articles.insert(result.articles, at: 0)
+                            self.currentBackwardNumber -= result.articles.count
+                            self.totalArticleNumber = result.total
+                            self.tableView.reloadData()
+                            var delayOffest = self.tableView.contentOffset
+                            for i in 0..<result.articles.count {
+                                delayOffest.y += self.tableView(self.tableView, heightForRowAt: IndexPath(row: i, section: 0))
+                            }
+                            self.tableView.setContentOffset(delayOffest, animated: false)
+                            self.updateCurrentSection()
                         }
-                        self.tableView.setContentOffset(delayOffest, animated: false)
-                        self.updateCurrentSection()
+                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                        self.tableView.switchRefreshFooter(to: .normal)
                     }
-                    self.api.displayErrorIfNeeded()
-                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                    self.tableView.switchRefreshFooter(to: .normal)
+                } catch {
+                    DispatchQueue.main.async {
+                        self.isFetchingData = false
+                        networkActivityIndicatorStop()
+                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                        self.tableView.switchRefreshFooter(to: .normal)
+                        (error as? SMError)?.display()
+                    }
                 }
             }
         } else {
@@ -282,47 +289,46 @@ class ArticleContentViewController: NTTableViewController {
             self.isFetchingData = true
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
-                var smArticles = [SMArticle]()
-                if let soloUser = self.soloUser { // 只看某人模式
-                    while smArticles.count < self.setting.articleCountPerSection
-                        && self.currentForwardNumber < self.totalArticleNumber
-                    {
-                        if let articles = self.api.getThreadContentInBoard(boardID: boardID,
-                                                                           articleID: articleID,
-                                                                           threadRange: self.forwardThreadRange,
-                                                                           replyMode: self.setting.sortMode)
+                do {
+                    var articles = [Article]()
+                    if let soloUser = self.soloUser { // 只看某人模式
+                        while articles.count < self.setting.articleCountPerSection
+                            && self.currentForwardNumber < self.totalArticleNumber
                         {
-                            smArticles += articles.filter { $0.authorID == soloUser }
-                            self.currentForwardNumber += articles.count
-                            self.totalArticleNumber = self.api.getLastThreadCount()
+                            let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
+                            articles += result.articles.filter { $0.authorID == soloUser }
+                            self.currentForwardNumber += result.articles.count
+                            self.totalArticleNumber = result.total
+                        }
+                    } else { // 正常模式
+                        let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
+                        articles += result.articles
+                        self.currentForwardNumber += result.articles.count
+                        self.totalArticleNumber = result.total
+                    }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.isFetchingData = false
+                        networkActivityIndicatorStop()
+                        if articles.count > 0 {
+                            self.articles.append(articles)
+                            self.tableView.reloadData()
+                        }
+                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                        self.tableView.switchRefreshFooter(to: .normal)
+                        if self.totalArticleNumber == self.currentForwardNumber {
+                            self.refreshFooter.textLabel.text = "没有新帖子了"
+                        } else {
+                            self.refreshFooter.textLabel.text = "上拉或点击加载更多"
                         }
                     }
-                } else { // 正常模式
-                    if let articles = self.api.getThreadContentInBoard(boardID: boardID,
-                                                                       articleID: articleID,
-                                                                       threadRange: self.forwardThreadRange,
-                                                                       replyMode: self.setting.sortMode)
-                    {
-                        smArticles += articles
-                        self.currentForwardNumber += articles.count
-                        self.totalArticleNumber = self.api.getLastThreadCount()
-                    }
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.isFetchingData = false
-                    networkActivityIndicatorStop()
-                    if smArticles.count > 0 {
-                        self.smarticles.append(smArticles)
-                        self.tableView.reloadData()
-                    }
-                    self.api.displayErrorIfNeeded()
-                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                    self.tableView.switchRefreshFooter(to: .normal)
-                    if self.totalArticleNumber == self.currentForwardNumber {
-                        self.refreshFooter.textLabel.text = "没有新帖子了"
-                    } else {
-                        self.refreshFooter.textLabel.text = "上拉或点击加载更多"
+                } catch {
+                    DispatchQueue.main.async {
+                        self.isFetchingData = false
+                        networkActivityIndicatorStop()
+                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                        self.tableView.switchRefreshFooter(to: .normal)
+                        (error as? SMError)?.display()
                     }
                 }
             }
@@ -334,11 +340,11 @@ class ArticleContentViewController: NTTableViewController {
     
     // MARK: - TableView Data Source and Delegate
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return smarticles.count
+        return articles.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return smarticles[section].count
+        return articles[section].count
     }
     
     private func articleCellAtIndexPath(indexPath: IndexPath) -> UITableViewCell {
@@ -348,12 +354,12 @@ class ArticleContentViewController: NTTableViewController {
     }
     
     private func configureArticleCell(cell: ArticleContentCell, atIndexPath indexPath: IndexPath) {
-        let smarticle = smarticles[indexPath.section][indexPath.row]
-        var floor = smarticle.floor
-        if setting.sortMode == .LaterPostFirst && floor != 0 {
+        let article = articles[indexPath.section][indexPath.row]
+        var floor = article.floor
+        if setting.sortMode == .newFirst && floor != 0 {
             floor = totalArticleNumber - floor
         }
-        cell.setData(displayFloor: floor, smarticle: smarticle, delegate: self, controller: self)
+        cell.setData(displayFloor: floor, article: article, delegate: self, controller: self)
         cell.preservesSuperviewLayoutMargins = true
         cell.fd_enforceFrameLayout = true
     }
@@ -363,7 +369,7 @@ class ArticleContentViewController: NTTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let articleId = smarticles[indexPath.section][indexPath.row].id
+        let articleId = articles[indexPath.section][indexPath.row].id
         let contentWidth = view.bounds.size.width - view.layoutMargins.left - view.layoutMargins.right
         let heightIdentifier = "\(articleId)_\(Int(contentWidth))" as NSString
         
@@ -491,7 +497,7 @@ class ArticleContentViewController: NTTableViewController {
         if let indexPath = tableView.indexPathForRow(at: point) {
             dPrint("double tap on article content cell at \(indexPath)")
             let fullscreen = FullscreenContentViewController()
-            fullscreen.article = smarticles[indexPath.section][indexPath.row]
+            fullscreen.article = articles[indexPath.section][indexPath.row]
             fullscreen.modalPresentationStyle = .fullScreen
             fullscreen.modalTransitionStyle = .crossDissolve
             present(fullscreen, animated: true)
@@ -546,7 +552,7 @@ extension ArticleContentViewController {
     func updateCurrentSection() {
         let leftTopPoint = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y + view.safeAreaInsets.top)
         if let indexPath = tableView.indexPathForRow(at: leftTopPoint) {
-            let article = smarticles[indexPath.section][indexPath.row]
+            let article = articles[indexPath.section][indexPath.row]
             currentSection = article.floor / setting.articleCountPerSection
         }
     }
@@ -586,7 +592,7 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
                 present(navigationController, animated: true)
             } else {
                 let cevc = ComposeEmailController()
-                cevc.email = SMMail(subject: "", body: "", authorID: userID, position: 0, time: Date(), flags: "", attachments: [])
+                cevc.email = Mail(subject: "", body: "", authorID: userID)
                 cevc.mode = .post
                 let navigationController = NTNavigationController(rootViewController: cevc)
                 navigationController.modalPresentationStyle = .formSheet
@@ -728,7 +734,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
     }
     
-    private func reply(_ article: SMArticle) {
+    private func reply(_ article: Article) {
         let cavc = ComposeArticleController()
         cavc.boardID = article.boardID
         cavc.completionHandler = { [unowned self] in
@@ -741,16 +747,16 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         present(navigationController, animated: true)
     }
     
-    private func modify(_ article: SMArticle, at indexPath: IndexPath) {
+    private func modify(_ article: Article, at indexPath: IndexPath) {
         let cavc = ComposeArticleController()
         cavc.boardID = article.boardID
         cavc.mode = .modify
         cavc.article = article
         cavc.completionHandler = { [unowned self] in
-            DispatchQueue.global().async {
-                if let newArticle = self.api.getArticleInBoard(boardID: article.boardID, articleID: article.id) {
-                    DispatchQueue.main.async {
-                        self.smarticles[indexPath.section][indexPath.row] = newArticle
+            self.api.getArticle(article.id, in: article.boardID) { (result) in
+                DispatchQueue.main.async {
+                    if let newArticle = try? result.map({ Article(from: $0, floor: article.floor, boardID: article.boardID) }).get() {
+                        self.articles[indexPath.section][indexPath.row] = newArticle
                         self.forceUpdateLayout(with: newArticle)
                         self.tableView.beginUpdates()
                         self.tableView.reloadRows(at: [indexPath], with: .automatic)
@@ -764,7 +770,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         present(navigationController, animated: true)
     }
     
-    private func forceUpdateLayout(with article: SMArticle) {
+    private func forceUpdateLayout(with article: Article) {
         let containerWidth = view.bounds.size.width - view.layoutMargins.left - view.layoutMargins.right
         articleContentLayout["\(article.id)_\(Int(containerWidth))"] = nil
         articleContentLayout["\(article.id)_\(Int(containerWidth))_dark"] = nil
@@ -772,21 +778,21 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         tableView.fd_keyedHeightCache.invalidateHeight(forKey: cacheKey)
     }
     
-    private func delete(_ article: SMArticle, at indexPath: IndexPath) {
+    private func delete(_ article: Article, at indexPath: IndexPath) {
         let confirmAlert = UIAlertController(title: "确定删除？", message: nil, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "确认", style: .destructive) { [unowned self] _ in
             networkActivityIndicatorStart(withHUD: true)
-            DispatchQueue.global().async {
-                let _ = self.api.deleteArticle(articleID: article.id, inBoard: article.boardID)
+            self.api.deleteArticle(article.id, in: article.boardID) { (result) in
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop(withHUD: true)
-                    if self.api.errorCode == 0 {
+                    switch result {
+                    case .success:
                         SVProgressHUD.showSuccess(withStatus: "删除成功")
-                        self.smarticles[indexPath.section].remove(at: indexPath.row)
+                        self.articles[indexPath.section].remove(at: indexPath.row)
                         self.tableView.beginUpdates()
                         self.tableView.deleteRows(at: [indexPath], with: .automatic)
                         self.tableView.endUpdates()
-                        let totalLeftNumber = self.smarticles.reduce(0) { $0 + $1.count }
+                        let totalLeftNumber = self.articles.reduce(0) { $0 + $1.count }
                         if totalLeftNumber == 0 {
                             if self.soloUser == nil {
                                 self.navigationController?.popViewController(animated: true)
@@ -795,10 +801,8 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                                 self.navigationController?.popViewController(animated: true)
                             }
                         }
-                    } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
-                        SVProgressHUD.showError(withStatus: self.api.errorDescription)
-                    } else {
-                        SVProgressHUD.showError(withStatus: "出错了")
+                    case .failure(let error):
+                        error.display()
                     }
                 }
             }
@@ -835,20 +839,13 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         show(acvc, sender: self)
     }
     
-    private func reportJunk(_ article: SMArticle) {
+    private func reportJunk(_ article: Article) {
         var adminID = "SYSOP"
         SVProgressHUD.show()
         DispatchQueue.global().async {
-            if let boards = self.api.queryBoard(query: article.boardID) {
-                for board in boards {
-                    if board.boardID == article.boardID {
-                        let managers = board.manager.split(separator: " ")
-                        if managers.count > 0 && !managers.last!.isEmpty {
-                            adminID = String(managers.last!)
-                        }
-                        break
-                    }
-                }
+            if let managers = try? self.api.getBoard(id: article.boardID).manager,
+                let manager = managers.split(separator: " ").last(where: { !$0.isEmpty }) {
+                adminID = String(manager)
             }
             DispatchQueue.main.async {
                 SVProgressHUD.dismiss()
@@ -866,17 +863,14 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                         let title = "举报用户 \(article.authorID) 在 \(article.boardID) 版中发表的不良内容"
                         let body = "举报原因：\(textField.text!)\n\n【以下为被举报的帖子内容】\n作者：\(article.authorID)\n信区：\(article.boardID)\n标题：\(article.subject)\n时间：\(article.timeString)\n\n\(article.body)\n"
                         networkActivityIndicatorStart()
-                        DispatchQueue.global().async {
-                            let result = self.api.sendMailTo(user: adminID, withTitle: title, content: body)
-                            dPrint("send mail status: \(result)")
+                        self.api.sendMail(to: adminID, title: title, content: body) { (result) in
                             DispatchQueue.main.async {
                                 networkActivityIndicatorStop()
-                                if self.api.errorCode == 0 {
+                                switch result {
+                                case .success:
                                     SVProgressHUD.showSuccess(withStatus: "举报成功")
-                                } else if let errorDescription = self.api.errorDescription, errorDescription != "" {
-                                    SVProgressHUD.showInfo(withStatus: errorDescription)
-                                } else {
-                                    SVProgressHUD.showError(withStatus: "出错了")
+                                case .failure(let error):
+                                    error.display()
                                 }
                             }
                         }
@@ -889,7 +883,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
     }
     
-    private func forward(_ article: SMArticle) {
+    private func forward(_ article: Article) {
         let alert = UIAlertController(title: "转寄文章", message: nil, preferredStyle: .alert)
         alert.addTextField{ textField in
             textField.placeholder = "收件人ID或邮箱，不填默认寄给自己"
@@ -898,23 +892,19 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
             textField.returnKeyType = .send
         }
         let okAction = UIAlertAction(title: "确定", style: .default) { [unowned alert, unowned self] _ in
-            if let textField = alert.textFields?.first {
-                networkActivityIndicatorStart()
-                DispatchQueue.global().async {
-                    let userID = textField.text!.isEmpty ? AppSetting.shared.username! : textField.text!
-                    let result = self.api.forwardArticle(articleID: article.id,
-                                                         inBoard: article.boardID,
-                                                         toUser: userID)
-                    dPrint("forwared article status: \(result)")
-                    DispatchQueue.main.async {
-                        networkActivityIndicatorStop()
-                        if self.api.errorCode == 0 {
-                            SVProgressHUD.showSuccess(withStatus: "转寄成功")
-                        } else if let errorDescription = self.api.errorDescription , errorDescription != "" {
-                            SVProgressHUD.showInfo(withStatus: errorDescription)
-                        } else {
-                            SVProgressHUD.showError(withStatus: "出错了")
-                        }
+            guard let textField = alert.textFields?.first else { return }
+            guard let text = textField.text else { return }
+            guard let myself = AppSetting.shared.username else { return }
+            let userID = text.isEmpty ? myself : text
+            networkActivityIndicatorStart()
+            self.api.forwardArticle(article.id, in: article.boardID, toUser: userID) { (result) in
+                DispatchQueue.main.async {
+                    networkActivityIndicatorStop()
+                    switch result {
+                    case .success:
+                        SVProgressHUD.showSuccess(withStatus: "转寄成功")
+                    case .failure(let error):
+                        error.display()
                     }
                 }
             }
@@ -924,25 +914,20 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         self.present(alert, animated: true)
     }
     
-    private func cross(_ article: SMArticle) {
+    private func cross(_ article: Article) {
         let resultController = BoardListSearchResultViewController.searchResultController(title: "转载到版面") { [unowned self] (controller, board) in
             let confirmAlert = UIAlertController(title: "确认转载?", message: nil, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "确认", style: .default) { [unowned self] _ in
                 self.dismiss(animated: true)
                 networkActivityIndicatorStart()
-                DispatchQueue.global().async {
-                    let result = self.api.crossArticle(articleID: article.id,
-                                                       fromBoard: article.boardID,
-                                                       toBoard: board.boardID)
-                    dPrint("cross article status: \(result)")
+                self.api.crossArticle(article.id, fromBoard: article.boardID, toBoard: board.boardID) { (result) in
                     DispatchQueue.main.async {
                         networkActivityIndicatorStop()
-                        if self.api.errorCode == 0 {
+                        switch result {
+                        case .success:
                             SVProgressHUD.showSuccess(withStatus: "转载成功")
-                        } else if let errorDescription = self.api.errorDescription , errorDescription != "" {
-                            SVProgressHUD.showInfo(withStatus: errorDescription)
-                        } else {
-                            SVProgressHUD.showError(withStatus: "出错了")
+                        case .failure(let error):
+                            error.display()
                         }
                     }
                 }
@@ -959,7 +944,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
 
 extension ArticleContentViewController {
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let article = smarticles[indexPath.section][indexPath.row]
+        let article = articles[indexPath.section][indexPath.row]
         let identifier = NSUUID().uuidString
         indexMap[identifier] = indexPath
         var shouldCollapse = false
@@ -1012,13 +997,13 @@ extension ArticleContentViewController {
         animator.addCompletion { [unowned self] in
             guard let identifier = configuration.identifier as? String else { return }
             guard let indexPath = self.indexMap[identifier] else { return }
-            let article = self.smarticles[indexPath.section][indexPath.row]
+            let article = self.articles[indexPath.section][indexPath.row]
             let fullscreen = self.getViewController(with: article)
             self.present(fullscreen, animated: true)
         }
     }
     
-    private func getViewController(with article: SMArticle) -> FullscreenContentViewController {
+    private func getViewController(with article: Article) -> FullscreenContentViewController {
         let fullscreen = FullscreenContentViewController()
         fullscreen.article = article
         fullscreen.modalPresentationStyle = .fullScreen

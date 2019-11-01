@@ -8,6 +8,7 @@
 
 import UIKit
 import SVProgressHUD
+import SmthConnection
 
 class FavListViewController: BaseTableViewController, FavoriteAddable {
     static let kUpdateFavListNotification = Notification.Name("UpdateFavListNotification")
@@ -67,25 +68,28 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
             completion?()
             return
         }
-        networkActivityIndicatorStart(withHUD: showHUD)
-        DispatchQueue.global().async {
-            var favBoards = [SMBoard]()
-            if self.index == 0 {
-                let ret = self.api.getFavBoardList(group: self.groupID) ?? [SMBoard]()
-                favBoards += ret
-            } else {
-                let ret = self.api.getUserMemberList(userID: userID) ?? [SMMember]()
-                favBoards += ret.map { $0.board }
-            }
-            
+        let completionHandler: SmthCompletion<[SMBoard]> = { result in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop(withHUD: showHUD)
                 completion?()
                 self.favorites.removeAll()
-                self.favorites += favBoards
+                switch result {
+                case .success(let favBoards):
+                    self.favorites += favBoards
+                    SMBoardInfo.save(boardList: favBoards)
+                case .failure(let error):
+                    error.display()
+                }
                 self.tableView?.reloadData()
-                self.api.displayErrorIfNeeded()
-                SMBoardInfo.save(boardList: favBoards)
+            }
+        }
+        networkActivityIndicatorStart(withHUD: showHUD)
+        if self.index == 0 {
+            api.getFavoriteList(in: groupID, completion: completionHandler)
+        } else {
+            api.getMemberList(userID: userID) { (result) in
+                let newResult = result.map { $0.map { $0.board } }
+                completionHandler(newResult)
             }
         }
     }
@@ -217,24 +221,27 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
         guard editingStyle == .delete else { return }
         guard let user = setting.username, let pass = setting.password else { return }
         let fav = favorites[indexPath.row]
+        let completion: SmthCompletion<Bool> = { result in
+            DispatchQueue.main.async {
+                networkActivityIndicatorStop()
+                switch result {
+                case .success:
+                    NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
+                                                    object: nil, userInfo: ["group_id": self.groupID])
+                case .failure(let error):
+                    SVProgressHUD.showInfo(withStatus: error.desc)
+                }
+            }
+        }
         networkActivityIndicatorStart()
-        DispatchQueue.global().async {
-            if (fav.flag != -1) && (fav.flag & 0x400 == 0) { //版面
-                if self.index == 0 {
-                    self.api.delFavorite(boardID: fav.boardID, group: self.groupID)
-                } else {
-                    let _ = self.api.quitMemberOfBoard(boardID: fav.boardID)
-                }
-                DispatchQueue.main.async {
-                    networkActivityIndicatorStop()
-                    if self.api.errorCode == 0 {
-                        NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                                                        object: nil, userInfo: ["group_id": self.groupID])
-                    } else {
-                        SVProgressHUD.showInfo(withStatus: self.api.errorDescription)
-                    }
-                }
-            } else { //目录
+        if (fav.flag != -1) && (fav.flag & 0x400 == 0) { //版面
+            if index == 0 {
+                api.delFavorite(fav.boardID, in: groupID, completion: completion)
+            } else {
+                api.quitMember(of: fav.boardID, completion: completion)
+            }
+        } else { //目录
+            DispatchQueue.global().async {
                 let success = self.api.delFavoriteDirectory(fav.position, in: self.groupID, user: user, pass: pass)
                 DispatchQueue.main.async {
                     networkActivityIndicatorStop()
@@ -317,34 +324,36 @@ extension FavoriteAddable {
     }
     
     func addFavoriteWithBoardID(_ boardID: String, in group: Int, isMember: Bool) {
-        networkActivityIndicatorStart(withHUD: true)
-        DispatchQueue.global().async {
-            var joinResult = 0
-            if !isMember {
-                self.api.addFavorite(boardID: boardID, group: group)
-            } else {
-                joinResult = self.api.joinMemberOfBoard(boardID: boardID)
-            }
+        let completion: SmthCompletion<Bool> = { result in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop(withHUD: true)
-                if self.api.errorCode == 0 {
+                switch result {
+                case .success(let isCandidate):
                     if !isMember {
                         SVProgressHUD.showSuccess(withStatus: "添加成功")
-                    } else if joinResult == 0 {
-                        SVProgressHUD.showSuccess(withStatus: "关注成功，您已是正式驻版用户")
-                    } else {
+                    } else if isCandidate {
                         SVProgressHUD.showSuccess(withStatus: "关注成功，尚需管理员审核成为正式驻版用户")
+                    } else {
+                        SVProgressHUD.showSuccess(withStatus: "关注成功，您已是正式驻版用户")
                     }
                     NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
                                                     object: nil, userInfo: ["group_id": group])
-                } else if self.api.errorCode == 10319 && !isMember {
-                    SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")
-                } else if self.api.errorDescription != nil && self.api.errorDescription != "" {
-                    SVProgressHUD.showInfo(withStatus: self.api.errorDescription)
-                } else {
-                    SVProgressHUD.showError(withStatus: "出错了")
+                case .failure(let error):
+                    if error.code == 10319 && !isMember {
+                        SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")
+                    } else if !error.desc.isEmpty {
+                        SVProgressHUD.showInfo(withStatus: error.desc)
+                    } else {
+                        SVProgressHUD.showError(withStatus: "出错了")
+                    }
                 }
             }
+        }
+        networkActivityIndicatorStart(withHUD: true)
+        if !isMember {
+            api.addFavorite(boardID, in: group, completion: completion)
+        } else {
+            api.joinMember(of: boardID, completion: completion)
         }
     }
 }

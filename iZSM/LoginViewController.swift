@@ -20,7 +20,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     private let containerView = UIView()
     private let lineView = UIView()
     
-    private let api = SmthAPI()
+    private let api = SmthAPI.shared
     private let setting = AppSetting.shared
     
     weak var delegate: LoginViewControllerDelegate?
@@ -138,28 +138,22 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func login(_ sender: UIButton?) {
-        let username = usernameField.text
-        let password = passwordField.text
-        
-        if username == "" || password == "" {
-            return
-        }
+        guard let username = usernameField.text, !username.isEmpty else { return }
+        guard let password = passwordField.text, !password.isEmpty else { return }
         
         spinner.startAnimating()
         networkActivityIndicatorStart()
-        DispatchQueue.global().async {
-            let loginSuccess = self.api.loginBBS(username: username!, password: password!) == 0 ? false : true
+        api.login(username: username, password: password) { (success) in
             DispatchQueue.main.async {
                 self.spinner.stopAnimating()
                 networkActivityIndicatorStop()
-                if loginSuccess && self.api.errorCode == 0 {
+                if success {
                     self.setting.username = username
                     self.setting.password = password
                     self.setting.accessToken = self.api.accessToken
                     self.delegate?.loginDidSuccessful()
                 } else {
                     self.lockAnimation(forView: self.passwordField)
-                    self.api.displayErrorIfNeeded()
                 }
             }
         }

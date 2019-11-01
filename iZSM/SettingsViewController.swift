@@ -186,14 +186,6 @@ class SettingsViewController: NTTableViewController {
         }
         backgroundTaskSwitch.isOn = setting.backgroundTaskEnabled
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // solve the bug when swipe back, tableview cell doesn't deselect
-        if let selectedRow = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: selectedRow, animated: true)
-        }
-    }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath == IndexPath(row: 0, section: 4) {

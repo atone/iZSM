@@ -75,10 +75,6 @@ class UserViewController: NTTableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // solve the bug when swipe back, tableview cell doesn't deselect
-        if let selectedRow = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: selectedRow, animated: true)
-        }
         updateUserInfoView()
         msgCenter.checkUnreadMessage()
     }

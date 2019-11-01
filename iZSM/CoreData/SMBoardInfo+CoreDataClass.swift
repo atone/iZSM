@@ -13,11 +13,13 @@ import SmthConnection
 
 @objc(SMBoardInfo)
 public class SMBoardInfo: NSManagedObject {
-    private static var queryingSet = Set<String>()
-    private static let lockQueue = DispatchQueue(label: "cn.yunaitong.iZSM.boardLockQueue")
+
 }
 
 extension SMBoardInfo {
+    private static var queryingSet = Set<String>()
+    private static let lockQueue = DispatchQueue(label: "cn.yunaitong.iZSM.boardLockQueue")
+    
     class func querySMBoardInfo(for boardID: String, callback: @escaping (SMBoard?) -> Void) {
         let container = CoreDataHelper.shared.persistentContainer
         container.performBackgroundTask { context in

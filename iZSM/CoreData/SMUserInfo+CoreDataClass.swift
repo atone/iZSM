@@ -13,11 +13,13 @@ import SmthConnection
 
 @objc(SMUserInfo)
 public class SMUserInfo: NSManagedObject {
-    private static var queryingSet = Set<String>()
-    private static let lockQueue = DispatchQueue(label: "cn.yunaitong.iZSM.userLockQueue")
+
 }
 
 extension SMUserInfo {
+    private static var queryingSet = Set<String>()
+    private static let lockQueue = DispatchQueue(label: "cn.yunaitong.iZSM.userLockQueue")
+    
     class func updateSMUserInfo(with user:SMUser, callback: @escaping () -> Void) {
         let container = CoreDataHelper.shared.persistentContainer
         container.performBackgroundTask { context in

@@ -15,8 +15,6 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     private let kBoardIdentifier = "Board"
     private let kDirectoryIdentifier = "Directory"
     
-    private var indexMap = [String : IndexPath]()
-    
     var boardID = 0
     var sectionID = 0
     var flag: Int = 0
@@ -235,52 +233,17 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
 extension BoardListViewController: FavoriteAddable {
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let board = boards[indexPath.row]
-        let identifier = NSUUID().uuidString
-        indexMap[identifier] = indexPath
-        let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
-            self.getViewController(with: board)
-        }
         let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
-            if (board.flag != -1) && (board.flag & 0x400 == 0) {
-                let addFavAction = UIAction(title: "收藏 \(board.name) 版", image: UIImage(systemName: "star")) { [unowned self] action in
-                    self.addFavoriteWithBoardID(board.boardID, in: 0)
-                }
-                return UIMenu(title: "", children: [addFavAction])
-            }
-            return nil
+            let addFavAction = UIAction(title: "收藏 \(board.name) 版", image: UIImage(systemName: "star.fill")) { [unowned self] action in
+                 self.addFavoriteWithBoardID(board.boardID, in: 0)
+             }
+             return UIMenu(title: "", children: [addFavAction])
         }
-        return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)
-    }
-    
-    override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
-        animator.addCompletion { [unowned self] in
-            guard let identifier = configuration.identifier as? String else { return }
-            guard let indexPath = self.indexMap[identifier] else { return }
-            let board = self.boards[indexPath.row]
-            let vc = self.getViewController(with: board)
-            self.show(vc, sender: self)
-        }
-    }
-    
-    private func getViewController(with board: SMBoard) -> BaseTableViewController {
-        if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
-            let blvc =  BoardListViewController()
-            if let r = board.name.range(of: " ") {
-                blvc.title = String(board.name[..<r.lowerBound])
-            } else {
-                blvc.title = board.name
-            }
-            blvc.boardID = board.bid
-            blvc.sectionID = board.section
-            blvc.flag = board.flag
-            return blvc
+        
+        if (board.flag != -1) && (board.flag & 0x400 == 0) {
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: actions)
         } else {
-            let alvc = ArticleListViewController()
-            alvc.boardID = board.boardID
-            alvc.boardName = board.name
-            alvc.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
-            alvc.hidesBottomBarWhenPushed = true
-            return alvc
+            return nil
         }
     }
 }

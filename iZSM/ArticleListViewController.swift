@@ -423,9 +423,9 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         let articleListActionVC = ArticleListActionViewController()
         let height: CGFloat
         if let bms = boardManagers, bms.count > 0 {
-            height = min(357 + 44.5 * CGFloat(bms.count), view.bounds.height / 2)
+            height = min(310 + 44 * CGFloat(bms.count), view.bounds.height / 2)
         } else {
-            height = min(327, view.bounds.height / 2) // 327 = 30 * 2 + 44.5 * 6
+            height = min(280, view.bounds.height / 2) // 280 = 30 * 2 + 44 * 5
         }
         articleListActionVC.preferredContentSize = CGSize(width: 240, height: height)
         articleListActionVC.modalPresentationStyle = .popover
@@ -611,12 +611,7 @@ class ArticleListActionViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell
-        if let newCell = tableView.dequeueReusableCell(withIdentifier: kCellIdentifier) {
-            cell = newCell
-        } else {
-            cell = UITableViewCell(style: .value1, reuseIdentifier: kCellIdentifier)
-        }
+        let cell = UITableViewCell(style: .value1, reuseIdentifier: kCellIdentifier)
         if indexPath.section == 0 {
             switch indexPath.row {
             case 0:
@@ -633,19 +628,14 @@ class ArticleListActionViewController: UITableViewController {
             if indexPath.row == threadSortMode.rawValue {
                 cell.detailTextLabel?.text = "✓"
                 cell.detailTextLabel?.textColor = UIColor(named: "SmthColor")
-            } else {
-                cell.detailTextLabel?.text = nil
             }
         } else if indexPath.section == 1 {
             cell.textLabel?.text = "寄信给 \(boardManagers[indexPath.row])"
-            cell.detailTextLabel?.text = nil
         } else {
             if indexPath.row == 0 {
                 cell.textLabel?.text = "收藏本版"
-            } else if indexPath.row == 1 {
-                cell.textLabel?.text = "关注本版 (驻版)"
+                cell.accessoryView = UIImageView(image: UIImage(systemName: "star.fill"))
             }
-            cell.detailTextLabel?.text = nil
         }
         return cell
     }

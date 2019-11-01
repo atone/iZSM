@@ -243,12 +243,9 @@ extension BoardListViewController: FavoriteAddable {
         let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
             if (board.flag != -1) && (board.flag & 0x400 == 0) {
                 let addFavAction = UIAction(title: "收藏 \(board.name) 版", image: UIImage(systemName: "star")) { [unowned self] action in
-                    self.addFavoriteWithBoardID(board.boardID, in: 0, isMember: false)
+                    self.addFavoriteWithBoardID(board.boardID, in: 0)
                 }
-                let addMemAction = UIAction(title: "关注 \(board.name) 版 (驻版)", image: UIImage(systemName: "heart")) { [unowned self] action in
-                    self.addFavoriteWithBoardID(board.boardID, in: 0, isMember: true)
-                }
-                return UIMenu(title: "", children: [addFavAction, addMemAction])
+                return UIMenu(title: "", children: [addFavAction])
             }
             return nil
         }

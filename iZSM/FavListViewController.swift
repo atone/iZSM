@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 import SVProgressHUD
 import SmthConnection
 
@@ -14,9 +15,29 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
     static let kUpdateFavListNotification = Notification.Name("UpdateFavListNotification")
     private let kBoardIdentifier = "Board"
     private let kDirectoryIdentifier = "Directory"
+    private let kStarThreadIdentifier = "StarThread"
+    
+    private let container = CoreDataHelper.shared.persistentContainer
+    
+    private lazy var fetchedResultsController: NSFetchedResultsController<StarThread> = {
+        let request: NSFetchRequest<StarThread> = StarThread.fetchRequest()
+        let userID = AppSetting.shared.username!.lowercased()
+        request.predicate = NSPredicate(format: "userID == '\(userID)'")
+        request.sortDescriptors = [NSSortDescriptor(key: "createTime", ascending: false)]
+        let frc = NSFetchedResultsController<StarThread>(fetchRequest: request,
+                                                         managedObjectContext: container.viewContext,
+                                                         sectionNameKeyPath: nil, cacheName: nil)
+        frc.delegate = self
+        try? frc.performFetch()
+        return frc
+    }()
+    
+    private lazy var addItem: UIBarButtonItem = {
+        return UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addFavoriteAction(_:)))
+    }()
     
     private lazy var switcher: UISegmentedControl = {
-        let switcher = UISegmentedControl(items: ["版面收藏", "驻版"])
+        let switcher = UISegmentedControl(items: ["版面收藏", "文章收藏"])
         switcher.selectedSegmentIndex = 0
         switcher.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         switcher.addTarget(self, action: #selector(indexChanged(_:)), for: .valueChanged)
@@ -50,13 +71,12 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        var barButtonItems = [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addFavoriteAction(_:)))]
-        if groupID == 0 { //只有根目录下有进入文章收藏的入口，以及切换收藏夹和驻版的Switcher
-            barButtonItems.append(UIBarButtonItem(image: UIImage(systemName: "text.badge.star"), style: .plain, target: self, action: #selector(showStarThreadVC(_:))))
+        tableView.register(StarThreadViewCell.self, forCellReuseIdentifier: kStarThreadIdentifier)
+        navigationItem.rightBarButtonItem = addItem
+        if groupID == 0 { //只有根目录下有进入文章收藏的入口，以及切换版面收藏和文章收藏的Switcher
             navigationItem.titleView = switcher
             navigationItem.leftBarButtonItem = editButtonItem
         }
-        navigationItem.rightBarButtonItems = barButtonItems
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(setUpdateFavList(_:)),
                                                name: FavListViewController.kUpdateFavListNotification,
@@ -64,11 +84,8 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
     }
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
-        guard let userID =  AppSetting.shared.username else {
-            completion?()
-            return
-        }
-        let completionHandler: SmthCompletion<[SMBoard]> = { result in
+        networkActivityIndicatorStart(withHUD: showHUD)
+        api.getFavoriteList(in: groupID) { (result) in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop(withHUD: showHUD)
                 completion?()
@@ -80,29 +97,23 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
                 case .failure(let error):
                     error.display()
                 }
-                self.tableView?.reloadData()
-            }
-        }
-        networkActivityIndicatorStart(withHUD: showHUD)
-        if self.index == 0 {
-            api.getFavoriteList(in: groupID, completion: completionHandler)
-        } else {
-            api.getMemberList(userID: userID) { (result) in
-                let newResult = result.map { $0.map { $0.board } }
-                completionHandler(newResult)
+                if self.index == 0 {
+                    self.tableView?.reloadData()
+                }
             }
         }
     }
     
     @objc private func indexChanged(_ sender: UISegmentedControl) {
         index = sender.selectedSegmentIndex
-        fetchDataDirectly(showHUD: true)
-    }
-    
-    @objc private func showStarThreadVC(_ sender: UIBarButtonItem) {
-        let vc = StarThreadViewController(style: .plain)
-        vc.hidesBottomBarWhenPushed = true
-        show(vc, sender: self)
+        if index == 0 {
+            refreshHeaderEnabled = true
+            navigationItem.rightBarButtonItem = addItem
+        } else {
+            refreshHeaderEnabled = false
+            navigationItem.rightBarButtonItem = nil
+        }
+        tableView?.reloadData()
     }
     
     @objc private func addFavoriteAction(_ sender: UIBarButtonItem) {
@@ -119,8 +130,6 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
             sheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
             sheet.popoverPresentationController?.barButtonItem = sender
             present(sheet, animated: true)
-        } else {
-            addFavorite()
         }
     }
     
@@ -138,12 +147,11 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
     }
     
     func addFavorite() {
-        let title = "请选择要\(self.index == 0 ? "收藏" : "关注")的版面"
-        let searchResultController = BoardListSearchResultViewController.searchResultController(title: title) { [unowned self] (controller, board) in
-            let confirmAlert = UIAlertController(title: "确认\(self.index == 0 ? "收藏" : "关注")?", message: nil, preferredStyle: .alert)
+        let searchResultController = BoardListSearchResultViewController.searchResultController(title: "请选择要收藏的版面") { [unowned self] (controller, board) in
+            let confirmAlert = UIAlertController(title: "确认收藏?", message: nil, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "确认", style: .default) { [unowned self] _ in
                 self.dismiss(animated: true)
-                self.addFavoriteWithBoardID(board.boardID, in: self.groupID, isMember: self.index != 0)
+                self.addFavoriteWithBoardID(board.boardID, in: self.groupID)
             }
             confirmAlert.addAction(okAction)
             confirmAlert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
@@ -155,10 +163,25 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
     
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return favorites.count
+        if self.index == 0 {
+            return favorites.count
+        } else {
+            if let sections = fetchedResultsController.sections {
+                return sections[section].numberOfObjects
+            }
+            return 0
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if self.index == 0 {
+            return getFavoriteCell(for: tableView, at: indexPath)
+        } else {
+            return getStarThreadCell(for: tableView, at: indexPath)
+        }
+    }
+    
+    private func getFavoriteCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let fav = favorites[indexPath.row]
         var cell: UITableViewCell
         if (fav.flag != -1) && (fav.flag & 0x400 == 0) { //是版面
@@ -188,57 +211,83 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
         return cell
     }
     
+    private func getStarThreadCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: kStarThreadIdentifier, for: indexPath) as! StarThreadViewCell
+        let object = fetchedResultsController.object(at: indexPath)
+        cell.configure(with: object, tableView: tableView)
+        return cell
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let board = favorites[indexPath.row]
-        if board.bid < 0 || board.position < 0 {
-            tableView.deselectRow(at: indexPath, animated: true)
-            return
-        }
-        if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
-            let flvc = FavListViewController()
-            flvc.title = board.name
-            flvc.groupID = board.bid
-            show(flvc, sender: self)
+        if self.index == 0 {
+            let board = favorites[indexPath.row]
+            if board.bid < 0 || board.position < 0 {
+                tableView.deselectRow(at: indexPath, animated: true)
+                return
+            }
+            if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
+                let flvc = FavListViewController()
+                flvc.title = board.name
+                flvc.groupID = board.bid
+                show(flvc, sender: self)
+            } else {
+                let alvc = ArticleListViewController()
+                alvc.boardID = board.boardID
+                alvc.boardName = board.name
+                alvc.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+                alvc.hidesBottomBarWhenPushed = true
+                show(alvc, sender: self)
+            }
         } else {
-            let alvc = ArticleListViewController()
-            alvc.boardID = board.boardID
-            alvc.boardName = board.name
-            alvc.boardManagers = board.manager.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
-            alvc.hidesBottomBarWhenPushed = true
-            show(alvc, sender: self)
+            let object = fetchedResultsController.object(at: indexPath)
+            let context = fetchedResultsController.managedObjectContext
+            object.accessTime = Date()
+            try? context.save()
+            let acvc = ArticleContentViewController()
+            acvc.articleID = Int(object.articleID)
+            acvc.boardID = object.boardID
+            acvc.fromStar = true
+            acvc.title = object.articleTitle
+            acvc.hidesBottomBarWhenPushed = true
+            showDetailViewController(acvc, sender: self)
         }
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        let board = favorites[indexPath.row]
-        if board.bid < 0 || board.position < 0 {
-            return false
+        if self.index == 0 {
+            let board = favorites[indexPath.row]
+            if board.bid < 0 || board.position < 0 {
+                return false
+            }
         }
         return true
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
+        if self.index == 0 {
+            deleteFavoriteItem(at: indexPath)
+        } else {
+            deleteStarThread(at: indexPath)
+        }
+    }
+    
+    private func deleteFavoriteItem(at indexPath: IndexPath) {
         guard let user = setting.username, let pass = setting.password else { return }
         let fav = favorites[indexPath.row]
-        let completion: SmthCompletion<Bool> = { result in
-            DispatchQueue.main.async {
-                networkActivityIndicatorStop()
-                switch result {
-                case .success:
-                    NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
-                                                    object: nil, userInfo: ["group_id": self.groupID])
-                case .failure(let error):
-                    SVProgressHUD.showInfo(withStatus: error.desc)
-                }
-            }
-        }
         networkActivityIndicatorStart()
         if (fav.flag != -1) && (fav.flag & 0x400 == 0) { //版面
-            if index == 0 {
-                api.delFavorite(fav.boardID, in: groupID, completion: completion)
-            } else {
-                api.quitMember(of: fav.boardID, completion: completion)
+            api.delFavorite(fav.boardID, in: groupID) { result in
+                DispatchQueue.main.async {
+                    networkActivityIndicatorStop()
+                    switch result {
+                    case .success:
+                        NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
+                                                        object: nil, userInfo: ["group_id": self.groupID])
+                    case .failure(let error):
+                        error.display()
+                    }
+                }
             }
         } else { //目录
             DispatchQueue.global().async {
@@ -253,10 +302,77 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
             }
         }
     }
+    
+    private func deleteStarThread(at indexPath: IndexPath) {
+        let object = fetchedResultsController.object(at: indexPath)
+        let context = fetchedResultsController.managedObjectContext
+        context.delete(object)
+        try? context.save()
+    }
+}
+
+extension FavListViewController: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard self.index == 1 else { return }
+        tableView.beginUpdates()
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard self.index == 1 else { return }
+        tableView.endUpdates()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        guard self.index == 1 else { return }
+        switch type {
+        case .insert:
+            tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .delete:
+            tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
+        default:
+            break
+        }
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        guard self.index == 1 else { return }
+        switch type {
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                tableView.insertRows(at: [newIndexPath], with: .fade)
+            }
+        case .delete:
+            if let indexPath = indexPath {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+        case .update:
+            if let indexPath = indexPath, let cell = tableView.cellForRow(at: indexPath) {
+                if let cell = cell as? StarThreadViewCell {
+                    let object = fetchedResultsController.object(at: indexPath)
+                    cell.configure(with: object, tableView: tableView)
+                }
+            }
+        case .move:
+            if let indexPath = indexPath, let newIndexPath = newIndexPath {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                tableView.insertRows(at: [newIndexPath], with: .fade)
+            }
+        @unknown default:
+            break
+        }
+    }
 }
 
 extension FavListViewController {
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        if self.index == 0 {
+            return favoriteContextMenuConfiguration(at: indexPath)
+        } else {
+            return starThreadContextMenuConfiguration(for: tableView, at: indexPath)
+        }
+    }
+    
+    private func favoriteContextMenuConfiguration(at indexPath: IndexPath) -> UIContextMenuConfiguration? {
         let board = favorites[indexPath.row]
         if board.bid < 0 || board.position < 0 {
             return nil
@@ -269,13 +385,58 @@ extension FavListViewController {
         return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: nil)
     }
     
+    private func starThreadContextMenuConfiguration(for tableView: UITableView, at indexPath: IndexPath) -> UIContextMenuConfiguration? {
+        guard let cell = tableView.cellForRow(at: indexPath) else { return nil }
+        let thread = self.fetchedResultsController.object(at: indexPath)
+        guard let boardID = thread.boardID, let articleTitle = thread.articleTitle else { return nil }
+        let identifier = NSUUID().uuidString
+        indexMap[identifier] = indexPath
+        let urlString: String
+        switch AppSetting.shared.displayMode {
+        case .nForum:
+            urlString = "https://www.newsmth.net/nForum/#!article/\(boardID)/\(thread.articleID)"
+        case .www2:
+            urlString = "https://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(thread.articleID)"
+        case .mobile:
+            urlString = "https://m.newsmth.net/article/\(boardID)/\(thread.articleID)"
+        }
+        let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
+            self.getViewController(with: thread)
+        }
+        let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
+            let openAction = UIAction(title: "浏览网页版", image: UIImage(systemName: "safari")) { [unowned self] action in
+                let webViewController = NTSafariViewController(url: URL(string: urlString)!)
+                self.present(webViewController, animated: true)
+            }
+            let shareAction = UIAction(title: "分享本帖", image: UIImage(systemName: "square.and.arrow.up")) { [unowned self] action in
+                let title = "水木\(boardID)版：【\(articleTitle)】"
+                let url = URL(string: urlString)!
+                let activityViewController = UIActivityViewController(activityItems: [title, url],
+                                                                      applicationActivities: nil)
+                activityViewController.popoverPresentationController?.sourceView = cell
+                activityViewController.popoverPresentationController?.sourceRect = cell.bounds
+                self.present(activityViewController, animated: true)
+            }
+            return UIMenu(title: "", children: [openAction, shareAction])
+        }
+        return UIContextMenuConfiguration(identifier: identifier as NSString, previewProvider: preview, actionProvider: actions)
+    }
+    
     override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
         animator.addCompletion { [unowned self] in
             guard let identifier = configuration.identifier as? String else { return }
             guard let indexPath = self.indexMap[identifier] else { return }
-            let board = self.favorites[indexPath.row]
-            let vc = self.getViewController(with: board)
-            self.show(vc, sender: self)
+            if self.index == 0 {
+                let board = self.favorites[indexPath.row]
+                let vc = self.getViewController(with: board)
+                self.show(vc, sender: self)
+            } else {
+                let thread = self.fetchedResultsController.object(at: indexPath)
+                thread.accessTime = Date()
+                try? self.fetchedResultsController.managedObjectContext.save()
+                let acvc = self.getViewController(with: thread)
+                self.showDetailViewController(acvc, sender: self)
+            }
         }
     }
     
@@ -294,13 +455,23 @@ extension FavListViewController {
             return alvc
         }
     }
+    
+    private func getViewController(with thread: StarThread) -> ArticleContentViewController {
+        let acvc = ArticleContentViewController()
+        acvc.articleID = Int(thread.articleID)
+        acvc.boardID = thread.boardID
+        acvc.fromStar = true
+        acvc.title = thread.articleTitle
+        acvc.hidesBottomBarWhenPushed = true
+        return acvc
+    }
 }
 
 protocol FavoriteAddable {
     var api: SmthAPI { get }
     var setting: AppSetting { get }
     
-    func addFavoriteWithBoardID(_ boardID: String, in group: Int, isMember: Bool) -> Void
+    func addFavoriteWithBoardID(_ boardID: String, in group: Int) -> Void
     func addFavoriteDirectoryWithName(_ name: String, in group: Int) -> Void
 }
 
@@ -323,37 +494,24 @@ extension FavoriteAddable {
         }
     }
     
-    func addFavoriteWithBoardID(_ boardID: String, in group: Int, isMember: Bool) {
-        let completion: SmthCompletion<Bool> = { result in
+    func addFavoriteWithBoardID(_ boardID: String, in group: Int) {
+        networkActivityIndicatorStart(withHUD: true)
+        api.addFavorite(boardID, in: group) { result in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop(withHUD: true)
                 switch result {
-                case .success(let isCandidate):
-                    if !isMember {
-                        SVProgressHUD.showSuccess(withStatus: "添加成功")
-                    } else if isCandidate {
-                        SVProgressHUD.showSuccess(withStatus: "关注成功，尚需管理员审核成为正式驻版用户")
-                    } else {
-                        SVProgressHUD.showSuccess(withStatus: "关注成功，您已是正式驻版用户")
-                    }
+                case .success:
+                    SVProgressHUD.showSuccess(withStatus: "添加成功")
                     NotificationCenter.default.post(name: FavListViewController.kUpdateFavListNotification,
                                                     object: nil, userInfo: ["group_id": group])
                 case .failure(let error):
-                    if error.code == 10319 && !isMember {
+                    if error.code == 10319 {
                         SVProgressHUD.showInfo(withStatus: "该版面已在收藏夹中")
-                    } else if !error.desc.isEmpty {
-                        SVProgressHUD.showInfo(withStatus: error.desc)
                     } else {
-                        SVProgressHUD.showError(withStatus: "出错了")
+                        error.display()
                     }
                 }
             }
-        }
-        networkActivityIndicatorStart(withHUD: true)
-        if !isMember {
-            api.addFavorite(boardID, in: group, completion: completion)
-        } else {
-            api.joinMember(of: boardID, completion: completion)
         }
     }
 }

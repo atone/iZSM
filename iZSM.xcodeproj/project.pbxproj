@@ -36,7 +36,6 @@
 		9C56E1D61F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1D11F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m */; };
 		9C56E1D71F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1D31F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m */; };
 		9C57261B233F7389003FE851 /* StarThread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C572619233F7389003FE851 /* StarThread+CoreDataClass.swift */; };
-		9C57261E233F8CD1003FE851 /* StarThreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C57261D233F8CD1003FE851 /* StarThreadViewController.swift */; };
 		9C572620233F901F003FE851 /* StarThreadViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C57261F233F901F003FE851 /* StarThreadViewCell.swift */; };
 		9C5E17121F0F77F100AA5368 /* PageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5E17111F0F77F100AA5368 /* PageListViewController.swift */; };
 		9C642E231F40242800B13794 /* BoardListSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */; };
@@ -319,7 +318,6 @@
 		9C56E1D21F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDTemplateLayoutCellDebug.h"; sourceTree = "<group>"; };
 		9C56E1D31F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCellDebug.m"; sourceTree = "<group>"; };
 		9C572619233F7389003FE851 /* StarThread+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "StarThread+CoreDataClass.swift"; path = "CoreData/StarThread+CoreDataClass.swift"; sourceTree = "<group>"; };
-		9C57261D233F8CD1003FE851 /* StarThreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarThreadViewController.swift; sourceTree = "<group>"; };
 		9C57261F233F901F003FE851 /* StarThreadViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarThreadViewCell.swift; sourceTree = "<group>"; };
 		9C5E17111F0F77F100AA5368 /* PageListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageListViewController.swift; sourceTree = "<group>"; };
 		9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardListSearchResultViewController.swift; sourceTree = "<group>"; };
@@ -696,7 +694,6 @@
 				9CA3B15D1DE3323B00E9B121 /* BaseTableViewController.swift */,
 				9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */,
 				9C889FCE1DE4995300C33A8D /* FavListViewController.swift */,
-				9C57261D233F8CD1003FE851 /* StarThreadViewController.swift */,
 				9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */,
 				9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */,
 				9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */,
@@ -1361,7 +1358,6 @@
 				9C25D5A91DE5634B005CB55C /* UserViewController.swift in Sources */,
 				9C25D5AD1DE56BC8005CB55C /* ReminderViewController.swift in Sources */,
 				9C9C3902232E04E40079AC71 /* NTTabBarController.swift in Sources */,
-				9C57261E233F8CD1003FE851 /* StarThreadViewController.swift in Sources */,
 				9C4FB42C234E121E008F88FC /* PlaceholderViewController.swift in Sources */,
 				9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */,
 				9C1A3BF41DE2EA9900CF4A43 /* SmthStructs.swift in Sources */,

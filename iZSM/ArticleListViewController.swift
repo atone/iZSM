@@ -453,7 +453,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         articleListActionVC.favoriteHandler = { [unowned self] index in
             self.dismiss(animated: true)
             guard let boardID = self.boardID else { return }
-            self.addFavoriteWithBoardID(boardID, in: 0, isMember: index != 0)
+            self.addFavoriteWithBoardID(boardID, in: 0)
         }
         
         let presentationCtr = articleListActionVC.presentationController as! UIPopoverPresentationController
@@ -593,7 +593,7 @@ class ArticleListActionViewController: UITableViewController {
         } else if section == 1 {
             return boardManagers.count // send message to board managers
         } else {
-            return 2 // favorite actions
+            return 1 // favorite actions
         }
     }
     

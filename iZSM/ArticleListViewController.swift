@@ -632,10 +632,8 @@ class ArticleListActionViewController: UITableViewController {
         } else if indexPath.section == 1 {
             cell.textLabel?.text = "寄信给 \(boardManagers[indexPath.row])"
         } else {
-            if indexPath.row == 0 {
-                cell.textLabel?.text = "收藏本版"
-                cell.accessoryView = UIImageView(image: UIImage(systemName: "star.fill"))
-            }
+            cell.textLabel?.text = "收藏本版"
+            cell.accessoryView = UIImageView(image: UIImage(systemName: "star.fill"))
         }
         return cell
     }

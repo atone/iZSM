@@ -153,87 +153,86 @@ class ArticleContentViewController: NTTableViewController {
     
     // MARK: - Fetch Data
     func fetchData(restorePosition: Bool, showHUD: Bool) {
-        if self.isFetchingData {
+        if self.isFetchingData { return }
+        guard let boardID = self.boardID, let articleID = self.articleID else {
+            self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+            self.tableView.switchRefreshFooter(to: .normal)
             return
         }
-        if let boardID = self.boardID, let articleID = self.articleID {
-            self.isFetchingData = true
-            networkActivityIndicatorStart(withHUD: showHUD)
-            self.refreshFooterEnabled = false
-            DispatchQueue.global().async {
-                do {
-                    var articles = [Article]()
-                    if let soloUser = self.soloUser { // 只看某人模式
-                        while articles.count < self.setting.articleCountPerSection
-                            && (self.totalArticleNumber == 0 || self.currentForwardNumber < self.totalArticleNumber)
-                        {
-                            let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
-                            articles += result.articles.filter { $0.authorID == soloUser }
-                            self.currentForwardNumber += result.articles.count
-                            self.totalArticleNumber = result.total
-                        }
-                    } else {  // 正常模式
+        
+        self.isFetchingData = true
+        networkActivityIndicatorStart(withHUD: showHUD)
+        self.refreshFooterEnabled = false
+        DispatchQueue.global().async {
+            do {
+                var articles = [Article]()
+                if let soloUser = self.soloUser { // 只看某人模式
+                    while articles.count < self.setting.articleCountPerSection
+                        && (self.totalArticleNumber == 0 || self.currentForwardNumber < self.totalArticleNumber)
+                    {
                         let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
-                        articles += result.articles
+                        articles += result.articles.filter { $0.authorID == soloUser }
                         self.currentForwardNumber += result.articles.count
                         self.totalArticleNumber = result.total
                     }
-                    
-                    if (self.fromTopTen || self.fromStar) && self.boardName == nil { // get boardName
-                        SMBoardInfo.querySMBoardInfo(for: boardID) { (board) in
-                            self.boardName = board?.name
-                        }
+                } else {  // 正常模式
+                    let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
+                    articles += result.articles
+                    self.currentForwardNumber += result.articles.count
+                    self.totalArticleNumber = result.total
+                }
+                
+                if (self.fromTopTen || self.fromStar) && self.boardName == nil { // get boardName
+                    SMBoardInfo.querySMBoardInfo(for: boardID) { (board) in
+                        self.boardName = board?.name
                     }
-                    
-                    DispatchQueue.main.async {
-                        self.isFetchingData = false
-                        networkActivityIndicatorStop(withHUD: showHUD)
-                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                        self.tableView.switchRefreshFooter(to: .normal)
-                        self.articles.removeAll()
-                        self.articleContentLayout.removeAll()
-                        self.tableView.fd_keyedHeightCache.invalidateAllHeightCache()
-                        if articles.count > 0 {
-                            self.refreshFooterEnabled = true
-                            self.articles.append(articles)
-                            self.tableView.reloadData()
-                            if restorePosition {
-                                if self.row < articles.count {
-                                    self.tableView.scrollToRow(at: IndexPath(row: self.row, section: 0),
-                                                               at: .top,
-                                                               animated: false)
-                                } else {
-                                    self.tableView.scrollToRow(at: IndexPath(row: articles.count - 1, section: 0),
-                                                               at: .top,
-                                                               animated: false)
-                                }
+                }
+                
+                DispatchQueue.main.async {
+                    self.isFetchingData = false
+                    networkActivityIndicatorStop(withHUD: showHUD)
+                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                    self.tableView.switchRefreshFooter(to: .normal)
+                    self.articles.removeAll()
+                    self.articleContentLayout.removeAll()
+                    self.tableView.fd_keyedHeightCache.invalidateAllHeightCache()
+                    if articles.count > 0 {
+                        self.refreshFooterEnabled = true
+                        self.articles.append(articles)
+                        self.tableView.reloadData()
+                        if restorePosition {
+                            if self.row < articles.count {
+                                self.tableView.scrollToRow(at: IndexPath(row: self.row, section: 0),
+                                                           at: .top,
+                                                           animated: false)
                             } else {
-                                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0),
+                                self.tableView.scrollToRow(at: IndexPath(row: articles.count - 1, section: 0),
                                                            at: .top,
                                                            animated: false)
                             }
                         } else {
-                            self.tableView.reloadData()
-                            SVProgressHUD.showError(withStatus: "指定的文章不存在\n或链接错误")
+                            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0),
+                                                       at: .top,
+                                                       animated: false)
                         }
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        self.isFetchingData = false
-                        networkActivityIndicatorStop(withHUD: showHUD)
-                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                        self.tableView.switchRefreshFooter(to: .normal)
-                        self.articles.removeAll()
-                        self.articleContentLayout.removeAll()
-                        self.tableView.fd_keyedHeightCache.invalidateAllHeightCache()
+                    } else {
                         self.tableView.reloadData()
-                        (error as? SMError)?.display()
+                        SVProgressHUD.showError(withStatus: "指定的文章不存在\n或链接错误")
                     }
                 }
+            } catch {
+                DispatchQueue.main.async {
+                    self.isFetchingData = false
+                    networkActivityIndicatorStop(withHUD: showHUD)
+                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                    self.tableView.switchRefreshFooter(to: .normal)
+                    self.articles.removeAll()
+                    self.articleContentLayout.removeAll()
+                    self.tableView.fd_keyedHeightCache.invalidateAllHeightCache()
+                    self.tableView.reloadData()
+                    (error as? SMError)?.display()
+                }
             }
-        } else {
-            self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-            self.tableView.switchRefreshFooter(to: .normal)
         }
     }
     

@@ -75,6 +75,11 @@ class BaseTableViewController: NTTableViewController {
     
     // check login status and fetch initial data
     func fetchData(showHUD: Bool, headerRefreshing: Bool = false) {
+        let stopHeaderRefreshing: () -> Void = {
+            if headerRefreshing {
+                self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+            }
+        }
         if !setting.eulaAgreed {
             let eulaViewController = EulaViewController()
             eulaViewController.delegate = self
@@ -82,11 +87,7 @@ class BaseTableViewController: NTTableViewController {
             navigationController.isModalInPresentation = true
             present(navigationController, animated: true)
         } else if setting.accessToken != nil { // fetch data directly
-            fetchDataDirectly(showHUD: showHUD) {
-                if headerRefreshing {
-                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                }
-            }
+            fetchDataDirectly(showHUD: showHUD, completion: stopHeaderRefreshing)
         } else if let username = setting.username, let password = setting.password { // silent login
             networkActivityIndicatorStart()
             api.login(username: username, password: password) { (success) in
@@ -94,15 +95,9 @@ class BaseTableViewController: NTTableViewController {
                     networkActivityIndicatorStop()
                     if success {
                         self.setting.accessToken = self.api.accessToken
-                        self.fetchDataDirectly(showHUD: showHUD) {
-                            if headerRefreshing {
-                                self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                            }
-                        }
+                        self.fetchDataDirectly(showHUD: showHUD, completion: stopHeaderRefreshing)
                     } else {
-                        if headerRefreshing {
-                            self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                        }
+                        stopHeaderRefreshing()
                     }
                 }
             }

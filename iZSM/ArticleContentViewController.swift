@@ -237,103 +237,101 @@ class ArticleContentViewController: NTTableViewController {
     }
     
     func fetchPrevData() {
-        if self.isFetchingData {
-            return
-        }
-        if let boardID = self.boardID, let articleID = self.articleID {
-            self.isFetchingData = true
-            networkActivityIndicatorStart()
-            DispatchQueue.global().async {
-                do {
-                    let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.backwardThreadRange, sort: self.setting.sortMode)
-                    DispatchQueue.main.async {
-                        self.isFetchingData = false
-                        networkActivityIndicatorStop()
-                        if result.articles.count > 0 {
-                            self.articles.insert(result.articles, at: 0)
-                            self.currentBackwardNumber -= result.articles.count
-                            self.totalArticleNumber = result.total
-                            self.tableView.reloadData()
-                            var delayOffest = self.tableView.contentOffset
-                            for i in 0..<result.articles.count {
-                                delayOffest.y += self.tableView(self.tableView, heightForRowAt: IndexPath(row: i, section: 0))
-                            }
-                            self.tableView.setContentOffset(delayOffest, animated: false)
-                            self.updateCurrentSection()
-                        }
-                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                        self.tableView.switchRefreshFooter(to: .normal)
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        self.isFetchingData = false
-                        networkActivityIndicatorStop()
-                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                        self.tableView.switchRefreshFooter(to: .normal)
-                        (error as? SMError)?.display()
-                    }
-                }
-            }
-        } else {
+        if self.isFetchingData { return }
+        guard let boardID = self.boardID, let articleID = self.articleID else {
             tableView.switchRefreshHeader(to: .normal(.none, 0))
             tableView.switchRefreshFooter(to: .normal)
+            return
+        }
+        
+        self.isFetchingData = true
+        networkActivityIndicatorStart()
+        DispatchQueue.global().async {
+            do {
+                let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.backwardThreadRange, sort: self.setting.sortMode)
+                DispatchQueue.main.async {
+                    self.isFetchingData = false
+                    networkActivityIndicatorStop()
+                    if result.articles.count > 0 {
+                        self.articles.insert(result.articles, at: 0)
+                        self.currentBackwardNumber -= result.articles.count
+                        self.totalArticleNumber = result.total
+                        self.tableView.reloadData()
+                        var delayOffest = self.tableView.contentOffset
+                        for i in 0..<result.articles.count {
+                            delayOffest.y += self.tableView(self.tableView, heightForRowAt: IndexPath(row: i, section: 0))
+                        }
+                        self.tableView.setContentOffset(delayOffest, animated: false)
+                        self.updateCurrentSection()
+                    }
+                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                    self.tableView.switchRefreshFooter(to: .normal)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.isFetchingData = false
+                    networkActivityIndicatorStop()
+                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                    self.tableView.switchRefreshFooter(to: .normal)
+                    (error as? SMError)?.display()
+                }
+            }
         }
     }
     
     @objc func fetchMoreData() {
-        if self.isFetchingData {
+        if self.isFetchingData { return }
+        guard let boardID = self.boardID, let articleID = self.articleID else {
+            tableView.switchRefreshHeader(to: .normal(.none, 0))
+            tableView.switchRefreshFooter(to: .normal)
             return
         }
-        if let boardID = self.boardID, let articleID = self.articleID {
-            self.isFetchingData = true
-            networkActivityIndicatorStart()
-            DispatchQueue.global().async {
-                do {
-                    var articles = [Article]()
-                    if let soloUser = self.soloUser { // 只看某人模式
-                        while articles.count < self.setting.articleCountPerSection
-                            && self.currentForwardNumber < self.totalArticleNumber
-                        {
-                            let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
-                            articles += result.articles.filter { $0.authorID == soloUser }
-                            self.currentForwardNumber += result.articles.count
-                            self.totalArticleNumber = result.total
-                        }
-                    } else { // 正常模式
+        
+        self.isFetchingData = true
+        networkActivityIndicatorStart()
+        DispatchQueue.global().async {
+            do {
+                var articles = [Article]()
+                if let soloUser = self.soloUser { // 只看某人模式
+                    while articles.count < self.setting.articleCountPerSection
+                        && self.currentForwardNumber < self.totalArticleNumber
+                    {
                         let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
-                        articles += result.articles
+                        articles += result.articles.filter { $0.authorID == soloUser }
                         self.currentForwardNumber += result.articles.count
                         self.totalArticleNumber = result.total
                     }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.isFetchingData = false
-                        networkActivityIndicatorStop()
-                        if articles.count > 0 {
-                            self.articles.append(articles)
-                            self.tableView.reloadData()
-                        }
-                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                        self.tableView.switchRefreshFooter(to: .normal)
-                        if self.totalArticleNumber == self.currentForwardNumber {
-                            self.refreshFooter.textLabel.text = "没有新帖子了"
-                        } else {
-                            self.refreshFooter.textLabel.text = "上拉或点击加载更多"
-                        }
+                } else { // 正常模式
+                    let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
+                    articles += result.articles
+                    self.currentForwardNumber += result.articles.count
+                    self.totalArticleNumber = result.total
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.isFetchingData = false
+                    networkActivityIndicatorStop()
+                    if articles.count > 0 {
+                        self.articles.append(articles)
+                        self.tableView.reloadData()
                     }
-                } catch {
-                    DispatchQueue.main.async {
-                        self.isFetchingData = false
-                        networkActivityIndicatorStop()
-                        self.tableView.switchRefreshHeader(to: .normal(.none, 0))
-                        self.tableView.switchRefreshFooter(to: .normal)
-                        (error as? SMError)?.display()
+                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                    self.tableView.switchRefreshFooter(to: .normal)
+                    if self.totalArticleNumber == self.currentForwardNumber {
+                        self.refreshFooter.textLabel.text = "没有新帖子了"
+                    } else {
+                        self.refreshFooter.textLabel.text = "上拉或点击加载更多"
                     }
                 }
+            } catch {
+                DispatchQueue.main.async {
+                    self.isFetchingData = false
+                    networkActivityIndicatorStop()
+                    self.tableView.switchRefreshHeader(to: .normal(.none, 0))
+                    self.tableView.switchRefreshFooter(to: .normal)
+                    (error as? SMError)?.display()
+                }
             }
-        } else {
-            tableView.switchRefreshHeader(to: .normal(.none, 0))
-            tableView.switchRefreshFooter(to: .normal)
         }
     }
     

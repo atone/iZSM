@@ -77,7 +77,7 @@ class MessageCenter {
                     let center = UNUserNotificationCenter.current()
                     center.add(request) { error in
                         if error != nil {
-                            print("Unable to post new mail notification")
+                            dPrint("Unable to post new mail notification")
                         }
                     }
                 }
@@ -93,7 +93,7 @@ class MessageCenter {
                     let center = UNUserNotificationCenter.current()
                     center.add(request) { error in
                         if error != nil {
-                            print("Unable to post new reply notification")
+                            dPrint("Unable to post new reply notification")
                         }
                     }
                 }
@@ -109,7 +109,7 @@ class MessageCenter {
                     let center = UNUserNotificationCenter.current()
                     center.add(request) { error in
                         if error != nil {
-                            print("Unable to post new refer notification")
+                            dPrint("Unable to post new refer notification")
                         }
                     }
                 }

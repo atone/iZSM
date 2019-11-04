@@ -101,74 +101,116 @@ class MessageCenter {
     }
     
     func checkUnreadMessage(postUserNotification post: Bool, completionHandler: ((Bool) -> Void)?) {
-        if self.setting.accessToken != nil {
-            DispatchQueue.global().async {
-                let newMailCount = (try? self.api.getMailCount().newCount) ?? 0
-                let newReplyCount = (try? self.api.getReferCount(mode: .reply).newCount) ?? 0
-                let newReferCount = (try? self.api.getReferCount(mode: .refer).newCount) ?? 0
-                
-                dPrint("mail \(self.mailCount) -> \(newMailCount), reply \(self.replyCount) -> \(newReplyCount), refer \(self.referCount) -> \(newReferCount)")
-                
-                if post && newMailCount > self.mailCount {
-                    dPrint("post new mail notification")
-                    let content = UNMutableNotificationContent()
-                    content.title = "新邮件"
-                    content.body = "您收到 \(newMailCount) 封新邮件"
-                    content.sound = UNNotificationSound.default
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-                    let request = UNNotificationRequest(identifier: "zsmth.newmail", content: content, trigger: trigger)
-                    let center = UNUserNotificationCenter.current()
-                    center.add(request) { error in
-                        if error != nil {
-                            dPrint("Unable to post new mail notification")
+        guard setting.accessToken != nil else {
+            completionHandler?(true)
+            return
+        }
+        
+        DispatchQueue.global().async {
+            var newMailCount = 0
+            var newReplyCount = 0
+            var newReferCount = 0
+            
+            do {
+                newMailCount = try self.api.getMailCount().newCount
+                newReplyCount = try self.api.getReferCount(mode: .reply).newCount
+                newReferCount = try self.api.getReferCount(mode: .refer).newCount
+            } catch {
+                guard let error = error as? SMError else {
+                    completionHandler?(false)
+                    return
+                }
+                dPrint(error)
+                guard error.code == 10014 || error.code == 10010 else {
+                    completionHandler?(false)
+                    return
+                }
+                // invalidate access token
+                self.setting.accessToken = nil
+                // try to login again
+                guard let user = self.setting.username, let pass = self.setting.password else {
+                    completionHandler?(false)
+                    return
+                }
+                dPrint("access_token is invalid, try to login again")
+                self.api.login(username: user, password: pass) { (success) in
+                    if success {
+                        self.setting.accessToken = self.api.accessToken
+                        do {
+                            newMailCount = try self.api.getMailCount().newCount
+                            newReplyCount = try self.api.getReferCount(mode: .reply).newCount
+                            newReferCount = try self.api.getReferCount(mode: .refer).newCount
+                        } catch {
+                            dPrint("error occurred again, task failed")
+                            completionHandler?(false)
+                            return
                         }
+                    } else {
+                        dPrint("login failed")
+                        completionHandler?(false)
+                        return
                     }
                 }
-                
-                if post && newReplyCount > self.replyCount {
-                    dPrint("post new reply notification")
-                    let content = UNMutableNotificationContent()
-                    content.title = "新回复"
-                    content.body = "您收到 \(newReplyCount) 条新回复"
-                    content.sound = UNNotificationSound.default
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-                    let request = UNNotificationRequest(identifier: "zsmth.newreply", content: content, trigger: trigger)
-                    let center = UNUserNotificationCenter.current()
-                    center.add(request) { error in
-                        if error != nil {
-                            dPrint("Unable to post new reply notification")
-                        }
-                    }
-                }
-                
-                if post && newReferCount > self.referCount {
-                    dPrint("post new refer notification")
-                    let content = UNMutableNotificationContent()
-                    content.title = "新提醒"
-                    content.body = "有人 @ 了您"
-                    content.sound = UNNotificationSound.default
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-                    let request = UNNotificationRequest(identifier: "zsmth.newrefer", content: content, trigger: trigger)
-                    let center = UNUserNotificationCenter.current()
-                    center.add(request) { error in
-                        if error != nil {
-                            dPrint("Unable to post new refer notification")
-                        }
-                    }
-                }
-                
-                self.mailCount = newMailCount
-                self.replyCount = newReplyCount
-                self.referCount = newReferCount
-                
-                self.updateBadge()
-                self.notifyOthers()
-                
-                completionHandler?(true)
             }
-        } else {
-            completionHandler?(false)
-            dPrint("no data, user not login or token expired")
+            
+            dPrint("mail \(self.mailCount) -> \(newMailCount), reply \(self.replyCount) -> \(newReplyCount), refer \(self.referCount) -> \(newReferCount)")
+            
+            if post && newMailCount > self.mailCount {
+                dPrint("post new mail notification")
+                let content = UNMutableNotificationContent()
+                content.title = "新邮件"
+                content.body = "您收到 \(newMailCount) 封新邮件"
+                content.sound = UNNotificationSound.default
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+                let request = UNNotificationRequest(identifier: "zsmth.newmail", content: content, trigger: trigger)
+                let center = UNUserNotificationCenter.current()
+                center.add(request) { error in
+                    if error != nil {
+                        dPrint("Unable to post new mail notification")
+                    }
+                }
+            }
+            
+            if post && newReplyCount > self.replyCount {
+                dPrint("post new reply notification")
+                let content = UNMutableNotificationContent()
+                content.title = "新回复"
+                content.body = "您收到 \(newReplyCount) 条新回复"
+                content.sound = UNNotificationSound.default
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+                let request = UNNotificationRequest(identifier: "zsmth.newreply", content: content, trigger: trigger)
+                let center = UNUserNotificationCenter.current()
+                center.add(request) { error in
+                    if error != nil {
+                        dPrint("Unable to post new reply notification")
+                    }
+                }
+            }
+            
+            if post && newReferCount > self.referCount {
+                dPrint("post new refer notification")
+                let content = UNMutableNotificationContent()
+                content.title = "新提醒"
+                content.body = "有人 @ 了您"
+                content.sound = UNNotificationSound.default
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+                let request = UNNotificationRequest(identifier: "zsmth.newrefer", content: content, trigger: trigger)
+                let center = UNUserNotificationCenter.current()
+                center.add(request) { error in
+                    if error != nil {
+                        dPrint("Unable to post new refer notification")
+                    }
+                }
+            }
+            
+            self.mailCount = newMailCount
+            self.replyCount = newReplyCount
+            self.referCount = newReferCount
+            
+            self.updateBadge()
+            self.notifyOthers()
+            
+            completionHandler?(true)
         }
     }
 }

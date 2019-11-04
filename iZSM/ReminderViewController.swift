@@ -29,17 +29,23 @@ class ReminderViewController: BaseTableViewController {
         }
     }
     
-    private var references: [[SMReference]] = [[SMReference]]() {
-        didSet { tableView?.reloadData() }
-    }
+    private var references: [[SMReference]] = [[SMReference]]()
     
     override func clearContent() {
         references.removeAll()
+        tableView.reloadData()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(ReminderListCell.self, forCellReuseIdentifier: kReminderListCellIdentifier)
+        navigationItem.rightBarButtonItem = editButtonItem
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.beginUpdates()
+        tableView.endUpdates()
     }
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
@@ -52,14 +58,15 @@ class ReminderViewController: BaseTableViewController {
                     DispatchQueue.main.async {
                         networkActivityIndicatorStop(withHUD: showHUD)
                         completion?()
+                        self.references.removeAll()
                         switch result {
                         case .success(let refers):
                             self.referCountLoaded -= refers.count
-                            self.references.removeAll()
                             self.references.append(refers.reversed())
                         case .failure(let error):
                             error.display()
                         }
+                        self.tableView.reloadData()
                     }
                 }
             }
@@ -76,6 +83,7 @@ class ReminderViewController: BaseTableViewController {
                 case .success(let refers):
                     self.referCountLoaded -= refers.count
                     self.references.append(refers.reversed())
+                    self.tableView.reloadData()
                 case .failure(let error):
                     error.display()
                 }
@@ -125,5 +133,33 @@ class ReminderViewController: BaseTableViewController {
             MessageCenter.shared.checkUnreadMessage()
         }
         showDetailViewController(rcvc, sender: self)
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete else { return }
+        networkActivityIndicatorStart()
+        let refer = references[indexPath.section][indexPath.row]
+        let mode: SMReference.ReferMode = replyMe ? .reply : .refer
+        api.deleteRefer(at: refer.position, mode: mode) { (result) in
+            DispatchQueue.main.async {
+                networkActivityIndicatorStop()
+                switch result {
+                case .success:
+                    let refer = self.references[indexPath.section].remove(at: indexPath.row)
+                    if refer.flag == 0 {
+                        MessageCenter.shared.checkUnreadMessage()
+                    }
+                    self.tableView.beginUpdates()
+                    self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                    self.tableView.endUpdates()
+                case .failure(let error):
+                    error.display()
+                }
+            }
+        }
     }
 }

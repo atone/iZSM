@@ -83,6 +83,12 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
                                                object: nil)
     }
     
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
+    
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         networkActivityIndicatorStart(withHUD: showHUD)
         api.getFavoriteList(in: groupID) { (result) in
@@ -214,7 +220,7 @@ class FavListViewController: BaseTableViewController, FavoriteAddable {
     private func getStarThreadCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: kStarThreadIdentifier, for: indexPath) as! StarThreadViewCell
         let object = fetchedResultsController.object(at: indexPath)
-        cell.configure(with: object, tableView: tableView)
+        cell.configure(with: object)
         return cell
     }
     
@@ -349,7 +355,7 @@ extension FavListViewController: NSFetchedResultsControllerDelegate {
             if let indexPath = indexPath, let cell = tableView.cellForRow(at: indexPath) {
                 if let cell = cell as? StarThreadViewCell {
                     let object = fetchedResultsController.object(at: indexPath)
-                    cell.configure(with: object, tableView: tableView)
+                    cell.configure(with: object)
                 }
             }
         case .move:

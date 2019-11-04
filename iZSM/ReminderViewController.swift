@@ -20,6 +20,10 @@ class ReminderViewController: BaseTableViewController {
         }
     }
     
+    var mode: SMReference.ReferMode {
+        return replyMe ? .reply : .refer
+    }
+    
     private var referCountLoaded: Int = 0
     private var referCountPerSection = 20
     private var referRange: NSRange {
@@ -52,11 +56,10 @@ class ReminderViewController: BaseTableViewController {
     
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         networkActivityIndicatorStart(withHUD: showHUD)
-        let mode: SMReference.ReferMode = replyMe ? .reply : .refer
         api.getReferCount(mode: mode) { (result) in
             if let (totalCount, _) = try? result.get() {
                 self.referCountLoaded = totalCount
-                self.api.getRefer(mode: mode, range: self.referRange) { (result) in
+                self.api.getRefer(mode: self.mode, range: self.referRange) { (result) in
                     DispatchQueue.main.async {
                         networkActivityIndicatorStop(withHUD: showHUD)
                         completion?()
@@ -77,7 +80,6 @@ class ReminderViewController: BaseTableViewController {
     
     override func fetchMoreData() {
         networkActivityIndicatorStart()
-        let mode: SMReference.ReferMode = replyMe ? .reply : .refer
         api.getRefer(mode: mode, range: referRange) { (result) in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
@@ -110,14 +112,13 @@ class ReminderViewController: BaseTableViewController {
     }
     
     func readAll() {
-        let mode: SMReference.ReferMode = replyMe ? .reply : .refer
         api.setAllReferRead(mode: mode) { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
                     SVProgressHUD.showSuccess(withStatus: "操作成功")
                     self.fetchData(showHUD: false)
-                    MessageCenter.shared.checkUnreadMessage()
+                    MessageCenter.shared.readRefer(mode: self.mode, all: true)
                 case .failure(let error):
                     error.display()
                 }
@@ -126,14 +127,13 @@ class ReminderViewController: BaseTableViewController {
     }
     
     func deleteAll() {
-        let mode: SMReference.ReferMode = replyMe ? .reply : .refer
         api.truncateRefer(mode: mode) { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
                     SVProgressHUD.showSuccess(withStatus: "操作成功")
                     self.fetchData(showHUD: false)
-                    MessageCenter.shared.checkUnreadMessage()
+                    MessageCenter.shared.readRefer(mode: self.mode, all: true)
                 case .failure(let error):
                     error.display()
                 }
@@ -179,8 +179,8 @@ class ReminderViewController: BaseTableViewController {
             var readReference = reference
             readReference.flag = 1
             references[indexPath.section][indexPath.row] = readReference
-            
-            MessageCenter.shared.checkUnreadMessage()
+            tableView.reloadData()
+            MessageCenter.shared.readRefer(mode: mode)
         }
         showDetailViewController(rcvc, sender: self)
     }
@@ -193,7 +193,6 @@ class ReminderViewController: BaseTableViewController {
         guard editingStyle == .delete else { return }
         networkActivityIndicatorStart()
         let refer = references[indexPath.section][indexPath.row]
-        let mode: SMReference.ReferMode = replyMe ? .reply : .refer
         api.deleteRefer(at: refer.position, mode: mode) { (result) in
             DispatchQueue.main.async {
                 networkActivityIndicatorStop()
@@ -201,7 +200,7 @@ class ReminderViewController: BaseTableViewController {
                 case .success:
                     let refer = self.references[indexPath.section].remove(at: indexPath.row)
                     if refer.flag == 0 {
-                        MessageCenter.shared.checkUnreadMessage()
+                        MessageCenter.shared.readRefer(mode: self.mode)
                     }
                     self.tableView.beginUpdates()
                     self.tableView.deleteRows(at: [indexPath], with: .automatic)

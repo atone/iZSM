@@ -8,6 +8,7 @@
 
 import Foundation
 import UserNotifications
+import SmthConnection
 
 class MessageCenter {
     static let kUpdateMessageCountNotification = Notification.Name("UpdateMessageCountNotification")
@@ -36,10 +37,63 @@ class MessageCenter {
         return mailCount + replyCount + referCount
     }
     
+    func readAllMail() {
+        guard mailCount > 0 else { return }
+        mailCount = 0
+        updateBadge()
+        notifyOthers()
+    }
+    
+    func readRefer(mode: SMReference.ReferMode, all: Bool = false) {
+        switch mode {
+        case .reply:
+            guard replyCount > 0 else { return }
+        case .refer:
+            guard referCount > 0 else { return }
+        }
+        if all {
+            switch mode {
+            case .reply:
+                replyCount = 0
+            case .refer:
+                referCount = 0
+            }
+        } else {
+            switch mode {
+            case .reply:
+                replyCount -= 1
+            case .refer:
+                referCount -= 1
+            }
+        }
+        updateBadge()
+        notifyOthers()
+    }
+    
     private init() {
         mailCount = setting.mailCount
         replyCount = setting.replyCount
         referCount = setting.referCount
+    }
+    
+    private func updateBadge() {
+        DispatchQueue.main.async {
+            UIApplication.shared.applicationIconBadgeNumber = self.allCount
+            if let delegate = UIApplication.shared.delegate as? AppDelegate,
+                let vc = delegate.tabBarViewController.viewControllers?[3] {
+                if self.allCount > 0 {
+                    vc.tabBarItem.badgeValue = "\(self.allCount)"
+                } else {
+                    vc.tabBarItem.badgeValue = nil
+                }
+            }
+        }
+    }
+    
+    private func notifyOthers() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: MessageCenter.kUpdateMessageCountNotification, object: nil)
+        }
     }
     
     func checkUnreadMessage() {
@@ -52,18 +106,7 @@ class MessageCenter {
                 let newMailCount = (try? self.api.getMailCount().newCount) ?? 0
                 let newReplyCount = (try? self.api.getReferCount(mode: .reply).newCount) ?? 0
                 let newReferCount = (try? self.api.getReferCount(mode: .refer).newCount) ?? 0
-                DispatchQueue.main.async {
-                    let allCount = newMailCount + newReplyCount + newReferCount
-                    UIApplication.shared.applicationIconBadgeNumber = allCount
-                    if let delegate = UIApplication.shared.delegate as? AppDelegate,
-                        let vc = delegate.tabBarViewController.viewControllers?[3] {
-                        if allCount > 0 {
-                            vc.tabBarItem.badgeValue = "\(allCount)"
-                        } else {
-                            vc.tabBarItem.badgeValue = nil
-                        }
-                    }
-                }
+                
                 dPrint("mail \(self.mailCount) -> \(newMailCount), reply \(self.replyCount) -> \(newReplyCount), refer \(self.referCount) -> \(newReferCount)")
                 
                 if post && newMailCount > self.mailCount {
@@ -118,7 +161,9 @@ class MessageCenter {
                 self.replyCount = newReplyCount
                 self.referCount = newReferCount
                 
-                NotificationCenter.default.post(name: MessageCenter.kUpdateMessageCountNotification, object: nil)
+                self.updateBadge()
+                self.notifyOthers()
+                
                 completionHandler?(true)
             }
         } else {

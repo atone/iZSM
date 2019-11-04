@@ -152,21 +152,9 @@ class MailBoxViewController: BaseTableViewController {
             var readMail = mail
             readMail.flags = "  "
             mails[indexPath.section][indexPath.row] = readMail
-            
-            var allRead = true
-            for section in 0..<mails.count {
-                for row in 0..<mails[section].count {
-                    if mails[section][row].flags.hasPrefix("N") {
-                        allRead = false
-                        break
-                    }
-                }
-                if !allRead {
-                    break
-                }
-            }
+            let allRead = mails.allSatisfy { $0.allSatisfy { !$0.flags.hasPrefix("N") } }
             if allRead {
-                MessageCenter.shared.checkUnreadMessage()
+                MessageCenter.shared.readAllMail()
             }
         }
         showDetailViewController(mcvc, sender: self)

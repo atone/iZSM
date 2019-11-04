@@ -42,7 +42,7 @@ class UserViewController: NTTableViewController {
                                                object: nil)
         // add observer to update unread message count
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateUnreadMessage(_:)),
+                                               selector: #selector(updateUI(_:)),
                                                name: MessageCenter.kUpdateMessageCountNotification,
                                                object: nil)
     }
@@ -171,10 +171,8 @@ class UserViewController: NTTableViewController {
         return result
     }
     
-    @objc private func updateUnreadMessage(_ notification: Notification) {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
+    @objc private func updateUI(_ notification: Notification) {
+        tableView.reloadData()
     }
     
     @IBAction func logout(_ segue: UIStoryboardSegue) {

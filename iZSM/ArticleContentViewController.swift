@@ -1009,12 +1009,5 @@ extension ArticleContentViewController {
     }
 }
 
-extension ArticleContentViewController: SmthContentEqutable {
-    override func isEqual(_ object: Any?) -> Bool {
-        if let other = object as? ArticleContentViewController {
-            return boardID == other.boardID && articleID == other.articleID && soloUser == other.soloUser
-        }
-        return false
-    }
-}
+extension ArticleContentViewController: SmthContent {}
 

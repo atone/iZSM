@@ -194,8 +194,4 @@ class AboutViewController: NTTableViewController {
 
 }
 
-extension AboutViewController: SmthContentEqutable {
-    override func isEqual(_ object: Any?) -> Bool {
-        return object is AboutViewController
-    }
-}
+extension AboutViewController: SmthContent {}

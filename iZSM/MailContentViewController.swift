@@ -279,4 +279,4 @@ extension MailContentViewController: UIPopoverPresentationControllerDelegate {
     }
 }
 
-extension MailContentViewController: SmthContentEqutable {}
+extension MailContentViewController: SmthContent {}

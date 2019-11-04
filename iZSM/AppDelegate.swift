@@ -306,8 +306,8 @@ extension AppDelegate: UISplitViewControllerDelegate {
     func splitViewController(_ splitViewController: UISplitViewController, showDetail vc: UIViewController, sender: Any?) -> Bool {
         if let tabBarController = splitViewController.viewControllers.first as? NTTabBarController,
             let firstNaviCtr = tabBarController.selectedViewController as? NTNavigationController {
-            if splitViewController.isCollapsed || !(vc is SmthContentEqutable) {
-                if vc != firstNaviCtr.topViewController {
+            if splitViewController.isCollapsed || !(vc is SmthContent) {
+                if vc.title != firstNaviCtr.topViewController?.title {
                     firstNaviCtr.pushViewController(vc, animated: true)
                 }
                 // if primary viewController is hidden, unhide it to avoid confusion
@@ -318,7 +318,7 @@ extension AppDelegate: UISplitViewControllerDelegate {
                     _ = target?.perform(action, with: displayModeItem)
                 }
             } else if let secondNaviCtr = splitViewController.viewControllers.last as? NTNavigationController {
-                if secondNaviCtr.topViewController != vc {
+                if secondNaviCtr.topViewController?.title != vc.title {
                     vc.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
                     secondNaviCtr.setViewControllers([vc], animated: false)
                 }
@@ -350,7 +350,7 @@ extension AppDelegate: UISplitViewControllerDelegate {
             
             var displayModeButtonItemAdded = false
             for viewController in viewControllers ?? [] {
-                if viewController is SmthContentEqutable {
+                if viewController is SmthContent {
                     if !displayModeButtonItemAdded {
                         displayModeButtonItemAdded = true
                         viewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
@@ -369,6 +369,4 @@ extension AppDelegate: UISplitViewControllerDelegate {
     }
 }
 
-protocol SmthContentEqutable: class {
-    func isEqual(_ object: Any?) -> Bool
-}
+protocol SmthContent {}

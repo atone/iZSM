@@ -142,6 +142,10 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let board = boards[indexPath.row]
+        if board.bid < 0 || board.position < 0 {
+            tableView.deselectRow(at: indexPath, animated: true)
+            return
+        }
         if board.flag == -1 || (board.flag > 0 && board.flag & 0x400 != 0) {
             let blvc =  BoardListViewController()
             if let r = board.name.range(of: " ") {

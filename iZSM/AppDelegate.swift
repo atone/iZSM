@@ -112,7 +112,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         favListViewController.tabBarItem = UITabBarItem(title: "收藏", image: UIImage(systemName: "star"), selectedImage: UIImage(systemName: "star.fill"))
         let userViewController = UserViewController(style: .grouped)
         userViewController.title = "我"
-        userViewController.tabBarItem = UITabBarItem(title: "用户", image: UIImage(systemName: "person"), selectedImage: UIImage(systemName: "person.fill"))
+        let tabBarItem = UITabBarItem(title: "用户", image: UIImage(systemName: "person"), selectedImage: UIImage(systemName: "person.fill"))
+        if MessageCenter.shared.allCount > 0 {
+            tabBarItem.badgeValue = "\(MessageCenter.shared.allCount)"
+        }
+        userViewController.tabBarItem = tabBarItem
         controllerArray.append(NTNavigationController(rootViewController: hotTableViewController))
         controllerArray.append(NTNavigationController(rootViewController: boardListViewController))
         controllerArray.append(NTNavigationController(rootViewController: favListViewController))

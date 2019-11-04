@@ -32,6 +32,10 @@ class MessageCenter {
         }
     }
     
+    var allCount: Int {
+        return mailCount + replyCount + referCount
+    }
+    
     private init() {
         mailCount = setting.mailCount
         replyCount = setting.replyCount
@@ -49,7 +53,16 @@ class MessageCenter {
                 let newReplyCount = (try? self.api.getReferCount(mode: .reply).newCount) ?? 0
                 let newReferCount = (try? self.api.getReferCount(mode: .refer).newCount) ?? 0
                 DispatchQueue.main.async {
-                    UIApplication.shared.applicationIconBadgeNumber = newMailCount + newReplyCount + newReferCount
+                    let allCount = newMailCount + newReplyCount + newReferCount
+                    UIApplication.shared.applicationIconBadgeNumber = allCount
+                    if let delegate = UIApplication.shared.delegate as? AppDelegate,
+                        let vc = delegate.tabBarViewController.viewControllers?[3] {
+                        if allCount > 0 {
+                            vc.tabBarItem.badgeValue = "\(allCount)"
+                        } else {
+                            vc.tabBarItem.badgeValue = nil
+                        }
+                    }
                 }
                 dPrint("mail \(self.mailCount) -> \(newMailCount), reply \(self.replyCount) -> \(newReplyCount), refer \(self.referCount) -> \(newReferCount)")
                 

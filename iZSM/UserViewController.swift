@@ -172,17 +172,7 @@ class UserViewController: NTTableViewController {
     }
     
     @objc private func updateUnreadMessage(_ notification: Notification) {
-        updateUI()
-    }
-    
-    func updateUI() {
-        let count = msgCenter.mailCount + msgCenter.replyCount + msgCenter.referCount
         DispatchQueue.main.async {
-            if count > 0 {
-                self.tabBarItem.badgeValue = "\(count)"
-            } else {
-                self.tabBarItem.badgeValue = nil
-            }
             self.tableView.reloadData()
         }
     }

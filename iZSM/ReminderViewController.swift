@@ -8,6 +8,7 @@
 
 import UIKit
 import SmthConnection
+import SVProgressHUD
 
 class ReminderViewController: BaseTableViewController {
 
@@ -39,7 +40,8 @@ class ReminderViewController: BaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(ReminderListCell.self, forCellReuseIdentifier: kReminderListCellIdentifier)
-        navigationItem.rightBarButtonItem = editButtonItem
+        let actionButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(action(_:)))
+        navigationItem.rightBarButtonItems = [editButtonItem, actionButtonItem]
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -84,6 +86,54 @@ class ReminderViewController: BaseTableViewController {
                     self.referCountLoaded -= refers.count
                     self.references.append(refers.reversed())
                     self.tableView.reloadData()
+                case .failure(let error):
+                    error.display()
+                }
+            }
+        }
+    }
+    
+    @objc func action(_ sender: UIBarButtonItem) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.popoverPresentationController?.barButtonItem = sender
+        let readAllAction = UIAlertAction(title: "全部已读", style: .default) { _ in
+            self.readAll()
+        }
+        let deleteAllAction = UIAlertAction(title: "全部删除", style: .destructive) { _ in
+            self.deleteAll()
+        }
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel)
+        alert.addAction(readAllAction)
+        alert.addAction(deleteAllAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true)
+    }
+    
+    func readAll() {
+        let mode: SMReference.ReferMode = replyMe ? .reply : .refer
+        api.setAllReferRead(mode: mode) { (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    SVProgressHUD.showSuccess(withStatus: "操作成功")
+                    self.fetchData(showHUD: false)
+                    MessageCenter.shared.checkUnreadMessage()
+                case .failure(let error):
+                    error.display()
+                }
+            }
+        }
+    }
+    
+    func deleteAll() {
+        let mode: SMReference.ReferMode = replyMe ? .reply : .refer
+        api.truncateRefer(mode: mode) { (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    SVProgressHUD.showSuccess(withStatus: "操作成功")
+                    self.fetchData(showHUD: false)
+                    MessageCenter.shared.checkUnreadMessage()
                 case .failure(let error):
                     error.display()
                 }

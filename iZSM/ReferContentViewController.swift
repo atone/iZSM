@@ -211,12 +211,14 @@ class ReferContentViewController: UIViewController, UITextViewDelegate {
         let bodyDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
         let bodyFont = UIFont.systemFont(ofSize: bodyDescr.pointSize * setting.fontScale)
         let attributeText = NSMutableAttributedString()
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = bodyFont.pointSize / 4
         
         let normal: [NSAttributedString.Key: Any] = [.font: bodyFont,
-                                                    .paragraphStyle: NSParagraphStyle.default,
+                                                    .paragraphStyle: paragraphStyle,
                                                     .foregroundColor: UIColor(named: "MainText")!]
         let quoted: [NSAttributedString.Key: Any] = [.font: bodyFont,
-                                                    .paragraphStyle: NSParagraphStyle.default,
+                                                    .paragraphStyle: paragraphStyle,
                                                     .foregroundColor: UIColor.secondaryLabel]
         
         string.enumerateLines { (line, stop) -> () in

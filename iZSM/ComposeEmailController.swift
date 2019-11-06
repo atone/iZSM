@@ -224,11 +224,11 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @objc private func cancel(_ sender: UIBarButtonItem) {
+    @objc private func cancel(_ sender: Any) {
         dismiss(animated: true)
     }
     
-    @objc private func done(_ sender: UIBarButtonItem) {
+    @objc private func done(_ sender: Any) {
         if let receiver = self.emailReceiver, let title = self.emailTitle, var content = self.emailContent {
             networkActivityIndicatorStart(withHUD: true)
             setEditable(false)
@@ -273,6 +273,7 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
                                                object: nil)
         setupUI()
         setupMode()
+        setupKeyCommand()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -315,5 +316,13 @@ class ComposeEmailController: UIViewController, UITextFieldDelegate {
             doneButton.isEnabled = false
         }
     }
+}
 
+extension ComposeEmailController {
+    func setupKeyCommand() {
+        let doneKeyCommand = UIKeyCommand(title: "寄出", action: #selector(done(_:)), input: "\r", modifierFlags: [.command])
+        let cancelKeyCommand = UIKeyCommand(title: "取消", action: #selector(cancel(_:)), input: UIKeyCommand.inputEscape)
+        addKeyCommand(doneKeyCommand)
+        addKeyCommand(cancelKeyCommand)
+    }
 }

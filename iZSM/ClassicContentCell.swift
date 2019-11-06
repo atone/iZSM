@@ -1,80 +1,19 @@
 //
-//  ArticleContentCell.swift
+//  ClassicContentCell.swift
 //  iZSM
 //
-//  Created by Naitong Yu on 2016/11/22.
-//  Copyright © 2016年 Naitong Yu. All rights reserved.
+//  Created by Naitong Yu on 2019/11/06.
+//  Copyright © 2019 Naitong Yu. All rights reserved.
 //
 
 import UIKit
 import YYKit
 
-class ArticleContentCell: UITableViewCell {
-    
-    let containerView = UIView()
-    let bckgroundView = UIView()
-    
-    let avatarImageView = YYAnimatedImageView()
-    
-    let authorLabel = UILabel()
-    let floorAndTimeLabel = UILabel()
-    let replyButton = UIButton(type: .system)
-    let moreButton = UIButton(type: .system)
-    
-    var boxImageView: BoxImageView?
-    
-    var contentLabel = YYLabel()
-    
-    var quotBars: [UIView] = []
-    
-    weak var delegate: ArticleContentCellDelegate?
-    weak var controller: ArticleContentViewController?
-    
-    let setting = AppSetting.shared
-    
-    var article: Article?
-    var displayFloor: Int = 0
-    
-    let replyButtonWidth: CGFloat = AppSetting.shared.isSmallScreen ? 36 : 40
-    let moreButtonWidth: CGFloat = AppSetting.shared.isSmallScreen ? 32 : 36
-    let buttonHeight: CGFloat = AppSetting.shared.isSmallScreen ? 24 : 26
-    let avatarHeight: CGFloat = AppSetting.shared.isSmallScreen ? 36 : 40
-    
-    let authorFontSize: CGFloat = AppSetting.shared.isSmallScreen ? 16 : 18
-    let floorTimeFontSize: CGFloat = AppSetting.shared.isSmallScreen ? 11 : 13
-    let replyMoreFontSize: CGFloat = AppSetting.shared.isSmallScreen ? 13 : 15
-    
-    let padding: CGFloat = AppSetting.shared.isSmallScreen ? 8 : 12
-    
-    var isDrawed: Bool = false
-    var isVisible: Bool = false {
-        didSet {
-            if isVisible && !isDrawed {
-                isDrawed = true
-                drawQuotBar(with: self.article?.quotedRange)
-                if !setting.noPicMode {
-                    drawImagesWithInfo(imageAtt: self.article?.imageAttachments)
-                }
-            }
-        }
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setup()
-    }
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setup()
-    }
-    
-    func setup() {
+class ClassicContentCell: ArticleContentCell {
+    override func setup() {
         selectionStyle = .none
-        contentView.addSubview(bckgroundView)
         contentView.addSubview(containerView)
         contentView.backgroundColor = .systemBackground
-        bckgroundView.backgroundColor = .secondarySystemGroupedBackground
         
         if (!setting.noPicMode) && setting.showAvatar {
             avatarImageView.contentMode = .scaleAspectFill
@@ -151,8 +90,8 @@ class ArticleContentCell: UITableViewCell {
         horizontalStack.addArrangedSubview(rightStack)
         
         containerView.addSubview(horizontalStack)
-        horizontalStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding).isActive = true
-        horizontalStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding).isActive = true
+        horizontalStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor).isActive = true
+        horizontalStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
         horizontalStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: padding).isActive = true
         horizontalStack.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -padding).isActive = true
         
@@ -179,54 +118,24 @@ class ArticleContentCell: UITableViewCell {
         containerView.addSubview(contentLabel)
     }
     
-    func setData(displayFloor floor: Int, article: Article, delegate: ArticleContentCellDelegate, controller: ArticleContentViewController) {
-        self.displayFloor = floor
-        self.delegate = delegate
-        self.article = article
-        self.controller = controller
-        
-        authorLabel.text = article.authorID
-        let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
-        floorAndTimeLabel.text = "\(floorText) • \(article.timeString)"
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        isVisible = false
-        isDrawed = false
-    }
-    
     //MARK: - Layout Subviews
     override func layoutSubviews() {
-        super.layoutSubviews()
+        superLayoutSubviews()
         
         guard let controller = controller else { return }
         
         let leftMargin = contentView.layoutMargins.left
         let rightMargin = contentView.layoutMargins.right
-        let leftSafeAreaMargin = contentView.safeAreaInsets.left
-        let rightSafeAreaMargin = contentView.safeAreaInsets.right
-        let upDownMargin = min(leftMargin - leftSafeAreaMargin, rightMargin - rightSafeAreaMargin) * 3 / 4
         let size = contentView.bounds.size
         
         let containerWidth = size.width - leftMargin - rightMargin
-        let containerHeight = size.height - 2 * upDownMargin
+        let containerHeight = size.height - 1.0 / UIScreen.main.scale
         let imageHeight = boxImageView != nil ? boxImageView!.imageHeight(boundingWidth: containerWidth) : 0
         
-        containerView.frame = CGRect(x: leftMargin, y: upDownMargin, width: containerWidth, height: containerHeight)
-        containerView.clipsToBounds = true
-        containerView.layer.cornerRadius = 16
+        containerView.frame = CGRect(x: leftMargin, y: 0, width: containerWidth, height: containerHeight)
         
-        bckgroundView.frame = containerView.frame
-        bckgroundView.layer.cornerRadius = 16
-        bckgroundView.layer.shadowColor = UIColor.black.cgColor
-        bckgroundView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        bckgroundView.layer.shadowOpacity = 0.1
-        bckgroundView.layer.shadowRadius = 8.0
-        
-        let contentWidth = containerWidth - 2 * padding
         let contentHeight = max(0, containerHeight - avatarHeight - 3 * padding - imageHeight)
-        contentLabel.frame = CGRect(x: padding, y: padding * 2 + avatarHeight, width: contentWidth, height: contentHeight)
+        contentLabel.frame = CGRect(x: 0, y: padding * 2 + avatarHeight, width: containerWidth, height: contentHeight)
         
         // contentLabel's layout also needs to be updated
         if let article = article {
@@ -243,7 +152,7 @@ class ArticleContentCell: UITableViewCell {
                     let quotedRange = article.quotedRange[i]
                     let rawRect = contentLabel.textLayout!.rect(for: YYTextRange(range: quotedRange))
                     let quotedRect = containerView.convert(rawRect, from: contentLabel)
-                    quotBars[i].frame = CGRect(x: padding, y: quotedRect.origin.y, width: 5, height: quotedRect.height)
+                    quotBars[i].frame = CGRect(x: 0, y: quotedRect.origin.y, width: 5, height: quotedRect.height)
                 }
             }
         }
@@ -253,20 +162,6 @@ class ArticleContentCell: UITableViewCell {
         }
     }
     
-    func superLayoutSubviews() {
-        super.layoutSubviews()
-    }
-    
-    func fixedLineHeightContainer(boundingSize: CGSize) -> YYTextContainer {
-        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
-        let modifier = YYTextLinePositionHorizontalFixedModifier()
-        modifier.fixedLineHeight = descriptor.pointSize * setting.fontScale * 1.4
-        let container = YYTextContainer()
-        container.size = boundingSize
-        container.linePositionModifier = modifier
-        return container
-    }
-    
     //MARK: - Calculate Fitting Size
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         
@@ -274,14 +169,9 @@ class ArticleContentCell: UITableViewCell {
         
         let leftMargin = controller.view.layoutMargins.left
         let rightMargin = controller.view.layoutMargins.right
-        let leftSafeAreaMargin = controller.view.safeAreaInsets.left
-        let rightSafeAreaMargin = controller.view.safeAreaInsets.right
-        let upDownMargin = min(leftMargin - leftSafeAreaMargin, rightMargin - rightSafeAreaMargin) * 3 / 4
         
         let containerWidth = size.width - leftMargin - rightMargin
-        let contentWidth = containerWidth - 2 * padding
-        guard contentWidth > 0 else { return .zero }
-        
+        guard containerWidth > 0 else { return .zero }
         
         let textBoundingSize: CGSize
         if let layout = controller.articleContentLayout["\(article.id)_\(Int(containerWidth))"] {
@@ -289,7 +179,7 @@ class ArticleContentCell: UITableViewCell {
             textBoundingSize = layout.textBoundingSize
         } else {
             // Calculate text layout
-            let boundingSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
+            let boundingSize = CGSize(width: containerWidth, height: CGFloat.greatestFiniteMagnitude)
             let container = fixedLineHeightContainer(boundingSize: boundingSize)
             if let layout = YYTextLayout(container: container, text: article.attributedBody),
                 let darkLayout = YYTextLayout(container: container, text: article.attributedDarkBody) {
@@ -307,99 +197,11 @@ class ArticleContentCell: UITableViewCell {
         
         let height: CGFloat
         if textBoundingSize.height > 0 {
-            height = 2 * upDownMargin + 3 * padding + avatarHeight + textBoundingSize.height + imageHeight
+            height = 3 * padding + avatarHeight + textBoundingSize.height + imageHeight
         } else {
-            height = 2 * upDownMargin + 2 * padding + avatarHeight + imageHeight
+            height = 2 * padding + avatarHeight + imageHeight
         }
         
         return CGSize(width: size.width, height: height)
-    }
-    
-    func drawImagesWithInfo(imageAtt: [ImageInfo]?) {
-        if setting.showAvatar, let article = self.article {
-            avatarImageView.setImageWith(SmthAPI.shared.faceURL(for: article.authorID, withFaceURL: nil),
-                                         placeholder: UIImage(named: "face_default"))
-        }
-        
-        // remove old image views
-        if let boxImageView = self.boxImageView {
-            boxImageView.removeFromSuperview()
-            self.boxImageView = nil
-        }
-        
-        // add new image views
-        if let imageAtt = imageAtt {
-            let imageURLs = imageAtt.map { $0.thumbnailURL }
-            let boxImageView = BoxImageView(imageURLs: imageURLs, target: self, action: #selector(singleTapOnImage(_:)))
-            containerView.addSubview(boxImageView)
-            self.boxImageView = boxImageView
-        }
-    }
-    
-    func drawQuotBar(with ranges: [NSRange]?) {
-        
-        // remove old quot bars
-        for quotBar in quotBars {
-            quotBar.removeFromSuperview()
-        }
-        quotBars.removeAll()
-        
-        // add new quot bars
-        if let ranges = ranges {
-            for _ in ranges {
-                let quotBar = UIView()
-                quotBar.backgroundColor = .systemFill
-                containerView.addSubview(quotBar)
-                quotBars.append(quotBar)
-            }
-        }
-    }
-    
-    //MARK: - Action
-    @objc func singleTapOnImage(_ recognizer: UIGestureRecognizer) {
-        if
-            let imageView = recognizer.view as? YYAnimatedImageView,
-            let index = boxImageView?.imageViews.firstIndex(of: imageView)
-        {
-            delegate?.cell(self, didClickImageAt: index)
-        }
-    }
-    
-    @objc func reply(_ button: UIButton) {
-        delegate?.cell(self, didClickReply: button)
-    }
-    
-    @objc func action(_ button: UIButton) {
-        delegate?.cell(self, didClickMore: button)
-    }
-    
-    @objc func showUserInfo(_ recognizer: UITapGestureRecognizer) {
-        delegate?.cell(self, didClickUser: recognizer.view)
-    }
-    
-}
-
-protocol ArticleContentCellDelegate: class {
-    func cell(_ cell: ArticleContentCell, didClickImageAt index: Int)
-    func cell(_ cell: ArticleContentCell, didClick url: URL)
-    func cell(_ cell: ArticleContentCell, didClickReply sender: UIView?)
-    func cell(_ cell: ArticleContentCell, didClickMore sender: UIView?)
-    func cell(_ cell: ArticleContentCell, didClickUser sender: UIView?)
-}
-
-class YYTextLinePositionHorizontalFixedModifier: NSObject, YYTextLinePositionModifier {
-    
-    var fixedLineHeight: CGFloat = 0.0
-    
-    func modifyLines(_ lines: [YYTextLine], fromText text: NSAttributedString, in container: YYTextContainer) {
-        for line in lines {
-            line.position.y = CGFloat(line.row) * fixedLineHeight + fixedLineHeight * 0.7 + container.insets.top
-        }
-    }
-    
-    func copy(with zone: NSZone? = nil) -> Any {
-        let one = YYTextLinePositionHorizontalFixedModifier()
-        one.fixedLineHeight = self.fixedLineHeight
-        return one
     }
 }

@@ -148,6 +148,7 @@ class ArticleListSearchResultViewController: BaseTableViewController {
 
 extension ArticleListSearchResultViewController {
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard !setting.disableHapticTouch else { return nil }
         guard let cell = tableView.cellForRow(at: indexPath) else { return nil }
         let thread = threads[indexPath.section][indexPath.row]
         let identifier = NSUUID().uuidString
@@ -155,11 +156,11 @@ extension ArticleListSearchResultViewController {
         let urlString: String
         switch self.setting.displayMode {
         case .nForum:
-            urlString = "https://www.newsmth.net/nForum/#!article/\(thread.boardID)/\(thread.id)"
+            urlString = setting.httpPrefix + "www.newsmth.net/nForum/#!article/\(thread.boardID)/\(thread.id)"
         case .www2:
-            urlString = "https://www.newsmth.net/bbstcon.php?board=\(thread.boardID)&gid=\(thread.id)"
+            urlString = setting.httpPrefix + "www.newsmth.net/bbstcon.php?board=\(thread.boardID)&gid=\(thread.id)"
         case .mobile:
-            urlString = "https://m.newsmth.net/article/\(thread.boardID)/\(thread.id)"
+            urlString = setting.httpPrefix + "m.newsmth.net/article/\(thread.boardID)/\(thread.id)"
         }
         let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
             self.getViewController(with: thread)

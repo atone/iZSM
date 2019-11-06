@@ -31,6 +31,7 @@
 		9C4E6AB11F1158EB00ABAEFA /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */; };
 		9C4FB42C234E121E008F88FC /* PlaceholderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4FB42B234E121E008F88FC /* PlaceholderViewController.swift */; };
 		9C4FB42E234E3B41008F88FC /* NTSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4FB42D234E3B41008F88FC /* NTSplitViewController.swift */; };
+		9C50001E237293C8003A5606 /* CompatibilityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C50001D237293C8003A5606 /* CompatibilityViewController.swift */; };
 		9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */; };
 		9C56E1D51F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1CF1F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.m */; };
 		9C56E1D61F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C56E1D11F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m */; };
@@ -77,6 +78,7 @@
 		9CBFD79C23486F5100A16194 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBFD79A23486F5100A16194 /* GTMNSString+HTML.m */; };
 		9CC1FD5B232F5C02006CFE33 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */; };
 		9CCE887C233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCE887A233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift */; };
+		9CD187C22372FFFC00F39072 /* ClassicContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD187C12372FFFC00F39072 /* ClassicContentCell.swift */; };
 		9CD2CD71236B4DAF00418F25 /* SmthConnection in Frameworks */ = {isa = PBXBuildFile; productRef = 9CD2CD70236B4DAF00418F25 /* SmthConnection */; };
 		9CD4ABFD1F34362400C3D9BF /* em1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB331F34362400C3D9BF /* em1.gif */; };
 		9CD4ABFE1F34362400C3D9BF /* em10.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4AB341F34362400C3D9BF /* em10.gif */; };
@@ -309,6 +311,7 @@
 		9C4E6AB01F1158EB00ABAEFA /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
 		9C4FB42B234E121E008F88FC /* PlaceholderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderViewController.swift; sourceTree = "<group>"; };
 		9C4FB42D234E3B41008F88FC /* NTSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTSplitViewController.swift; sourceTree = "<group>"; };
+		9C50001D237293C8003A5606 /* CompatibilityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompatibilityViewController.swift; sourceTree = "<group>"; };
 		9C56E1CC1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDIndexPathHeightCache.h"; sourceTree = "<group>"; };
 		9C56E1CD1F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDIndexPathHeightCache.m"; sourceTree = "<group>"; };
 		9C56E1CE1F0E0DF00093E504 /* UITableView+FDKeyedHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDKeyedHeightCache.h"; sourceTree = "<group>"; };
@@ -359,6 +362,7 @@
 		9CBFD79A23486F5100A16194 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
 		9CC1FD5A232F5C02006CFE33 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
 		9CCE887A233F2B0600CFF79A /* SMBoardInfo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SMBoardInfo+CoreDataClass.swift"; path = "CoreData/SMBoardInfo+CoreDataClass.swift"; sourceTree = "<group>"; };
+		9CD187C12372FFFC00F39072 /* ClassicContentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassicContentCell.swift; sourceTree = "<group>"; };
 		9CD4AB331F34362400C3D9BF /* em1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = em1.gif; sourceTree = "<group>"; };
 		9CD4AB341F34362400C3D9BF /* em10.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = em10.gif; sourceTree = "<group>"; };
 		9CD4AB351F34362400C3D9BF /* em11.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = em11.gif; sourceTree = "<group>"; };
@@ -710,6 +714,7 @@
 				9CB573B81DE58E8800CD6F3E /* MailContentViewController.swift */,
 				9CB573BA1DE59A2E00CD6F3E /* ReferContentViewController.swift */,
 				9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */,
+				9C50001D237293C8003A5606 /* CompatibilityViewController.swift */,
 				9C8DEB34233334E600E5CE4A /* CustomHotSectionViewController.swift */,
 				9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */,
 				9C4FB42B234E121E008F88FC /* PlaceholderViewController.swift */,
@@ -724,6 +729,7 @@
 				9C57261F233F901F003FE851 /* StarThreadViewCell.swift */,
 				9C889FB61DE3EEEF00C33A8D /* ArticleListViewCell.swift */,
 				9C889FBE1DE4271200C33A8D /* ArticleContentCell.swift */,
+				9CD187C12372FFFC00F39072 /* ClassicContentCell.swift */,
 				9C25D5AE1DE56FC9005CB55C /* MailListCell.swift */,
 				9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */,
 			);
@@ -1377,6 +1383,7 @@
 				9C25D5AB1DE56BAE005CB55C /* MailBoxViewController.swift in Sources */,
 				9CBFD79C23486F5100A16194 /* GTMNSString+HTML.m in Sources */,
 				9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */,
+				9CD187C22372FFFC00F39072 /* ClassicContentCell.swift in Sources */,
 				9CD9E6451F1DB10E00713853 /* IAPHelper.swift in Sources */,
 				9CA3B1A31DE33C0800E9B121 /* HotTableViewController.swift in Sources */,
 				9CB573C11DE5B46D00CD6F3E /* SettingsViewController.swift in Sources */,
@@ -1384,6 +1391,7 @@
 				9C25D5AF1DE56FC9005CB55C /* MailListCell.swift in Sources */,
 				9C56E1D61F0E0DF00093E504 /* UITableView+FDTemplateLayoutCell.m in Sources */,
 				9CA3B1A61DE33E8D00E9B121 /* HotTableViewCell.swift in Sources */,
+				9C50001E237293C8003A5606 /* CompatibilityViewController.swift in Sources */,
 				9C889FBD1DE4222000C33A8D /* ArticleContentViewController.swift in Sources */,
 				9CB5708F1F2B87E000974BC0 /* AttachImageView.swift in Sources */,
 				9C07EC982330D85300EAEC8E /* NTLabel.swift in Sources */,

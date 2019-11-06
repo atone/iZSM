@@ -371,6 +371,7 @@ extension FavListViewController: NSFetchedResultsControllerDelegate {
 
 extension FavListViewController {
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard !setting.disableHapticTouch else { return nil }
         if self.index == 0 {
             return favoriteContextMenuConfiguration(at: indexPath)
         } else {
@@ -400,11 +401,11 @@ extension FavListViewController {
         let urlString: String
         switch AppSetting.shared.displayMode {
         case .nForum:
-            urlString = "https://www.newsmth.net/nForum/#!article/\(boardID)/\(thread.articleID)"
+            urlString = setting.httpPrefix + "www.newsmth.net/nForum/#!article/\(boardID)/\(thread.articleID)"
         case .www2:
-            urlString = "https://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(thread.articleID)"
+            urlString = setting.httpPrefix + "www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(thread.articleID)"
         case .mobile:
-            urlString = "https://m.newsmth.net/article/\(boardID)/\(thread.articleID)"
+            urlString = setting.httpPrefix + "m.newsmth.net/article/\(boardID)/\(thread.articleID)"
         }
         let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
             self.getViewController(with: thread)

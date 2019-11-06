@@ -141,7 +141,7 @@ struct Article: Cleanable, Replyable {
         for attachment in self.attachments {
             let fileName = attachment.name.lowercased()
             if !isPicture(fileName) {
-                let urlString = "https://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
+                let urlString = AppSetting.shared.httpPrefix + "att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
                 let mutable = NSMutableAttributedString(string: fileName)
                 mutable.setLink(urlString, range: NSMakeRange(0, mutable.length))
                 mutable.setTextHighlight(highlight, range: NSMakeRange(0, mutable.length))
@@ -182,7 +182,7 @@ struct Article: Cleanable, Replyable {
     }
     
     private func attachmentURL(at pos: Int) -> URL {
-        let string = "https://att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(pos)"
+        let string = AppSetting.shared.httpPrefix + "att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(pos)"
         return URL(string: string)!
     }
 

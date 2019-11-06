@@ -77,8 +77,13 @@ class ArticleContentViewController: NTTableViewController {
     
     // MARK: - ViewController Related
     override func viewDidLoad() {
-        tableView.register(ArticleContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)
-        tableView.separatorStyle = .none
+        if setting.classicReadingMode {
+            tableView.register(ClassicContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)
+            tableView.separatorStyle = .singleLine
+        } else {
+            tableView.register(ArticleContentCell.self, forCellReuseIdentifier: kArticleContentCellIdentifier)
+            tableView.separatorStyle = .none
+        }
         // no use self-sizing cell
         tableView.estimatedRowHeight = 0
         tableView.estimatedSectionHeaderHeight = 0
@@ -407,11 +412,11 @@ class ArticleContentViewController: NTTableViewController {
             let urlString: String
             switch self.setting.displayMode {
             case .nForum:
-                urlString = "https://www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
+                urlString = setting.httpPrefix + "www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
             case .www2:
-                urlString = "https://www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
+                urlString = setting.httpPrefix + "www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
             case .mobile:
-                urlString = "https://m.newsmth.net/article/\(boardID)/\(articleID)"
+                urlString = setting.httpPrefix + "m.newsmth.net/article/\(boardID)/\(articleID)"
             }
             let shareAction = UIAlertAction(title: "分享本帖", style: .default) { [unowned self] _ in
                 let title = "水木\(self.boardName ?? boardID)版：【\(self.title ?? "无标题")】"
@@ -941,6 +946,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
 
 extension ArticleContentViewController {
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard !setting.disableHapticTouch else { return nil }
         let article = articles[indexPath.section][indexPath.row]
         let identifier = NSUUID().uuidString
         indexMap[identifier] = indexPath

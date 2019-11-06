@@ -26,6 +26,7 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var clearReadingStatusLabel: UILabel!
     @IBOutlet weak var clearCacheLabel: UILabel!
     @IBOutlet weak var cacheSizeLabel: UILabel!
+    @IBOutlet weak var compatibilityLabel: UILabel!
     @IBOutlet weak var logoutLabel: UILabel!
 
     @IBOutlet weak var hideTopSwitch: UISwitch!
@@ -165,6 +166,8 @@ class SettingsViewController: NTTableViewController {
             cacheSize = cache.diskCache.totalCost() / 1024 / 1024
         }
         cacheSizeLabel.text = "\(cacheSize) MB"
+        compatibilityLabel.font = font
+        compatibilityLabel.textColor = UIColor(named: "MainText")
         logoutLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize * setting.fontScale)
         logoutLabel.textColor = UIColor.systemRed
 

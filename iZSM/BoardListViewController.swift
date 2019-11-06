@@ -236,6 +236,7 @@ class BoardListViewController: BaseTableViewController, UISearchControllerDelega
 
 extension BoardListViewController: FavoriteAddable {
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard !setting.disableHapticTouch else { return nil }
         let board = boards[indexPath.row]
         let actions: UIContextMenuActionProvider = { [unowned self] seggestedActions in
             let addFavAction = UIAction(title: "收藏 \(board.name) 版", image: UIImage(systemName: "star.fill")) { [unowned self] action in

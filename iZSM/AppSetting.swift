@@ -45,6 +45,9 @@ class AppSetting {
         static let DisabledHotSectionsKey = "SmthAPI.disabledHotSectionsKey"
         static let CustomFontScaleIndexKey = "SmthAPI.customFontScaleIndexKey"
         static let ThreadSortModeKey = "SmthAPI.threadSortModeKey"
+        static let disableHapticTouchKey = "SmthAPI.Compatibility.disableHapticTouchKey"
+        static let classicReadingModeKey = "SmthAPI.Compatibility.classicReadingModeKey"
+        static let usePlainHttpKey = "SmthAPI.Compatibility.usePlainHttpKey"
     }
 
     private let defaults = UserDefaults.standard
@@ -73,7 +76,10 @@ class AppSetting {
             Static.AvailableHotSectionsKey : [1, 2, 3, 4, 5, 6, 7, 8, 9],
             Static.DisabledHotSectionsKey : [0],
             Static.CustomFontScaleIndexKey: 2,
-            Static.ThreadSortModeKey : 0
+            Static.ThreadSortModeKey : 0,
+            Static.disableHapticTouchKey : false,
+            Static.classicReadingModeKey : false,
+            Static.usePlainHttpKey : false
         ]
         defaults.register(defaults: initialSettings)
     }
@@ -312,5 +318,40 @@ class AppSetting {
     
     var isSmallScreen: Bool {
         return Device.current.diagonal <= 4
+    }
+    
+    var disableHapticTouch: Bool {
+        get {
+            return defaults.bool(forKey: Static.disableHapticTouchKey)
+        }
+        set {
+            defaults.set(newValue, forKey: Static.disableHapticTouchKey)
+        }
+    }
+    
+    var classicReadingMode: Bool {
+        get {
+            return defaults.bool(forKey: Static.classicReadingModeKey)
+        }
+        set {
+            defaults.set(newValue, forKey: Static.classicReadingModeKey)
+        }
+    }
+    
+    var usePlainHttp: Bool {
+        get {
+            return defaults.bool(forKey: Static.usePlainHttpKey)
+        }
+        set {
+            defaults.set(newValue, forKey: Static.usePlainHttpKey)
+        }
+    }
+    
+    var httpPrefix: String {
+        if usePlainHttp {
+            return "http://"
+        } else {
+            return "https://"
+        }
     }
 }

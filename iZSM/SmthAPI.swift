@@ -196,7 +196,7 @@ class SmthAPI: SmthConnection {
         case .post:
             request.httpMethod = "POST"
             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-            request.setValue("https://www.newsmth.net", forHTTPHeaderField: "Origin")
+            request.setValue(setting.httpPrefix + "www.newsmth.net", forHTTPHeaderField: "Origin")
             request.httpBody = params?.data(using: .utf8)
         case .get:
             request.httpMethod = "GET"
@@ -217,13 +217,13 @@ class SmthAPI: SmthConnection {
     }
     
     private func www2Login(id: String, pass: String) {
-        let url = URL(string: "https://www.newsmth.net/bbslogin.php")!
+        let url = URL(string: setting.httpPrefix + "www.newsmth.net/bbslogin.php")!
         _ = httpRequest(url: url, method: .post, params: "id=\(id.percent)&passwd=\(pass.percent)&kick_multi=1")
     }
 
     // get thread list in origin mode
     private func _getOriginThreadList(for boardID: String, page: Int) -> (page: Int, threads: [SMThread]) {
-        var url = "https://www.newsmth.net/bbsdoc.php?board=\(boardID)&ftype=6"
+        var url = setting.httpPrefix + "www.newsmth.net/bbsdoc.php?board=\(boardID)&ftype=6"
         if page > 0 {
             url.append(contentsOf: "&page=\(page)")
         }
@@ -290,8 +290,8 @@ class SmthAPI: SmthConnection {
     }
     
     private func addFavoriteDirectory(_ name: String, in group: Int) -> Int {
-        let url = URL(string: "https://www.newsmth.net/bbsfav.php?dname=\(name.percentEncodingWithGBK)&select=\(group)")!
-        let referer = "https://www.newsmth.net/bbsfav.php?select=\(group)"
+        let url = URL(string: setting.httpPrefix + "www.newsmth.net/bbsfav.php?dname=\(name.percentEncodingWithGBK)&select=\(group)")!
+        let referer = setting.httpPrefix + "www.newsmth.net/bbsfav.php?select=\(group)"
         guard let data = httpRequest(url: url, referer: referer) else { return -1 } // 无法加载数据
         let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
         guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return -2 } // 解码错误
@@ -302,8 +302,8 @@ class SmthAPI: SmthConnection {
     }
     
     private func delFavoriteDirectory(_ index: Int, in group: Int) -> Int {
-        let url = URL(string: "https://www.newsmth.net/bbsfav.php?select=\(group)&deldir=\(index)")!
-        let referer = "https://www.newsmth.net/bbsfav.php?select=\(group)"
+        let url = URL(string: setting.httpPrefix + "www.newsmth.net/bbsfav.php?select=\(group)&deldir=\(index)")!
+        let referer = setting.httpPrefix + "www.newsmth.net/bbsfav.php?select=\(group)"
         guard let data = httpRequest(url: url, referer: referer) else { return -1 } // 无法加载数据
         let enc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
         guard let result = String(data: data, encoding: String.Encoding(rawValue: enc)) else { return -2 } // 解码错误
@@ -324,7 +324,7 @@ class SmthAPI: SmthConnection {
             faceString = "\(userID).jpg"
         }
         faceString = faceString.addingPercentEncoding(withAllowedCharacters: .smURLQueryAllowed)!
-        return URL(string: "https://images.newsmth.net/nForum/uploadFace/\(prefix)/\(faceString)")!
+        return URL(string: setting.httpPrefix + "images.newsmth.net/nForum/uploadFace/\(prefix)/\(faceString)")!
     }
     
     @discardableResult

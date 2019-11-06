@@ -69,7 +69,11 @@ class HotTableViewCell: UITableViewCell {
         let titleDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
         let replyDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
         
-        titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+        if setting.useBoldFont {
+            titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+        } else {
+            titleLabel.font = UIFont.systemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+        }
         replyLabel.font = UIFont.boldSystemFont(ofSize: replyDescriptor.pointSize * setting.smallFontScale)
         
         if let thread = hotThread {

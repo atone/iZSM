@@ -78,7 +78,11 @@ class StarThreadViewCell: UITableViewCell {
             titleLabel.text = title
             boardLabel.text = boardID
             let titleDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
-            titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+            if setting.useBoldFont {
+                titleLabel.font = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+            } else {
+                titleLabel.font = UIFont.systemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+            }
             let infoDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote)
             let normalInfoFont = UIFont.systemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)
             let boldInfoFont = UIFont.boldSystemFont(ofSize: infoDescriptor.pointSize * setting.smallFontScale)

@@ -57,7 +57,12 @@ class MailListCell: UITableViewCell {
         attributedText.append(NSAttributedString(string: " • \(mail.time.relativeDateString)", attributes: normalAttributes))
         infoLabel.attributedText = attributedText
         
-        let titleFont = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+        let titleFont: UIFont
+        if setting.useBoldFont {
+            titleFont = UIFont.boldSystemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+        } else {
+            titleFont = UIFont.systemFont(ofSize: titleDescriptor.pointSize * setting.smallFontScale)
+        }
         let unreadAttributes : [NSAttributedString.Key : Any] = [.font: titleFont, .foregroundColor: UIColor.red]
         let titleAttributes : [NSAttributedString.Key : Any] = [.font: titleFont, .foregroundColor: UIColor(named: "MainText")!]
         

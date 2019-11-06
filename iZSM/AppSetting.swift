@@ -45,6 +45,7 @@ class AppSetting {
         static let DisabledHotSectionsKey = "SmthAPI.disabledHotSectionsKey"
         static let CustomFontScaleIndexKey = "SmthAPI.customFontScaleIndexKey"
         static let ThreadSortModeKey = "SmthAPI.threadSortModeKey"
+        static let useBoldFontKey = "SmthAPI.useBoldFontKey"
         static let disableHapticTouchKey = "SmthAPI.Compatibility.disableHapticTouchKey"
         static let classicReadingModeKey = "SmthAPI.Compatibility.classicReadingModeKey"
         static let usePlainHttpKey = "SmthAPI.Compatibility.usePlainHttpKey"
@@ -77,6 +78,7 @@ class AppSetting {
             Static.DisabledHotSectionsKey : [0],
             Static.CustomFontScaleIndexKey: 2,
             Static.ThreadSortModeKey : 0,
+            Static.useBoldFontKey : false,
             Static.disableHapticTouchKey : false,
             Static.classicReadingModeKey : false,
             Static.usePlainHttpKey : false
@@ -313,6 +315,15 @@ class AppSetting {
         }
         set {
             defaults.set(newValue.rawValue, forKey: Static.ThreadSortModeKey)
+        }
+    }
+    
+    var useBoldFont: Bool {
+        get {
+            return defaults.bool(forKey: Static.useBoldFontKey)
+        }
+        set {
+            defaults.set(newValue, forKey: Static.useBoldFontKey)
         }
     }
     

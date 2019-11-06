@@ -20,6 +20,7 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var addDeviceSignatureLabel: UILabel!
     @IBOutlet weak var displayModeLabel: UILabel!
     @IBOutlet weak var customHotSectionLabel: UILabel!
+    @IBOutlet weak var boldFontLabel: UILabel!
     @IBOutlet weak var showAvatarLabel: UILabel!
     @IBOutlet weak var noPicModeLabel: UILabel!
     @IBOutlet weak var backgroundTaskLabel: UILabel!
@@ -34,6 +35,7 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var newReplyFirstSwitch: UISwitch!
     @IBOutlet weak var rememberLastSwitch: UISwitch!
     @IBOutlet weak var addDeviceSignatureSwitch: UISwitch!
+    @IBOutlet weak var boldFontSwitch: UISwitch!
     @IBOutlet weak var showAvatarSwitch: UISwitch!
     @IBOutlet weak var noPicModeSwitch: UISwitch!
     @IBOutlet weak var backgroundTaskSwitch: UISwitch!
@@ -112,6 +114,11 @@ class SettingsViewController: NTTableViewController {
         fontScaleIndex = index
     }
     
+    @IBAction func boldFontChanged(_ sender: UISwitch) {
+        setting.useBoldFont = sender.isOn
+        NotificationCenter.default.post(Notification(name: SettingsViewController.fontScaleDidChangeNotification))
+    }
+    
     @IBAction func showAvatarChanged(_ sender: UISwitch) {
         setting.showAvatar = sender.isOn
     }
@@ -149,6 +156,8 @@ class SettingsViewController: NTTableViewController {
         displayModeLabel.textColor = UIColor(named: "MainText")
         customHotSectionLabel.font = font
         customHotSectionLabel.textColor = UIColor(named: "MainText")
+        boldFontLabel.font = font
+        boldFontLabel.textColor = UIColor(named: "MainText")
         showAvatarLabel.font = font
         showAvatarLabel.textColor = UIColor(named: "MainText")
         noPicModeLabel.font = font
@@ -179,6 +188,7 @@ class SettingsViewController: NTTableViewController {
         addDeviceSignatureSwitch.isOn = setting.addDeviceSignature
         displayModeSegmentedControl.selectedSegmentIndex = setting.displayMode.rawValue
         fontSizeSlider.value = Float(fontScaleIndex)
+        boldFontSwitch.isOn = setting.useBoldFont
         noPicModeSwitch.isOn = setting.noPicMode
         if setting.noPicMode {
             showAvatarSwitch.isOn = false

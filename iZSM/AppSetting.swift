@@ -48,6 +48,7 @@ class AppSetting {
         static let useBoldFontKey = "SmthAPI.useBoldFontKey"
         static let disableHapticTouchKey = "SmthAPI.Compatibility.disableHapticTouchKey"
         static let classicReadingModeKey = "SmthAPI.Compatibility.classicReadingModeKey"
+        static let forceDarkModeKey = "SmthAPI.Compatibility.forceDarkModeKey"
         static let usePlainHttpKey = "SmthAPI.Compatibility.usePlainHttpKey"
     }
 
@@ -81,6 +82,7 @@ class AppSetting {
             Static.useBoldFontKey : false,
             Static.disableHapticTouchKey : false,
             Static.classicReadingModeKey : false,
+            Static.forceDarkModeKey : false,
             Static.usePlainHttpKey : false
         ]
         defaults.register(defaults: initialSettings)
@@ -346,6 +348,15 @@ class AppSetting {
         }
         set {
             defaults.set(newValue, forKey: Static.classicReadingModeKey)
+        }
+    }
+    
+    var forceDarkMode: Bool {
+        get {
+            return defaults.bool(forKey: Static.forceDarkModeKey)
+        }
+        set {
+            defaults.set(newValue, forKey: Static.forceDarkModeKey)
         }
     }
     

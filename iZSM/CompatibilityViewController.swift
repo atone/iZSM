@@ -30,6 +30,12 @@ class CompatibilityViewController: NTTableViewController {
         return $0
     }(UISwitch())
     
+    lazy var forceDarkModeSwitch: UISwitch = {
+        $0.isOn = setting.forceDarkMode
+        $0.addTarget(self, action: #selector(forceDarkModeChanged(_:)), for: .valueChanged)
+        return $0
+    }(UISwitch())
+    
     @objc private func disableHapticTouchChanged(_ sender: UISwitch) {
         setting.disableHapticTouch = sender.isOn
     }
@@ -41,6 +47,13 @@ class CompatibilityViewController: NTTableViewController {
     @objc private func usePlainHttpChanged(_ sender: UISwitch) {
         setting.usePlainHttp = sender.isOn
         SmthAPI.setUseInsecureHttpConnection(sender.isOn)
+    }
+    
+    @objc private func forceDarkModeChanged(_ sender: UISwitch) {
+        setting.forceDarkMode = sender.isOn
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
+            window.overrideUserInterfaceStyle = sender.isOn ? .dark : .unspecified
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -58,7 +71,7 @@ class CompatibilityViewController: NTTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 2
+            return 3
         case 1:
             return 1
         default:
@@ -75,6 +88,9 @@ class CompatibilityViewController: NTTableViewController {
         case IndexPath(row: 1, section: 0):
             cell.textLabel?.text = "经典看帖界面"
             cell.accessoryView = useClassicReadingSwitch
+        case IndexPath(row: 2, section: 0):
+            cell.textLabel?.text = "强制黑暗模式"
+            cell.accessoryView = forceDarkModeSwitch
         case IndexPath(row: 0, section: 1):
             cell.textLabel?.text = "使用HTTP连接"
             cell.accessoryView = useHttpSwitch

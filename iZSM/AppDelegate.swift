@@ -57,6 +57,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = splitViewController
         window?.makeKeyAndVisible()
         
+        if setting.forceDarkMode {
+            window?.overrideUserInterfaceStyle = .dark
+        }
+        
         // set the SVProgressHUD setting
         SVProgressHUD.setMinimumDismissTimeInterval(2)
         

@@ -261,7 +261,12 @@ class ArticleContentViewController: NTTableViewController {
                         self.articles.insert(result.articles, at: 0)
                         self.currentBackwardNumber -= result.articles.count
                         self.totalArticleNumber = result.total
+                        let indexPath = self.tableView.indexPathForSelectedRow
                         self.tableView.reloadData()
+                        if var indexPath = indexPath {
+                            indexPath.section += 1
+                            self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                        }
                         var delayOffest = self.tableView.contentOffset
                         for i in 0..<result.articles.count {
                             delayOffest.y += self.tableView(self.tableView, heightForRowAt: IndexPath(row: i, section: 0))
@@ -318,7 +323,11 @@ class ArticleContentViewController: NTTableViewController {
                     networkActivityIndicatorStop()
                     if articles.count > 0 {
                         self.articles.append(articles)
+                        let indexPath = self.tableView.indexPathForSelectedRow
                         self.tableView.reloadData()
+                        if let indexPath = indexPath {
+                            self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                        }
                     }
                     self.tableView.switchRefreshHeader(to: .normal(.none, 0))
                     self.tableView.switchRefreshFooter(to: .normal)

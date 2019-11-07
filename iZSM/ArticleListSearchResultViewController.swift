@@ -80,7 +80,11 @@ class ArticleListSearchResultViewController: BaseTableViewController {
                     case .success(let threadSection):
                         if threadSection.count > 0 {
                             self.threadLoaded += threadSection.count
+                            let indexPath = self.tableView.indexPathForSelectedRow
                             self.threads.append(threadSection)
+                            if let indexPath = indexPath {
+                                self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                            }
                         }
                     case .failure(let error):
                         error.display()

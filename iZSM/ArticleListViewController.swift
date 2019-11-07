@@ -345,7 +345,11 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                             return //如果模式已经改变，则此数据需要丢弃
                         }
                         if threadSection.count > 0 {
+                            let indexPath = self.tableView.indexPathForSelectedRow
                             self.threads.append(threadSection)
+                            if let indexPath = indexPath {
+                                self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                            }
                         }
                     }
                 } catch {

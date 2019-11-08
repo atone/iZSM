@@ -31,27 +31,3 @@ class NTSplitViewController: UISplitViewController {
     }
 }
 
-extension NTSplitViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupKeyCommands()
-    }
-    
-    private func setupKeyCommands() {
-        let hotKeyCommand = UIKeyCommand(title: "切换到“十大”", action: #selector(receiveKeyCommand(_:)), input: "1", modifierFlags: [.command])
-        addKeyCommand(hotKeyCommand)
-        let boardKeyCommand = UIKeyCommand(title: "切换到“版面”", action: #selector(receiveKeyCommand(_:)), input: "2", modifierFlags: [.command])
-        addKeyCommand(boardKeyCommand)
-        let favoriteKeyCommand = UIKeyCommand(title: "切换到“收藏”", action: #selector(receiveKeyCommand(_:)), input: "3", modifierFlags: [.command])
-        addKeyCommand(favoriteKeyCommand)
-        let userKeyCommand = UIKeyCommand(title: "切换到“用户”", action: #selector(receiveKeyCommand(_:)), input: "4", modifierFlags: [.command])
-        addKeyCommand(userKeyCommand)
-    }
-    
-    @objc private func receiveKeyCommand(_ sender: UIKeyCommand) {
-        guard let input = sender.input else { return }
-        guard let intKey = Int(input) else { return }
-        guard let tabBarViewController = viewControllers.first as? NTTabBarController else { return }
-        tabBarViewController.selectedIndex = intKey - 1
-    }
-}

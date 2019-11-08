@@ -279,6 +279,7 @@
 		9CD4ACC11F34362400C3D9BF /* emc7.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4ABFA1F34362400C3D9BF /* emc7.gif */; };
 		9CD4ACC21F34362400C3D9BF /* emc8.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4ABFB1F34362400C3D9BF /* emc8.gif */; };
 		9CD4ACC31F34362400C3D9BF /* emc9.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9CD4ABFC1F34362400C3D9BF /* emc9.gif */; };
+		9CD5F2F12375A7C700EA13B4 /* NTSplitViewController+KeyboardSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD5F2F02375A7C700EA13B4 /* NTSplitViewController+KeyboardSupport.swift */; };
 		9CD9E6451F1DB10E00713853 /* IAPHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD9E6441F1DB10E00713853 /* IAPHelper.swift */; };
 		9CF349301F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF3492F1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m */; };
 /* End PBXBuildFile section */
@@ -562,6 +563,7 @@
 		9CD4ABFA1F34362400C3D9BF /* emc7.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = emc7.gif; sourceTree = "<group>"; };
 		9CD4ABFB1F34362400C3D9BF /* emc8.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = emc8.gif; sourceTree = "<group>"; };
 		9CD4ABFC1F34362400C3D9BF /* emc9.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = emc9.gif; sourceTree = "<group>"; };
+		9CD5F2F02375A7C700EA13B4 /* NTSplitViewController+KeyboardSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NTSplitViewController+KeyboardSupport.swift"; sourceTree = "<group>"; };
 		9CD9E6441F1DB10E00713853 /* IAPHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAPHelper.swift; sourceTree = "<group>"; };
 		9CF3492E1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FDFullscreenPopGesture.h"; sourceTree = "<group>"; };
 		9CF3492F1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FDFullscreenPopGesture.m"; sourceTree = "<group>"; };
@@ -689,6 +691,7 @@
 			isa = PBXGroup;
 			children = (
 				9C4FB42D234E3B41008F88FC /* NTSplitViewController.swift */,
+				9CD5F2F02375A7C700EA13B4 /* NTSplitViewController+KeyboardSupport.swift */,
 				9C9C3901232E04E40079AC71 /* NTTabBarController.swift */,
 				9C6EB7291F1776E200129EA3 /* NTNavigationController.swift */,
 				9C4D0B081F1A6F91007B4D83 /* NTTableViewController.swift */,
@@ -698,6 +701,7 @@
 				9CA3B15D1DE3323B00E9B121 /* BaseTableViewController.swift */,
 				9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */,
 				9C889FCE1DE4995300C33A8D /* FavListViewController.swift */,
+				9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */,
 				9C642E221F40242800B13794 /* BoardListSearchResultViewController.swift */,
 				9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */,
 				9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */,
@@ -709,7 +713,6 @@
 				9C25D5A61DE55452005CB55C /* ComposeEmailController.swift */,
 				9C25D5A81DE5634B005CB55C /* UserViewController.swift */,
 				9C25D5AA1DE56BAE005CB55C /* MailBoxViewController.swift */,
-				9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */,
 				9C25D5AC1DE56BC8005CB55C /* ReminderViewController.swift */,
 				9CB573B81DE58E8800CD6F3E /* MailContentViewController.swift */,
 				9CB573BA1DE59A2E00CD6F3E /* ReferContentViewController.swift */,
@@ -1365,6 +1368,7 @@
 				9C25D5AD1DE56BC8005CB55C /* ReminderViewController.swift in Sources */,
 				9C9C3902232E04E40079AC71 /* NTTabBarController.swift in Sources */,
 				9C4FB42C234E121E008F88FC /* PlaceholderViewController.swift in Sources */,
+				9CD5F2F12375A7C700EA13B4 /* NTSplitViewController+KeyboardSupport.swift in Sources */,
 				9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */,
 				9C1A3BF41DE2EA9900CF4A43 /* SmthStructs.swift in Sources */,
 				9C572620233F901F003FE851 /* StarThreadViewCell.swift in Sources */,

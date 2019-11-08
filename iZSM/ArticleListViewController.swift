@@ -406,7 +406,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         showDetailViewController(acvc, sender: self)
     }
     
-    @objc private func composeArticle(_ sender: UIBarButtonItem) {
+    @objc private func composeArticle(_ sender: Any?) {
         let cavc = ComposeArticleController()
         cavc.boardID = boardID
         cavc.completionHandler = { [unowned self] in
@@ -652,5 +652,26 @@ class ArticleListActionViewController: UITableViewController {
         } else {
             favoriteHandler?(indexPath.row)
         }
+    }
+}
+
+extension ArticleListViewController {
+    func navigateCompose() {
+        composeArticle(nil)
+    }
+    
+    func navigateRefresh() {
+        fetchDataDirectly(showHUD: true) {
+            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        }
+    }
+    
+    func navigateEnterSearch() {
+        searchController?.isActive = true
+        searchController?.searchBar.becomeFirstResponder()
+    }
+    
+    func navigateEscapeSearch() {
+        searchController?.isActive = false
     }
 }

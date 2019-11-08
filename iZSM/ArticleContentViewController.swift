@@ -157,7 +157,7 @@ class ArticleContentViewController: NTTableViewController {
     }
     
     // MARK: - Fetch Data
-    func fetchData(restorePosition: Bool, showHUD: Bool) {
+    func fetchData(restorePosition: Bool, showHUD: Bool, keepSelection: Bool = false) {
         if self.isFetchingData { return }
         guard let boardID = self.boardID, let articleID = self.articleID else {
             self.tableView.switchRefreshHeader(to: .normal(.none, 0))
@@ -204,7 +204,15 @@ class ArticleContentViewController: NTTableViewController {
                     if articles.count > 0 {
                         self.refreshFooterEnabled = true
                         self.articles.append(articles)
-                        self.tableView.reloadData()
+                        if keepSelection {
+                            let indexPath = self.tableView.indexPathForSelectedRow
+                            self.tableView.reloadData()
+                            if let indexPath = indexPath {
+                                self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                            }
+                        } else {
+                            self.tableView.reloadData()
+                        }
                         if restorePosition {
                             if self.row < articles.count {
                                 self.tableView.scrollToRow(at: IndexPath(row: self.row, section: 0),
@@ -745,13 +753,17 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         }
     }
     
-    private func reply(_ article: Article) {
+    private func reply(_ article: Article, byMail: Bool = false) {
         let cavc = ComposeArticleController()
         cavc.boardID = article.boardID
-        cavc.completionHandler = { [unowned self] in
-            self.fetchMoreData()
+        if byMail {
+            cavc.mode = .replyByMail
+        } else {
+            cavc.completionHandler = { [unowned self] in
+                self.fetchMoreData()
+            }
+            cavc.mode = .reply
         }
-        cavc.mode = .reply
         cavc.article = article
         let navigationController = NTNavigationController(rootViewController: cavc)
         navigationController.modalPresentationStyle = .formSheet
@@ -847,6 +859,7 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         acvc.title = "只看\(userID)"
         acvc.soloUser = userID
         acvc.hidesBottomBarWhenPushed = true
+        acvc.isFocus = self.isFocus
         show(acvc, sender: self)
     }
     
@@ -1026,3 +1039,98 @@ extension ArticleContentViewController {
 
 extension ArticleContentViewController: SmthContent {}
 
+extension ArticleContentViewController {
+    var isFocus: Bool {
+        get {
+            return !clearsSelectionOnViewWillAppear
+        }
+        set {
+            let oldValue = !clearsSelectionOnViewWillAppear
+            clearsSelectionOnViewWillAppear = !newValue
+            
+            if oldValue == false && newValue == true {
+                for cell in tableView.visibleCells as! [ArticleContentCell] {
+                    cell.selectionStyle = .default
+                }
+            } else if oldValue == true && newValue == false {
+                for cell in tableView.visibleCells as! [ArticleContentCell] {
+                    cell.selectionStyle = .none
+                }
+            }
+        }
+    }
+    
+    func navigateDown() {
+        isFocus = true
+        var indexPath = IndexPath(row: 0, section: 0)
+        if let ip = tableView.indexPathForSelectedRow {
+            indexPath = ip
+            if tableView.numberOfRows(inSection: indexPath.section) - 1 > indexPath.row {
+                indexPath.row += 1
+            } else if tableView.numberOfSections - 1 > indexPath.section {
+                indexPath = IndexPath(row: 0, section: indexPath.section + 1)
+            } else {
+                tableView.switchRefreshFooter(to: .refreshing)
+                return
+            }
+        } else if let ip = tableView.indexPathsForVisibleRows?.first {
+            indexPath = ip
+        } else {
+            return
+        }
+        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        tableView.scrollToRow(at: indexPath, at: .none, animated: true)
+    }
+    
+    private func _navigateRefresh() {
+        if soloUser == nil && currentBackwardNumber > 0 {
+            fetchPrevData()
+        } else {
+            section = 0
+            fetchData(restorePosition: false, showHUD: true, keepSelection: true)
+        }
+    }
+    
+    func navigateUp() {
+        isFocus = true
+        var indexPath = IndexPath(row: 0, section: 0)
+        if let ip = tableView.indexPathForSelectedRow {
+            indexPath = ip
+            if indexPath.row > 0 {
+                indexPath.row -= 1
+            } else if indexPath.section > 0 {
+                let rowCount = tableView.numberOfRows(inSection: indexPath.section - 1)
+                indexPath = IndexPath(row: rowCount - 1, section: indexPath.section - 1)
+            } else {
+                _navigateRefresh()
+                return
+            }
+        } else if let ip = tableView.indexPathsForVisibleRows?.last {
+            indexPath = ip
+        } else {
+            return
+        }
+        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        tableView.scrollToRow(at: indexPath, at: .none, animated: true)
+    }
+    
+    func navigateNextPage() {
+        if soloUser == nil, currentSection < totalSection - 1 {
+            section = currentSection + 1
+            fetchData(restorePosition: false, showHUD: true)
+        }
+    }
+    
+    func navigatePrevPage() {
+        if soloUser == nil, currentSection > 0 {
+            section = currentSection - 1
+            fetchData(restorePosition: false, showHUD: true)
+        }
+    }
+    
+    func navigateReply(byMail: Bool = false) {
+        guard let indexPath = tableView.indexPathForSelectedRow else { return }
+        let article = articles[indexPath.section][indexPath.row]
+        reply(article, byMail: byMail)
+    }
+}

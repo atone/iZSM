@@ -256,3 +256,14 @@ extension BoardListViewController: FavoriteAddable {
         }
     }
 }
+
+extension BoardListViewController {
+    func navigateEnterSearch() {
+        searchController?.isActive = true
+        searchController?.searchBar.becomeFirstResponder()
+    }
+    
+    func navigateEscapeSearch() {
+        searchController?.isActive = false
+    }
+}

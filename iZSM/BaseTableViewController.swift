@@ -75,6 +75,7 @@ class BaseTableViewController: NTTableViewController {
     
     // check login status and fetch initial data
     func fetchData(showHUD: Bool, headerRefreshing: Bool = false) {
+        isFocus = false
         let stopHeaderRefreshing: () -> Void = {
             if headerRefreshing {
                 self.tableView.switchRefreshHeader(to: .normal(.none, 0))
@@ -162,5 +163,61 @@ extension BaseTableViewController: EulaViewControllerDelegate {
         alert.addAction(UIAlertAction(title: "确定", style: .default))
         controller.present(alert, animated: true)
         dPrint("decline tapped")
+    }
+}
+
+extension BaseTableViewController {
+    var isFocus: Bool {
+        get {
+            return !clearsSelectionOnViewWillAppear
+        }
+        set {
+            clearsSelectionOnViewWillAppear = !newValue
+        }
+    }
+    
+    func navigateDown() {
+        isFocus = true
+        var indexPath = IndexPath(row: 0, section: 0)
+        if let ip = tableView.indexPathForSelectedRow {
+            indexPath = ip
+            if tableView.numberOfRows(inSection: indexPath.section) - 1 > indexPath.row {
+                indexPath.row += 1
+            } else if tableView.numberOfSections - 1 > indexPath.section {
+                indexPath = IndexPath(row: 0, section: indexPath.section + 1)
+            }
+        } else if let ip = tableView.indexPathsForVisibleRows?.first {
+            indexPath = ip
+        } else {
+            return
+        }
+        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        tableView.scrollToRow(at: indexPath, at: .none, animated: true)
+    }
+    
+    func navigateUp() {
+        isFocus = true
+        var indexPath = IndexPath(row: 0, section: 0)
+        if let ip = tableView.indexPathForSelectedRow {
+            indexPath = ip
+            if indexPath.row > 0 {
+                indexPath.row -= 1
+            } else if indexPath.section > 0 {
+                let rowCount = tableView.numberOfRows(inSection: indexPath.section - 1)
+                indexPath = IndexPath(row: rowCount - 1, section: indexPath.section - 1)
+            }
+        } else if let ip = tableView.indexPathsForVisibleRows?.last {
+            indexPath = ip
+        } else {
+            return
+        }
+        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        tableView.scrollToRow(at: indexPath, at: .none, animated: true)
+    }
+    
+    func navigateEnter() {
+        if let indexPath = tableView.indexPathForSelectedRow {
+            tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+        }
     }
 }

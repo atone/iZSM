@@ -227,6 +227,7 @@ extension ArticleListSearchResultViewController {
                 readThread.flags = " " + flags.dropFirst()
                 self.threads[indexPath.section][indexPath.row] = readThread
             }
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             let acvc = self.getViewController(with: thread)
             self.showDetailViewController(acvc, sender: self)
         }

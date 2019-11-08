@@ -220,6 +220,7 @@ extension HotTableViewController {
         animator.addCompletion { [unowned self] in
             guard let identifier = configuration.identifier as? String else { return }
             guard let indexPath = self.indexMap[identifier] else { return }
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             let thread = self.content[indexPath.section].hotThreads[indexPath.row]
             let acvc = self.getViewController(with: thread)
             self.showDetailViewController(acvc, sender: self)

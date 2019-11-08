@@ -231,6 +231,9 @@ class ArticleContentViewController: NTTableViewController {
                     } else {
                         self.tableView.reloadData()
                         SVProgressHUD.showError(withStatus: "指定的文章不存在\n或链接错误")
+                        if self.isFocus {
+                            self.isFocus = false
+                        }
                     }
                 }
             } catch {
@@ -244,6 +247,9 @@ class ArticleContentViewController: NTTableViewController {
                     self.tableView.fd_keyedHeightCache.invalidateAllHeightCache()
                     self.tableView.reloadData()
                     (error as? SMError)?.display()
+                    if self.isFocus {
+                        self.isFocus = false
+                    }
                 }
             }
         }

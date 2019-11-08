@@ -65,6 +65,7 @@ class CompatibilityViewController: NTTableViewController {
         // set tableview self-sizing cell
         tableView.estimatedRowHeight = 44
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.allowsSelection = false
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
     }
 
@@ -81,7 +82,6 @@ class CompatibilityViewController: NTTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
-        cell.selectionStyle = .none
         switch indexPath {
         case IndexPath(row: 0, section: 0):
             cell.textLabel?.text = "禁用Haptic Touch"

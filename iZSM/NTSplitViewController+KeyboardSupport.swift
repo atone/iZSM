@@ -207,16 +207,22 @@ extension NTSplitViewController {
         guard let masterNVC = masterNavigationController else { return }
         if masterNVC.viewControllers.count > 1 {
             masterNVC.popViewController(animated: true)
-        } else if let topVC = masterNVC.topViewController as? BaseTableViewController,
-            topVC.isFocus == true {
-            topVC.isFocus = false
-            if let indexPath = topVC.tableView.indexPathForSelectedRow {
-                topVC.tableView.deselectRow(at: indexPath, animated: true)
+        } else if let topVC = masterNVC.topViewController as? BaseTableViewController {
+            if topVC.isFocus {
+                topVC.isFocus = false
+                if let indexPath = topVC.tableView.indexPathForSelectedRow {
+                    topVC.tableView.deselectRow(at: indexPath, animated: true)
+                }
+            } else if preferredDisplayMode != .automatic {
+                preferredDisplayMode = .automatic
             }
         }
     }
     
     @objc private func navigationAction(_ sender: UIKeyCommand) {
+        if displayMode != .allVisible {
+            preferredDisplayMode = .allVisible
+        }
         if let contentVC = topViewController as? ArticleContentViewController,
             isCollapsed || contentVC.isFocus {
             if sender.input == UIKeyCommand.inputUpArrow {

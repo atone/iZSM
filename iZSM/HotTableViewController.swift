@@ -237,3 +237,11 @@ extension HotTableViewController {
         return acvc
     }
 }
+
+extension HotTableViewController {
+    func navigateRefresh() {
+        fetchDataDirectly(showHUD: true) {
+            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        }
+    }
+}

@@ -28,6 +28,10 @@ extension NTSplitViewController {
         
         commands.append(backCommand)
         
+        if topMasterViewController is HotTableViewController {
+            commands.append(contentsOf: hotTopicCommands)
+        }
+        
         if boardListCanEnterSearchMode {
             commands.append(contentsOf: boardListCommands)
         }
@@ -66,6 +70,12 @@ extension NTSplitViewController {
         return [
             UIKeyCommand(title: "上一项", action: #selector(navigationAction(_:)), input: UIKeyCommand.inputUpArrow),
             UIKeyCommand(title: "下一项", action: #selector(navigationAction(_:)), input: UIKeyCommand.inputDownArrow)
+        ]
+    }
+    
+    private var hotTopicCommands: [UIKeyCommand] {
+        return [
+            UIKeyCommand(title: "刷新", action: #selector(hotTopicAction(_:)), input: "r", modifierFlags: [.command])
         ]
     }
     
@@ -219,6 +229,14 @@ extension NTSplitViewController {
                 baseVC.navigateUp()
             } else if sender.input == UIKeyCommand.inputDownArrow {
                 baseVC.navigateDown()
+            }
+        }
+    }
+    
+    @objc private func hotTopicAction(_ sender: UIKeyCommand) {
+        if let hvc = topMasterViewController as? HotTableViewController {
+            if sender.input == "r" {
+                hvc.navigateRefresh()
             }
         }
     }

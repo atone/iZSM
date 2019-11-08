@@ -11,9 +11,7 @@ import YYKit
 
 class ClassicContentCell: ArticleContentCell {
     override func setup() {
-        selectionStyle = .none
         contentView.addSubview(containerView)
-        contentView.backgroundColor = .systemBackground
         
         if (!setting.noPicMode) && setting.showAvatar {
             avatarImageView.contentMode = .scaleAspectFill

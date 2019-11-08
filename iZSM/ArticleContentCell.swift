@@ -70,10 +70,8 @@ class ArticleContentCell: UITableViewCell {
     }
     
     func setup() {
-        selectionStyle = .none
         contentView.addSubview(bckgroundView)
         contentView.addSubview(containerView)
-        contentView.backgroundColor = .systemBackground
         bckgroundView.backgroundColor = .secondarySystemGroupedBackground
         
         if (!setting.noPicMode) && setting.showAvatar {
@@ -188,6 +186,12 @@ class ArticleContentCell: UITableViewCell {
         authorLabel.text = article.authorID
         let floorText = displayFloor == 0 ? "楼主" : "\(displayFloor)楼"
         floorAndTimeLabel.text = "\(floorText) • \(article.timeString)"
+        
+        if controller.isFocus {
+            selectionStyle = .default
+        } else {
+            selectionStyle = .none
+        }
     }
     
     override func prepareForReuse() {

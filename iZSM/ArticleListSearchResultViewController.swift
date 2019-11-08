@@ -144,6 +144,7 @@ class ArticleListSearchResultViewController: BaseTableViewController {
             let flags = thread.flags
             readThread.flags = " " + flags[flags.index(after: flags.startIndex)...]
             threads[indexPath.section][indexPath.row] = readThread
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none) // restore selection
         }
         
         showDetailViewController(acvc, sender: self)

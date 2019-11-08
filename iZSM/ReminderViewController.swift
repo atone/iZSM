@@ -87,7 +87,11 @@ class ReminderViewController: BaseTableViewController {
                 case .success(let refers):
                     self.referCountLoaded -= refers.count
                     self.references.append(refers.reversed())
+                    let indexPath = self.tableView.indexPathForSelectedRow
                     self.tableView.reloadData()
+                    if let indexPath = indexPath {
+                        self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                    }
                 case .failure(let error):
                     error.display()
                 }
@@ -180,6 +184,7 @@ class ReminderViewController: BaseTableViewController {
             readReference.flag = 1
             references[indexPath.section][indexPath.row] = readReference
             tableView.reloadData()
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none) // restore selection
             MessageCenter.shared.readRefer(mode: mode)
         }
         showDetailViewController(rcvc, sender: self)

@@ -87,7 +87,11 @@ class MailBoxViewController: BaseTableViewController {
                 switch result {
                 case .success(let mails):
                     self.mailCountLoaded -= mails.count
+                    let indexPath = self.tableView.indexPathForSelectedRow
                     self.mails.append(mails.reversed())
+                    if let indexPath = indexPath {
+                        self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                    }
                 case .failure(let error):
                     error.display()
                 }
@@ -152,6 +156,7 @@ class MailBoxViewController: BaseTableViewController {
             var readMail = mail
             readMail.flags = "  "
             mails[indexPath.section][indexPath.row] = readMail
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none) // restore selection
             let allRead = mails.allSatisfy { $0.allSatisfy { !$0.flags.hasPrefix("N") } }
             if allRead {
                 MessageCenter.shared.readAllMail()

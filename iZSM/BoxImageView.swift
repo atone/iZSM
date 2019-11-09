@@ -84,6 +84,7 @@ class BoxImageView: UIView {
                 break
             }
         }
-        return totalHeight
+        let scale = UIScreen.main.scale
+        return floor(totalHeight * scale) / scale
     }
 }

@@ -20,13 +20,14 @@ extension NTSplitViewController {
         var commands = [UIKeyCommand]()
         commands.append(contentsOf: switchTabCommands)
         
-        commands.append(contentsOf: navigationCommands)
-        
-        if !(isCollapsed && topMasterViewController is ArticleContentViewController) {
-            commands.append(enterCommand)
+        if topMasterViewController is BaseTableViewController
+            || (isCollapsed && topMasterViewController is ArticleContentViewController) {
+            commands.append(contentsOf: navigationCommands)
+            if !(isCollapsed && topMasterViewController is ArticleContentViewController) {
+                commands.append(enterCommand)
+            }
+            commands.append(backCommand)
         }
-        
-        commands.append(backCommand)
         
         if topMasterViewController is HotTableViewController {
             commands.append(contentsOf: hotTopicCommands)

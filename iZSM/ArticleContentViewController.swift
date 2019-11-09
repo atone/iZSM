@@ -1076,9 +1076,21 @@ extension ArticleContentViewController {
     
     func navigateDown() {
         isFocus = true
+        let inset = tableView.adjustedContentInset
+        let visibleHeight = tableView.bounds.height - inset.top
         var indexPath = IndexPath(row: 0, section: 0)
         if let ip = tableView.indexPathForSelectedRow {
             indexPath = ip
+            let cellMaxY = tableView.rectForRow(at: indexPath).maxY
+            let contentMaxY = tableView.contentOffset.y + inset.top + visibleHeight
+            if cellMaxY > contentMaxY {
+                var dy = cellMaxY - contentMaxY
+                dy = min(visibleHeight / 2, dy)
+                var offset = tableView.contentOffset
+                offset.y += dy
+                tableView.setContentOffset(offset, animated: true)
+                return
+            }
             if tableView.numberOfRows(inSection: indexPath.section) - 1 > indexPath.row {
                 indexPath.row += 1
             } else if tableView.numberOfSections - 1 > indexPath.section {
@@ -1092,8 +1104,13 @@ extension ArticleContentViewController {
         } else {
             return
         }
-        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-        tableView.scrollToRow(at: indexPath, at: .none, animated: true)
+        let cellHeight = tableView.rectForRow(at: indexPath).height
+        if cellHeight > (visibleHeight - inset.bottom) {
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .top)
+        } else {
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+            tableView.scrollToRow(at: indexPath, at: .none, animated: true)
+        }
     }
     
     private func _navigateRefresh() {
@@ -1107,9 +1124,21 @@ extension ArticleContentViewController {
     
     func navigateUp() {
         isFocus = true
+        let inset = tableView.adjustedContentInset
+        let visibleHeight = tableView.bounds.height - inset.top
         var indexPath = IndexPath(row: 0, section: 0)
         if let ip = tableView.indexPathForSelectedRow {
             indexPath = ip
+            let cellMinY = tableView.rectForRow(at: indexPath).minY
+            let contentMinY = tableView.contentOffset.y + inset.top
+            if cellMinY < contentMinY {
+                var dy = contentMinY - cellMinY
+                dy = min(visibleHeight / 2, dy)
+                var offset = tableView.contentOffset
+                offset.y -= dy
+                tableView.setContentOffset(offset, animated: true)
+                return
+            }
             if indexPath.row > 0 {
                 indexPath.row -= 1
             } else if indexPath.section > 0 {
@@ -1124,8 +1153,13 @@ extension ArticleContentViewController {
         } else {
             return
         }
-        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-        tableView.scrollToRow(at: indexPath, at: .none, animated: true)
+        let cellHeight = tableView.rectForRow(at: indexPath).height
+        if cellHeight > (visibleHeight - inset.bottom) {
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .bottom)
+        } else {
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+            tableView.scrollToRow(at: indexPath, at: .none, animated: true)
+        }
     }
     
     func navigateNextPage() {

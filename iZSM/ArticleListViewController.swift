@@ -149,6 +149,17 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         threads.removeAll()
     }
     
+    private func isGoodTitle(_ title: String) -> Bool {
+        return setting.keywordBlacklist.allSatisfy {
+            !title.lowercased().contains($0.lowercased())
+        }
+    }
+    
+    private lazy var blackUserSet = Set(setting.userBlacklist.map{$0.lowercased()})
+    private func isGoodUser(_ user: String) -> Bool {
+        return !blackUserSet.contains(user.lowercased())
+    }
+    
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         if let boardID = self.boardID {
             let currentMode = self.searchMode
@@ -166,34 +177,40 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                     case .byReplyNewFirst:
                         self.threadCursor = 0
                         while threadSection.count == 0 {
-                            let threads = try self.api.getThreadList(in: boardID, range: self.threadRange)
+                            var threads = try self.api.getThreadList(in: boardID, range: self.threadRange)
                             // self.threadCursor存储的是已经加载的主题数（包括被过滤掉的）
                             self.threadCursor += threads.count
                             if self.setting.hideAlwaysOnTopThread {
                                 // 过滤置顶帖
-                                threadSection.append(contentsOf: threads.filter({
+                                threads = threads.filter {
                                     !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                                }))
-                            } else {
-                                threadSection.append(contentsOf: threads)
+                                }
                             }
+                            // 过滤黑名单
+                            threads = threads.filter {
+                                self.isGoodTitle($0.subject) && self.isGoodUser($0.authorID)
+                            }
+                            threadSection.append(contentsOf: threads)
                         }
                     case .byReplyOldFirst:
                         self.totalThreads = try self.api.getThreadCount(in: boardID)
                         guard self.totalThreads > 0 else { break }
                         self.threadCursor = self.totalThreads
                         while threadSection.count == 0 {
-                            let threads = try self.api.getThreadList(in: boardID, range: self.threadRange)
+                            var threads = try self.api.getThreadList(in: boardID, range: self.threadRange)
                             // self.threadCursor存储的是已经加载的主题数（包括被过滤掉的）
                             self.threadCursor -= threads.count
                             if self.setting.hideAlwaysOnTopThread {
                                 // 过滤置顶帖
-                                threadSection.append(contentsOf: threads.filter({
+                                threads = threads.filter {
                                     !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                                }).reversed())
-                            } else {
-                                threadSection.append(contentsOf: threads.reversed())
+                                }
                             }
+                            // 过滤黑名单
+                            threads = threads.filter {
+                                self.isGoodTitle($0.subject) && self.isGoodUser($0.authorID)
+                            }
+                            threadSection.append(contentsOf: threads.reversed())
                         }
                     case .byPostNewFirst:
                         self.currentPage = -1
@@ -210,14 +227,18 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                                 }
                             }
                             self.currentPage = result.page - 1
+                            var threads = result.threads
                             if self.setting.hideAlwaysOnTopThread {
                                 // 过滤置顶帖
-                                threadSection.append(contentsOf: result.threads.filter({
+                                threads = threads.filter {
                                     !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                                }).reversed())
-                            } else {
-                                threadSection.append(contentsOf: result.threads.reversed())
+                                }
                             }
+                            // 过滤黑名单
+                            threads = threads.filter {
+                                self.isGoodTitle($0.subject) && self.isGoodUser($0.authorID)
+                            }
+                            threadSection.append(contentsOf: threads.reversed())
                         }
                     case .byPostOldFirst:
                         self.currentPage = 1
@@ -230,14 +251,18 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                                 continue // try to load next page
                             }
                             self.currentPage = result.page + 1
+                            var threads = result.threads
                             if self.setting.hideAlwaysOnTopThread {
                                 // 过滤置顶帖
-                                threadSection.append(contentsOf: result.threads.filter({
+                                threads = threads.filter {
                                     !$0.flags.hasPrefix("d") && !$0.flags.hasPrefix("D")
-                                }))
-                            } else {
-                                threadSection.append(contentsOf: result.threads)
+                                }
                             }
+                            // 过滤黑名单
+                            threads = threads.filter {
+                                self.isGoodTitle($0.subject) && self.isGoodUser($0.authorID)
+                            }
+                            threadSection.append(contentsOf: threads)
                         }
                     }
                     DispatchQueue.main.async {
@@ -337,6 +362,10 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
                     }
                     threadSection = threadSection.filter {
                         !loadedThreadIds.contains($0.id)
+                    }
+                    // 过滤黑名单
+                    threadSection = threadSection.filter {
+                        self.isGoodTitle($0.subject) && self.isGoodUser($0.authorID)
                     }
                     DispatchQueue.main.async {
                         self._isFetchingMoreData = false

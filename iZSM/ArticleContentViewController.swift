@@ -156,6 +156,11 @@ class ArticleContentViewController: NTTableViewController {
         }
     }
     
+    private lazy var blackUserSet = Set(setting.userBlacklist.map{$0.lowercased()})
+    private func isGoodUser(_ user: String) -> Bool {
+        return !blackUserSet.contains(user.lowercased())
+    }
+    
     // MARK: - Fetch Data
     func fetchData(restorePosition: Bool, showHUD: Bool, keepSelection: Bool = false) {
         if self.isFetchingData { return }
@@ -182,7 +187,7 @@ class ArticleContentViewController: NTTableViewController {
                     }
                 } else {  // 正常模式
                     let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
-                    articles += result.articles
+                    articles += result.articles.filter { self.isGoodUser($0.authorID) }
                     self.currentForwardNumber += result.articles.count
                     self.totalArticleNumber = result.total
                 }
@@ -268,13 +273,14 @@ class ArticleContentViewController: NTTableViewController {
         DispatchQueue.global().async {
             do {
                 let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.backwardThreadRange, sort: self.setting.sortMode)
+                self.currentBackwardNumber -= result.articles.count
+                self.totalArticleNumber = result.total
+                let articles = result.articles.filter { self.isGoodUser($0.authorID) }
                 DispatchQueue.main.async {
                     self.isFetchingData = false
                     networkActivityIndicatorStop()
-                    if result.articles.count > 0 {
-                        self.articles.insert(result.articles, at: 0)
-                        self.currentBackwardNumber -= result.articles.count
-                        self.totalArticleNumber = result.total
+                    if articles.count > 0 {
+                        self.articles.insert(articles, at: 0)
                         let indexPath = self.tableView.indexPathForSelectedRow
                         self.tableView.reloadData()
                         if var indexPath = indexPath {
@@ -282,7 +288,7 @@ class ArticleContentViewController: NTTableViewController {
                             self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
                         }
                         var delayOffest = self.tableView.contentOffset
-                        for i in 0..<result.articles.count {
+                        for i in 0..<articles.count {
                             delayOffest.y += self.tableView(self.tableView, heightForRowAt: IndexPath(row: i, section: 0))
                         }
                         self.tableView.setContentOffset(delayOffest, animated: false)
@@ -327,7 +333,7 @@ class ArticleContentViewController: NTTableViewController {
                     }
                 } else { // 正常模式
                     let result = try self.api.getThreadWithRetry(articleID, in: boardID, range: self.forwardThreadRange, sort: self.setting.sortMode)
-                    articles += result.articles
+                    articles += result.articles.filter { self.isGoodUser($0.authorID) }
                     self.currentForwardNumber += result.articles.count
                     self.totalArticleNumber = result.total
                 }

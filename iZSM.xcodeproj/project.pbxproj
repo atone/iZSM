@@ -54,6 +54,7 @@
 		9C889FCD1DE4832E00C33A8D /* YYPhotoGroupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FCC1DE4832E00C33A8D /* YYPhotoGroupView.m */; };
 		9C889FCF1DE4995300C33A8D /* FavListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FCE1DE4995300C33A8D /* FavListViewController.swift */; };
 		9C889FD11DE4B66E00C33A8D /* ComposeArticleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FD01DE4B66E00C33A8D /* ComposeArticleController.swift */; };
+		9C8C4C3A2376D4BF0036EFE0 /* BlacklistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8C4C392376D4BF0036EFE0 /* BlacklistViewController.swift */; };
 		9C8DEB31233313F500E5CE4A /* TZImagePickerController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C8DEB30233313F500E5CE4A /* TZImagePickerController.framework */; };
 		9C8DEB35233334E600E5CE4A /* CustomHotSectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8DEB34233334E600E5CE4A /* CustomHotSectionViewController.swift */; };
 		9C9C3902232E04E40079AC71 /* NTTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9C3901232E04E40079AC71 /* NTTabBarController.swift */; };
@@ -340,6 +341,7 @@
 		9C889FCC1DE4832E00C33A8D /* YYPhotoGroupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYPhotoGroupView.m; sourceTree = "<group>"; };
 		9C889FCE1DE4995300C33A8D /* FavListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavListViewController.swift; sourceTree = "<group>"; };
 		9C889FD01DE4B66E00C33A8D /* ComposeArticleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeArticleController.swift; sourceTree = "<group>"; };
+		9C8C4C392376D4BF0036EFE0 /* BlacklistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlacklistViewController.swift; sourceTree = "<group>"; };
 		9C8DC6262329F48800DDE69F /* iZSM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iZSM.entitlements; sourceTree = "<group>"; };
 		9C8DEB30233313F500E5CE4A /* TZImagePickerController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TZImagePickerController.framework; path = Carthage/Build/iOS/TZImagePickerController.framework; sourceTree = "<group>"; };
 		9C8DEB34233334E600E5CE4A /* CustomHotSectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHotSectionViewController.swift; sourceTree = "<group>"; };
@@ -718,6 +720,7 @@
 				9CB573BA1DE59A2E00CD6F3E /* ReferContentViewController.swift */,
 				9CB573BF1DE5B46D00CD6F3E /* SettingsViewController.swift */,
 				9C50001D237293C8003A5606 /* CompatibilityViewController.swift */,
+				9C8C4C392376D4BF0036EFE0 /* BlacklistViewController.swift */,
 				9C8DEB34233334E600E5CE4A /* CustomHotSectionViewController.swift */,
 				9CB573C01DE5B46D00CD6F3E /* AboutViewController.swift */,
 				9C4FB42B234E121E008F88FC /* PlaceholderViewController.swift */,
@@ -1384,6 +1387,7 @@
 				9C25D5A71DE55452005CB55C /* ComposeEmailController.swift in Sources */,
 				9CC1FD5B232F5C02006CFE33 /* MessageCenter.swift in Sources */,
 				9C57261B233F7389003FE851 /* StarThread+CoreDataClass.swift in Sources */,
+				9C8C4C3A2376D4BF0036EFE0 /* BlacklistViewController.swift in Sources */,
 				9C25D5AB1DE56BAE005CB55C /* MailBoxViewController.swift in Sources */,
 				9CBFD79C23486F5100A16194 /* GTMNSString+HTML.m in Sources */,
 				9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */,

@@ -20,6 +20,7 @@ class SettingsViewController: NTTableViewController {
     @IBOutlet weak var addDeviceSignatureLabel: UILabel!
     @IBOutlet weak var displayModeLabel: UILabel!
     @IBOutlet weak var customHotSectionLabel: UILabel!
+    @IBOutlet weak var blacklistLabel: UILabel!
     @IBOutlet weak var boldFontLabel: UILabel!
     @IBOutlet weak var showAvatarLabel: UILabel!
     @IBOutlet weak var noPicModeLabel: UILabel!
@@ -156,6 +157,8 @@ class SettingsViewController: NTTableViewController {
         displayModeLabel.textColor = UIColor(named: "MainText")
         customHotSectionLabel.font = font
         customHotSectionLabel.textColor = UIColor(named: "MainText")
+        blacklistLabel.font = font
+        blacklistLabel.textColor = UIColor(named: "MainText")
         boldFontLabel.font = font
         boldFontLabel.textColor = UIColor(named: "MainText")
         showAvatarLabel.font = font

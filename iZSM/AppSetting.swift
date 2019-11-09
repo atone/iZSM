@@ -46,6 +46,8 @@ class AppSetting {
         static let CustomFontScaleIndexKey = "SmthAPI.customFontScaleIndexKey"
         static let ThreadSortModeKey = "SmthAPI.threadSortModeKey"
         static let useBoldFontKey = "SmthAPI.useBoldFontKey"
+        static let userBlacklistKey = "SmthAPI.userBlacklistKey"
+        static let keywordBlacklistKey = "SmthAPI.keywordBlacklistKey"
         static let disableHapticTouchKey = "SmthAPI.Compatibility.disableHapticTouchKey"
         static let classicReadingModeKey = "SmthAPI.Compatibility.classicReadingModeKey"
         static let forceDarkModeKey = "SmthAPI.Compatibility.forceDarkModeKey"
@@ -331,6 +333,24 @@ class AppSetting {
     
     var isSmallScreen: Bool {
         return Device.current.diagonal <= 4
+    }
+    
+    var userBlacklist: [String] {
+        get {
+            return defaults.stringArray(forKey: Static.userBlacklistKey) ?? []
+        }
+        set {
+            defaults.set(newValue, forKey: Static.userBlacklistKey)
+        }
+    }
+    
+    var keywordBlacklist: [String] {
+        get {
+            return defaults.stringArray(forKey: Static.keywordBlacklistKey) ?? []
+        }
+        set {
+            defaults.set(newValue, forKey: Static.keywordBlacklistKey)
+        }
     }
     
     var disableHapticTouch: Bool {

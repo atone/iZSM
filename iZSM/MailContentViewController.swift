@@ -281,4 +281,12 @@ extension MailContentViewController: UIPopoverPresentationControllerDelegate {
     }
 }
 
-extension MailContentViewController: SmthContent {}
+extension MailContentViewController: SmthContent {
+    var identifier: String {
+        if let mail = mail {
+            return "mail: \(mail)"
+        } else {
+            return "mail"
+        }
+    }
+}

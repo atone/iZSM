@@ -194,4 +194,8 @@ class AboutViewController: NTTableViewController {
 
 }
 
-extension AboutViewController: SmthContent {}
+extension AboutViewController: SmthContent {
+    var identifier: String {
+        return "AboutViewController"
+    }
+}

@@ -1043,7 +1043,15 @@ extension ArticleContentViewController {
     }
 }
 
-extension ArticleContentViewController: SmthContent {}
+extension ArticleContentViewController: SmthContent {
+    var identifier: String {
+        if let boardID = boardID, let articleID = articleID {
+            return "thread: \(articleID) in \(boardID)"
+        } else {
+            return "thread"
+        }
+    }
+}
 
 extension ArticleContentViewController {
     var isFocus: Bool {

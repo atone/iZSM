@@ -322,11 +322,12 @@ extension AppDelegate: UISplitViewControllerDelegate {
                     let action = displayModeItem.action
                     _ = target?.perform(action, with: displayModeItem)
                 }
-            } else if let secondNaviCtr = splitViewController.viewControllers.last as? NTNavigationController {
-                if secondNaviCtr.topViewController?.title != vc.title {
-                    vc.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
-                    secondNaviCtr.setViewControllers([vc], animated: false)
+            } else if let secondNaviCtr = splitViewController.viewControllers.last as? NTNavigationController, let topViewController = secondNaviCtr.topViewController {
+                if let topVC = topViewController as? SmthContent, let newVC = vc as? SmthContent, topVC.identifier == newVC.identifier {
+                    return true
                 }
+                vc.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
+                secondNaviCtr.setViewControllers([vc], animated: false)
             }
         }
         return true
@@ -374,4 +375,6 @@ extension AppDelegate: UISplitViewControllerDelegate {
     }
 }
 
-protocol SmthContent {}
+protocol SmthContent {
+    var identifier: String { get }
+}

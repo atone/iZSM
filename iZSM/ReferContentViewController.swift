@@ -291,4 +291,12 @@ extension ReferContentViewController: UIPopoverPresentationControllerDelegate {
     }
 }
 
-extension ReferContentViewController: SmthContent {}
+extension ReferContentViewController: SmthContent {
+    var identifier: String {
+        if let reference = reference {
+            return "reference: \(reference)"
+        } else {
+            return "reference"
+        }
+    }
+}

@@ -319,7 +319,6 @@
                                                     <rect key="frame" x="310" y="6.5" width="51" height="31"/>
                                                     <connections>
                                                         <action selector="boldFontChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="l6R-B2-SoK"/>
-                                                        <action selector="showAvatarChanged:" destination="cfW-o0-iaM" eventType="valueChanged" id="xKM-Fg-T2K"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>

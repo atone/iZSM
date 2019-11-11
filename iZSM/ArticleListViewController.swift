@@ -149,21 +149,31 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
         threads.removeAll()
     }
     
+    // MARK: - Blacklist
+    private var blackUserSet = Set<String>()
+    private var blackKeywordList = [String]()
+    
     private func isGoodTitle(_ title: String) -> Bool {
-        return setting.keywordBlacklist.allSatisfy {
-            !title.lowercased().contains($0.lowercased())
+        return blackKeywordList.allSatisfy {
+            !title.lowercased().contains($0)
         }
     }
     
-    private lazy var blackUserSet = Set(setting.userBlacklist.map{$0.lowercased()})
     private func isGoodUser(_ user: String) -> Bool {
         return !blackUserSet.contains(user.lowercased())
     }
     
+    private func updateBlacklist() {
+        blackUserSet = Set(setting.userBlacklist.map{$0.lowercased().trimmingCharacters(in: .whitespaces)})
+        blackKeywordList = setting.keywordBlacklist.map{$0.lowercased().trimmingCharacters(in: .whitespaces)}
+    }
+    
+    // MARK: - Fetch Data
     override func fetchDataDirectly(showHUD: Bool, completion: (() -> Void)? = nil) {
         if let boardID = self.boardID {
             let currentMode = self.searchMode
             let currentThreadSortMode = self.threadSortMode
+            updateBlacklist()
             networkActivityIndicatorStart(withHUD: showHUD)
             DispatchQueue.global().async {
                 do {
@@ -307,6 +317,7 @@ class ArticleListViewController: BaseTableViewController, UISearchControllerDele
             guard let searchString = self.searchString else { return }
             let currentMode = self.searchMode
             let currentThreadSortMode = self.threadSortMode
+            updateBlacklist()
             networkActivityIndicatorStart()
             DispatchQueue.global().async {
                 do {

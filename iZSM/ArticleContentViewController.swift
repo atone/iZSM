@@ -156,9 +156,15 @@ class ArticleContentViewController: NTTableViewController {
         }
     }
     
-    private lazy var blackUserSet = Set(setting.userBlacklist.map{$0.lowercased()})
+    // MARK: - Blacklist
+    private var blackUserSet = Set<String>()
+    
     private func isGoodUser(_ user: String) -> Bool {
         return !blackUserSet.contains(user.lowercased())
+    }
+    
+    private func updateBlacklist() {
+        blackUserSet = Set(setting.userBlacklist.map{$0.lowercased().trimmingCharacters(in: .whitespaces)})
     }
     
     // MARK: - Fetch Data
@@ -171,6 +177,7 @@ class ArticleContentViewController: NTTableViewController {
         }
         
         self.isFetchingData = true
+        updateBlacklist()
         networkActivityIndicatorStart(withHUD: showHUD)
         self.refreshFooterEnabled = false
         DispatchQueue.global().async {
@@ -269,6 +276,7 @@ class ArticleContentViewController: NTTableViewController {
         }
         
         self.isFetchingData = true
+        updateBlacklist()
         networkActivityIndicatorStart()
         DispatchQueue.global().async {
             do {
@@ -318,6 +326,7 @@ class ArticleContentViewController: NTTableViewController {
         }
         
         self.isFetchingData = true
+        updateBlacklist()
         networkActivityIndicatorStart()
         DispatchQueue.global().async {
             do {
@@ -726,6 +735,9 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         let forwardToBoardAction = UIAlertAction(title: "转载到版面", style: .default) { [unowned self] _ in
             self.cross(article)
         }
+        let blockAction = UIAlertAction(title: "屏蔽 \(article.authorID)", style: .default) { [unowned self] _ in
+            self.block(article.authorID)
+        }
         let reportJunkAction = UIAlertAction(title: "举报不良内容", style: .destructive) { [unowned self] _ in
             self.reportJunk(article)
         }
@@ -735,6 +747,9 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
                 let moreSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 moreSheet.addAction(forwardAction)
                 moreSheet.addAction(forwardToBoardAction)
+                if self.soloUser == nil {
+                    moreSheet.addAction(blockAction)
+                }
                 moreSheet.addAction(reportJunkAction)
                 moreSheet.addAction(UIAlertAction(title: "取消", style: .cancel))
                 moreSheet.popoverPresentationController?.sourceView = sender
@@ -745,6 +760,9 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         } else {
             actionSheet.addAction(forwardAction)
             actionSheet.addAction(forwardToBoardAction)
+            if soloUser == nil {
+                actionSheet.addAction(blockAction)
+            }
             actionSheet.addAction(reportJunkAction)
         }
         
@@ -976,6 +994,23 @@ extension ArticleContentViewController: ArticleContentCellDelegate {
         resultController.modalPresentationStyle = .formSheet
         present(resultController, animated: true)
     }
+    
+    private func block(_ userID: String) {
+        let confirmAlert = UIAlertController(title: "确定屏蔽\(userID)？", message: nil, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "确定", style: .default) { [unowned self] _ in
+            self.setting.userBlacklist.append(userID)
+            self.articles = self.articles.map {
+                $0.filter {
+                    $0.authorID != userID
+                }
+            }
+            self.tableView.reloadData()
+            SVProgressHUD.showSuccess(withStatus: "操作成功")
+        }
+        confirmAlert.addAction(okAction)
+        confirmAlert.addAction(UIAlertAction(title: "取消", style: .cancel))
+        present(confirmAlert, animated: true)
+    }
 }
 
 extension ArticleContentViewController {
@@ -1016,14 +1051,23 @@ extension ArticleContentViewController {
             let forwardToBoardAction = UIAction(title: "转载到版面", image: UIImage(systemName: "text.insert")) { [unowned self] action in
                 self.cross(article)
             }
+            let blockAction = UIAction(title: "屏蔽 \(article.authorID)", image: UIImage(systemName: "eye.slash")) { [unowned self] action in
+                self.block(article.authorID)
+            }
             let reportJunkAction = UIAction(title: "举报不良内容", attributes: .destructive) { [unowned self] action in
                 self.reportJunk(article)
             }
+            let moreActions: [UIAction]
+            if self.soloUser == nil {
+                moreActions = [forwardToUserAction, forwardToBoardAction, blockAction, reportJunkAction]
+            } else {
+                moreActions = [forwardToUserAction, forwardToBoardAction, reportJunkAction]
+            }
             if shouldCollapse {
-                let moreMenu = UIMenu(title: "更多…", children: [forwardToUserAction, forwardToBoardAction, reportJunkAction])
+                let moreMenu = UIMenu(title: "更多…", children: moreActions)
                 actionArray.append(moreMenu)
             } else {
-                actionArray.append(contentsOf: [forwardToUserAction, forwardToBoardAction, reportJunkAction])
+                actionArray.append(contentsOf: moreActions)
             }
             return UIMenu(title: "", children: actionArray)
         }

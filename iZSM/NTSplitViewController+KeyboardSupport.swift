@@ -221,8 +221,8 @@ extension NTSplitViewController {
     }
     
     @objc private func navigationAction(_ sender: UIKeyCommand) {
-        if displayMode != .allVisible {
-            preferredDisplayMode = .allVisible
+        if displayMode != .oneBesideSecondary {
+            preferredDisplayMode = .oneBesideSecondary
         }
         if let contentVC = topViewController as? ArticleContentViewController,
             isCollapsed || contentVC.isFocus {

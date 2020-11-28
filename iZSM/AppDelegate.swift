@@ -316,7 +316,7 @@ extension AppDelegate: UISplitViewControllerDelegate {
                     firstNaviCtr.pushViewController(vc, animated: true)
                 }
                 // if primary viewController is hidden, unhide it to avoid confusion
-                if !splitViewController.isCollapsed && splitViewController.displayMode == .primaryHidden {
+                if !splitViewController.isCollapsed && splitViewController.displayMode == .secondaryOnly {
                     let displayModeItem = splitViewController.displayModeButtonItem
                     let target = displayModeItem.target
                     let action = displayModeItem.action

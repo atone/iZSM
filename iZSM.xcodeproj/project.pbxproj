@@ -7,13 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5E01B65B25727932001C22D5 /* YYText in Frameworks */ = {isa = PBXBuildFile; productRef = 5E01B65A25727932001C22D5 /* YYText */; };
+		5E01B65E25727B8E001C22D5 /* SVProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 5E01B65D25727B8E001C22D5 /* SVProgressHUD */; };
 		5E28D5C22570D6740021A7DB /* PullToRefreshKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5E28D5C12570D6740021A7DB /* PullToRefreshKit */; };
 		5E28D5C62570D8660021A7DB /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E28D5C42570D8660021A7DB /* OnePasswordExtension.m */; };
-		5E28D5CA2570DBC40021A7DB /* SVProgressHUD.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E28D5C92570DBC40021A7DB /* SVProgressHUD.xcframework */; };
-		5E28D5CB2570DBC40021A7DB /* SVProgressHUD.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5E28D5C92570DBC40021A7DB /* SVProgressHUD.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5E53BC0825713C4600A9CE4D /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 5E53BC0725713C4600A9CE4D /* Kingfisher */; };
-		5EA91ABB25713408007B3159 /* YYText.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EA91ABA25713408007B3159 /* YYText.xcframework */; };
-		5EA91ABC25713408007B3159 /* YYText.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5EA91ABA25713408007B3159 /* YYText.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9C07EC982330D85300EAEC8E /* NTLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C07EC972330D85300EAEC8E /* NTLabel.swift */; };
 		9C086E011F1E3BE300023788 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C086E001F1E3BE300023788 /* StoreKit.framework */; };
 		9C118CF01F3BFFC700D6F405 /* NTSafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C118CEF1F3BFFC700D6F405 /* NTSafariViewController.swift */; };
@@ -286,26 +284,9 @@
 		9CF349301F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF3492F1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		5E28D5BF2570D48F0021A7DB /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				5EA91ABC25713408007B3159 /* YYText.xcframework in Embed Frameworks */,
-				5E28D5CB2570DBC40021A7DB /* SVProgressHUD.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		5E28D5C42570D8660021A7DB /* OnePasswordExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnePasswordExtension.m; sourceTree = "<group>"; };
 		5E28D5C52570D8660021A7DB /* OnePasswordExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnePasswordExtension.h; sourceTree = "<group>"; };
-		5E28D5C92570DBC40021A7DB /* SVProgressHUD.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SVProgressHUD.xcframework; path = iZSM/Resources/SVProgressHUD.xcframework; sourceTree = "<group>"; };
-		5EA91ABA25713408007B3159 /* YYText.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = YYText.xcframework; path = iZSM/Resources/YYText.xcframework; sourceTree = "<group>"; };
 		9C07EC972330D85300EAEC8E /* NTLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTLabel.swift; sourceTree = "<group>"; };
 		9C086E001F1E3BE300023788 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9C118CEF1F3BFFC700D6F405 /* NTSafariViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTSafariViewController.swift; sourceTree = "<group>"; };
@@ -590,15 +571,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CA70D3C23326A4900F575C7 /* DeviceKit in Frameworks */,
-				5E28D5CA2570DBC40021A7DB /* SVProgressHUD.xcframework in Frameworks */,
 				9CA70D39233266E200F575C7 /* KeychainSwift in Frameworks */,
 				5E28D5C22570D6740021A7DB /* PullToRefreshKit in Frameworks */,
 				5E53BC0825713C4600A9CE4D /* Kingfisher in Frameworks */,
+				5E01B65B25727932001C22D5 /* YYText in Frameworks */,
 				9C086E011F1E3BE300023788 /* StoreKit.framework in Frameworks */,
+				5E01B65E25727B8E001C22D5 /* SVProgressHUD in Frameworks */,
 				9CA70D422332749600F575C7 /* SnapKit in Frameworks */,
 				9C3A3F00233E5AE6006223AA /* CloudKit.framework in Frameworks */,
 				9CD2CD71236B4DAF00418F25 /* SmthConnection in Frameworks */,
-				5EA91ABB25713408007B3159 /* YYText.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -664,8 +645,6 @@
 		9C1A3BD21DE2C5E100CF4A43 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5EA91ABA25713408007B3159 /* YYText.xcframework */,
-				5E28D5C92570DBC40021A7DB /* SVProgressHUD.xcframework */,
 				9C3A3EFF233E5AE6006223AA /* CloudKit.framework */,
 				9C086E001F1E3BE300023788 /* StoreKit.framework */,
 			);
@@ -1062,7 +1041,6 @@
 				9C1A3BB81DE2C0ED00CF4A43 /* Sources */,
 				9C1A3BB91DE2C0ED00CF4A43 /* Frameworks */,
 				9C1A3BBA1DE2C0ED00CF4A43 /* Resources */,
-				5E28D5BF2570D48F0021A7DB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1076,6 +1054,8 @@
 				9CD2CD70236B4DAF00418F25 /* SmthConnection */,
 				5E28D5C12570D6740021A7DB /* PullToRefreshKit */,
 				5E53BC0725713C4600A9CE4D /* Kingfisher */,
+				5E01B65A25727932001C22D5 /* YYText */,
+				5E01B65D25727B8E001C22D5 /* SVProgressHUD */,
 			);
 			productName = iZSM;
 			productReference = 9C1A3BBC1DE2C0ED00CF4A43 /* iZSM.app */;
@@ -1122,6 +1102,8 @@
 				9CD2CD6F236B4DAF00418F25 /* XCRemoteSwiftPackageReference "SmthConnection" */,
 				5E28D5C02570D6740021A7DB /* XCRemoteSwiftPackageReference "PullToRefreshKit" */,
 				5E53BC0625713C4600A9CE4D /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				5E01B65925727932001C22D5 /* XCRemoteSwiftPackageReference "YYText" */,
+				5E01B65C25727B8E001C22D5 /* XCRemoteSwiftPackageReference "SVProgressHUD" */,
 			);
 			productRefGroup = 9C1A3BBD1DE2C0ED00CF4A43 /* Products */;
 			projectDirPath = "";
@@ -1616,6 +1598,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		5E01B65925727932001C22D5 /* XCRemoteSwiftPackageReference "YYText" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/atone/YYText.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.6;
+			};
+		};
+		5E01B65C25727B8E001C22D5 /* XCRemoteSwiftPackageReference "SVProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/atone/SVProgressHUD.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.5;
+			};
+		};
 		5E28D5C02570D6740021A7DB /* XCRemoteSwiftPackageReference "PullToRefreshKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/atone/PullToRefreshKit.git";
@@ -1667,6 +1665,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5E01B65A25727932001C22D5 /* YYText */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5E01B65925727932001C22D5 /* XCRemoteSwiftPackageReference "YYText" */;
+			productName = YYText;
+		};
+		5E01B65D25727B8E001C22D5 /* SVProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5E01B65C25727B8E001C22D5 /* XCRemoteSwiftPackageReference "SVProgressHUD" */;
+			productName = SVProgressHUD;
+		};
 		5E28D5C12570D6740021A7DB /* PullToRefreshKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 5E28D5C02570D6740021A7DB /* XCRemoteSwiftPackageReference "PullToRefreshKit" */;

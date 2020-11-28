@@ -9,7 +9,7 @@
 import UIKit
 import MobileCoreServices
 import SVProgressHUD
-import TZImagePickerController
+import PhotosUI
 
 class UserViewController: NTTableViewController {
     
@@ -198,11 +198,15 @@ class UserViewController: NTTableViewController {
     }
 }
 
-extension UserViewController: TZImagePickerControllerDelegate {
-    func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingPhotos photos: [UIImage]!, sourceAssets assets: [Any]!, isSelectOriginalPhoto: Bool) {
-        if let selectedImage = photos.first {
+extension UserViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        dismiss(animated: true)
+        guard let itemProvider = results.first?.itemProvider,
+              itemProvider.canLoadObject(ofClass: UIImage.self) else { return }
+        itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+            guard let image = image as? UIImage else { return }
             networkActivityIndicatorStart()
-            api.modifyUserFaceImage(selectedImage) { (result) in
+            self.api.modifyUserFaceImage(image) { (result) in
                 networkActivityIndicatorStop()
                 switch result {
                 case .success(let user):
@@ -230,13 +234,12 @@ extension UserViewController: UserInfoViewControllerDelegate {
         if setting.username == nil {
             return
         }
-        let imagePicker = TZImagePickerController(maxImagesCount: 1, delegate: self)!
+        var config = PHPickerConfiguration()
+        config.selectionLimit = 1
+        config.filter = .images
+        let imagePicker = PHPickerViewController(configuration: config)
+        imagePicker.delegate = self
         imagePicker.modalPresentationStyle = .formSheet
-        imagePicker.naviBgColor = navigationController?.navigationBar.barTintColor
-        imagePicker.naviTitleColor = navigationController?.navigationBar.tintColor
-        imagePicker.allowPickingVideo = false
-        imagePicker.allowPickingOriginalPhoto = false
-        imagePicker.allowCrop = true
         present(imagePicker, animated: true)
     }
 

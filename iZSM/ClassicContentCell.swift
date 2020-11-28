@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import YYKit
+import YYText
 
 class ClassicContentCell: ArticleContentCell {
     override func setup() {
@@ -98,7 +98,7 @@ class ClassicContentCell: ArticleContentCell {
         contentLabel.clearContentsBeforeAsynchronouslyDisplay = false
         contentLabel.ignoreCommonProperties = true
         contentLabel.highlightTapAction = { [unowned self] (containerView, text, range, rect) in
-            let attributes = text.attributedSubstring(from: range).attributes!
+            let attributes = text.attributedSubstring(from: range).yy_attributes!
             var urlString = attributes[NSAttributedString.Key.link.rawValue] as! String
             if !urlString.contains(":") {
                 if urlString.contains("@") {

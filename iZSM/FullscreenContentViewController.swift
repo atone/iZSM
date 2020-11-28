@@ -42,7 +42,7 @@ class FullscreenContentViewController: UIViewController {
                                                         .font: titleFont,
                                                         .foregroundColor: titleColor])
             fullArticle.append(title)
-            fullArticle.appendString("\n")
+            fullArticle.append(NSAttributedString(string: "\n"))
             
             let subtitleText = "作者: \(article.authorID) 时间: \(article.timeString)"
             let subtitleDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .subheadline)
@@ -58,7 +58,7 @@ class FullscreenContentViewController: UIViewController {
                                                            .font: subtitleFont,
                                                            .foregroundColor: subtitleColor])
             fullArticle.append(subtitle)
-            fullArticle.appendString("\n")
+            fullArticle.append(NSAttributedString(string: "\n"))
             
             let bodyDescr = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
             let bodyFont = UIFont.systemFont(ofSize: bodyDescr.pointSize * setting.largeFontScale)

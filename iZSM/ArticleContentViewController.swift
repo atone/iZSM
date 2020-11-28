@@ -8,7 +8,7 @@
 
 import UIKit
 import SVProgressHUD
-import YYKit
+import YYText
 import PullToRefreshKit
 import SmthConnection
 
@@ -654,25 +654,25 @@ extension ArticleContentViewController: UserInfoViewControllerDelegate {
 extension ArticleContentViewController: ArticleContentCellDelegate {
     
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int) {
-        guard let imageInfos = cell.article?.imageAttachments else { return }
-        guard let imageViews = cell.boxImageView?.imageViews else { return }
-        var items = [YYPhotoGroupItem]()
-        var fromView: UIView?
-        for i in 0..<imageInfos.count {
-            let imgView = imageViews[i]
-            let item = YYPhotoGroupItem()
-            item.thumbView = imgView
-            item.largeImageURL = imageInfos[i].fullImageURL
-            items.append(item)
-            if i == index {
-                fromView = imgView
-            }
-        }
-        let v = YYPhotoGroupView(groupItems: items)
-        globalShouldRotate = false
-        v?.present(fromImageView: fromView, toContainer: self.view.window, in: self, animated: true) {
-            globalShouldRotate = true
-        }
+//        guard let imageInfos = cell.article?.imageAttachments else { return }
+//        guard let imageViews = cell.boxImageView?.imageViews else { return }
+//        var items = [YYPhotoGroupItem]()
+//        var fromView: UIView?
+//        for i in 0..<imageInfos.count {
+//            let imgView = imageViews[i]
+//            let item = YYPhotoGroupItem()
+//            item.thumbView = imgView
+//            item.largeImageURL = imageInfos[i].fullImageURL
+//            items.append(item)
+//            if i == index {
+//                fromView = imgView
+//            }
+//        }
+//        let v = YYPhotoGroupView(groupItems: items)
+//        globalShouldRotate = false
+//        v?.present(fromImageView: fromView, toContainer: self.view.window, in: self, animated: true) {
+//            globalShouldRotate = true
+//        }
     }
     
     func cell(_ cell: ArticleContentCell, didClickUser sender: UIView?) {

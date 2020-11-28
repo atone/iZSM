@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5E28D5C22570D6740021A7DB /* PullToRefreshKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5E28D5C12570D6740021A7DB /* PullToRefreshKit */; };
+		5E28D5C62570D8660021A7DB /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E28D5C42570D8660021A7DB /* OnePasswordExtension.m */; };
+		5E28D5CA2570DBC40021A7DB /* SVProgressHUD.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E28D5C92570DBC40021A7DB /* SVProgressHUD.xcframework */; };
+		5E28D5CB2570DBC40021A7DB /* SVProgressHUD.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5E28D5C92570DBC40021A7DB /* SVProgressHUD.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5E53BC0825713C4600A9CE4D /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 5E53BC0725713C4600A9CE4D /* Kingfisher */; };
+		5EA91ABB25713408007B3159 /* YYText.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EA91ABA25713408007B3159 /* YYText.xcframework */; };
+		5EA91ABC25713408007B3159 /* YYText.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5EA91ABA25713408007B3159 /* YYText.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9C07EC982330D85300EAEC8E /* NTLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C07EC972330D85300EAEC8E /* NTLabel.swift */; };
 		9C086E011F1E3BE300023788 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C086E001F1E3BE300023788 /* StoreKit.framework */; };
 		9C118CF01F3BFFC700D6F405 /* NTSafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C118CEF1F3BFFC700D6F405 /* NTSafariViewController.swift */; };
@@ -17,7 +24,6 @@
 		9C1A3BF21DE2EA9900CF4A43 /* AppSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BEF1DE2EA9900CF4A43 /* AppSetting.swift */; };
 		9C1A3BF31DE2EA9900CF4A43 /* SmthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BF01DE2EA9900CF4A43 /* SmthAPI.swift */; };
 		9C1A3BF41DE2EA9900CF4A43 /* SmthStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BF11DE2EA9900CF4A43 /* SmthStructs.swift */; };
-		9C1A3BF61DE2EEAA00CF4A43 /* SVProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C1A3BF51DE2EEAA00CF4A43 /* SVProgressHUD.framework */; };
 		9C1A3BF81DE3076C00CF4A43 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1A3BF71DE3076C00CF4A43 /* LoginViewController.swift */; };
 		9C25D5A71DE55452005CB55C /* ComposeEmailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5A61DE55452005CB55C /* ComposeEmailController.swift */; };
 		9C25D5A91DE5634B005CB55C /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C25D5A81DE5634B005CB55C /* UserViewController.swift */; };
@@ -47,15 +53,11 @@
 		9C7C6B151F13BD9D00940300 /* ArticleListSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */; };
 		9C889FB41DE3E24B00C33A8D /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */; };
 		9C889FB71DE3EEEF00C33A8D /* ArticleListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FB61DE3EEEF00C33A8D /* ArticleListViewCell.swift */; };
-		9C889FB91DE409B100C33A8D /* YYKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C889FB81DE409B100C33A8D /* YYKit.framework */; };
 		9C889FBD1DE4222000C33A8D /* ArticleContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FBC1DE4222000C33A8D /* ArticleContentViewController.swift */; };
 		9C889FBF1DE4271200C33A8D /* ArticleContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FBE1DE4271200C33A8D /* ArticleContentCell.swift */; };
-		9C889FC71DE4733A00C33A8D /* OnePasswordExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */; };
-		9C889FCD1DE4832E00C33A8D /* YYPhotoGroupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FCC1DE4832E00C33A8D /* YYPhotoGroupView.m */; };
 		9C889FCF1DE4995300C33A8D /* FavListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FCE1DE4995300C33A8D /* FavListViewController.swift */; };
 		9C889FD11DE4B66E00C33A8D /* ComposeArticleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C889FD01DE4B66E00C33A8D /* ComposeArticleController.swift */; };
 		9C8C4C3A2376D4BF0036EFE0 /* BlacklistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8C4C392376D4BF0036EFE0 /* BlacklistViewController.swift */; };
-		9C8DEB31233313F500E5CE4A /* TZImagePickerController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C8DEB30233313F500E5CE4A /* TZImagePickerController.framework */; };
 		9C8DEB35233334E600E5CE4A /* CustomHotSectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8DEB34233334E600E5CE4A /* CustomHotSectionViewController.swift */; };
 		9C9C3902232E04E40079AC71 /* NTTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9C3901232E04E40079AC71 /* NTTabBarController.swift */; };
 		9C9C3904232E0F5B0079AC71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C9C3903232E0F5B0079AC71 /* Assets.xcassets */; };
@@ -66,7 +68,6 @@
 		9CA70D39233266E200F575C7 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D38233266E200F575C7 /* KeychainSwift */; };
 		9CA70D3C23326A4900F575C7 /* DeviceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D3B23326A4900F575C7 /* DeviceKit */; };
 		9CA70D422332749600F575C7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9CA70D412332749600F575C7 /* SnapKit */; };
-		9CA70D5A2332952D00F575C7 /* PullToRefreshKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */; };
 		9CAA1F67235C8A6F00180F71 /* BoxImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CAA1F66235C8A6F00180F71 /* BoxImageView.swift */; };
 		9CB5708F1F2B87E000974BC0 /* AttachImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */; };
 		9CB573B71DE588EC00CD6F3E /* ReminderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */; };
@@ -285,7 +286,26 @@
 		9CF349301F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF3492F1F2C30CF00C0B236 /* UINavigationController+FDFullscreenPopGesture.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		5E28D5BF2570D48F0021A7DB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5EA91ABC25713408007B3159 /* YYText.xcframework in Embed Frameworks */,
+				5E28D5CB2570DBC40021A7DB /* SVProgressHUD.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		5E28D5C42570D8660021A7DB /* OnePasswordExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnePasswordExtension.m; sourceTree = "<group>"; };
+		5E28D5C52570D8660021A7DB /* OnePasswordExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnePasswordExtension.h; sourceTree = "<group>"; };
+		5E28D5C92570DBC40021A7DB /* SVProgressHUD.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SVProgressHUD.xcframework; path = iZSM/Resources/SVProgressHUD.xcframework; sourceTree = "<group>"; };
+		5EA91ABA25713408007B3159 /* YYText.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = YYText.xcframework; path = iZSM/Resources/YYText.xcframework; sourceTree = "<group>"; };
 		9C07EC972330D85300EAEC8E /* NTLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTLabel.swift; sourceTree = "<group>"; };
 		9C086E001F1E3BE300023788 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9C118CEF1F3BFFC700D6F405 /* NTSafariViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTSafariViewController.swift; sourceTree = "<group>"; };
@@ -299,7 +319,6 @@
 		9C1A3BEF1DE2EA9900CF4A43 /* AppSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSetting.swift; sourceTree = "<group>"; };
 		9C1A3BF01DE2EA9900CF4A43 /* SmthAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmthAPI.swift; sourceTree = "<group>"; };
 		9C1A3BF11DE2EA9900CF4A43 /* SmthStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmthStructs.swift; sourceTree = "<group>"; };
-		9C1A3BF51DE2EEAA00CF4A43 /* SVProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SVProgressHUD.framework; path = Carthage/Build/iOS/SVProgressHUD.framework; sourceTree = "<group>"; };
 		9C1A3BF71DE3076C00CF4A43 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		9C25D5A61DE55452005CB55C /* ComposeEmailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeEmailController.swift; sourceTree = "<group>"; };
 		9C25D5A81DE5634B005CB55C /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
@@ -333,17 +352,12 @@
 		9C7C6B141F13BD9D00940300 /* ArticleListSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListSearchResultViewController.swift; sourceTree = "<group>"; };
 		9C889FB31DE3E24B00C33A8D /* ArticleListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListViewController.swift; sourceTree = "<group>"; };
 		9C889FB61DE3EEEF00C33A8D /* ArticleListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListViewCell.swift; sourceTree = "<group>"; };
-		9C889FB81DE409B100C33A8D /* YYKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYKit.framework; path = Carthage/Build/iOS/YYKit.framework; sourceTree = "<group>"; };
 		9C889FBC1DE4222000C33A8D /* ArticleContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleContentViewController.swift; sourceTree = "<group>"; };
 		9C889FBE1DE4271200C33A8D /* ArticleContentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleContentCell.swift; sourceTree = "<group>"; };
-		9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OnePasswordExtension.framework; path = Carthage/Build/iOS/OnePasswordExtension.framework; sourceTree = "<group>"; };
-		9C889FCB1DE4832E00C33A8D /* YYPhotoGroupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYPhotoGroupView.h; sourceTree = "<group>"; };
-		9C889FCC1DE4832E00C33A8D /* YYPhotoGroupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYPhotoGroupView.m; sourceTree = "<group>"; };
 		9C889FCE1DE4995300C33A8D /* FavListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavListViewController.swift; sourceTree = "<group>"; };
 		9C889FD01DE4B66E00C33A8D /* ComposeArticleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeArticleController.swift; sourceTree = "<group>"; };
 		9C8C4C392376D4BF0036EFE0 /* BlacklistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlacklistViewController.swift; sourceTree = "<group>"; };
 		9C8DC6262329F48800DDE69F /* iZSM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iZSM.entitlements; sourceTree = "<group>"; };
-		9C8DEB30233313F500E5CE4A /* TZImagePickerController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TZImagePickerController.framework; path = Carthage/Build/iOS/TZImagePickerController.framework; sourceTree = "<group>"; };
 		9C8DEB34233334E600E5CE4A /* CustomHotSectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHotSectionViewController.swift; sourceTree = "<group>"; };
 		9C9C3901232E04E40079AC71 /* NTTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTTabBarController.swift; sourceTree = "<group>"; };
 		9C9C3903232E0F5B0079AC71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -351,7 +365,6 @@
 		9CA3B1A21DE33C0800E9B121 /* HotTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotTableViewController.swift; sourceTree = "<group>"; };
 		9CA3B1A51DE33E8D00E9B121 /* HotTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotTableViewCell.swift; sourceTree = "<group>"; };
 		9CA3B1A71DE35A2300E9B121 /* BoardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardListViewController.swift; sourceTree = "<group>"; };
-		9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PullToRefreshKit.framework; path = Carthage/Build/iOS/PullToRefreshKit.framework; sourceTree = "<group>"; };
 		9CAA1F66235C8A6F00180F71 /* BoxImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxImageView.swift; sourceTree = "<group>"; };
 		9CB5708E1F2B87E000974BC0 /* AttachImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachImageView.swift; sourceTree = "<group>"; };
 		9CB573B61DE588EB00CD6F3E /* ReminderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderListCell.swift; sourceTree = "<group>"; };
@@ -576,23 +589,31 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C889FC71DE4733A00C33A8D /* OnePasswordExtension.framework in Frameworks */,
 				9CA70D3C23326A4900F575C7 /* DeviceKit in Frameworks */,
+				5E28D5CA2570DBC40021A7DB /* SVProgressHUD.xcframework in Frameworks */,
 				9CA70D39233266E200F575C7 /* KeychainSwift in Frameworks */,
-				9C1A3BF61DE2EEAA00CF4A43 /* SVProgressHUD.framework in Frameworks */,
+				5E28D5C22570D6740021A7DB /* PullToRefreshKit in Frameworks */,
+				5E53BC0825713C4600A9CE4D /* Kingfisher in Frameworks */,
 				9C086E011F1E3BE300023788 /* StoreKit.framework in Frameworks */,
-				9C889FB91DE409B100C33A8D /* YYKit.framework in Frameworks */,
 				9CA70D422332749600F575C7 /* SnapKit in Frameworks */,
 				9C3A3F00233E5AE6006223AA /* CloudKit.framework in Frameworks */,
-				9CA70D5A2332952D00F575C7 /* PullToRefreshKit.framework in Frameworks */,
-				9C8DEB31233313F500E5CE4A /* TZImagePickerController.framework in Frameworks */,
 				9CD2CD71236B4DAF00418F25 /* SmthConnection in Frameworks */,
+				5EA91ABB25713408007B3159 /* YYText.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5E28D5C32570D8660021A7DB /* OnePasswordExtension */ = {
+			isa = PBXGroup;
+			children = (
+				5E28D5C42570D8660021A7DB /* OnePasswordExtension.m */,
+				5E28D5C52570D8660021A7DB /* OnePasswordExtension.h */,
+			);
+			path = OnePasswordExtension;
+			sourceTree = "<group>";
+		};
 		9C1A3BB31DE2C0ED00CF4A43 = {
 			isa = PBXGroup;
 			children = (
@@ -643,13 +664,10 @@
 		9C1A3BD21DE2C5E100CF4A43 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5EA91ABA25713408007B3159 /* YYText.xcframework */,
+				5E28D5C92570DBC40021A7DB /* SVProgressHUD.xcframework */,
 				9C3A3EFF233E5AE6006223AA /* CloudKit.framework */,
-				9C889FC61DE4733A00C33A8D /* OnePasswordExtension.framework */,
-				9CA70D592332952D00F575C7 /* PullToRefreshKit.framework */,
 				9C086E001F1E3BE300023788 /* StoreKit.framework */,
-				9C1A3BF51DE2EEAA00CF4A43 /* SVProgressHUD.framework */,
-				9C8DEB30233313F500E5CE4A /* TZImagePickerController.framework */,
-				9C889FB81DE409B100C33A8D /* YYKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -678,15 +696,6 @@
 				9C56E1D31F0E0DF00093E504 /* UITableView+FDTemplateLayoutCellDebug.m */,
 			);
 			path = FDTemplateLayoutCell;
-			sourceTree = "<group>";
-		};
-		9C889FCA1DE4832E00C33A8D /* YYPhotoGroupView */ = {
-			isa = PBXGroup;
-			children = (
-				9C889FCB1DE4832E00C33A8D /* YYPhotoGroupView.h */,
-				9C889FCC1DE4832E00C33A8D /* YYPhotoGroupView.m */,
-			);
-			path = YYPhotoGroupView;
 			sourceTree = "<group>";
 		};
 		9CA3B15C1DE331F800E9B121 /* ViewControllers */ = {
@@ -1014,8 +1023,8 @@
 		9CEBD0761F24F98900E4E29E /* Third Parties */ = {
 			isa = PBXGroup;
 			children = (
+				5E28D5C32570D8660021A7DB /* OnePasswordExtension */,
 				9CBFD79623486F5100A16194 /* GTMNSString */,
-				9C889FCA1DE4832E00C33A8D /* YYPhotoGroupView */,
 				9C56E1CB1F0E0DF00093E504 /* FDTemplateLayoutCell */,
 				9CF3492D1F2C30CF00C0B236 /* FDFullscreenPopGesture */,
 			);
@@ -1053,7 +1062,7 @@
 				9C1A3BB81DE2C0ED00CF4A43 /* Sources */,
 				9C1A3BB91DE2C0ED00CF4A43 /* Frameworks */,
 				9C1A3BBA1DE2C0ED00CF4A43 /* Resources */,
-				9C1A3BD71DE2C60000CF4A43 /* Run Script */,
+				5E28D5BF2570D48F0021A7DB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1065,6 +1074,8 @@
 				9CA70D3B23326A4900F575C7 /* DeviceKit */,
 				9CA70D412332749600F575C7 /* SnapKit */,
 				9CD2CD70236B4DAF00418F25 /* SmthConnection */,
+				5E28D5C12570D6740021A7DB /* PullToRefreshKit */,
+				5E53BC0725713C4600A9CE4D /* Kingfisher */,
 			);
 			productName = iZSM;
 			productReference = 9C1A3BBC1DE2C0ED00CF4A43 /* iZSM.app */;
@@ -1077,12 +1088,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Naitong Yu";
 				TargetAttributes = {
 					9C1A3BBB1DE2C0ED00CF4A43 = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = 9TXRXPVXCE;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -1110,6 +1120,8 @@
 				9CA70D3A23326A4900F575C7 /* XCRemoteSwiftPackageReference "DeviceKit" */,
 				9CA70D402332749600F575C7 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				9CD2CD6F236B4DAF00418F25 /* XCRemoteSwiftPackageReference "SmthConnection" */,
+				5E28D5C02570D6740021A7DB /* XCRemoteSwiftPackageReference "PullToRefreshKit" */,
+				5E53BC0625713C4600A9CE4D /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 9C1A3BBD1DE2C0ED00CF4A43 /* Products */;
 			projectDirPath = "";
@@ -1333,33 +1345,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		9C1A3BD71DE2C60000CF4A43 /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/YYKit.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/OnePasswordExtension.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/PullToRefreshKit.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/TZImagePickerController.framework",
-			);
-			name = "Run Script";
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/YYKit.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/OnePasswordExtension.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PullToRefreshKit.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/TZImagePickerController.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		9C1A3BB81DE2C0ED00CF4A43 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1375,7 +1360,6 @@
 				9C56E1D41F0E0DF00093E504 /* UITableView+FDIndexPathHeightCache.m in Sources */,
 				9C1A3BF41DE2EA9900CF4A43 /* SmthStructs.swift in Sources */,
 				9C572620233F901F003FE851 /* StarThreadViewCell.swift in Sources */,
-				9C889FCD1DE4832E00C33A8D /* YYPhotoGroupView.m in Sources */,
 				9C7C6B151F13BD9D00940300 /* ArticleListSearchResultViewController.swift in Sources */,
 				9C889FCF1DE4995300C33A8D /* FavListViewController.swift in Sources */,
 				9CA3B15E1DE3323B00E9B121 /* BaseTableViewController.swift in Sources */,
@@ -1386,6 +1370,7 @@
 				9CB573B71DE588EC00CD6F3E /* ReminderListCell.swift in Sources */,
 				9C25D5A71DE55452005CB55C /* ComposeEmailController.swift in Sources */,
 				9CC1FD5B232F5C02006CFE33 /* MessageCenter.swift in Sources */,
+				5E28D5C62570D8660021A7DB /* OnePasswordExtension.m in Sources */,
 				9C57261B233F7389003FE851 /* StarThread+CoreDataClass.swift in Sources */,
 				9C8C4C3A2376D4BF0036EFE0 /* BlacklistViewController.swift in Sources */,
 				9C25D5AB1DE56BAE005CB55C /* MailBoxViewController.swift in Sources */,
@@ -1475,6 +1460,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1500,7 +1486,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1533,6 +1519,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1552,7 +1539,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -1569,10 +1556,6 @@
 				CODE_SIGN_ENTITLEMENTS = iZSM/iZSM.entitlements;
 				CURRENT_PROJECT_VERSION = 558;
 				DEVELOPMENT_TEAM = 9TXRXPVXCE;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = iZSM/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1595,10 +1578,6 @@
 				CODE_SIGN_ENTITLEMENTS = iZSM/iZSM.entitlements;
 				CURRENT_PROJECT_VERSION = 558;
 				DEVELOPMENT_TEAM = 9TXRXPVXCE;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = iZSM/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1637,6 +1616,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		5E28D5C02570D6740021A7DB /* XCRemoteSwiftPackageReference "PullToRefreshKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/atone/PullToRefreshKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.0;
+			};
+		};
+		5E53BC0625713C4600A9CE4D /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.15.7;
+			};
+		};
 		9CA70D37233266E200F575C7 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
@@ -1650,7 +1645,7 @@
 			repositoryURL = "https://github.com/devicekit/DeviceKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.0;
+				minimumVersion = 4.0.0;
 			};
 		};
 		9CA70D402332749600F575C7 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
@@ -1672,6 +1667,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5E28D5C12570D6740021A7DB /* PullToRefreshKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5E28D5C02570D6740021A7DB /* XCRemoteSwiftPackageReference "PullToRefreshKit" */;
+			productName = PullToRefreshKit;
+		};
+		5E53BC0725713C4600A9CE4D /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5E53BC0625713C4600A9CE4D /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 		9CA70D38233266E200F575C7 /* KeychainSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9CA70D37233266E200F575C7 /* XCRemoteSwiftPackageReference "keychain-swift" */;

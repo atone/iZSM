@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import YYKit
+import YYText
 import SVProgressHUD
 import SmthConnection
 
@@ -123,9 +123,9 @@ struct Article: Cleanable, Replyable {
             let content = attributeText.attributedSubstring(from: match.range(at: 2))
             let contentLength = content.string.trimmingCharacters(in: .whitespaces).count
             let mutable = NSMutableAttributedString(attributedString: contentLength > 0 ? content : url)
-            mutable.setLink(url.string, range: NSMakeRange(0, mutable.length))
-            mutable.setTextHighlight(highlight, range: NSMakeRange(0, mutable.length))
-            mutable.setColor(urlColor, range: NSMakeRange(0, mutable.length))
+            mutable.yy_setLink(url.string, range: NSMakeRange(0, mutable.length))
+            mutable.yy_setTextHighlight(highlight, range: NSMakeRange(0, mutable.length))
+            mutable.yy_setColor(urlColor, range: NSMakeRange(0, mutable.length))
             attributeText.replaceCharacters(in: match.range, with: mutable)
         }
         
@@ -133,9 +133,9 @@ struct Article: Cleanable, Replyable {
         let detector = try! NSDataDetector(types: types.rawValue)
         let matches = detector.matches(in: attributeText.string, range: NSMakeRange(0, attributeText.length))
         for match in matches {
-            attributeText.setTextHighlight(highlight, range: match.range)
-            attributeText.setColor(urlColor, range: match.range)
-            attributeText.setLink(attributeText.attributedSubstring(from: match.range).string, range: match.range)
+            attributeText.yy_setTextHighlight(highlight, range: match.range)
+            attributeText.yy_setColor(urlColor, range: match.range)
+            attributeText.yy_setLink(attributeText.attributedSubstring(from: match.range).string, range: match.range)
         }
         
         for attachment in self.attachments {
@@ -143,18 +143,15 @@ struct Article: Cleanable, Replyable {
             if !isPicture(fileName) {
                 let urlString = AppSetting.shared.httpPrefix + "att.newsmth.net/nForum/att/\(self.boardID)/\(self.id)/\(attachment.pos)"
                 let mutable = NSMutableAttributedString(string: fileName)
-                mutable.setLink(urlString, range: NSMakeRange(0, mutable.length))
-                mutable.setTextHighlight(highlight, range: NSMakeRange(0, mutable.length))
-                mutable.setColor(urlColor, range: NSMakeRange(0, mutable.length))
-                mutable.setFont(textFont, range: NSMakeRange(0, mutable.length))
-                mutable.setParagraphStyle(paragraphStyle, range: NSMakeRange(0, mutable.length))
-                attributeText.appendString("\n")
+                mutable.yy_setLink(urlString, range: NSMakeRange(0, mutable.length))
+                mutable.yy_setTextHighlight(highlight, range: NSMakeRange(0, mutable.length))
+                mutable.yy_setColor(urlColor, range: NSMakeRange(0, mutable.length))
+                mutable.yy_setFont(textFont, range: NSMakeRange(0, mutable.length))
+                mutable.yy_setParagraphStyle(paragraphStyle, range: NSMakeRange(0, mutable.length))
+                attributeText.yy_appendString("\n")
                 attributeText.append(mutable)
             }
         }
-        
-        let emoticonParser = Emoticon.shared.parser
-        emoticonParser.parseText(attributeText, selectedRange: nil)
         
         self.quotedRange.removeAll()
         attributeText.enumerateAttribute(.paragraphStyle, in: NSMakeRange(0, attributeText.length)) { (value, range, stop) in
@@ -381,42 +378,6 @@ extension Cleanable {
         // 过滤掉部分未过滤的来源信息
         lines = lines.filter { !$0.contains("※ 来源:·") && !$0.contains("※ 修改:·") }
         return lines.joined(separator: "\n")
-    }
-}
-
-struct Emoticon {
-    
-    static let shared = Emoticon()
-    
-    public let parser: YYTextSimpleEmoticonParser
-    
-    private init() {
-        
-        parser = YYTextSimpleEmoticonParser()
-        
-        var mapper = [String: UIImage]()
-        
-        for i in 1...73 {
-            let name = "em\(i)"
-            mapper["[\(name)]"] = YYImage(named: "\(name).gif")
-        }
-        
-        for i in 0...41 {
-            let name = "ema\(i)"
-            mapper["[\(name)]"] = YYImage(named: "\(name).gif")
-        }
-        
-        for i in 0...24 {
-            let name = "emb\(i)"
-            mapper["[\(name)]"] = YYImage(named: "\(name).gif")
-        }
-        
-        for i in 0...58 {
-            let name = "emc\(i)"
-            mapper["[\(name)]"] = YYImage(named: "\(name).gif")
-        }
-        
-        parser.emoticonMapper = mapper
     }
 }
 

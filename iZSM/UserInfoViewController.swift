@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import YYKit
+import Kingfisher
 import SnapKit
 import SmthConnection
 
@@ -27,10 +27,10 @@ class UserInfoViewController: UIViewController {
     private let width: CGFloat = 300
     private let height: CGFloat = 320
     
-    private var backgroundImageView: YYAnimatedImageView?
+    private var backgroundImageView: UIImageView?
     private let backgroundView = UIView()
     
-    private let avatarImageView = YYAnimatedImageView()
+    private let avatarImageView = UIImageView()
     private let idLabel = UILabel()
     private let nickLabel = UILabel()
     
@@ -67,7 +67,7 @@ class UserInfoViewController: UIViewController {
         preferredContentSize = CGSize(width: width, height: height)
         view.backgroundColor = UIColor.systemBackground
         if !UIAccessibility.isReduceTransparencyEnabled {
-            backgroundImageView = YYAnimatedImageView()
+            backgroundImageView = UIImageView()
             backgroundImageView!.frame = view.bounds
             backgroundImageView!.contentMode = .scaleAspectFill
             backgroundImageView!.clipsToBounds = true
@@ -180,10 +180,10 @@ class UserInfoViewController: UIViewController {
             idLabel.text = "\(user.id) \(genderSymbol)"
             nickLabel.text = user.nick
             let defaultImage = user.gender == 0 ? UIImage(named: "face_default_m") : UIImage(named: "face_default_f")
-            avatarImageView.setImageWith(SmthAPI.shared.faceURL(for: user.id, withFaceURL: user.faceURL),
-                                         placeholder: defaultImage)
-            backgroundImageView?.setImageWith(SmthAPI.shared.faceURL(for: user.id, withFaceURL: user.faceURL),
-                                              placeholder: defaultImage)
+            avatarImageView.kf.setImage(with: SmthAPI.shared.faceURL(for: user.id, withFaceURL: user.faceURL),
+                                        placeholder: defaultImage)
+            backgroundImageView?.kf.setImage(with: SmthAPI.shared.faceURL(for: user.id, withFaceURL: user.faceURL),
+                                             placeholder: defaultImage)
             titleLabel.text = "身份"
             levelLabel.text = "等级"
             postsLabel.text = "发帖"

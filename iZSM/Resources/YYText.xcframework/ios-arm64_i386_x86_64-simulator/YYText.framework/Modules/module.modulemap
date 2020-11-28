@@ -1,0 +1,6 @@
+framework module YYText {
+  umbrella header "YYText.h"
+
+  export *
+  module * { export * }
+}

@@ -23,5 +23,4 @@ xcshareddata/
 *.xccheckout
 *.xcscmblueprint
 
-## Carthage file
-Carthage/
+.DS_Store

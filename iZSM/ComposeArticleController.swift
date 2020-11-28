@@ -11,7 +11,7 @@ import Photos
 import MobileCoreServices
 import SnapKit
 import SVProgressHUD
-import TZImagePickerController
+import PhotosUI
 import SmthConnection
 
 class ComposeArticleController: UIViewController, UITextFieldDelegate {
@@ -78,7 +78,8 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     private let setting = AppSetting.shared
     
     private let maxAttachNumber = 8
-    private var attachedAssets = [PHAsset]()
+    private var attachedImageNames = [String]()
+    private var untitledCounter = 0
     private var attachedImages = [UIImage]() {
         didSet {
             if oldValue.count == 0 && attachedImages.count > 0 {
@@ -242,44 +243,21 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
             networkActivityIndicatorStart(withHUD: true)
             setEditable(false)
             DispatchQueue.global().async {
-                for (index, asset) in self.attachedAssets.enumerated() {
+                for (index, image) in self.attachedImages.enumerated() {
                     DispatchQueue.main.async {
-                        SVProgressHUD.show(withStatus: "正在上传: \(index + 1) / \(self.attachedAssets.count)")
+                        SVProgressHUD.show(withStatus: "正在上传: \(index + 1) / \(self.attachedImages.count)")
                     }
-                    if let fileName = asset.value(forKey: "filename") as? String {
-//                        // could not support gif due to file size too large (> 1M)
-//                        if fileName.hasSuffix("GIF") {
-//                            print("filename: \(fileName)")
-//                            var photoData: Data?
-//                            let semaphore = DispatchSemaphore(value: 0)
-//                            TZImageManager.default()!.getOriginalPhotoData(with: asset) { (data, info, isDegraded) in
-//                                photoData = data
-//                                semaphore.signal()
-//                            }
-//                            semaphore.wait()
-//                            if let photoData = photoData {
-//                                self.api.upload(data: photoData, name: fileName)
-//                            }
-//                        } else {
-//                            let baseFileName: String
-//                            if let dot = fileName.lastIndex(of: "."), dot != fileName.startIndex {
-//                                baseFileName = String(fileName[fileName.index(after: dot)...])
-//                            } else {
-//                                baseFileName = fileName
-//                            }
-//                            self.api.uploadAttImage(image: self.attachedImages[index], baseFileName: baseFileName)
-//                        }
-                        let baseFileName: String
-                        if let dot = fileName.lastIndex(of: "."), dot != fileName.startIndex {
-                            baseFileName = String(fileName[..<dot])
-                        } else {
-                            baseFileName = fileName
-                        }
-                        do {
-                            try self.api.uploadAttachImage(self.attachedImages[index], baseFileName: baseFileName)
-                        } catch {
-                            (error as? SMError)?.display()
-                        }
+                    let fileName = self.attachedImageNames[index]
+                    let baseFileName: String
+                    if let dot = fileName.lastIndex(of: "."), dot != fileName.startIndex {
+                        baseFileName = String(fileName[..<dot])
+                    } else {
+                        baseFileName = fileName
+                    }
+                    do {
+                        try self.api.uploadAttachImage(image, baseFileName: baseFileName)
+                    } catch {
+                        (error as? SMError)?.display()
                     }
                 }
                 
@@ -384,14 +362,18 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func addPhoto(_ sender: UIBarButtonItem) {
-        let imagePicker = TZImagePickerController(maxImagesCount: maxAttachNumber, delegate: self)!
+        if attachedImages.count >= maxAttachNumber {
+            let alert = UIAlertController(title: nil, message: "目前允许最多\(maxAttachNumber)个附件", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "好的", style: .default))
+            present(alert, animated: true)
+            return
+        }
+        var config = PHPickerConfiguration()
+        config.filter = .images
+        config.selectionLimit = maxAttachNumber - attachedImages.count
+        let imagePicker = PHPickerViewController(configuration: config)
         imagePicker.modalPresentationStyle = .formSheet
-        imagePicker.naviBgColor = navigationController?.navigationBar.barTintColor
-        imagePicker.naviTitleColor = navigationController?.navigationBar.tintColor
-        imagePicker.selectedAssets = NSMutableArray(array: attachedAssets)
-        imagePicker.allowPickingVideo = false
-        imagePicker.allowPickingOriginalPhoto = false
-        imagePicker.photoWidth = 1280
+        imagePicker.delegate = self
         present(imagePicker, animated: true)
     }
     
@@ -430,24 +412,33 @@ class ComposeArticleController: UIViewController, UITextFieldDelegate {
     }
 }
 
-extension ComposeArticleController: TZImagePickerControllerDelegate {
-    func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingPhotos photos: [UIImage]!, sourceAssets assets: [Any]!, isSelectOriginalPhoto: Bool) {
+extension ComposeArticleController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        dismiss(animated: true)
         contentTextView.becomeFirstResponder()
-        if let photos = photos, let assets = assets as? [PHAsset] {
-            attachStack.removeAllSubviews()
-            for photo in photos {
-                let view = AttachImageView()
-                view.image = photo
-                view.delegate = self
-                attachStack.addArrangedSubview(view)
+        let itemProviders = results.map(\.itemProvider)
+        for item in itemProviders {
+            guard item.canLoadObject(ofClass: UIImage.self) else { continue }
+            item.loadObject(ofClass: UIImage.self) { image, error in
+                DispatchQueue.main.async {
+                    guard self.attachedImages.count < self.maxAttachNumber else { return }
+                    guard let image = image as? UIImage else { return }
+                    let view = AttachImageView()
+                    view.image = image
+                    view.delegate = self
+                    self.attachStack.addArrangedSubview(view)
+                    self.attachedImages.append(image)
+                    let imageName: String
+                    if let suggestedName = item.suggestedName {
+                        imageName = suggestedName
+                    } else {
+                        imageName = "Untitled\(self.untitledCounter)"
+                        self.untitledCounter += 1
+                    }
+                    self.attachedImageNames.append(imageName)
+                }
             }
-            attachedImages = photos
-            attachedAssets = assets
         }
-    }
-    
-    func tz_imagePickerControllerDidCancel(_ picker: TZImagePickerController!) {
-        contentTextView.becomeFirstResponder()
     }
 }
 
@@ -455,23 +446,23 @@ extension ComposeArticleController: AttachImageViewDelegate {
     func deleteButtonPressed(in attachImageView: AttachImageView) {
         if let image = attachImageView.image, let idx = attachedImages.firstIndex(of: image) {
             attachedImages.remove(at: idx)
-            attachedAssets.remove(at: idx)
+            attachedImageNames.remove(at: idx)
         }
         attachStack.removeArrangedSubview(attachImageView)
         attachImageView.removeFromSuperview()
     }
     
     func imageTapped(in attachImageView: AttachImageView) {
-        if let image = attachImageView.image, let idx = attachedImages.firstIndex(of: image) {
-            let imagePicker = TZImagePickerController(selectedAssets: NSMutableArray(array: attachedAssets), selectedPhotos: NSMutableArray(array: attachedImages), index: idx)!
-            imagePicker.didFinishPickingPhotosHandle = { [unowned self] (_, _, _) in
-                self.contentTextView.becomeFirstResponder()
-            }
-            imagePicker.imagePickerControllerDidCancelHandle = { [unowned self] in
-                self.contentTextView.becomeFirstResponder()
-            }
-            present(imagePicker, animated: true)
-        }
+//        if let image = attachImageView.image, let idx = attachedImages.firstIndex(of: image) {
+//            let imagePicker = TZImagePickerController(selectedAssets: NSMutableArray(array: attachedAssets), selectedPhotos: NSMutableArray(array: attachedImages), index: idx)!
+//            imagePicker.didFinishPickingPhotosHandle = { [unowned self] (_, _, _) in
+//                self.contentTextView.becomeFirstResponder()
+//            }
+//            imagePicker.imagePickerControllerDidCancelHandle = { [unowned self] in
+//                self.contentTextView.becomeFirstResponder()
+//            }
+//            present(imagePicker, animated: true)
+//        }
     }
 }
 

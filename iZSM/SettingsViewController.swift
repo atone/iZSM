@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import YYKit
+import Kingfisher
 import SVProgressHUD
 import CoreData
 import SmthConnection
@@ -59,11 +59,8 @@ class SettingsViewController: NTTableViewController {
         }
     }
     
-    var cache: YYImageCache?
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        cache = YYWebImageManager.shared().cache
         updateUI()
         // add observer to font size change
         NotificationCenter.default.addObserver(self,
@@ -173,11 +170,14 @@ class SettingsViewController: NTTableViewController {
         clearCacheLabel.textColor = UIColor(named: "MainText")
         cacheSizeLabel.font = font
         cacheSizeLabel.textColor = UIColor.secondaryLabel
-        var cacheSize = 0
-        if let cache = cache {
-            cacheSize = cache.diskCache.totalCost() / 1024 / 1024
+        ImageCache.default.calculateDiskStorageSize { result in
+            switch result {
+            case .success(let size):
+                self.cacheSizeLabel.text = "\(Int(Double(size) / 1024 / 1024)) MB"
+            case .failure(_):
+                self.cacheSizeLabel.text = "Unknown"
+            }
         }
-        cacheSizeLabel.text = "\(cacheSize) MB"
         compatibilityLabel.font = font
         compatibilityLabel.textColor = UIColor(named: "MainText")
         logoutLabel.font = UIFont.boldSystemFont(ofSize: descriptor.pointSize * setting.fontScale)
@@ -228,9 +228,7 @@ class SettingsViewController: NTTableViewController {
         } else if indexPath == IndexPath(row: 1, section: 4) {
             tableView.deselectRow(at: indexPath, animated: true)
             SVProgressHUD.show()
-            DispatchQueue.global().async {
-                self.cache?.memoryCache.removeAllObjects()
-                self.cache?.diskCache.removeAllObjects()
+            ImageCache.default.clearCache {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     SVProgressHUD.dismiss()
                     SVProgressHUD.showSuccess(withStatus: "清除成功")

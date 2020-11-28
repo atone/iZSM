@@ -7,14 +7,15 @@
 //
 
 import UIKit
-import YYKit
+import YYText
+import Kingfisher
 
 class ArticleContentCell: UITableViewCell {
     
     let containerView = UIView()
     let bckgroundView = UIView()
     
-    let avatarImageView = YYAnimatedImageView()
+    let avatarImageView = UIImageView()
     
     let authorLabel = UILabel()
     let floorAndTimeLabel = UILabel()
@@ -159,7 +160,7 @@ class ArticleContentCell: UITableViewCell {
         contentLabel.clearContentsBeforeAsynchronouslyDisplay = false
         contentLabel.ignoreCommonProperties = true
         contentLabel.highlightTapAction = { [unowned self] (containerView, text, range, rect) in
-            let attributes = text.attributedSubstring(from: range).attributes!
+            let attributes = text.attributedSubstring(from: range).yy_attributes!
             var urlString = attributes[NSAttributedString.Key.link.rawValue] as! String
             if !urlString.contains(":") {
                 if urlString.contains("@") {
@@ -321,8 +322,8 @@ class ArticleContentCell: UITableViewCell {
     
     func drawImagesWithInfo(imageAtt: [ImageInfo]?) {
         if setting.showAvatar, let article = self.article {
-            avatarImageView.setImageWith(SmthAPI.shared.faceURL(for: article.authorID, withFaceURL: nil),
-                                         placeholder: UIImage(named: "face_default"))
+            avatarImageView.kf.setImage(with: SmthAPI.shared.faceURL(for: article.authorID, withFaceURL: nil),
+                                        placeholder: UIImage(named: "face_default"))
         }
         
         // remove old image views
@@ -362,7 +363,7 @@ class ArticleContentCell: UITableViewCell {
     //MARK: - Action
     @objc func singleTapOnImage(_ recognizer: UIGestureRecognizer) {
         if
-            let imageView = recognizer.view as? YYAnimatedImageView,
+            let imageView = recognizer.view as? UIImageView,
             let index = boxImageView?.imageViews.firstIndex(of: imageView)
         {
             delegate?.cell(self, didClickImageAt: index)

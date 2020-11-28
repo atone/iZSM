@@ -8,7 +8,6 @@
 
 import UIKit
 import SnapKit
-import OnePasswordExtension
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     

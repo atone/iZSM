@@ -7,21 +7,22 @@
 //
 
 import UIKit
-import YYKit
+import Kingfisher
 
 class BoxImageView: UIView {
     
     private static let blankWidth: CGFloat = 4
     
-    let imageViews: [YYAnimatedImageView]
+    let imageViews: [UIImageView]
     
     init(imageURLs: [URL], target: Any?, action: Selector) {
-        var imageViews = [YYAnimatedImageView]()
+        var imageViews = [UIImageView]()
         for url in imageURLs {
-            let imageView = YYAnimatedImageView()
+            let imageView = UIImageView()
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
-            imageView.setImageWith(url, placeholder: UIImage(named: "loading"), options: [.setImageWithFadeAnimation])
+            imageView.kf.indicatorType = .activity
+            imageView.kf.setImage(with: url, placeholder: UIImage(named: "loading"), options: [.transition(.fade(0.2))])
             imageView.isUserInteractionEnabled = true
             imageView.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
             imageViews.append(imageView)

@@ -13,6 +13,7 @@ import SnapKit
 import SVProgressHUD
 import PhotosUI
 import SmthConnection
+import BFRImageViewer
 
 class ComposeArticleController: UIViewController, UITextFieldDelegate {
     
@@ -453,16 +454,12 @@ extension ComposeArticleController: AttachImageViewDelegate {
     }
     
     func imageTapped(in attachImageView: AttachImageView) {
-//        if let image = attachImageView.image, let idx = attachedImages.firstIndex(of: image) {
-//            let imagePicker = TZImagePickerController(selectedAssets: NSMutableArray(array: attachedAssets), selectedPhotos: NSMutableArray(array: attachedImages), index: idx)!
-//            imagePicker.didFinishPickingPhotosHandle = { [unowned self] (_, _, _) in
-//                self.contentTextView.becomeFirstResponder()
-//            }
-//            imagePicker.imagePickerControllerDidCancelHandle = { [unowned self] in
-//                self.contentTextView.becomeFirstResponder()
-//            }
-//            present(imagePicker, animated: true)
-//        }
+        if let image = attachImageView.image, let idx = attachedImages.firstIndex(of: image) {
+            guard let imageVC = BFRImageViewController(imageSource: attachedImages) else { return }
+            imageVC.startingIndex = idx
+            imageVC.enableDoneButton = false
+            present(imageVC, animated: true)
+        }
     }
 }
 

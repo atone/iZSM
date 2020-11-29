@@ -11,6 +11,7 @@
 		5E01B65E25727B8E001C22D5 /* SVProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 5E01B65D25727B8E001C22D5 /* SVProgressHUD */; };
 		5E28D5C22570D6740021A7DB /* PullToRefreshKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5E28D5C12570D6740021A7DB /* PullToRefreshKit */; };
 		5E28D5C62570D8660021A7DB /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E28D5C42570D8660021A7DB /* OnePasswordExtension.m */; };
+		5E4C291A2573518C00994613 /* BFRImageViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 5E4C29192573518C00994613 /* BFRImageViewer */; };
 		5E53BC0825713C4600A9CE4D /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 5E53BC0725713C4600A9CE4D /* Kingfisher */; };
 		9C07EC982330D85300EAEC8E /* NTLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C07EC972330D85300EAEC8E /* NTLabel.swift */; };
 		9C086E011F1E3BE300023788 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C086E001F1E3BE300023788 /* StoreKit.framework */; };
@@ -578,6 +579,7 @@
 				9C086E011F1E3BE300023788 /* StoreKit.framework in Frameworks */,
 				5E01B65E25727B8E001C22D5 /* SVProgressHUD in Frameworks */,
 				9CA70D422332749600F575C7 /* SnapKit in Frameworks */,
+				5E4C291A2573518C00994613 /* BFRImageViewer in Frameworks */,
 				9C3A3F00233E5AE6006223AA /* CloudKit.framework in Frameworks */,
 				9CD2CD71236B4DAF00418F25 /* SmthConnection in Frameworks */,
 			);
@@ -1056,6 +1058,7 @@
 				5E53BC0725713C4600A9CE4D /* Kingfisher */,
 				5E01B65A25727932001C22D5 /* YYText */,
 				5E01B65D25727B8E001C22D5 /* SVProgressHUD */,
+				5E4C29192573518C00994613 /* BFRImageViewer */,
 			);
 			productName = iZSM;
 			productReference = 9C1A3BBC1DE2C0ED00CF4A43 /* iZSM.app */;
@@ -1104,6 +1107,7 @@
 				5E53BC0625713C4600A9CE4D /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				5E01B65925727932001C22D5 /* XCRemoteSwiftPackageReference "YYText" */,
 				5E01B65C25727B8E001C22D5 /* XCRemoteSwiftPackageReference "SVProgressHUD" */,
+				5E4C29182573518C00994613 /* XCRemoteSwiftPackageReference "BFRImageViewer" */,
 			);
 			productRefGroup = 9C1A3BBD1DE2C0ED00CF4A43 /* Products */;
 			projectDirPath = "";
@@ -1622,6 +1626,14 @@
 				minimumVersion = 0.9.0;
 			};
 		};
+		5E4C29182573518C00994613 /* XCRemoteSwiftPackageReference "BFRImageViewer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/atone/BFRImageViewer.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.9;
+			};
+		};
 		5E53BC0625713C4600A9CE4D /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -1679,6 +1691,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5E28D5C02570D6740021A7DB /* XCRemoteSwiftPackageReference "PullToRefreshKit" */;
 			productName = PullToRefreshKit;
+		};
+		5E4C29192573518C00994613 /* BFRImageViewer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5E4C29182573518C00994613 /* XCRemoteSwiftPackageReference "BFRImageViewer" */;
+			productName = BFRImageViewer;
 		};
 		5E53BC0725713C4600A9CE4D /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

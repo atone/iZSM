@@ -70,6 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let clientID = "atone"
         SmthAPI.setConfig(secret: clientSecret, signature: clientSignature, id: clientID)
         SmthAPI.setUseInsecureHttpConnection(setting.usePlainHttp)
+        SmthAPI.setCustomServerURL("open.mysmth.net")
         
         // set the background fetch mode
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "cn.yunaitong.zsmth.refresh", using: nil) { task in

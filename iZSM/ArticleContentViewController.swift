@@ -450,11 +450,11 @@ class ArticleContentViewController: NTTableViewController {
             let urlString: String
             switch self.setting.displayMode {
             case .nForum:
-                urlString = setting.httpPrefix + "www.newsmth.net/nForum/#!article/\(boardID)/\(articleID)"
+                urlString = setting.httpPrefix + "www.mysmth.net/nForum/#!article/\(boardID)/\(articleID)"
             case .www2:
-                urlString = setting.httpPrefix + "www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
+                urlString = setting.httpPrefix + "www.mysmth.net/bbstcon.php?board=\(boardID)&gid=\(articleID)"
             case .mobile:
-                urlString = setting.httpPrefix + "m.newsmth.net/article/\(boardID)/\(articleID)"
+                urlString = setting.httpPrefix + "m.mysmth.net/article/\(boardID)/\(articleID)"
             }
             let shareAction = UIAlertAction(title: "分享本帖", style: .default) { [unowned self] _ in
                 let title = "水木\(self.boardName ?? boardID)版：【\(self.title ?? "无标题")】"

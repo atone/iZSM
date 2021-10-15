@@ -405,11 +405,11 @@ extension FavListViewController {
         let urlString: String
         switch AppSetting.shared.displayMode {
         case .nForum:
-            urlString = setting.httpPrefix + "www.newsmth.net/nForum/#!article/\(boardID)/\(thread.articleID)"
+            urlString = setting.httpPrefix + "www.mysmth.net/nForum/#!article/\(boardID)/\(thread.articleID)"
         case .www2:
-            urlString = setting.httpPrefix + "www.newsmth.net/bbstcon.php?board=\(boardID)&gid=\(thread.articleID)"
+            urlString = setting.httpPrefix + "www.mysmth.net/bbstcon.php?board=\(boardID)&gid=\(thread.articleID)"
         case .mobile:
-            urlString = setting.httpPrefix + "m.newsmth.net/article/\(boardID)/\(thread.articleID)"
+            urlString = setting.httpPrefix + "m.mysmth.net/article/\(boardID)/\(thread.articleID)"
         }
         let preview: UIContextMenuContentPreviewProvider = { [unowned self] in
             self.getViewController(with: thread)

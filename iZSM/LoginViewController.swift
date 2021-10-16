@@ -189,6 +189,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
-protocol LoginViewControllerDelegate: class {
+protocol LoginViewControllerDelegate: AnyObject {
     func loginDidSuccessful()
 }

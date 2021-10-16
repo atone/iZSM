@@ -48,7 +48,7 @@ class EulaViewController: UIViewController {
     }
 }
 
-protocol EulaViewControllerDelegate: class {
+protocol EulaViewControllerDelegate: AnyObject {
     func userAcceptedEula(_ controller: EulaViewController)
     func userDeclinedEula(_ controller: EulaViewController)
 }

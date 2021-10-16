@@ -1565,10 +1565,6 @@
 				CODE_SIGN_ENTITLEMENTS = iZSM/iZSM.entitlements;
 				CURRENT_PROJECT_VERSION = 559;
 				DEVELOPMENT_TEAM = 9TXRXPVXCE;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = iZSM/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1591,10 +1587,6 @@
 				CODE_SIGN_ENTITLEMENTS = iZSM/iZSM.entitlements;
 				CURRENT_PROJECT_VERSION = 559;
 				DEVELOPMENT_TEAM = 9TXRXPVXCE;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = iZSM/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

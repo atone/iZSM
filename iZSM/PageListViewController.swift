@@ -64,6 +64,6 @@ class PageListViewController: UITableViewController {
     }
 }
 
-protocol PageListViewControllerDelegate: class {
+protocol PageListViewControllerDelegate: AnyObject {
     func pageListViewController(_ controller: PageListViewController, currentPageChangedTo currentPage: Int)
 }

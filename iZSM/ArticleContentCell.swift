@@ -383,7 +383,7 @@ class ArticleContentCell: UITableViewCell {
     
 }
 
-protocol ArticleContentCellDelegate: class {
+protocol ArticleContentCellDelegate: AnyObject {
     func cell(_ cell: ArticleContentCell, didClickImageAt index: Int)
     func cell(_ cell: ArticleContentCell, didClick url: URL)
     func cell(_ cell: ArticleContentCell, didClickReply sender: UIView?)

@@ -247,7 +247,7 @@ class UserInfoViewController: UIViewController {
     }
 }
 
-protocol UserInfoViewControllerDelegate: class {
+protocol UserInfoViewControllerDelegate: AnyObject {
     func userInfoViewController(_ controller: UserInfoViewController, didClickSearch button: UIBarButtonItem)
     func userInfoViewController(_ controller: UserInfoViewController, didClickCompose button: UIBarButtonItem)
     func userInfoViewController(_ controller: UserInfoViewController, didTapUserImageView imageView: UIImageView)

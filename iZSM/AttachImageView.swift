@@ -73,7 +73,7 @@ class AttachImageView: UIView {
     }
 }
 
-protocol AttachImageViewDelegate: class {
+protocol AttachImageViewDelegate: AnyObject {
     func deleteButtonPressed(in attachImageView: AttachImageView)
     func imageTapped(in attachImageView: AttachImageView)
 }

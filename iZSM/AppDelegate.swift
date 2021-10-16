@@ -61,10 +61,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.overrideUserInterfaceStyle = .dark
         }
         
-        // White non-transucent navigatio bar, supports dark appearance
+        // White semi-transucent navigation bar, supports dark appearance
         if #available(iOS 15, *) {
             let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
+            appearance.configureWithDefaultBackground()
             UINavigationBar.appearance().standardAppearance = appearance
             UINavigationBar.appearance().scrollEdgeAppearance = appearance
         }

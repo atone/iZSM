@@ -61,6 +61,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.overrideUserInterfaceStyle = .dark
         }
         
+        // White non-transucent navigatio bar, supports dark appearance
+        if #available(iOS 15, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        }
+        
         // set the SVProgressHUD setting
         SVProgressHUD.setMinimumDismissTimeInterval(2)
         

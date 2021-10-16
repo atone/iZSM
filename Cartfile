@@ -1,5 +1,4 @@
 github "atone/YYKit"
 github "SVProgressHUD/SVProgressHUD"
 github "AgileBits/onepassword-extension" "add-framework-support"
-github "atone/PullToRefreshKit"
 github "banchichen/TZImagePickerController"

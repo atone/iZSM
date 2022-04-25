@@ -1638,7 +1638,7 @@
 			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 19.0.0;
+				minimumVersion = 20.0.0;
 			};
 		};
 		9CA70D3A23326A4900F575C7 /* XCRemoteSwiftPackageReference "DeviceKit" */ = {
@@ -1654,7 +1654,7 @@
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
+				minimumVersion = 5.0.1;
 			};
 		};
 		9CD2CD6F236B4DAF00418F25 /* XCRemoteSwiftPackageReference "SmthConnection" */ = {

@@ -1,0 +1,50 @@
+{
+  "pins" : [
+    {
+      "identity" : "devicekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/devicekit/DeviceKit.git",
+      "state" : {
+        "revision" : "cc49d42dafd69c96abbf695cedbefab6441f1afa",
+        "version" : "4.6.0"
+      }
+    },
+    {
+      "identity" : "keychain-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/evgenyneu/keychain-swift.git",
+      "state" : {
+        "revision" : "d108a1fa6189e661f91560548ef48651ed8d93b9",
+        "version" : "20.0.0"
+      }
+    },
+    {
+      "identity" : "pulltorefreshkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/atone/PullToRefreshKit.git",
+      "state" : {
+        "revision" : "41ddd20b385059aad6eb6c578565f641d12ddae3",
+        "version" : "0.9.0"
+      }
+    },
+    {
+      "identity" : "smthconnection",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:atone/SmthConnection.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "353397dffbec80091fcc57713b41feabbf4cdda4"
+      }
+    },
+    {
+      "identity" : "snapkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SnapKit/SnapKit.git",
+      "state" : {
+        "revision" : "d458564516e5676af9c70b4f4b2a9178294f1bc6",
+        "version" : "5.0.1"
+      }
+    }
+  ],
+  "version" : 2
+}
